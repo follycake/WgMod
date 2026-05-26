@@ -158,7 +158,6 @@ Items: {
 		Tooltip:
 			'''
 			Increases summon damage by {0}%
-			Increases summon critical strike chance by {1}%
 			Immune to bleeding
 			Effects scale with your obesity
 			'''
