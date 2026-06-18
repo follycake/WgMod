@@ -43,7 +43,7 @@ public class HomingFood : ModNPC
         NPC.height = 22;
         NPC.damage = 10;
         NPC.defense = 14;
-        NPC.lifeMax = 100;
+        NPC.lifeMax = 30;
         NPC.HitSound = SoundID.NPCHit1;
         NPC.DeathSound = SoundID.NPCDeath1;
         NPC.value = 0f;
