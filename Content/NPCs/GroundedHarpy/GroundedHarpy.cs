@@ -93,6 +93,8 @@ public class GroundedHarpy : ModNPC
                 NPC.lifeMax = 330;
             }
         }
+
+        NPC.ApplyTownNPCModifiers();
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -121,15 +123,15 @@ public class GroundedHarpy : ModNPC
 
     public override List<string> SetNPCNameList()
     {
-        return new List<string>()
-        {
+        return
+        [
             "Keeth", "Orrit", "Elun", "Ari", "Tweety", "Dewey",
             "Archimedes", "Gunter", "Condor", "Quetzal", "Macaw", "Nightingale",
             "Kingfisher", "Hoopoe", "Griffin", "Cockatrice", "Ra", "Thoth",
             "Horus", "Axex", "Zu", "Huma", "Odin", "Cher Ami",
             "Thunderbird", "Ibis", "Raven", "Athena", "Daffy", "Illo",
             "Ceen", "Issot", "Quassice", "Zhonu", "Qhueen", "Obeth",
-        };
+        ];
     }
 
     public override string GetChat()
@@ -243,9 +245,9 @@ public class GroundedHarpy : ModNPC
             .Add(new Item(ItemID.Cloud) { shopCustomPrice = Item.buyPrice(copper: 50) })
             .Add(new Item(ItemID.RainCloud) { shopCustomPrice = Item.buyPrice(copper: 50) })
             .Add(ItemID.Feather)
-            .Add(ItemID.SoulofFlight, Condition.Hardmode)
             .Add(ItemID.RainbowBrick, Condition.Hardmode)
             .Add(ItemID.GiantHarpyFeather, Condition.Hardmode)
+            .Add(ItemID.SoulofFlight, Condition.DownedMechBossAll)
             .Add(ItemID.SunBanner, Condition.MoonPhaseFull)
             .Add(ItemID.WorldBanner, Condition.MoonPhaseWaningGibbous)
             .Add(ItemID.GravityBanner, Condition.MoonPhaseThirdQuarter)
