@@ -8,6 +8,8 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Weapons;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor._d_u_m_m_y_)]
 public class Endocannon : ModItem
 {
 	public int _cooldown;
@@ -17,8 +19,8 @@ public class Endocannon : ModItem
 
 	public override void SetDefaults()
 	{
-		Item.width = 62;
-		Item.height = 32;
+		Item.width = 64;
+		Item.height = 40;
 		Item.rare = ItemRarityID.Green;
 		Item.value = Item.buyPrice(gold: 1);
 
@@ -100,7 +102,7 @@ public class Endocannon : ModItem
 		else
 			_cooldown++;
 
-		Vector2 muzzleOffset = Vector2.Normalize(velocity) * 25f;
+		Vector2 muzzleOffset = Vector2.Normalize(velocity) * 18f;
 
 		if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
 		{

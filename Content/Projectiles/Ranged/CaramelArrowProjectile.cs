@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Security.Cryptography;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -57,11 +59,13 @@ public class CaramelArrowProjectile : ModProjectile
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        target.AddBuff(ModContent.BuffType<Caramelized>(), 8 * 60);
+        if (Main.rand.NextBool(3))
+            target.AddBuff(ModContent.BuffType<Caramelized>(), 8 * 60);
     }
 
     public override void OnHitPlayer(Player target, Player.HurtInfo info)
     {
-        target.AddBuff(ModContent.BuffType<Caramelized>(), 8 * 60);
+        if (Main.rand.NextBool(3))
+            target.AddBuff(ModContent.BuffType<Caramelized>(), 8 * 60);
     }
 }

@@ -42,8 +42,8 @@ public class SunriseProjectile : ModProjectile
 
 	public override void SetDefaults()
 	{
-		Projectile.width = 16;
-		Projectile.height = 16;
+		Projectile.width = 18;
+		Projectile.height = 18;
 		Projectile.aiStyle = 0;
 		Projectile.friendly = true;
 		Projectile.hostile = false;
@@ -55,6 +55,8 @@ public class SunriseProjectile : ModProjectile
 		Projectile.ignoreWater = true;
 		Projectile.tileCollide = true;
 		Projectile.hide = true;
+
+		DrawOffsetX = -4;
 	}
 
 	public const int GravityDelay = 45;
