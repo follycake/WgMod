@@ -7,6 +7,7 @@ using WgMod.Content.Projectiles.Ranged;
 namespace WgMod.Content.Items.Ammo;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.maimaichubs)]
 public class CaramelArrow : ModItem
 {
     public override void SetStaticDefaults()

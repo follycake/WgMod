@@ -22,7 +22,7 @@ public class PowderedSugar : ModItem
     {
         Vector2 mousePosition = Main.MouseWorld;
         float angle = Utils.AngleTo(player.Center, mousePosition);
-        Vector2 velocity = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+        Vector2 velocity = new(MathF.Cos(angle), MathF.Sin(angle));
 
         for (int i = 0; i < 100; i++)
         {
@@ -43,6 +43,8 @@ public class PowderedSugar : ModItem
 
     public override void AddRecipes()
     {
-        CreateRecipe(5).AddIngredient(ItemID.BambooBlock, 1).AddTile(TileID.Bottles).Register();
+        CreateRecipe(5)
+            .AddIngredient(ItemID.BambooBlock, 1)
+            .AddTile(TileID.Bottles).Register();
     }
 }

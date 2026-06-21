@@ -6,6 +6,8 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Weapons;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
 public class HarpyStormbow : ModItem
 {
     WgStat _damage = new(1f, 1.25f);

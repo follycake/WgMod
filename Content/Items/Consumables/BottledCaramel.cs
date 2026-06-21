@@ -8,6 +8,7 @@ using WgMod.Content.Buffs.Consumables;
 namespace WgMod.Content.Items.Consumables;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.maimaichubs)]
 public class BottledCaramel : ModItem
 {
     public override void SetStaticDefaults()
