@@ -28,9 +28,10 @@ public class TownNPCRespawnSystem : ModSystem
     public override void LoadWorldData(TagCompound tag)
     {
         unlockGroundedHarpy = tag.GetBool(nameof(unlockGroundedHarpy));
+        unlockSanguist = tag.GetBool(nameof(unlockSanguist));
 
         unlockGroundedHarpy |= NPC.AnyNPCs(ModContent.NPCType<GroundedHarpyNPC>());
-        unlockGroundedHarpy |= NPC.AnyNPCs(ModContent.NPCType<SanguistNPC>());
+        unlockSanguist |= NPC.AnyNPCs(ModContent.NPCType<SanguistNPC>());
     }
 
     public override void NetSend(BinaryWriter writer)
