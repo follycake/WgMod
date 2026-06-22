@@ -639,8 +639,8 @@ Buffs: {
 	}
 
 	Caramelized: {
-		Description: Mods.WgMod.Buffs.Caramelized.Description
 		DisplayName: Caramelized
+		Description: You're covered in caramel!
 	}
 }
 
