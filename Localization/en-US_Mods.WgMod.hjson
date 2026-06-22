@@ -423,23 +423,6 @@ Items: {
 		Tooltip: ""
 	}
 
-	FollowerBanner: {
-		DisplayName: Follower Banner
-		Tooltip: ""
-	}
-
-	VoidCakes: {
-		DisplayName: Voidcakes
-		Tooltip:
-			'''
-			Increases mobility and decreases movement penalty from weight
-			Buff duration can be stacked
-			...However, you become debuffed when the effect ends
-			Cannot be consumed while under said debuff
-			2 minute duration
-			'''
-	}
-
 	BandOfSweetening: {
 		DisplayName: Band Of Sweetening
 		Tooltip: Increased life regeneration by {0} per second
@@ -645,32 +628,6 @@ Buffs: {
 			'''
 	}
 
-	Caramelized: {
-		DisplayName: Caramelized
-		Description: You're covered in caramel!
-	}
-
-	CrashDown: {
-		DisplayName: CRASHING DOWN
-		Description:
-			'''
-			15% decreased movement speed
-			33% increased movement penalty from weight
-			'However, the future's threats won't cease to exist.'
-			'''
-	}
-
-	GiftOfVoid: {
-		DisplayName: Gift of Void
-		Description:
-			'''
-			{0}% increased movement speed
-			{1}% increased jump height
-			{2}% decreased movement penalty from weight
-			'Ignorance is bliss.'
-			'''
-	}
-
 	Sunrising: {
 		DisplayName: Sunrising
 		Description: Mods.WgMod.Buffs.Sunrising.Description
@@ -679,6 +636,11 @@ Buffs: {
 	SporeStuffed: {
 		DisplayName: Spore Stuffed
 		Description: Mods.WgMod.Buffs.SporeStuffed.Description
+	}
+
+	Caramelized: {
+		Description: Mods.WgMod.Buffs.Caramelized.Description
+		DisplayName: Caramelized
 	}
 }
 
@@ -779,8 +741,6 @@ NPCs: {
 	}
 
 	HomingFood.DisplayName: Cursed Food
-	Follower.DisplayName: Follower
-	FollowerSpawner.DisplayName: Follower Spawner
 }
 
 Dialogue: {
@@ -821,6 +781,5 @@ Dialogue: {
 
 Bestiary: {
 	GroundedHarpy: A previously free and carefree harpy, fattened until she cannot fly! She will begrudgingly provide you with useful materials from the sky.
-	Follower: Don't you know it's rude to say no? These were made just for you! Just open your mouth, and...
 	HomingFood: Food cursed by a malevolent spirit to seek out and fatten up adventurers until they're defenseless.
 }

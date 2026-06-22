@@ -3,7 +3,6 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
-using WgMod.Content.NPCs.Dungeon.Follower;
 
 namespace WgMod;
 
@@ -13,7 +12,6 @@ partial class WgMod
     {
         Invalid = 0,
         WgPlayerSync,
-        FollowerExplode
     }
 
     public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -26,17 +24,6 @@ partial class WgMod
                 player.ReceivePlayerSync(reader);
                 if (Main.netMode == NetmodeID.Server) // Forward the changes to the other clients
                     player.SyncPlayer(-1, whoAmI, false);
-                break;
-            case MessageType.FollowerExplode:
-                NPC follower = Main.npc[reader.ReadByte()];
-                Follower.FollowerExplode(follower);
-                if (Main.netMode == NetmodeID.Server) // Forward the changes to the other clients
-                {
-                    ModPacket packet = GetPacket();
-                    packet.Write((byte)MessageType.FollowerExplode);
-                    packet.Write((byte)follower.whoAmI);
-                    packet.Send(-1, whoAmI);
-                }
                 break;
             default:
                 Logger.WarnFormat("WgMod: Unknown Message type: {0}", type);

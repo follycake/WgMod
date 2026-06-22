@@ -27,9 +27,6 @@ public partial class WgMod
         On_Main.GetPlayerArmPosition += Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras += Main_DrawProj_DrawExtras;
         On_TileObject.CanPlace += TileObject_CanPlace;
-
-        // folly: Move this elsewhere, this doesn't belong here. Do it inside of a Load and Unload of a ModType
-        On_Main.DrawDust += DrawFollowerDust;
     }
 
     // Always remember to unregister your hooks
@@ -43,8 +40,6 @@ public partial class WgMod
         On_Main.GetPlayerArmPosition -= Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras -= Main_DrawProj_DrawExtras;
         On_TileObject.CanPlace -= TileObject_CanPlace;
-
-        On_Main.DrawDust -= DrawFollowerDust;
     }
 
     static void Player_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
@@ -183,46 +178,5 @@ public partial class WgMod
         if (type == TileID.Tombstones && !Main.dedServ && Main.LocalPlayer.dead)
             FatTombstones.ReplaceTombstone(Main.LocalPlayer, ref type, ref style);
         return orig(x, y, type, style, dir, out objectData, onlyCheck, forcedRandom, checkStay);
-    }
-
-    static void DrawFollowerDust(On_Main.orig_DrawDust orig, Main self)
-    {
-        Texture2D sprite = ModContent.Request<Texture2D>("WgMod/Content/Dusts/FollowerDust").Value;
-
-        Main.spriteBatch.Begin(0, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.Transform);
-
-        for (int i = 0; i < Main.maxDustToDraw; i++)
-        {
-            Dust dust = Main.dust[i];
-            if (!dust.active)
-                continue;
-            if (dust.type == ModContent.DustType<FollowerDustSmall>())
-            {
-                Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(6, 0, 6, 6), dust.color, dust.rotation, new Vector2(3, 3), dust.scale, SpriteEffects.None, 0f);
-            }
-            else if (dust.type == ModContent.DustType<FollowerDustBig>())
-            {
-                Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(7, 7, 7, 7), dust.color, dust.rotation, new Vector2(3.5f, 3.5f), dust.scale, SpriteEffects.None, 0f);
-            }
-        }
-
-        for (int i = 0; i < Main.maxDustToDraw; i++)
-        {
-            Dust dust = Main.dust[i];
-            if (!dust.active)
-                continue;
-            if (dust.type == ModContent.DustType<FollowerDustSmall>())
-            {
-                Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(0, 0, 6, 6), Color.Black, dust.rotation, new Vector2(3, 3), dust.scale, SpriteEffects.None, 0f);
-            }
-            else if (dust.type == ModContent.DustType<FollowerDustBig>())
-            {
-                Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(0, 7, 7, 7), Color.Black, dust.rotation, new Vector2(3.5f, 3.5f), dust.scale, SpriteEffects.None, 0f);
-            }
-        }
-
-        Main.spriteBatch.End();
-
-        orig(self);
     }
 }
