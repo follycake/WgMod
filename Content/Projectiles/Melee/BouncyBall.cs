@@ -200,7 +200,8 @@ public class BouncyBall : ModProjectile
     public override void OnKill(int timeLeft)
     {
         Projectile.PrepareBombToBlow();
-        SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
+        if (Main.rand.NextBool(3))
+            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
         for (int i = 0; i < 50; i++)
         {
             Dust cute = Dust.NewDustDirect(
