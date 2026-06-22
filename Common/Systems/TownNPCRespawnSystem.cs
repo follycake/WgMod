@@ -3,11 +3,8 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using WgMod.Content.NPCs;
-<<<<<<< Updated upstream
-=======
 using WgMod.Content.NPCs.GroundedHarpy;
 using WgMod.Content.NPCs.Sanguist;
->>>>>>> Stashed changes
 
 namespace WgMod.Common.Systems;
 
@@ -32,7 +29,8 @@ public class TownNPCRespawnSystem : ModSystem
     {
         unlockGroundedHarpy = tag.GetBool(nameof(unlockGroundedHarpy));
 
-        unlockGroundedHarpy |= NPC.AnyNPCs(ModContent.NPCType<GroundedHarpy>());
+        unlockGroundedHarpy |= NPC.AnyNPCs(ModContent.NPCType<GroundedHarpyNPC>());
+        unlockGroundedHarpy |= NPC.AnyNPCs(ModContent.NPCType<SanguistNPC>());
     }
 
     public override void NetSend(BinaryWriter writer)

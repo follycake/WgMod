@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 using WgMod.Common.Players;
 using WgMod.Content.Projectiles.Melee;
 
-namespace WgMod.Content.Items.Weapons;
+namespace WgMod.Content.Items.Weapons.Melee;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 public class HoneyedHamBat : ModItem

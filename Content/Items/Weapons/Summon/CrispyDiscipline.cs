@@ -6,7 +6,7 @@ using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
 using WgMod.Content.Projectiles.Whip;
 
-namespace WgMod.Content.Items.Weapons;
+namespace WgMod.Content.Items.Weapons.Summon;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.sinnerdrip)]

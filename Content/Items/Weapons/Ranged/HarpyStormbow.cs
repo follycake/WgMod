@@ -4,7 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
 
-namespace WgMod.Content.Items.Weapons;
+namespace WgMod.Content.Items.Weapons.Ranged;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.sinnerdrip)]

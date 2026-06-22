@@ -4,6 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Systems;
 using WgMod.Content.NPCs;
+using WgMod.Content.NPCs.GroundedHarpy;
 using WgMod.Content.Projectiles;
 
 namespace WgMod.Common.GlobalNPCs;
@@ -27,7 +28,7 @@ public class TransformGlobalNPC : GlobalNPC
                         Entity.GetSource_TownSpawn(),
                         (int)npc.Center.X,
                         (int)npc.Center.Y,
-                        ModContent.NPCType<GroundedHarpy>()
+                        ModContent.NPCType<GroundedHarpyNPC>()
                     );
                     npc.active = false;
                 }

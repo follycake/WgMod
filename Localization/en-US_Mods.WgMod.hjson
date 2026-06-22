@@ -821,7 +821,7 @@ NPCs: {
 }
 
 Dialogue: {
-	GroundedHarpy: {
+	GroundedHarpyNPC: {
 		StandardDialogue1: Scraw! I'm still mad at you for making me this big!
 		StandardDialogue2: No wonder humans can't fly if all of their food tastes this good!
 		StandardDialogue4: Have any more of that sweet powder stuff? Why? Mind your business!

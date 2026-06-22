@@ -9,7 +9,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using WgMod.Common.Systems;
-using WgMod.Content.Items.Weapons;
+using WgMod.Content.Items.Weapons.Ranged;
 using WgMod.Content.NPCs.Sanguist;
 using WgMod.Content.Projectiles;
 

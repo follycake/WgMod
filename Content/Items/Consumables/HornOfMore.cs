@@ -4,6 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
 using WgMod.Content.NPCs;
+using WgMod.Content.NPCs.GroundedHarpy;
 
 namespace WgMod.Content.Items.Consumables;
 
@@ -52,7 +53,7 @@ public class HornOfMoreNPC : GlobalNPC
 {
     public override void ModifyShop(NPCShop shop)
     {
-        if (shop.NpcType == ModContent.NPCType<GroundedHarpy>() && NPC.downedBoss2)
+        if (shop.NpcType == ModContent.NPCType<GroundedHarpyNPC>() && NPC.downedBoss2)
             shop.Add<HornOfMore>();
     }
 }
