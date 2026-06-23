@@ -1,4 +1,6 @@
-﻿using Terraria;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
@@ -7,10 +9,9 @@ using Terraria.GameContent.Personalities;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 using WgMod.Common.Systems;
-using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using WgMod.Content.Items.Weapons.Melee;
 using WgMod.Content.NPCs.GroundedHarpy;
 
@@ -30,18 +31,18 @@ public class SanguistNPC : ModNPC
 
     public override bool CanGoToStatue(bool toQueenStatue) => toQueenStatue;
 
+    public const int WeightLevelMax = 5;
+    public const int WeightProgressMax = 3;
+    public const string ShopName = "Shop";
+
     public int weightLevel;
     public int weightProgress;
-    const int WeightLevelMax = 5;
-    const int WeightProgressMax = 3;
-    public bool drankToday = false;
+    public bool drankToday;
 
-    static readonly int _prize1 = ItemID.BloodButcherer;
-    static readonly int _prize2 = ModContent.ItemType<NightcrawlerSlashes>();
-    static readonly int _prize3 = ItemID.BloodHamaxe;
-    static readonly int _prize4 = ItemID.BloodRainBow;
-
-    public const string ShopName = "Shop";
+    readonly int _prize1 = ItemID.BloodButcherer;
+    readonly int _prize2 = ModContent.ItemType<NightcrawlerSlashes>();
+    readonly int _prize3 = ItemID.BloodHamaxe;
+    readonly int _prize4 = ItemID.BloodRainBow;
 
     public override void SetStaticDefaults()
     {
@@ -124,6 +125,7 @@ public class SanguistNPC : ModNPC
             "aaa", "aaa", "aaa", "aaa", "aaa", "aaa",
         ];
     }
+
     static string Belch3(string key, int belchChance)
     {
         string belchVariant = Language.GetTextValue("Mods.WgMod.Dialogue.Sanguist.Belches.Belch" + Main.rand.Next(1, 4));
@@ -219,7 +221,6 @@ public class SanguistNPC : ModNPC
             else
                 ChatHelper.BroadcastChatMessage(NetworkText.FromKey("Mods.WgMod.Announcements.SanguistHunger"), new Color(255, 22, 22));
         }
-
         return true;
     }
 
@@ -248,16 +249,14 @@ public class SanguistNPC : ModNPC
             else
             {
                 weightProgress = 0;
-
                 if (weightLevel < WeightLevelMax)
                     weightLevel++;
             }
 
             if (weightLevel == prevWeightLevel)
-            {
                 player.QuickSpawnItem(NPC.GetSource_GiftOrReward(), ItemID.GoldCoin);
-            }
             else
+            {
                 switch (weightLevel)
                 {
                     case 1:
@@ -273,10 +272,7 @@ public class SanguistNPC : ModNPC
                         player.QuickSpawnItem(NPC.GetSource_GiftOrReward(), _prize4);
                         break;
                 }
-
-
-
-
+            }
             Main.npcChatText = Belch3("Mods.WgMod.Dialogue.Sanguist.Drink.Drink" + (1 + weightLevel) + Main.rand.Next(1, 4), belchChance);
         }
         else
@@ -297,7 +293,7 @@ public class SanguistNPC : ModNPC
         sanguistShop.Register();
     }
 
-    public override void ModifyActiveShop(string shopName, Item[] items)
+    /*public override void ModifyActiveShop(string shopName, Item[] items)
     {
         foreach (Item item in items)
         {
@@ -306,7 +302,7 @@ public class SanguistNPC : ModNPC
                 continue;
             }
         }
-    }
+    }*/
 
     public override void TownNPCAttackStrength(ref int damage, ref float knockback)
     {
@@ -326,14 +322,28 @@ public class SanguistNPC : ModNPC
         attackDelay = 1;
     }
 
-    public override void TownNPCAttackProjSpeed(
-        ref float multiplier,
-        ref float gravityCorrection,
-        ref float randomOffset
-    )
+    public override void TownNPCAttackProjSpeed(ref float multiplier, ref float gravityCorrection, ref float randomOffset)
     {
         multiplier = 6f;
         randomOffset = 1f;
         gravityCorrection = 5f;
+    }
+
+    // Saving
+    public override void LoadData(TagCompound tag)
+    {
+        if (!tag.TryGet(nameof(weightLevel), out weightLevel))
+            weightLevel = 0;
+        if (!tag.TryGet(nameof(weightProgress), out weightProgress))
+            weightProgress = 0;
+        if (!tag.TryGet(nameof(drankToday), out drankToday))
+            drankToday = false;
+    }
+
+    public override void SaveData(TagCompound tag)
+    {
+        tag[nameof(weightLevel)] = weightLevel;
+        tag[nameof(weightProgress)] = weightProgress;
+        tag[nameof(drankToday)] = drankToday;
     }
 }
