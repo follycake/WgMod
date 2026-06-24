@@ -21,10 +21,7 @@ namespace WgMod.Content.NPCs.GroundedHarpy;
 [Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
 public class GroundedHarpyNPC : ModNPC
 {
-    public override string Texture
-    {
-        get { return "WgMod/Content/NPCs/GroundedHarpy/GroundedHarpy"; }
-    }
+    public override string Texture => "WgMod/Content/NPCs/GroundedHarpy/GroundedHarpy";
 
     public const string ShopName = "Shop";
 

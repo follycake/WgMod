@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.Chat;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.Events;
 using Terraria.GameContent.Personalities;
@@ -24,10 +27,7 @@ namespace WgMod.Content.NPCs.Sanguist;
 [Credit(ProjectRole.Idea, Contributor.igobee_)]
 public class SanguistNPC : ModNPC
 {
-    public override string Texture
-    {
-        get { return "WgMod/Content/NPCs/Sanguist/Sanguist"; }
-    }
+    public override string Texture => "WgMod/Content/NPCs/Sanguist/Sanguist";
 
     public override bool CanGoToStatue(bool toQueenStatue) => toQueenStatue;
 
@@ -43,6 +43,10 @@ public class SanguistNPC : ModNPC
     readonly int _prize2 = ModContent.ItemType<NightcrawlerSlashes>();
     readonly int _prize3 = ItemID.BloodHamaxe;
     readonly int _prize4 = ItemID.BloodRainBow;
+
+    // Hardcoded to two textures for now
+    static Asset<Texture2D> _baseTexture;
+    static Asset<Texture2D> _immobileTexture;
 
     public override void SetStaticDefaults()
     {
@@ -87,6 +91,12 @@ public class SanguistNPC : ModNPC
         AnimationType = NPCID.Guide;
 
         NPC.ApplyTownNPCModifiers();
+    }
+
+    public override void Load()
+    {
+        _baseTexture = ModContent.Request<Texture2D>(Texture);
+        _immobileTexture = ModContent.Request<Texture2D>(Texture + "_Stage5");
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -210,8 +220,19 @@ public class SanguistNPC : ModNPC
         button2 = Language.GetTextValue("Mods.WgMod.Interface.Offer");
     }
 
+    public override void FindFrame(int frameHeight)
+    {
+        NPC.frame.Width = TextureAssets.Npc[Type].Width();
+    }
+
     public override bool PreAI()
     {
+        // Textures
+        if (weightLevel == WeightLevelMax - 1)
+            TextureAssets.Npc[Type] = _immobileTexture;
+        else
+            TextureAssets.Npc[Type] = _baseTexture;
+
         if (Main.dayTime && Main.time == 0)
         {
             drankToday = false;
@@ -222,6 +243,12 @@ public class SanguistNPC : ModNPC
                 ChatHelper.BroadcastChatMessage(NetworkText.FromKey("Mods.WgMod.Announcements.SanguistHunger"), new Color(255, 22, 22));
         }
         return true;
+    }
+
+    public override void PostAI()
+    {
+        if (weightLevel == WeightLevelMax - 1) // TODO: Find a better way, for now this will do
+            NPC.velocity.X = 0f;
     }
 
     public override void OnChatButtonClicked(bool firstButton, ref string shop)
@@ -237,7 +264,7 @@ public class SanguistNPC : ModNPC
         }
         else if (drankToday == true)
             Main.npcChatText = Belch3("Mods.WgMod.Dialogue.Sanguist.Drink.DrinkDeny2", belchChance);
-        else if (weightLevel == WeightLevelMax)
+        else if (weightLevel == WeightLevelMax - 1)
             Main.npcChatText = Belch3("Mods.WgMod.Dialogue.Sanguist.Drink.DrinkDeny3", belchChance);
         else if (player.ConsumedLifeCrystals > 0)
         {
@@ -292,17 +319,6 @@ public class SanguistNPC : ModNPC
 
         sanguistShop.Register();
     }
-
-    /*public override void ModifyActiveShop(string shopName, Item[] items)
-    {
-        foreach (Item item in items)
-        {
-            if (item == null || item.type == ItemID.None)
-            {
-                continue;
-            }
-        }
-    }*/
 
     public override void TownNPCAttackStrength(ref int damage, ref float knockback)
     {
