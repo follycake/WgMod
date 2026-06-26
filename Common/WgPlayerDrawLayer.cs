@@ -25,7 +25,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
     public override Position GetDefaultPosition() => new Multiple()
     {
         { new Between(PlayerDrawLayers.Torso, PlayerDrawLayers.OffhandAcc), drawInfo => !CheckTop(drawInfo) },
-        { new Between(PlayerDrawLayers.Head, PlayerDrawLayers.ArmOverItem), CheckTop }
+        { new Between(PlayerDrawLayers.Head, PlayerDrawLayers.Shield), CheckTop }
     };
 
     static bool CheckTop(PlayerDrawSet drawInfo)
@@ -68,25 +68,27 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
     {
         if (!drawInfo.drawPlayer.TryGetModPlayer(out WgPlayer wg))
             return;
-        Draw(wg, ref drawInfo, false);
-        if (WeightValues.GetArmStage(wg.Weight.GetStage()) < 0)
-            Draw(wg, ref drawInfo, true);
+        Draw(ref drawInfo, false);
+        Draw(ref drawInfo, true);
     }
 
-    public static bool Draw(WgPlayer wg, ref PlayerDrawSet drawInfo, bool top)
+    public static void Draw(ref PlayerDrawSet drawInfo, bool top)
     {
         Player player = drawInfo.drawPlayer;
         if (player.dead)
-            return false;
+            return;
+
+        if (!player.TryGetModPlayer(out WgPlayer wg))
+            return;
 
         int stage = wg.Weight.GetStage();
         if (stage <= 0)
-            return false;
+            return;
 
         SpriteSet set = SpriteSet.Current;
         SpriteSet.Layer[] layers = top ? set.TopLayers : set.Layers;
         if (layers.Length <= 0)
-            return false;
+            return;
 
         int direction = ((drawInfo.playerEffect & SpriteEffects.FlipHorizontally) == 0).ToDirectionInt();
         Vector2 position = new Vector2((int)(drawInfo.Position.X - Main.screenPosition.X - drawInfo.drawPlayer.bodyFrame.Width / 2 + drawInfo.drawPlayer.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + drawInfo.drawPlayer.height - drawInfo.drawPlayer.bodyFrame.Height + 4f)) + drawInfo.drawPlayer.bodyPosition + new Vector2(drawInfo.drawPlayer.bodyFrame.Width / 2, drawInfo.drawPlayer.bodyFrame.Height / 2);
@@ -163,7 +165,6 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             if (drawArmor && layer.UVArmor)
                 WgArmor.Draw(wg, ref drawInfo, drawData, layer);
         }
-        return true;
     }
 
     static Vector2 PrepPos(Vector2 pos, float xOffset, float yOffset, float gravDir)
