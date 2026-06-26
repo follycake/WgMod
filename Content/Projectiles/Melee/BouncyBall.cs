@@ -156,7 +156,8 @@ public class BouncyBall : ModProjectile
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        SoundEngine.PlaySound(WgSounds.Squeaky, Projectile.Center);
+        if (Main.rand.NextBool(3))
+            SoundEngine.PlaySound(WgSounds.Squeaky, Projectile.Center);
 
         Vector2 direction = target.Center.DirectionTo(Projectile.Center);
         float velocity = Projectile.velocity.Length();
@@ -200,8 +201,7 @@ public class BouncyBall : ModProjectile
     public override void OnKill(int timeLeft)
     {
         Projectile.PrepareBombToBlow();
-        if (Main.rand.NextBool(3))
-            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
+        SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
         for (int i = 0; i < 50; i++)
         {
             Dust cute = Dust.NewDustDirect(
@@ -223,7 +223,7 @@ public class BouncyBall : ModProjectile
     {
         Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-        Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
+        Vector2 drawOrigin = new(texture.Width * 0.5f, Projectile.height * 0.5f);
         for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
         {
             Vector2 drawPos =
