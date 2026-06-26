@@ -53,6 +53,10 @@ public class WgArmsDrawLayer : PlayerDrawLayer
         bodyVect -= drawInfo.compFrontArmFrame.Size() * 0.5f;
         bodyVect += frame.Size() * 0.5f;
 
+        bool drawTop = frameY == 0 && (frameX == 2 || frameX == 3) || frameY == 1 && frameX == 2;
+        if (!drawTop)
+            WgPlayerDrawLayer.Draw(wg, ref drawInfo, true);
+
         if (drawArmor && !drawInfo.compShoulderOverFrontArm)
             DrawCompShoulder(ref drawInfo, shoulderPosition, bodyRotation, bodyVect);
 
@@ -68,6 +72,9 @@ public class WgArmsDrawLayer : PlayerDrawLayer
             if (drawInfo.compShoulderOverFrontArm)
                 DrawCompShoulder(ref drawInfo, shoulderPosition, bodyRotation, bodyVect);
         }
+
+        if (drawTop)
+            WgPlayerDrawLayer.Draw(wg, ref drawInfo, true);
     }
 
     static void DrawCompShoulder(ref PlayerDrawSet drawInfo, Vector2 position, float bodyRotation, Vector2 bodyVect)

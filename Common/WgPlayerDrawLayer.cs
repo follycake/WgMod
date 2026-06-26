@@ -66,20 +66,32 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
 
     protected override void Draw(ref PlayerDrawSet drawInfo)
     {
+        if (!drawInfo.drawPlayer.TryGetModPlayer(out WgPlayer wg))
+            return;
+        Draw(wg, ref drawInfo, false);
+        if (WeightValues.GetArmStage(wg.Weight.GetStage()) < 0)
+            Draw(wg, ref drawInfo, true);
+    }
+
+    public static bool Draw(WgPlayer wg, ref PlayerDrawSet drawInfo, bool top)
+    {
         Player player = drawInfo.drawPlayer;
         if (player.dead)
-            return;
-
-        if (!player.TryGetModPlayer(out WgPlayer wg))
-            return;
+            return false;
 
         int stage = wg.Weight.GetStage();
         if (stage <= 0)
-            return;
+            return false;
+
+        SpriteSet set = SpriteSet.Current;
+        SpriteSet.Layer[] layers = top ? set.TopLayers : set.Layers;
+        if (layers.Length <= 0)
+            return false;
 
         int direction = ((drawInfo.playerEffect & SpriteEffects.FlipHorizontally) == 0).ToDirectionInt();
         Vector2 position = new Vector2((int)(drawInfo.Position.X - Main.screenPosition.X - drawInfo.drawPlayer.bodyFrame.Width / 2 + drawInfo.drawPlayer.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + drawInfo.drawPlayer.height - drawInfo.drawPlayer.bodyFrame.Height + 4f)) + drawInfo.drawPlayer.bodyPosition + new Vector2(drawInfo.drawPlayer.bodyFrame.Width / 2, drawInfo.drawPlayer.bodyFrame.Height / 2);
         position.X += WeightValues.DrawOffsetX(stage) * direction;
+        position += new Vector2(set.DrawOffsetX * direction, set.DrawOffsetY);
 
         float yOffset = 4f;
         Rectangle legFrame = player.legFrame;
@@ -110,15 +122,12 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         float bellySquish = float.Lerp(wg._squishPos, 1f, t * t * 0.4f);
         float baseSquish = (bellySquish + 1f) * 0.5f;
 
-        SpriteSet set = SpriteSet.Current;
-        position += new Vector2(set.DrawOffsetX * direction, set.DrawOffsetY);
-
         bool drawArmor = WgArmor.ShouldDraw(drawInfo);
         if (drawArmor)
             SetupArmorLayers(wg, drawInfo);
 
         int stageFrame = set.GetStage(stage).Frame;
-        foreach (SpriteSet.Layer layer in set.Layers)
+        foreach (SpriteSet.Layer layer in layers)
         {
             if (!layer.ShouldRender(player))
                 continue;
@@ -154,6 +163,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             if (drawArmor && layer.UVArmor)
                 WgArmor.Draw(wg, ref drawInfo, drawData, layer);
         }
+        return true;
     }
 
     static Vector2 PrepPos(Vector2 pos, float xOffset, float yOffset, float gravDir)
