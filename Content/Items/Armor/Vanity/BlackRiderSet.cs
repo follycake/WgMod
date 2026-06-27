@@ -32,7 +32,7 @@ public class BlackRiderHair : ModItem
         Item.width = 18;
         Item.height = 18;
         Item.rare = ItemRarityID.Cyan;
-        Item.value = Item.buyPrice(gold: 5);
+        //Item.value = Item.buyPrice(gold: 5);
         Item.vanity = true;
     }
 
@@ -55,7 +55,7 @@ public class BlackRiderChest : ModItem
         Item.width = 18;
         Item.height = 18;
         Item.rare = ItemRarityID.Cyan;
-        Item.value = Item.buyPrice(gold: 5);
+        //Item.value = Item.buyPrice(gold: 5);
         Item.vanity = true;
     }
 
@@ -78,7 +78,7 @@ public class BlackRiderSkirt : ModItem
         Item.width = 18;
         Item.height = 18;
         Item.rare = ItemRarityID.Cyan;
-        Item.value = Item.buyPrice(gold: 5);
+        //Item.value = Item.buyPrice(gold: 5);
         Item.vanity = true;
     }
 
