@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Placeable;
 
 [Credit(ProjectRole.Programmer, Contributor.follycake)]
+[Credit(ProjectRole.Artist, Contributor.follycake)]
 public class Treadmill : ModItem
 {
     public override void SetDefaults()

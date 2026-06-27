@@ -10,6 +10,8 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Tiles;
 
+[Credit(ProjectRole.Programmer, Contributor.follycake)]
+[Credit(ProjectRole.Artist, Contributor.follycake)]
 public class Treadmill : ModTile
 {
     public const float WeightLoss = 80f;
@@ -50,7 +52,7 @@ public class Treadmill : ModTile
             info.TargetDirection = 1;
             targetFrameX = 1;
         }
-        info.VisualOffset.Y -= 4f;
+        info.VisualOffset.Y -= 8f;
 
         info.AnchorTilePosition.X = i + (targetFrameX - frameX);
         info.AnchorTilePosition.Y = j;
