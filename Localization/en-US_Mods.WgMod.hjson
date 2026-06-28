@@ -799,15 +799,16 @@ Projectiles: {
 	HoneyGlob.DisplayName: Honey Glob
 	HarpyFeatherFriendly.DisplayName: Harpy Feather Friendly
 	BouncyBall.DisplayName: Bouncy Ball
-	CaramelArrowProjectile.DisplayName: Caramel Arrow Projectile
-	PowderedSugarProjectile.DisplayName: Powdered Sugar Projectile
-	SunriseProjectile.DisplayName: Sunrise Projectile
+	CaramelArrowProjectile.DisplayName: Caramel Arrow
+	PowderedSugarProjectile.DisplayName: Powdered Sugar
+	SunriseProjectile.DisplayName: Sunrise
 	SporeCloud.DisplayName: Spore Cloud
 	Plate.DisplayName: Plate
 }
 
 NPCs: {
 	GroundedHarpyNPC: {
+		
 		DisplayName: Grounded Harpy
 
 		TownNPCMood: {
