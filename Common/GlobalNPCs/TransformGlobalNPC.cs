@@ -3,7 +3,6 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Systems;
-using WgMod.Content.NPCs;
 using WgMod.Content.NPCs.GroundedHarpy;
 using WgMod.Content.Projectiles;
 
@@ -18,11 +17,7 @@ public class TransformGlobalNPC : GlobalNPC
             for (int i = 0; i < 300; i++)
             {
                 Projectile proj = Main.projectile[i];
-                if (
-                    proj.active
-                    && proj.type == ModContent.ProjectileType<PowderedSugarProjectile>()
-                    && Vector2.Distance(npc.Center, proj.Center) < npc.height
-                )
+                if (proj.active && proj.type == ModContent.ProjectileType<PowderedSugarProjectile>() && Vector2.Distance(npc.Center, proj.Center) < npc.height)
                 {
                     NPC.NewNPC(
                         Entity.GetSource_TownSpawn(),
