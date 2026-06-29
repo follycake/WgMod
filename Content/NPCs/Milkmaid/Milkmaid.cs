@@ -29,7 +29,6 @@ public class MilkmaidNPC : ModNPC
 
     public override bool CanGoToStatue(bool toQueenStatue) => toQueenStatue;
 
-    public const int milkModifier = 4;
     public static bool milkedToday;
 
     public const string ShopName = "Shop";
@@ -219,8 +218,9 @@ public class MilkmaidNPC : ModNPC
     {
         Player player = Main.LocalPlayer;
 
-        int milkFactor = 0;
+        int milkModifier = 0;
         string bloodMoon = "";
+        WeightedRandom<int> potions = new();
 
         if (firstButton)
         {
@@ -235,18 +235,17 @@ public class MilkmaidNPC : ModNPC
             {
                 milkedToday = true;
 
-                if (Main.rand.NextBool((milkModifier - milkFactor) * 12))
-                    player.QuickSpawnItem(NPC.GetSource_GiftOrReward(), SuperWeightPotions[Main.rand.Next(0, 2)], Main.rand.Next(1, 2 + milkFactor));
-                else if (Main.rand.NextBool((milkModifier - milkFactor) * 4))
-                    player.QuickSpawnItem(NPC.GetSource_GiftOrReward(), GreaterWeightPotions[Main.rand.Next(0, 2)], Main.rand.Next(1, 2 + milkFactor));
-                else if (Main.rand.NextBool((milkModifier - milkFactor) * 2))
-                    player.QuickSpawnItem(NPC.GetSource_GiftOrReward(), WeightPotions[Main.rand.Next(0, 2)], Main.rand.Next(1, 3 + milkFactor));
-                else if (Main.rand.NextBool(milkModifier - milkFactor))
-                    player.QuickSpawnItem(NPC.GetSource_GiftOrReward(), LesserWeightPotions[Main.rand.Next(0, 2)], Main.rand.Next(1, 3 + milkFactor));
-                else if (Main.rand.NextBool(milkModifier + milkFactor))
-                    player.QuickSpawnItem(NPC.GetSource_GiftOrReward(), ItemID.MilkCarton, Main.rand.Next(1, 3 + milkFactor));
-                else
-                    player.QuickSpawnItem(NPC.GetSource_GiftOrReward(), LesserWeightPotions[Main.rand.Next(0, 2)], 1);
+                potions.Add(ModContent.ItemType<SuperWeightGainPotion>(), 1 + milkModifier);
+                potions.Add(ModContent.ItemType<SuperWeightLossPotion>(), 1 + milkModifier);
+                potions.Add(ModContent.ItemType<GreaterWeightGainPotion>(), 2 + milkModifier);
+                potions.Add(ModContent.ItemType<GreaterWeightLossPotion>(), 2 + milkModifier);
+                potions.Add(ModContent.ItemType<WeightGainPotion>(), 4 - milkModifier);
+                potions.Add(ModContent.ItemType<WeightLossPotion>(), 4 - milkModifier);
+                potions.Add(ModContent.ItemType<LesserWeightGainPotion>(), 8 - milkModifier);
+                potions.Add(ModContent.ItemType<LesserWeightLossPotion>(), 8 - milkModifier);
+                potions.Add(ItemID.MilkCarton, 4);
+
+                player.QuickSpawnItem(NPC.GetSource_GiftOrReward(), potions, Main.rand.Next(1, 3 + milkModifier));
 
                 Main.npcChatText = Language.GetTextValue("Mods.WgMod.Dialogue.Milkmaid." + bloodMoon + "Milked" + Main.rand.Next(1, 4));
 
