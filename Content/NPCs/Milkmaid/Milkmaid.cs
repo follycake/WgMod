@@ -218,9 +218,10 @@ public class MilkmaidNPC : ModNPC
     {
         Player player = Main.LocalPlayer;
 
+        WeightedRandom<int> potions = new();
+
         int milkModifier = 0;
         string bloodMoon = "";
-        WeightedRandom<int> potions = new();
 
         if (firstButton)
         {
@@ -234,6 +235,9 @@ public class MilkmaidNPC : ModNPC
             if (!milkedToday)
             {
                 milkedToday = true;
+
+                // Todo: increase milkModifier in increments of 1 based on certain conditions
+                // For instance: Reaching a certain NPC happiness level
 
                 potions.Add(ModContent.ItemType<SuperWeightGainPotion>(), 1 + milkModifier);
                 potions.Add(ModContent.ItemType<SuperWeightLossPotion>(), 1 + milkModifier);
