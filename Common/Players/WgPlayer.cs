@@ -166,6 +166,10 @@ public partial class WgPlayer : ModPlayer
 
     void ResizeHitbox(int stage)
     {
+        // None of our business
+        if ((Player.width + 12) % 16 != 0 || Player.height != Player.defaultHeight)
+            return;
+
         int targetWidth = Player.defaultWidth;
         if (!WgServerConfig.Instance.DisableFatHitbox && !Player.mount.Active && !Player.isLockedToATile)
             targetWidth = WeightValues.GetHitboxWidthInTiles(stage) * 16 - 12;
