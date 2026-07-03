@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WgMod.Content.Items.Armor.Vanity;
+namespace WgMod.Content.Items.Armor.Vanity.BlackRider;
 
 public static class BlackRiderSet
 {
