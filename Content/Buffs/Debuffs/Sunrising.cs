@@ -5,6 +5,8 @@ using WgMod.Content.Projectiles.Melee;
 
 namespace WgMod.Content.Buffs.Debuffs;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.follycake)]
 public class Sunrising : ModBuff
 {
     public override void SetStaticDefaults()
