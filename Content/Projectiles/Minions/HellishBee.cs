@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -69,6 +70,7 @@ public class HellishBee : ModProjectile
             {
                 _weightProgress = 0;
                 _weightStage++;
+                Projectile.netUpdate = true;
 
                 SoundEngine.PlaySound(WgSounds.Belly, Projectile.Center);
             }
@@ -307,6 +309,19 @@ public class HellishBee : ModProjectile
         }
 
         Lighting.AddLight(Projectile.Center, Color.White.ToVector3() * 0.78f);
+    }
+
+    public override void SendExtraAI(BinaryWriter writer)
+    {
+        writer.Write((byte)_weightStage);
+    }
+
+    public override void ReceiveExtraAI(BinaryReader reader)
+    {
+        byte stage = reader.ReadByte();
+        if (_weightStage != stage)
+            SoundEngine.PlaySound(WgSounds.Belly, Projectile.Center);
+        _weightStage = stage;
     }
 }
 
