@@ -81,7 +81,7 @@ public class DogTailItem : GlobalItem
 {
     public override void UseAnimation(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !dt._active || dt._cooldown < 120 || item.damage < 1)
+        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !dt._active || dt._cooldown < 120 || item.damage < 1 || player.whoAmI != Main.myPlayer)
             return;
 
         if (Main.hardMode)

@@ -292,7 +292,7 @@ public class LiftingTomeItem : GlobalItem
 {
     public override void UseAnimation(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out LiftingTomePlayer lt) || !player.TryGetModPlayer(out WgPlayer wg) || !lt._active || item.damage < 1)
+        if (!player.TryGetModPlayer(out LiftingTomePlayer lt) || !player.TryGetModPlayer(out WgPlayer wg) || !lt._active || item.damage < 1 || player.whoAmI != Main.myPlayer)
             return;
 
         float immobility = wg.Weight.ClampedImmobility;
