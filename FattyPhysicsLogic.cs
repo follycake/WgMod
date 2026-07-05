@@ -76,12 +76,10 @@ public static class FattyPhysicsLogic
             return;
         foreach (Player plr in Main.ActivePlayers)
         {
-            if (!plr.active)
+            if (!plr.active || plr.dead)
                 continue;
             if (plr.Hitbox.Intersects(entity.Hitbox))
-            {
                 DoPush(entity, plr);
-            }
         }
         foreach (NPC npc in Main.ActiveNPCs)
         {
@@ -90,9 +88,7 @@ public static class FattyPhysicsLogic
             if (npc.type == NPCID.TargetDummy)
                 continue;
             if (npc.Hitbox.Intersects(entity.Hitbox))
-            {
                 DoPush(entity, npc);
-            }
         }
     }
 }
