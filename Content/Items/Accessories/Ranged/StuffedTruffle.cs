@@ -63,7 +63,7 @@ public class StuffedTruffleItem : GlobalItem
 {
     public override void UseAnimation(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out StuffedTrufflePlayer st) || !player.TryGetModPlayer(out WgPlayer wg) || !st._active || st._cooldown < StuffedTrufflePlayer.CooldownMax || item.DamageType != DamageClass.Ranged)
+        if (!player.TryGetModPlayer(out StuffedTrufflePlayer st) || !player.TryGetModPlayer(out WgPlayer wg) || !st._active || st._cooldown < StuffedTrufflePlayer.CooldownMax || item.DamageType != DamageClass.Ranged || player.whoAmI != Main.myPlayer)
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
