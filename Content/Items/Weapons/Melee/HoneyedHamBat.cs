@@ -9,6 +9,7 @@ using WgMod.Content.Projectiles.Melee;
 namespace WgMod.Content.Items.Weapons.Melee;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.follycake)]
 public class HoneyedHamBat : ModItem
 {
     WgStat _damage = new(1f, 2f);
