@@ -8,6 +8,7 @@ using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Content.Items.Consumables.Potions.WeightLossPotions;
 
+// TODO: Use inheritance
 public class LesserWeightLossPotion : ModItem
 {
 	const float WeightEffect = -10;
@@ -35,7 +36,7 @@ public class LesserWeightLossPotion : ModItem
 	public override bool? UseItem(Player player)
 	{
 		if (!player.TryGetModPlayer(out WgPlayer wg))
-			return null;
+			return false;
 		float weightChange;
 
 		if (player.HasBuff<MilkshakeSickness>())
@@ -49,7 +50,7 @@ public class LesserWeightLossPotion : ModItem
 		wg.SetWeight(wg.Weight + weightChange);
 
 		CombatText.NewText(player.getRect(), Color.Yellow, weightChange + " kg");
-		return null;
+		return true;
 	}
 
 	public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -85,7 +86,7 @@ public class WeightLossPotion : ModItem
 	public override bool? UseItem(Player player)
 	{
 		if (!player.TryGetModPlayer(out WgPlayer wg))
-			return null;
+			return false;
 		float weightChange;
 
 		if (player.HasBuff<MilkshakeSickness>())
@@ -99,7 +100,7 @@ public class WeightLossPotion : ModItem
 		wg.SetWeight(wg.Weight + weightChange);
 
 		CombatText.NewText(player.getRect(), Color.Yellow, weightChange + " kg");
-		return null;
+		return true;
 	}
 
 	public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -135,7 +136,7 @@ public class GreaterWeightLossPotion : ModItem
 	public override bool? UseItem(Player player)
 	{
 		if (!player.TryGetModPlayer(out WgPlayer wg))
-			return null;
+			return false;
 		float weightChange;
 
 		if (player.HasBuff<MilkshakeSickness>())
@@ -149,7 +150,7 @@ public class GreaterWeightLossPotion : ModItem
 		wg.SetWeight(wg.Weight + weightChange);
 
 		CombatText.NewText(player.getRect(), Color.Yellow, weightChange + " kg");
-		return null;
+		return true;
 	}
 
 	public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -157,6 +158,7 @@ public class GreaterWeightLossPotion : ModItem
 		tooltips.FormatLines(WeightEffect * -1);
 	}
 }
+
 public class SuperWeightLossPotion : ModItem
 {
 	const float WeightEffect = -40;
@@ -184,7 +186,7 @@ public class SuperWeightLossPotion : ModItem
 	public override bool? UseItem(Player player)
 	{
 		if (!player.TryGetModPlayer(out WgPlayer wg))
-			return null;
+			return false;
 		float weightChange;
 
 		if (player.HasBuff<MilkshakeSickness>())
@@ -198,7 +200,7 @@ public class SuperWeightLossPotion : ModItem
 		wg.SetWeight(wg.Weight + weightChange);
 
 		CombatText.NewText(player.getRect(), Color.Yellow, weightChange + " kg");
-		return null;
+		return true;
 	}
 
 	public override void ModifyTooltips(List<TooltipLine> tooltips)
