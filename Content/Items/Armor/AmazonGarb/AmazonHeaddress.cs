@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -19,11 +22,21 @@ public class AmazonHeaddress : ModItem
     WgStat _setBonusDamage = new(0.09f, 0.22f);
     WgStat _setBonusCritChance = new(18f, 36f);
 
+    public static int HeadSlot { get; private set; }
+    public static Asset<Texture2D> LavaTexture { get; set; }
+
     public override void SetStaticDefaults()
     {
         ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
+        ArmorIDs.Head.Sets.DrawHead[Item.headSlot] = false;
 
+        HeadSlot = Item.headSlot;
         SetBonusText = this.GetLocalization("SetBonus");
+    }
+
+    public override void Load()
+    {
+        LavaTexture = ModContent.Request<Texture2D>(Texture + "_Head_Lava");
     }
 
     public static LocalizedText SetBonusText { get; private set; }
@@ -145,6 +158,15 @@ public class AmazonGarbPlayer : ModPlayer
 
         if (proj.DamageType == DamageClass.Ranged || proj.DamageType == DamageClass.Throwing)
             proj.DamageType = DamageClass.Melee;
+    }
+
+    public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
+    {
+        if (Player.head == AmazonHeaddress.HeadSlot)
+        {
+            if (Player.TryGetModPlayer(out WgPlayer wg))
+                wg._headOverride = AmazonHeaddress.LavaTexture;
+        }
     }
 
     /*public override void PostUpdateEquips()

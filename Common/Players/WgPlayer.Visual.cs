@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -17,6 +18,8 @@ public partial class WgPlayer
 
     internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[4];
     internal RenderTarget2D _armorTarget;
+
+    internal Asset<Texture2D> _headOverride;
 
     internal float _addedGfxOffY;
     float _lastGfxOffY;
@@ -39,6 +42,7 @@ public partial class WgPlayer
     {
         Player.gfxOffY = _lastGfxOffY;
         _addedGfxOffY = WeightValues.DrawOffsetY(Weight.GetStage()) * -Player.gravDir;
+        _headOverride = null;
     }
 
     void PostUpdateVisuals()
