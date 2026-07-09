@@ -28,7 +28,7 @@ public class WgClientConfig : ModConfig
     [Increment(5)]
     [Slider]
     [DrawTicks]
-    public float GurgleVolume;
+    public int GurgleVolume;
 
     [Header("Sprites")]
     [CustomModConfigItem(typeof(SpriteSetElement))]

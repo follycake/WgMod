@@ -651,6 +651,16 @@ Items: {
 		DisplayName: Barn Worktable
 		Tooltip: Used in special crafting
 	}
+
+	MintyTail: {
+		Tooltip: ""
+		DisplayName: Minty Tail
+	}
+
+	MintyEars: {
+		Tooltip: ""
+		DisplayName: Minty Ears
+	}
 }
 
 Buffs: {
@@ -813,6 +823,7 @@ Configs: {
 			General: General settings
 			Visual: Visual settings
 			Sprites: Sprites
+			Volume: Gurgle Volume
 		}
 
 		DisableJiggle: {
@@ -838,6 +849,11 @@ Configs: {
 		PlayerSpriteSet: {
 			Label: Player Sprite Set
 			Tooltip: Controls the aspect of fat player sprites
+		}
+
+		GurgleVolume: {
+			Tooltip: The volume of gurgles compared to the rest of the game's audio, setting it to 0 mutes gurgles entirely.
+			Label: Gurgle Volume
 		}
 	}
 }
@@ -1004,6 +1020,10 @@ Bestiary: {
 	HomingFood: Food cursed by a malevolent spirit to seek out and fatten up adventurers until they're defenseless.
 }
 
-Conditions.BlackRiderDev: Mods.WgMod.Conditions.BlackRiderDev
+Conditions: {
+	BlackRiderDev: Mods.WgMod.Conditions.BlackRiderDev
+	MintyDev: Mods.WgMod.Conditions.MintyDev
+}
+
 Interface.Milk: Milk
 DeathReason.Milkmaid: Next time listen, honey.
