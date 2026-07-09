@@ -22,6 +22,14 @@ public class WgClientConfig : ModConfig
     [DefaultValue(true)]
     public bool ShowCredits;
 
+    [Header("Volume")]
+    [DefaultValue(100)]
+    [Range(0, 100)]
+    [Increment(5)]
+    [Slider]
+    [DrawTicks]
+    public float GurgleVolume;
+
     [Header("Sprites")]
     [CustomModConfigItem(typeof(SpriteSetElement))]
     [DefaultValue(SpriteSet.DefaultSet), ReloadRequired]

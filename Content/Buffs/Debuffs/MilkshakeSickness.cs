@@ -3,6 +3,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common.Configs;
 
 namespace WgMod.Content.Buffs.Debuffs;
 
@@ -70,8 +71,15 @@ public class MilkshakeSicknessPlayer : ModPlayer
 
                 Main.dust[bubble].noGravity = true;
 
+                SoundStyle gurgle = new SoundStyle("WgMod/Assets/Sounds/Gurgle_", 4)
+                {
+                    Volume = ((float)WgClientConfig.Instance.GurgleVolume) / 100,
+                    PitchVariance = 0.08f,
+                    MaxInstances = 4
+                };
+
                 if (Main.rand.NextBool(gurgleRate))
-                    SoundEngine.PlaySound(WgSounds.Gurgle, Player.Center);
+                    SoundEngine.PlaySound(gurgle, Player.Center);
             }
         }
     }
