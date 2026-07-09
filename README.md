@@ -31,5 +31,9 @@ These are turned on by default but can be turned off in the mod's settings
 # Installation
 Currently there are no pre-packaged binaries, so you have to compile the source code by yourself. [See the thread](https://forum.weightgaming.com/t/terraria-weight-gain-mod-in-development)
 
+# For the devs
+The [.editorconfig](.editorconfig) has some explicit rules about the naming of variables and such.
+Remember to run `dotnet format WgMod.csproj` on the root folder every once in a while.
+
 # Credits
 See [description.txt](description.txt) and [Credits.cs](Credits.cs)

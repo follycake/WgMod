@@ -28,7 +28,6 @@ public enum Contributor
     follycake,
     maimaichubs,
     jumpsu2,
-    bb_waffle_batter,
     _d_u_m_m_y_,
     igobee_,
     minty0985,

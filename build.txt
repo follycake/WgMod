@@ -1,6 +1,6 @@
 displayName = Weight Gain
 author = WgMod Team
-version = 0.1
+version = 0.1.0
 side = Both
 homepage = https://github.com/follyfoxe/WgMod
 buildIgnore = Sources/*, Properties/*
