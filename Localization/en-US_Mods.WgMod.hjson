@@ -1027,4 +1027,8 @@ Conditions: {
 
 Interface.Milk: Milk
 DeathReason.Milkmaid: Next time listen, honey.
-Emotes.GroundedHarpyEmote.Command: groundedharpy
+
+Emotes: {
+	GroundedHarpyEmote.Command: groundedharpy
+	MilkmaidEmote.Command: milkmaid
+}

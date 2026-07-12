@@ -42,3 +42,8 @@ public class GroundedHarpyEmote : ModTownEmote
 {
     public override int Row => 0;
 }
+
+public class MilkmaidEmote : ModTownEmote
+{
+    public override int Row => 1;
+}
