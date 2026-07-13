@@ -54,13 +54,15 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
     {
         Array.Clear(wg._armorLayers);
         if (drawInfo.drawPlayer.body > 0)
-            wg._armorLayers[0] = new(TextureAssets.ArmorBodyComposite[drawInfo.drawPlayer.body], drawInfo.colorArmorBody);
+            wg._armorLayers[0] = new(TextureAssets.ArmorBodyComposite[drawInfo.drawPlayer.body], Color.White);
         else
         {
-            wg._armorLayers[0] = new(TextureAssets.Players[drawInfo.skinVar, 4], drawInfo.colorUnderShirt);
-            wg._armorLayers[1] = new(TextureAssets.Players[drawInfo.skinVar, 8], drawInfo.colorUnderShirt);
-            wg._armorLayers[2] = new(TextureAssets.Players[drawInfo.skinVar, 13], drawInfo.colorShirt);
-            wg._armorLayers[3] = new(TextureAssets.Players[drawInfo.skinVar, 6], drawInfo.colorShirt);
+            Color underShirt = drawInfo.drawPlayer.underShirtColor;
+            Color shirt = drawInfo.drawPlayer.shirtColor;
+            wg._armorLayers[0] = new(TextureAssets.Players[drawInfo.skinVar, 4], underShirt);
+            wg._armorLayers[1] = new(TextureAssets.Players[drawInfo.skinVar, 8], underShirt);
+            wg._armorLayers[2] = new(TextureAssets.Players[drawInfo.skinVar, 13], shirt);
+            wg._armorLayers[3] = new(TextureAssets.Players[drawInfo.skinVar, 6], shirt);
         }
     }
 

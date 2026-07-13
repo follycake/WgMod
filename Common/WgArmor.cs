@@ -105,7 +105,7 @@ public static class WgArmor
             texture = wg._armorTarget,
             sourceRect = rect,
             shader = drawInfo.drawPlayer.body > 0 ? drawInfo.cBody : 0,
-            color = drawInfo.drawPlayer.GetImmuneAlphaPure(Color.White, drawInfo.shadow)
+            color = drawInfo.colorArmorBody
         });
     }
 
