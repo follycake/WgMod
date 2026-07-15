@@ -661,6 +661,11 @@ Items: {
 		Tooltip: ""
 		DisplayName: Minty Ears
 	}
+
+	FollyPlush: {
+		DisplayName: Folly Plush
+		Tooltip: "I'm a very wawa fox :3"
+	}
 }
 
 Buffs: {
