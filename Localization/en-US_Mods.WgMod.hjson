@@ -262,11 +262,9 @@ Items: {
 		Tooltip:
 			'''
 			Allows for flight and slow fall
-			Increased damage by {0}%
-			Further increased magic damage by {4}%
-			Decreased mana cost by {1}%
-			Increases maximum mana by {2}
-			Increases the maximum number of minions by {3}
+			Increased magic damage by {2}%
+			Decreased mana cost by {0}%
+			Increases maximum mana by {1}
 			Summons shadow hands to carry you and attack your foes
 			Your attacks are accompanied by multiple magical tomes at half power
 			Effects scale with your obesity

@@ -20,17 +20,15 @@ namespace WgMod.Content.Items.Accessories.Magic;
 [Credit(ProjectRole.VFX, Contributor._d_u_m_m_y_)]
 public class LiftingTome : ModItem
 {
-    public const int _minionCount = 1;
-    WgStat _damage = new(0.04f, 0.08f);
-    WgStat _magicDamage = new(0.02f, 0.04f);
+    WgStat _magicDamage = new(0.06f, 0.12f);
     WgStat _manaCost = new(0.96f, 0.92f);
     WgStat _maxMana = new(20, 60);
-    WgStat _flight = new(1, 2);
+    WgStat _flight = new(1f, 1.5f);
     public string _texture;
 
     public override void SetStaticDefaults()
     {
-        ArmorIDs.Wing.Sets.Stats[Item.wingSlot] = new WingStats(60, 5f, 1f);
+        ArmorIDs.Wing.Sets.Stats[Item.wingSlot] = new WingStats(40, 5f, 1f);
     }
 
     public override void SetDefaults()
@@ -50,17 +48,14 @@ public class LiftingTome : ModItem
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
-        _damage.Lerp(immobility);
         _magicDamage.Lerp(immobility);
         _manaCost.Lerp(immobility);
         _maxMana.Lerp(immobility);
         _maxMana.Value = MathF.Floor(_maxMana.Value / 20f) * 20f;
 
-        player.GetDamage(DamageClass.Generic) += _damage;
         player.GetDamage(DamageClass.Magic) += _magicDamage;
         player.manaCost *= _manaCost;
         player.statManaMax2 += _maxMana;
-        player.maxMinions += _minionCount;
 
         lt._active = true;
 
@@ -133,10 +128,8 @@ public class LiftingTome : ModItem
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
         tooltips.FormatLines(
-            _damage.Percent(),
             (1 - _manaCost).Percent(),
             _maxMana,
-            _minionCount,
             _magicDamage.Percent()
         );
     }
@@ -148,11 +141,11 @@ public class LiftingTomePlayer : ModPlayer
     public int _cooldownBolt;
     public int _cooldownSkull;
     public int _cooldownScythe;
-    public int _cooldownBoltMax = 90;
-    public int _cooldownSkullMax = 120;
-    public int _cooldownScytheMax = 180;
+    public int _cooldownBoltMax = 120;
+    public int _cooldownSkullMax = 180;
+    public int _cooldownScytheMax = 240;
 
-    public WgStat _damageModifier = new(1f, 2f);
+    public WgStat _damageModifier = new(1f, 1.5f);
     public WgStat _velocityModifier = new(1f, 0.8f);
 
     public override void ResetEffects()
@@ -299,7 +292,7 @@ public class LiftingTomeItem : GlobalItem
 
         Vector2 mousePosition = Main.MouseWorld;
         float angle = Utils.AngleTo(player.Center, mousePosition);
-        Vector2 velocity = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+        Vector2 velocity = new(MathF.Cos(angle), MathF.Sin(angle));
 
         lt._damageModifier.Lerp(immobility);
         lt._velocityModifier.Lerp(immobility);
