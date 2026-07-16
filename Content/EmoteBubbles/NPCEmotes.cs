@@ -38,50 +38,6 @@ public abstract class ModTownEmote : ModEmoteBubble
     }
 }
 
-public abstract class ModItemEmote : ModEmoteBubble
-{
-    public override string Texture => "WgMod/Content/EmoteBubbles/NPCEmotes";
-
-    public override void SetStaticDefaults()
-    {
-        AddToCategory(EmoteID.Category.Items);
-    }
-
-    public abstract int Row { get; }
-
-    public override Rectangle? GetFrame()
-    {
-        return new Rectangle(EmoteBubble.frame * 34, 28 * Row, 34, 28);
-    }
-
-    public override Rectangle? GetFrameInEmoteMenu(int frame, int frameCounter)
-    {
-        return new Rectangle(frame * 34, 28 * Row, 34, 28);
-    }
-}
-
-public abstract class ModCrittersMonstersEmote : ModEmoteBubble
-{
-    public override string Texture => "WgMod/Content/EmoteBubbles/NPCEmotes";
-
-    public override void SetStaticDefaults()
-    {
-        AddToCategory(EmoteID.Category.CrittersAndMonsters);
-    }
-
-    public abstract int Row { get; }
-
-    public override Rectangle? GetFrame()
-    {
-        return new Rectangle(EmoteBubble.frame * 34, 28 * Row, 34, 28);
-    }
-
-    public override Rectangle? GetFrameInEmoteMenu(int frame, int frameCounter)
-    {
-        return new Rectangle(frame * 34, 28 * Row, 34, 28);
-    }
-}
-
 public class GroundedHarpyEmote : ModTownEmote
 {
     public override int Row => 0;
@@ -90,19 +46,4 @@ public class GroundedHarpyEmote : ModTownEmote
 public class MilkmaidEmote : ModTownEmote
 {
     public override int Row => 1;
-}
-
-public class WeightGainEmote : ModItemEmote
-{
-    public override int Row => 3;
-}
-
-public class WeightLossEmote : ModItemEmote
-{
-    public override int Row => 2;
-}
-
-public class HellishBeeEmote : ModCrittersMonstersEmote
-{
-    public override int Row => 4;
 }
