@@ -664,6 +664,11 @@ Items: {
 		DisplayName: Folly Plush
 		Tooltip: I'm a very wawa fox :3
 	}
+
+	CozyAfternoons: {
+		DisplayName: Cozy Afternoons
+		Tooltip: "'C. Maimai'"
+	}
 }
 
 Buffs: {
