@@ -52,13 +52,11 @@ public class AmazonToga : ModItem
 
     public override void ArmorArmGlowMask(Player drawPlayer, float shadow, ref int glowMask, ref Color color)
     {
-        glowMask = 1;
         color = Color.White;
     }
 
     public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)
     {
-        glowMask = 1;
         glowMaskColor = Color.White;
     }
 }

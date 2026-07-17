@@ -26,7 +26,7 @@ public class WgHeadDrawLayer : PlayerDrawLayer
         DrawData head = new(wg._headOverride.Value,
             new Vector2((int)(drawInfo.Position.X - Main.screenPosition.X - drawInfo.drawPlayer.bodyFrame.Width / 2 + drawInfo.drawPlayer.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + drawInfo.drawPlayer.height - drawInfo.drawPlayer.bodyFrame.Height + 4f)) + drawInfo.drawPlayer.headPosition + drawInfo.headVect,
             drawInfo.drawPlayer.bodyFrame,
-            Color.White,
+            player.GetImmuneAlphaPure(Color.White, drawInfo.shadow),
             drawInfo.drawPlayer.headRotation,
             drawInfo.headVect,
             1f,
