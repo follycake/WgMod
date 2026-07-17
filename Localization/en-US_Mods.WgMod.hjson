@@ -877,6 +877,7 @@ Tiles: {
 	}
 
 	BarnDresser.MapEntry: Barn Dresser
+	Oven.MapEntry: Oven
 }
 
 InfoDisplays.PortableScale_InfoDisplay.DisplayName: Current weight

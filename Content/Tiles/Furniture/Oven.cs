@@ -39,5 +39,7 @@ public class Oven : ModTile
             0
         );
         TileObjectData.addTile(Type);
+
+        AddMapEntry(new Color(200, 200, 200), Mod.GetLocalization("Tiles.Oven.MapEntry"));
     }
 }
