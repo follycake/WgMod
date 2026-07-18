@@ -42,6 +42,7 @@ public class SpriteSet
 
     public static void Initialize(Mod mod, string name)
     {
+        Main.RunOnMainThread(() => WgArmorLUTs.Initialize(mod));
         FoundSets = [.. FindSets(mod)];
         if (!Exists(mod, name))
             name = DefaultSet;
@@ -83,7 +84,7 @@ public class SpriteSet
             {
                 layer.ArmorTexture = mod.Assets.Request<Texture2D>(armorName, AssetRequestMode.ImmediateLoad).Value;
                 if (layer.SimpleArmor)
-                    Main.RunOnMainThread(() => WgArmor.ConvertSimple(layer.ArmorTexture));
+                    Main.RunOnMainThread(() => WgArmorLUTs.ConvertSimple(0, layer.ArmorTexture));
                 set.ArmorAltasWidth += layer.ArmorTexture.Width;
                 set.ArmorAltasHeight = Math.Max(set.ArmorAltasHeight, layer.ArmorTexture.Height);
                 armorLayers.Add(layer);
