@@ -36,15 +36,11 @@ public class MilkshakeSicknessPlayer : ModPlayer
 
     public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
     {
-        if (!MilkshakeSickness || drawInfo.shadow != 0f)
+        if (!MilkshakeSickness || drawInfo.shadow != 0f || Main.gamePaused)
             return;
 
         int dustRate = 5;
         int gurgleRate = 15;
-
-        /*r = 50;
-        g = 25;
-        b = 20;*/
 
         if (_cooldown < TicksPerCycle)
             _cooldown++;
