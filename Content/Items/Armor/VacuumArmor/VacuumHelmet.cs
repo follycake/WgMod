@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -21,9 +22,17 @@ public class VacuumHelmet : ModItem
     WgStat _defense = new(0, 12 * 2);
     WgStat _resist = new(0f, 0.02f);
     WgStat _movePenalty = new(1.2f, 1.05f);
-
     WgStat _setBonusRegen = new(0, 20);
     WgStat _setBonusHealth = new(0f, 1f);
+
+    static int _glowMask;
+
+    public override void SetStaticDefaults()
+    {
+        _glowMask = GlowMaskUtility.AddGlowMask(Texture + "_Head_Glow");
+
+        SetBonusText = this.GetLocalization("SetBonus");
+    }
 
     public override void SetDefaults()
     {
@@ -32,11 +41,6 @@ public class VacuumHelmet : ModItem
         Item.value = Item.sellPrice(gold: 2);
         Item.rare = ItemRarityID.Red;
         Item.defense = 36 / 2;
-    }
-
-    public override void SetStaticDefaults()
-    {
-        SetBonusText = this.GetLocalization("SetBonus");
     }
 
     public static LocalizedText SetBonusText { get; private set; }
@@ -85,6 +89,11 @@ public class VacuumHelmet : ModItem
         wg.MovementPenalty *= _movePenalty;
 
         player.aggro += 5;
+
+        Vector3 light = new(130f / 255f, 90f / 255f, 190f / 255f);
+
+        if (!Main.dedServ)
+            Lighting.AddLight(player.Center, light);
     }
 
     public override void AddRecipes()
@@ -102,5 +111,11 @@ public class VacuumHelmet : ModItem
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
         tooltips.FormatLines(_critChance, _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+    }
+
+    public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)
+    {
+        glowMask = _glowMask;
+        glowMaskColor = Color.White;
     }
 }

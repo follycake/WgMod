@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -18,6 +19,13 @@ public class VacuumSkirt : ModItem
     WgStat _defense = new(0, 16 * 2);
     WgStat _resist = new(0f, 0.02f);
     WgStat _movePenalty = new(1.2f, 1.05f);
+
+    static int _glowMask;
+
+    public override void SetStaticDefaults()
+    {
+        _glowMask = GlowMaskUtility.AddGlowMask(Texture + "_Legs_Glow");
+    }
 
     public override void SetDefaults()
     {
@@ -50,6 +58,11 @@ public class VacuumSkirt : ModItem
         wg.MovementPenalty *= _movePenalty;
 
         player.aggro += 5;
+
+        Vector3 light = new(130f / 255f, 90f / 255f, 190f / 255f);
+
+        if (!Main.dedServ)
+            Lighting.AddLight(player.Center, light);
     }
 
     public override void AddRecipes()
@@ -67,5 +80,11 @@ public class VacuumSkirt : ModItem
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
         tooltips.FormatLines((_attackSpeed - 1f).Percent(), _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+    }
+
+    public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)
+    {
+        glowMask = _glowMask;
+        glowMaskColor = Color.White;
     }
 }

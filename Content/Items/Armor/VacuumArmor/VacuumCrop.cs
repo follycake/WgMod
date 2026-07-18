@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Graphics.Light;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
@@ -50,6 +52,11 @@ public class VacuumCrop : ModItem
         wg.MovementPenalty *= _movePenalty;
 
         player.aggro += 5;
+
+        Vector3 light = new(130f / 255f, 90f / 255f, 190f / 255f);
+
+        if (!Main.dedServ)
+            Lighting.AddLight(player.Center, light);
     }
 
     public override void AddRecipes()
@@ -67,5 +74,15 @@ public class VacuumCrop : ModItem
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
         tooltips.FormatLines(_attack.Percent(), _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+    }
+
+    public override void ArmorArmGlowMask(Player drawPlayer, float shadow, ref int glowMask, ref Color color)
+    {
+        color = Color.White;
+    }
+
+    public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)
+    {
+        glowMaskColor = Color.White;
     }
 }
