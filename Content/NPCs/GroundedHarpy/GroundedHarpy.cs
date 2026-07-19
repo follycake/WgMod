@@ -9,6 +9,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using WgMod.Common.Systems;
+using WgMod.Content.Items.Consumables;
 using WgMod.Content.Items.Weapons.Ranged;
 using WgMod.Content.Projectiles;
 
@@ -225,6 +226,7 @@ public class GroundedHarpyNPC : ModNPC
     {
         var harpyShop = new NPCShop(Type, ShopName)
             .Add(ModContent.ItemType<HarpyStormbow>(), Condition.DownedSkeletron)
+            .Add(ModContent.ItemType<HornOfMore>(), Condition.DownedEowOrBoc)
             .Add(new Item(ItemID.CreativeWings) { shopCustomPrice = Item.buyPrice(gold: 30) })
             .Add(ItemID.ShinyRedBalloon)
             .Add(ItemID.LuckyHorseshoe)

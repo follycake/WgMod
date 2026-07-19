@@ -47,12 +47,3 @@ public class HornOfMore : ModItem
         return false;
     }
 }
-
-public class HornOfMoreNPC : GlobalNPC
-{
-    public override void ModifyShop(NPCShop shop)
-    {
-        if (shop.NpcType == ModContent.NPCType<GroundedHarpyNPC>() && NPC.downedBoss2)
-            shop.Add<HornOfMore>();
-    }
-}
