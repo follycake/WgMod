@@ -43,24 +43,35 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         {
             drawPlayer = wg.Player,
             skinVar = wg.Player.skinVariant,
-            colorArmorBody = Color.White,
-            colorUnderShirt = wg.Player.underShirtColor,
-            colorShirt = wg.Player.shirtColor
+            Position = wg.Player.position
         };
         SetupArmorLayers(wg, drawInfo);
+    }
+
+    // Hurt effect is already applied in drawInfo, so bake lighting only
+    static Color Light(in PlayerDrawSet drawInfo, Color color)
+    {
+        Player player = drawInfo.drawPlayer;
+        return Lighting.GetColorClamped(
+            (int)(drawInfo.Position.X + player.width * 0.5) / 16,
+            (int)((drawInfo.Position.Y + player.height * 0.5) / 16.0),
+            color);
     }
 
     public static void SetupArmorLayers(WgPlayer wg, in PlayerDrawSet drawInfo)
     {
         Array.Clear(wg._armorLayers);
-        if (drawInfo.drawPlayer.body > 0)
-            wg._armorLayers[0] = new(TextureAssets.ArmorBodyComposite[drawInfo.drawPlayer.body], drawInfo.colorArmorBody);
+        Player player = drawInfo.drawPlayer;
+        if (player.body > 0)
+            wg._armorLayers[0] = new(TextureAssets.ArmorBodyComposite[player.body], Light(drawInfo, Color.White));
         else
         {
-            wg._armorLayers[0] = new(TextureAssets.Players[drawInfo.skinVar, 4], drawInfo.colorUnderShirt);
-            wg._armorLayers[1] = new(TextureAssets.Players[drawInfo.skinVar, 8], drawInfo.colorUnderShirt);
-            wg._armorLayers[2] = new(TextureAssets.Players[drawInfo.skinVar, 13], drawInfo.colorShirt);
-            wg._armorLayers[3] = new(TextureAssets.Players[drawInfo.skinVar, 6], drawInfo.colorShirt);
+            Color underShirt = Light(drawInfo, player.underShirtColor);
+            Color shirt = Light(drawInfo, player.shirtColor);
+            wg._armorLayers[0] = new(TextureAssets.Players[drawInfo.skinVar, 4], underShirt);
+            wg._armorLayers[1] = new(TextureAssets.Players[drawInfo.skinVar, 8], underShirt);
+            wg._armorLayers[2] = new(TextureAssets.Players[drawInfo.skinVar, 13], shirt);
+            wg._armorLayers[3] = new(TextureAssets.Players[drawInfo.skinVar, 6], shirt);
         }
     }
 

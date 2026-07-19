@@ -104,7 +104,8 @@ public static class WgArmor
             texture = wg._armorTarget,
             sourceRect = rect,
             shader = drawInfo.drawPlayer.body > 0 ? drawInfo.cBody : 0,
-            color = drawInfo.drawPlayer.GetImmuneAlphaPure(Color.White, drawInfo.shadow)
+            // Vanilla uses GetImmuneAlpha for body texture, using GetImmuneAlphaPure puts body and armor out of sync
+            color = drawInfo.drawPlayer.GetImmuneAlpha(Color.White, drawInfo.shadow)
         });
     }
 }
