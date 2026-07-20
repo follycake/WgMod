@@ -33,6 +33,7 @@ public class HoneyedHamBat : ModItem
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
         float immobility = wg.Weight.ClampedImmobility;
+
         _damage.Lerp(immobility);
         _knockback.Lerp(immobility);
     }
@@ -48,28 +49,19 @@ public class HoneyedHamBat : ModItem
     }
 
     public override void MeleeEffects(Player player, Rectangle hitbox)
-    { // Took inspiration from Calamity mod's "UltimusCleaver" item
+    {
+        // Took inspiration from https://github.com/CalamityTeam/CalamityModPublic/blob/1.4.4/Items/Weapons/Melee/UltimusCleaver.cs
+
         float angle;
         Vector2 velocity;
         Vector2 swordTipper = hitbox.Center.ToVector2();
 
-        if (
-            player.itemAnimation == (int)(player.itemAnimationMax * 0.25)
-            || player.itemAnimation == (int)(player.itemAnimationMax * 0.5)
-            || player.itemAnimation == player.itemAnimationMax
-        )
+        if (player.itemAnimation == (int)(player.itemAnimationMax * 0.25) || player.itemAnimation == (int)(player.itemAnimationMax * 0.5) || player.itemAnimation == player.itemAnimationMax)
         {
             angle = Utils.AngleTo(player.Center, swordTipper);
             velocity = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
 
-            Projectile.NewProjectile(
-                player.GetSource_FromThis(),
-                player.Center,
-                velocity * 10,
-                ModContent.ProjectileType<HoneyGlob>(),
-                (int)(Item.damage * 0.66666666),
-                Item.knockBack * 0.25f
-            );
+            Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, velocity * 10, ModContent.ProjectileType<HoneyGlob>(), (int)(Item.damage * 0.66666666), Item.knockBack * 0.25f);
         }
     }
 
