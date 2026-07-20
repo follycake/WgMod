@@ -74,17 +74,25 @@ public class SpriteSet
 
         List<Layer> armorLayers = [];
         set.ArmorAltasWidth = 0;
-        void LoadTextures(Layer layer)
+        void LoadTextures(Layer layer, int lookup = 0)
         {
             layer.Texture = mod.Assets.Request<Texture2D>(Path.Combine(path, layer.Name));
             layer.ArmorAtlasX = set.ArmorAltasWidth;
 
             string armorName = Path.Combine(path, layer.Name + "_Armor");
-            if (mod.HasAsset(armorName))
+            bool hasArmor = mod.HasAsset(armorName);
+            bool simpleArmor = true;
+            if (!hasArmor)
+            {
+                armorName = Path.Combine(path, layer.Name + "_ExArmor");
+                hasArmor = mod.HasAsset(armorName);
+                simpleArmor = false;
+            }
+            if (hasArmor)
             {
                 layer.ArmorTexture = mod.Assets.Request<Texture2D>(armorName, AssetRequestMode.ImmediateLoad).Value;
-                if (layer.SimpleArmor)
-                    Main.RunOnMainThread(() => WgArmorLUTs.ConvertSimple(0, layer.ArmorTexture));
+                if (simpleArmor)
+                    Main.RunOnMainThread(() => WgArmorLUTs.ConvertSimple(lookup, layer.ArmorTexture));
                 set.ArmorAltasWidth += layer.ArmorTexture.Width;
                 set.ArmorAltasHeight = Math.Max(set.ArmorAltasHeight, layer.ArmorTexture.Height);
                 armorLayers.Add(layer);
@@ -97,8 +105,8 @@ public class SpriteSet
         set.ArmLayers = new Layer[set.ArmCount];
         for (int i = 0; i < set.ArmLayers.Length; i++)
         {
-            Layer arm = new() { Name = "Arms" + i, Type = LayerType.Arms, SimpleArmor = false };
-            LoadTextures(arm);
+            Layer arm = new() { Name = "Arms" + i, Type = LayerType.Arms };
+            LoadTextures(arm, 1);
             set.ArmLayers[i] = arm;
         }
 
@@ -139,7 +147,6 @@ public class SpriteSet
         public string Name;
         public LayerType Type;
         public RenderType Render;
-        public bool SimpleArmor = true;
 
         [JsonIgnore] public Asset<Texture2D> Texture;
         [JsonIgnore] public Texture2D ArmorTexture;

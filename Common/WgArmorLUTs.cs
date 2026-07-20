@@ -12,10 +12,11 @@ public static class WgArmorLUTs
 
     public static void Initialize(Mod mod)
     {
-        const int stride = 18;
+        int stride;
         Color[] colors;
         using (Texture2D texture = mod.Assets.Request<Texture2D>("Assets/Textures/ArmorLookup", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value)
         {
+            stride = texture.Width;
             colors = new Color[texture.Width * texture.Height];
             texture.GetData(colors);
         }
