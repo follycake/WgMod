@@ -21,8 +21,11 @@ public class SpriteSet
     public static string[] FoundSets { get; private set; }
 
     public string Author = "Unknown";
+    public float DrawOffsetX;
+    public float DrawOffsetY;
     public int ArmCount;
     public Layer[] Layers = [];
+    public Layer[] TopLayers = [];
     public Dictionary<int, Stage> Stages = [];
 
     [JsonIgnore] public int FrameCount { get; private set; }
@@ -100,6 +103,9 @@ public class SpriteSet
         }
 
         foreach (Layer layer in set.Layers)
+            LoadTextures(layer);
+
+        foreach (Layer layer in set.TopLayers)
             LoadTextures(layer);
 
         set.ArmLayers = new Layer[set.ArmCount];

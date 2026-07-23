@@ -9,7 +9,9 @@
         {
             "Name": "Belly",
             "Type": "Belly"
-        },
+        }
+    ],
+    "TopLayers": [
         {
             "Name": "Boobs",
             "Type": "Breasts"

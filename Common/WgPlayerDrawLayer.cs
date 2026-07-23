@@ -24,7 +24,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
     public override Position GetDefaultPosition() => new Multiple()
     {
         { new Between(PlayerDrawLayers.Torso, PlayerDrawLayers.OffhandAcc), drawInfo => !CheckTop(drawInfo) },
-        { new Between(PlayerDrawLayers.Head, PlayerDrawLayers.ArmOverItem), CheckTop }
+        { new Between(PlayerDrawLayers.Head, PlayerDrawLayers.Shield), CheckTop }
     };
 
     static bool CheckTop(PlayerDrawSet drawInfo)
@@ -38,6 +38,12 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
 
     protected override void Draw(ref PlayerDrawSet drawInfo)
     {
+        Draw(ref drawInfo, false);
+        Draw(ref drawInfo, true);
+    }
+
+    public static void Draw(ref PlayerDrawSet drawInfo, bool top)
+    {
         Player player = drawInfo.drawPlayer;
         if (player.dead)
             return;
@@ -49,9 +55,15 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         if (stage <= 0)
             return;
 
+        SpriteSet set = SpriteSet.Current;
+        SpriteSet.Layer[] layers = top ? set.TopLayers : set.Layers;
+        if (layers.Length <= 0)
+            return;
+
         int direction = ((drawInfo.playerEffect & SpriteEffects.FlipHorizontally) == 0).ToDirectionInt();
         Vector2 position = new Vector2((int)(drawInfo.Position.X - Main.screenPosition.X - drawInfo.drawPlayer.bodyFrame.Width / 2 + drawInfo.drawPlayer.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + drawInfo.drawPlayer.height - drawInfo.drawPlayer.bodyFrame.Height + 4f)) + drawInfo.drawPlayer.bodyPosition + new Vector2(drawInfo.drawPlayer.bodyFrame.Width / 2, drawInfo.drawPlayer.bodyFrame.Height / 2);
         position.X += WeightValues.DrawOffsetX(stage) * direction;
+        position += new Vector2(set.DrawOffsetX * direction, set.DrawOffsetY);
 
         float yOffset = 4f;
         Rectangle legFrame = player.legFrame;
@@ -82,11 +94,9 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         float bellySquish = float.Lerp(wg._squishPos, 1f, t * t * 0.4f);
         float baseSquish = (bellySquish + 1f) * 0.5f;
 
-        SpriteSet set = SpriteSet.Current;
         bool drawArmor = WgArmor.ShouldDraw(drawInfo);
-
         int stageFrame = set.GetStage(stage).Frame;
-        foreach (SpriteSet.Layer layer in set.Layers)
+        foreach (SpriteSet.Layer layer in layers)
         {
             if (!layer.ShouldRender(player))
                 continue;

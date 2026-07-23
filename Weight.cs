@@ -39,7 +39,7 @@ public readonly record struct Weight(float Mass)
     public static Weight FromImmobility(float factor) => new(float.Lerp(Base.Mass, Immobile.Mass, factor));
 
     public static Weight FromPounds(float pounds) => new(pounds / KgToPounds);
-    public static Weight Clamp(Weight weight) => Clamp(weight, ImmobileStage);
+    public static Weight Clamp(Weight weight) => Clamp(weight, MaxStage);
     public static Weight Clamp(Weight weight, int maxStage) => new(Math.Clamp(weight.Mass, Base.Mass, FromStage(maxStage).Mass + 10f));
 
     public static Weight operator +(Weight w, float mass) => new(w.Mass + mass);
