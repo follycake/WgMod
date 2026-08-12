@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Content.Projectiles;
@@ -70,7 +73,7 @@ public class MeteorCrushPlayer : ModPlayer
         }
         if (_landState == 1)
         {
-            float crushPower = _yVelocityOfLastTick * Player.Wg().Weight.Mass / 120f - 10;
+            float crushPower = GetCrushPower();
             if (crushPower > 10)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -81,6 +84,11 @@ public class MeteorCrushPlayer : ModPlayer
             }
         }
         _yVelocityOfLastTick = Player.velocity.Y;
+    }
+
+    float GetCrushPower()
+    {
+        return _yVelocityOfLastTick * Player.Wg().Weight.Mass / 120f - 10;
     }
 
     bool CheckForSolidGround()
@@ -108,5 +116,24 @@ public class MeteorCrushPlayer : ModPlayer
         else
             _landState = 0;
         return hasSolidTile;
+    }
+
+    public override void DrawPlayer(Camera camera)
+    {
+        if (_landState != 0)
+            return;
+        float crushPower = GetCrushPower();
+        if (crushPower < 10f)
+            return;
+        float fade = Utils.Remap(crushPower, 10f, 30f, 0f, 1f);
+        int totalShadows = Math.Min(Player.availableAdvancedShadowsCount, 10);
+        int skip = 2;
+        for (int i = totalShadows - totalShadows % skip; i > 0; i -= skip)
+        {
+            EntityShadowInfo shadowInfo = Player.GetAdvancedShadow(i);
+            float shadow = Utils.Remap((float)i / totalShadows, 0f, 1f, 0.5f, 1f);
+            shadow = float.Lerp(1f, shadow, fade);
+            Main.PlayerRenderer.DrawPlayer(camera, Player, shadowInfo.Position + new Vector2(0f, Player.gfxOffY), shadowInfo.Rotation, shadowInfo.Origin, shadow);
+        }
     }
 }

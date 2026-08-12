@@ -22,9 +22,7 @@ public class AmuletOfStarving : ModItem
 
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
-        if (!player.TryGetModPlayer(out WgPlayer wg))
-            return;
-        if (!player.TryGetModPlayer(out AmuletOfStarvingPlayer wp))
+        if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out AmuletOfStarvingPlayer wp))
             return;
         wg.WeightLossRate += 5f;
         wp._active = true;

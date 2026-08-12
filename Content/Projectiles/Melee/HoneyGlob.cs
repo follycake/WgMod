@@ -104,12 +104,8 @@ public class HoneyGlobPlayer : ModPlayer
 {
     public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
     {
-        if (
-            proj.type != ModContent.ProjectileType<HoneyGlob>()
-            || !Player.TryGetModPlayer(out WgPlayer wg)
-        )
+        if (proj.type != ModContent.ProjectileType<HoneyGlob>() || !Player.TryGetModPlayer(out WgPlayer wg))
             return;
-
-        wg.SetWeight(wg.Weight + hurtInfo.Damage / 6);
+        wg.AddWeight(hurtInfo.Damage / 6);
     }
 }

@@ -56,17 +56,17 @@ public class FatTombstones : ModTile
         return true;
     }
 
-    internal static bool ReplaceTombstone(Player player, ref int type, ref int style)
+    public static int GetStyle(int type)
     {
-        if (!Main.rand.NextBool())
-            return false;
-        if (!player.TryGetModPlayer(out WgPlayer wg) || wg.Weight.GetStage() <= 0)
-            return false;
-        type = ModContent.TileType<FatTombstones>();
+        int style = 0;
+        if (type >= ProjectileID.GraveMarker && type <= ProjectileID.Obelisk)
+            style = type - 200;
+        if (type >= ProjectileID.RichGravestone1 && type <= ProjectileID.RichGravestone5)
+            style = type - ProjectileID.RichGravestone1 + 6;
         if (style >= 6) // Gold
             style = (style - 6) % GoldCount + RegularCount;
         else
             style %= RegularCount;
-        return true;
+        return style;
     }
 }

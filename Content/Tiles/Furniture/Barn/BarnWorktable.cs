@@ -23,7 +23,7 @@ public class BarnWorktable : ModTile
         TileObjectData.newTile.CoordinateHeights = [16, 18];
         TileObjectData.addTile(Type);
 
-        AddMapEntry(new Color(200, 200, 200), Mod.GetLocalization("Items.BarnWorktable.DisplayName"));
+        AddMapEntry(new Color(215, 186, 54), Mod.GetLocalization("Items.BarnWorktable.DisplayName"));
     }
 
     public override void NumDust(int x, int y, bool fail, ref int num)

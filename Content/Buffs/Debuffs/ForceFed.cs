@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
@@ -11,7 +10,7 @@ namespace WgMod.Content.Buffs.Debuffs;
 public class ForceFed : ModBuff
 {
     public const int TicksPerCycle = 30;
-    public const int FatPerCycle = 3;
+    public const int FatPerCycle = 2;
     int _cooldown;
 
     public override void SetStaticDefaults()
@@ -37,9 +36,8 @@ public class ForceFed : ModBuff
         else
         {
             _cooldown = 0;
-
-            wg.SetWeight(wg.Weight + FatPerCycle);
-            CombatText.NewText(player.getRect(), Color.Yellow, FatPerCycle + " kg");
+            wg.CombatWeightText(FatPerCycle, false);
+            wg.AddStomach(FatPerCycle);
             SoundEngine.PlaySound(WgSounds.Gulp, player.Center);
         }
     }

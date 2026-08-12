@@ -25,6 +25,7 @@ public enum ProjectRole
 /// <summary> A contributor's Discord handle </summary>
 public enum Contributor
 {
+    /// <summary> Meooow </summary>
     [Category("Team")]
     follycake,
     /// <summary> Haiiii :3 </summary>
@@ -42,9 +43,19 @@ public enum Contributor
     haydumbb,
     divine_lumine,
     the_trueterrafox,
+    tea_kettles,
+    anolivewine,
+    thegungis,
+    radiantluminant,
+    robinn9283,
+    magicalmoondust_,
+    alphas0,
 
     [Category("Other")]
-    purple_circle
+    purple_circle,
+    bombuspyrobombus,
+    /// <summary> This sprite isn't finished and needs to be replaced at some point. </summary>
+    PLACEHOLDER,
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
@@ -70,11 +81,18 @@ public static class Credits
         _ => ItemID.None
     };
 
+    public static string GetTag(Contributor contributor)
+    {
+        if (contributor == Contributor.PLACEHOLDER)
+            return contributor.ToString();
+        return "@" + contributor;
+    }
+
     public static void Scan(Mod mod)
     {
         Dictionary<Contributor, List<string>> roles = [];
         foreach (Contributor contributor in Enum.GetValues<Contributor>())
-            roles.Add(contributor, [$"@{contributor}"]);
+            roles.Add(contributor, [GetTag(contributor)]);
 
         Type[] types = AssemblyManager.GetLoadableTypes(mod.Code);
         foreach (Type type in types)
@@ -88,7 +106,7 @@ public static class Credits
                 CreditAttribute credit = (CreditAttribute)credits[i];
                 if (i != 0)
                     text += "\n";
-                text += $"[i:{GetIcon(credit.Role)}] [c/808080:{credit.Role}: @{credit.Contributor}]";
+                text += $"[i:{GetIcon(credit.Role)}] [c/808080:{credit.Role}: {GetTag(credit.Contributor)}]";
                 roles[credit.Contributor].Add($"- {type.Name} ({credit.Role})");
             }
             Tooltips.Add(type, new TooltipLine(mod, "Credits", text));

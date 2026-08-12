@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Consumables.Baked;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.robinn9283)]
 public class NopalesEmpanadas : ModItem
 {
     public override void SetStaticDefaults()
@@ -26,8 +27,8 @@ public class NopalesEmpanadas : ModItem
     public override void SetDefaults()
     {
         Item.DefaultToFood(
-            22,
-            22,
+            42,
+            26,
             ModContent.BuffType<Buffs.Consumables.SpikedSkin>(),
             8 * 60 * 60
         );

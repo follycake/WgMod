@@ -235,7 +235,12 @@ Items: {
 
 	GuideToLiftingYourFatAss: {
 		DisplayName: Guide to Lifting Your Fat Ass
-		Tooltip: Reduces movement penalty by 50% in exchange for mana
+		Tooltip:
+			'''
+			Reduces movement penalty by 50% in exchange for mana
+			Mana drains faster the heavier you are
+			Mana usage is reduced from magic damage bonuses
+			'''
 	}
 
 	CrispyDiscipline: {
@@ -651,13 +656,13 @@ Items: {
 	}
 
 	MintyTail: {
-		Tooltip: ""
 		DisplayName: Minty Tail
+		Tooltip: ""
 	}
 
 	MintyEars: {
-		Tooltip: ""
 		DisplayName: Minty Ears
+		Tooltip: ""
 	}
 
 	FollyPlush: {
@@ -676,6 +681,104 @@ Items: {
 		DisplayName: Spider Donut
 		Tooltip: Don't worry. Spider didn't.
 	}
+
+	Scale: {
+		DisplayName: Scale
+		Tooltip:
+			'''
+			Right click to weigh yourself!
+			Just don't expect this to work with a land whale...
+			'''
+	}
+
+	HoneyGun: {
+		DisplayName: Honey Gun
+		Tooltip: Sprays tasty honey! (WIP)
+	}
+
+	BarnBathtub: {
+		DisplayName: Barn Bathtub
+		Tooltip: ""
+	}
+
+	BarnSofa: {
+		DisplayName: Barn Sofa
+		Tooltip: ""
+	}
+
+	BarnPiano: {
+		DisplayName: BarnPiano
+		Tooltip: ""
+	}
+
+	BarnCandelabra: {
+		DisplayName: Barn Candelabra
+		Tooltip: ""
+	}
+
+	BarnCouch.DisplayName: Mods.WgMod.Items.BarnCouch.DisplayName
+
+	BarnCandle: {
+		DisplayName: Barn Candle
+		Tooltip: ""
+	}
+
+	StagnantPotion: {
+		DisplayName: Stagnant Potion
+		Tooltip: Completely pauses weight loss and weight gain.
+	}
+
+	GreedyFlask: {
+		DisplayName: Greedy Flask
+		Tooltip: Effects scale with your obesity
+	}
+
+	WeightGainAdjuster: {
+		DisplayName: Weight Gain Adjuster
+		Tooltip:
+			'''
+			Left Click to increase weight gain rate.
+			Right Click to decrease.
+			'''
+	}
+
+	FeedingTube: {
+		DisplayName: Feeding Tube
+		Tooltip:
+			'''
+			I think we all know where this is going...
+			Right click with a bucket to add liquid.
+			Right click without a bucket to attach a hose to your mouth.
+			Left click to remove liquid.
+			'''
+	}
+
+	FatteningDartTrap: {
+		DisplayName: Fattening Dart Trap
+		Tooltip: Activates when signalled
+	}
+
+	TwinEyes: {
+		DisplayName: Twin Eyes
+		Tooltip:
+			'''
+			One mace fires a cursed inferno, the other fires a death laser
+			Stats scale with your obesity
+			'''
+	}
+
+	GainTosser: {
+		DisplayName: Gain Tosser
+		Tooltip:
+			'''
+			Throw weight potions at friends and foes alike!
+			Enemies take damage, allies will have their weight changed
+			Damage, radius and effect change based on the potion
+			Damage and projectile speed scale with obesity
+			Increased damage by {0}%
+			Increased projectile speed by {1}%
+			'''
+	}
 }
 
 Buffs: {
@@ -688,8 +791,9 @@ Buffs: {
 			Increases maximum health by {2}
 			Added {3}% knockback resistance
 			'''
-		HitboxIncrease: Increased hitbox horizontally by {0} tiles
 		DisabledBuffs: Fat buffs and debuffs disabled
+		HitboxIncrease: Increased hitbox horizontally by {0} tiles
+		CantMoveArms: You're so fat your arms are practically uselesss
 
 		Stages: {
 			Name0: Regular
@@ -700,7 +804,14 @@ Buffs: {
 			Name5: Morbidly obese
 			Name6: Barely mobile
 			Name7: Immobile
+			Name8: Encumbered
+			Name9: Blob
 		}
+	}
+
+	StomachBuff: {
+		DisplayName: Stomach
+		Description: Indicates how much food has yet to be digested
 	}
 
 	GainingBuff: {
@@ -823,6 +934,26 @@ Buffs: {
 			'... I think purple is a better look on you! Ahuhuhu~'
 			'''
 	}
+
+	Tired: {
+		DisplayName: Tired
+		Description: Attack speed decreased by {0}%
+	}
+
+	Stagnant: {
+		DisplayName: Stagnant
+		Description: Completely pauses weight loss and weight gain.
+	}
+
+	PrismaticStuffing: {
+		DisplayName: Prismatic Stuffing
+		Description: You are being forced to eat against your will!
+	}
+
+	Bloated: {
+		Description: Mods.WgMod.Buffs.Bloated.Description
+		DisplayName: Bloated
+	}
 }
 
 Configs: {
@@ -838,6 +969,11 @@ Configs: {
 		DisableFatHitbox: {
 			Label: Disable Fat Hitbox
 			Tooltip: Disables player hitbox size changes
+		}
+
+		DisablePlayerPushing: {
+			Label: Disable Player Pushing
+			Tooltip: Disables players pushing around other players and NPCs with their fat
 		}
 	}
 
@@ -880,6 +1016,32 @@ Configs: {
 			Tooltip: The volume of gurgles compared to the rest of the game's audio, setting it to 0 mutes gurgles entirely.
 			Label: Gurgle Volume
 		}
+
+		UseImperialUnits: {
+			Label: Use Imperial Units
+			Tooltip: Use imperial (lbs) units instead of metric (kg)
+		}
+	}
+
+	WorkshopIconsConfig: {
+		DisplayName: Past Workshop Icons
+		Headers.WorkshopIcons: Past Workshop Icons
+
+		WorkshopIcons: {
+			Label: Select Version
+			Tooltip:
+				'''
+				This config doesn't actually change anything in the game!
+				It exists exclusively to look at the old workshop icons after they've changed!
+
+				Select the version icon you want to see!
+				'''
+		}
+
+		CurrentIcon: {
+			Label: Current Icon
+			Tooltip: ""
+		}
 	}
 }
 
@@ -911,6 +1073,21 @@ Projectiles: {
 	SunriseProjectile.DisplayName: Sunrise
 	SporeCloud.DisplayName: Spore Cloud
 	Plate.DisplayName: Plate
+	HoneySprayProjectile.DisplayName: Honey Spray Projectile
+	FatteningDart.DisplayName: Fattening Dart
+	CursedFlameFriendly.DisplayName: Cursed Flame
+	DeathLaserFriendly.DisplayName: Death Laser
+	TwinEyesSpazm.DisplayName: Eye of Spazmatism
+	TwinEyesRet.DisplayName: Eye of Retinazer
+	WeightGainPotionProjectile.DisplayName: Weight Gain Potion Projectile
+	GreaterWeightGainPotionProjectile.DisplayName: Greater Weight Gain Potion Projectile
+	GreaterWeightLossPotionProjectile.DisplayName: Greater Weight Loss Potion Projectile
+	LesserWeightGainPotionProjectile.DisplayName: Lesser Weight Gain Potion Projectile
+	LesserWeightLossPotionProjectile.DisplayName: Lesser Weight Loss Potion Projectile
+	SuperWeightGainPotionProjectile.DisplayName: Super Weight Gain Potion Projectile
+	SuperWeightLossPotionProjectile.DisplayName: Super Weight Loss Potion Projectile
+	WeightLossPotionProjectile.DisplayName: Weight Loss Potion Projectile
+	FatTombstone.DisplayName: Fat Tombstone
 }
 
 NPCs: {
@@ -935,7 +1112,7 @@ NPCs: {
 			DislikeBiome: It's c-c-cold! I need to fly south for the winter!
 		}
 
-		Census.SpawnCondition: Use {$ItemName.PowderedSugar} [i:PowderedSugar] on a harpy
+		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a harpy
 	}
 
 	HomingFood.DisplayName: Cursed Food
@@ -966,12 +1143,35 @@ NPCs: {
 	}
 
 	SweetSpirit.DisplayName: Sweet Spirit
+
+	OverflowingMimicNPC: {
+		TownNPCMood: {
+			HateNPC: Taxman take gold coins! Evil! Full of malice!
+			LikeNPC: Like bomb guy! Throw bombs! Boom!
+			DislikeNPC: Mean and evil plunderer, tried to reach and find treasure! All plunderer found was flabby!
+			DislikeBiome: It's too pretty up here! Don't like it one bit!
+			LikeBiome: Cozy cold home, comfy and nice!
+			LoveBiome: We most comfy in the caves! Yay!
+			HateCrowded: Too many others around... no good!
+			DislikeCrowded: Needs personal space!
+			LoveSpace: Human built good spacious chest!
+			FarFromHome: Help! Got lost!
+			NoHome: Need comfy chest to live in!
+			Content: Happy!
+			LikeNPC_Princess: Pink girl give tasty loot!
+			Princess_LovesNPC: I've never seen a mimic like {NPCName} in person before! She's so pretty!
+		}
+
+		DisplayName: Overflowing Mimic
+		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a mimic
+	}
 }
 
 Dialogue: {
 	GroundedHarpy: {
 		StandardDialogue1: Scraw! I'm still mad at you for making me this big!
 		StandardDialogue2: No wonder humans can't fly if all of their food tastes this good!
+		StandardDialogue3: What? No we don't die when you kill us! We respawn, just like you! Scraw!
 		StandardDialogue4: Have any more of that sweet powder stuff? Why? Mind your business!
 		StandardDialogue5: Living on the ground is boring, I wanna touch the clouds again!
 		StandardDialogue6: You've killed some big baddies, did you roast their meat by the fire?
@@ -979,7 +1179,7 @@ Dialogue: {
 		StandardDialogue8: Can you groom my plumage? I've had a hard time doing it myself since... you know!
 		DayDialogue1: You're interrupting my exercises! I will fly again soon!
 		PartyDialogue1: Human festivities are so fun! And tasty!
-		PartyDialogue2: Please tell {1} not to pin the tail on the harpy!
+		PartyDialogue2: Please tell {0} not to pin the tail on the harpy!
 		WindyDayDialogue1: I feel like the wind's gonna take me away!
 		WindyDayDialogue2: Screech! I flew! Did you see? What? It was just the wind?
 		BloodMoonDialogue1: Come any closer and I'll use my talons! Craw!
@@ -1041,11 +1241,42 @@ Dialogue: {
 		BloodMilked3: Next time I'm kickin'.
 		BloodMilkedDeny: Ya already had yer fill, beat it hoss.
 	}
+
+	OverflowingMimic: {
+		StandardDialogue1: Why make {0} big, human? Mean human! Bad!
+		StandardDialogue2: Bwah! Don't look at {0}'s belly!
+		StandardDialogue3: Slime like {0} can ride chest! Look like loot!
+		StandardDialogue4: Your name {1}? That name silly! {0} name better!
+		StandardDialogue5: "{0} chest is getting so heavy to bounce around in... human fault!"
+		StandardDialogue6: Hungry... {1}! Give {0} food! Now!
+		StandardDialogue7: Could {1} uhmm... teach {0} how doors work again?
+		StandardDialogue8: Uuurrp... {0} found a little bunny... so yummy!
+		BloodMoonDialogue1: GRAHAHA! THE MOON HUNGRY TONIGHT!
+		BloodMoonDialogue2: EAT EVERYTHING! EAT EVERYONE!
+		BloodMoonDialogue3: OOUUURRRPP...
+		HomelessDialogue1: Mean human! Give {0} a home!
+		HomelessDialogue2: Can human make {0} really really big chest?
+		HomelessDialogue3: "{0} too fat for chest now! Oh no!"
+		PartyDialogue1: "{0} tried to take a nap and humans put cups on top of {0}! So rude!"
+		PartyDialogue2: Woo woo woo! Dance dance!
+		StormDialogue1: Human, help! There giant loud monster outside!
+		StormDialogue2: AH! RUN AWAY!
+		RainDialogue1: Rain rain, go away...
+		RainDialogue2: "{0} so boooooored... wants to play outside!"
+		RainDialogue3: Does {1} know spell to stop rain?
+		WindyDayDialogue1: Sky try to steal {0}, but {0} too heavy!
+		WindyDayDialogue2: "{0} watch the plants dance all day... so pretty..."
+		DayDialogue1: Pretty day! Full of play!
+		NightDialogue1: "{0} love nighttime, so many friends out to play!"
+		LoveStruckDialogue1: "{1}... {0} kinda wants to... bite {1} face..."
+		PostMechDialogue1: "{0} ate the flesh of big robots... {0} feels so powerful..."
+	}
 }
 
 Bestiary: {
 	GroundedHarpy: A previously free and carefree harpy, fattened until she cannot fly! She will begrudgingly provide you with useful materials from the sky.
 	Milkmaid: Simple and kind cowgirl, her magical teats produce milkshakes that can instantly change the drinker's weight! Regularly attends lesbian bars.
+	OverflowingMimic: Mimics are a form of slime who act much like hermit crabs, moving from chest to chest as they grow. This one may be a bit big for her chest, though...
 	HomingFood: Food cursed by a malevolent spirit to seek out and fatten up adventurers until they're defenseless.
 	SweetSpirit: These spirits that dwell in the caverns will try their best to fatten you up.
 }
@@ -1064,4 +1295,29 @@ Emotes: {
 	WeightLossEmote.Command: weightlosspotion
 	WeightGainEmote.Command: weightgainpotion
 	HellishBeeEmote.Command: hellishbee
+}
+
+Prefixes: {
+	MaxLifeTooltip: +{0} max life
+	MovePenaltyTooltip: "{0}% movement penalty"
+	DamageAttackSpeedTooltip:
+		'''
+		+{0}% damage
+		{1}% attack speed
+		'''
+
+	Padded: {
+		DisplayName: Padded
+		AdditionalTooltip: uwu
+	}
+
+	Lightweight: {
+		DisplayName: Lightweight
+		AdditionalTooltip: uwu
+	}
+
+	Rotund: {
+		DisplayName: Rotund
+		AdditionalTooltip: uwu
+	}
 }

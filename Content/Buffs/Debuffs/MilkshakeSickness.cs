@@ -1,5 +1,4 @@
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,6 +27,7 @@ public class MilkshakeSicknessPlayer : ModPlayer
     public bool MilkshakeSickness;
 
     int _cooldown;
+    bool _requestDust;
 
     public override void ResetEffects()
     {
@@ -36,36 +36,44 @@ public class MilkshakeSicknessPlayer : ModPlayer
 
     public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
     {
-        if (!MilkshakeSickness || drawInfo.shadow != 0f || Main.gamePaused)
+        if (!MilkshakeSickness || drawInfo.shadow != 0f)
+            return;
+        if (_requestDust)
+        {
+            _requestDust = false;
+            int bubble = Dust.NewDust(
+                Player.position,
+                Player.width,
+                Player.height,
+                DustID.BubbleBurst_Pink,
+                0f,
+                -1f,
+                100,
+                default,
+                2f
+            );
+            Main.dust[bubble].noGravity = true;
+        }
+    }
+
+    public override void PostUpdate()
+    {
+        if (!MilkshakeSickness)
             return;
 
-        int dustRate = 5;
-        int gurgleRate = 15;
+        const int dustRate = 5;
+        const int gurgleRate = 15;
 
         if (_cooldown < TicksPerCycle)
             _cooldown++;
         else
         {
             _cooldown = 0;
-
             if (Main.rand.NextBool(dustRate))
             {
-                int bubble = Dust.NewDust(
-                    Player.position,
-                    Player.width,
-                    Player.height,
-                    DustID.BubbleBurst_Pink,
-                    0f,
-                    -1f,
-                    100,
-                    default,
-                    2f
-                );
-
-                Main.dust[bubble].noGravity = true;
-
-                if (Main.rand.NextBool(gurgleRate))
-                    SoundEngine.PlaySound(WgSounds.Gurgle, Player.Center);
+                _requestDust = true;
+                if (Player.whoAmI == Main.myPlayer && Main.rand.NextBool(gurgleRate))
+                    Player.Wg().Gurgle(true);
             }
         }
     }

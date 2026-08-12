@@ -1,10 +1,18 @@
+using System.Collections.Generic;
 using Terraria.ModLoader;
 
 namespace WgMod.Content.Items.Placeable.Tombstones;
 
 public abstract class FatTombstoneItem : ModItem
 {
+    public static readonly Dictionary<int, int> StyleToItem = [];
+
     public abstract int Style { get; }
+
+    public override void SetStaticDefaults()
+    {
+        StyleToItem[Style] = Type;
+    }
 
     public override void SetDefaults()
     {

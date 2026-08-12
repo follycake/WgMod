@@ -4,7 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ModLoader;
+using Terraria.GameContent;
+using Terraria.ID;
 using WgMod.Common.Configs;
 using WgMod.Common.Players;
 
@@ -15,22 +16,14 @@ public static class WgArmor
     public record struct Layer(Asset<Texture2D> ArmorTexture, Color Color);
 
     public static bool Enabled => !WgClientConfig.Instance.DisableUVClothes && SpriteSet.Current.UVArmor;
-    public static Asset<Effect> UVShader { get; private set; }
-    public static Asset<Effect> SoftenShader { get; private set; }
     static BlendState _multiplyBlend;
 
-    public static void Load(Mod mod)
+    public static void Render(int stage, ref RenderTarget2D target, ReadOnlySpan<Layer> layers, bool male)
     {
-        UVShader = mod.Assets.Request<Effect>("Assets/Effects/FatArmor");
-        SoftenShader = mod.Assets.Request<Effect>("Assets/Effects/FatArmorSoften");
-    }
-
-    public static void Render(ref RenderTarget2D target, ReadOnlySpan<Layer> layers, bool male)
-    {
-        if (!UVShader.IsLoaded)
+        if (!Shaders.FatArmor.IsLoaded)
             return;
 
-        SpriteSet set = SpriteSet.Current;
+        SpriteSet set = SpriteSet.GetSet(stage);
         GraphicsDevice device = Main.graphics.GraphicsDevice;
         SpriteBatch spriteBatch = Main.spriteBatch;
         target ??= new RenderTarget2D(device, set.ArmorAltasWidth, set.ArmorAltasHeight, false, device.PresentationParameters.BackBufferFormat, DepthFormat.None);
@@ -44,7 +37,7 @@ public static class WgArmor
             SamplerState.PointClamp,
             DepthStencilState.None,
             RasterizerState.CullCounterClockwise,
-            UVShader.Value
+            Shaders.FatArmor.Value
         );
         Vector2 baseOffset = male ? new Vector2(0f, -0.5f) : Vector2.Zero;
         foreach (Layer layer in layers)
@@ -53,11 +46,11 @@ public static class WgArmor
                 continue;
 
             device.Textures[1] = layer.ArmorTexture.Value;
-            UVShader.Value.Parameters["uImageSize1"].SetValue(layer.ArmorTexture.Size());
+            Shaders.FatArmor.Value.Parameters["uImageSize1"].SetValue(layer.ArmorTexture.Size());
 
             foreach (SpriteSet.Layer spriteLayer in set.ArmorLayers)
             {
-                UVShader.Value.Parameters["uOffset"].SetValue(spriteLayer.Type == SpriteSet.LayerType.Arms ? Vector2.Zero : baseOffset);
+                Shaders.FatArmor.Value.Parameters["uOffset"].SetValue(spriteLayer.Type == SpriteSet.LayerType.Arms ? Vector2.Zero : baseOffset);
                 spriteBatch.Draw(spriteLayer.ArmorTexture, new Vector2(spriteLayer.ArmorAtlasX, 0f), layer.Color);
             }
         }
@@ -79,7 +72,7 @@ public static class WgArmor
             SamplerState.PointClamp,
             DepthStencilState.None,
             RasterizerState.CullCounterClockwise,
-            SoftenShader.Value
+            Shaders.FatArmorSoften.Value
         );
         foreach (SpriteSet.Layer layer in set.ArmorLayers)
             spriteBatch.Draw(layer.Texture.Value, new Vector2(layer.ArmorAtlasX, 0f), Color.White);
@@ -104,7 +97,74 @@ public static class WgArmor
             texture = wg._armorTarget,
             sourceRect = rect,
             shader = drawInfo.drawPlayer.body > 0 ? drawInfo.cBody : 0,
-            color = drawInfo.drawPlayer.GetImmuneAlphaPure(Color.White, drawInfo.shadow)
+            // Vanilla uses GetImmuneAlpha for body texture, using GetImmuneAlphaPure puts body and armor out of sync
+            color = drawInfo.drawPlayer.GetImmuneAlpha(Color.White, drawInfo.shadow)
         });
+    }
+
+    // Hurt effect is already applied in drawInfo, so bake lighting only
+    static Color Light(Player player, Vector2 position, Color color)
+    {
+        return Lighting.GetColorClamped((int)(position.X + player.width * 0.5) / 16, (int)((position.Y + player.height * 0.5) / 16.0), color);
+    }
+
+    static Vector2 GetDrawPosition(Player player)
+    {
+        if (Main.gameMenu)
+            return player.position;
+
+        bool isSitting = player.sitting.isSitting;
+        bool isSleeping = player.sleeping.isSleeping;
+
+        if (player.mount.Active && player.mount.Type == MountID.GolfCartSomebodySaveMe)
+            isSitting = true;
+        if (player.mount.Active && player.mount.Type == MountID.WitchBroom)
+            isSitting = true;
+        if (player.mount.Active && player.mount.Type == MountID.SpookyWood)
+            isSitting = true;
+
+        Vector2 position = player.position;
+        position.X += player.MountXOffset * player.direction;
+        if (isSitting)
+        {
+            player.sitting.GetSittingOffsetInfo(player, out Vector2 posOffset, out _);
+            position += posOffset;
+        }
+        if (isSleeping)
+        {
+            player.sleeping.GetSleepingOffsetInfo(player, out Vector2 posOffset);
+            position += posOffset;
+        }
+        position.Y -= player.HeightOffsetVisual;
+        return position;
+    }
+
+    public static void SetupArmorLayers(WgPlayer wg)
+    {
+        Player player = wg.Player;
+        Vector2 position = GetDrawPosition(player);
+
+        Array.Clear(wg._armorLayers);
+        if (player.body > 0)
+        {
+            Color lit = Light(player, position, Color.White);
+            if (player.isDisplayDollOrInanimate)
+                wg._armorLayers[0] = new(TextureAssets.Players[player.skinVariant, 3], lit);
+            wg._armorLayers[1] = new(TextureAssets.ArmorBodyComposite[player.body], lit);
+        }
+        else
+        {
+            if (player.isDisplayDollOrInanimate)
+                wg._armorLayers[0] = new(TextureAssets.Players[player.skinVariant, 3], Light(player, position, Color.White));
+            else
+            {
+                Color underShirt = Light(player, position, player.underShirtColor);
+                Color shirt = Light(player, position, player.shirtColor);
+                wg._armorLayers[0] = new(TextureAssets.Players[player.skinVariant, 4], underShirt);
+                wg._armorLayers[1] = new(TextureAssets.Players[player.skinVariant, 8], underShirt);
+                wg._armorLayers[2] = new(TextureAssets.Players[player.skinVariant, 13], shirt);
+                wg._armorLayers[3] = new(TextureAssets.Players[player.skinVariant, 6], shirt);
+            }
+        }
     }
 }

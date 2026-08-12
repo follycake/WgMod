@@ -8,43 +8,58 @@ using Terraria.ModLoader;
 using WgMod.Common.Configs;
 using WgMod.Common.Systems;
 using WgMod.Content.Buffs;
+using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Common.Players;
 
 public partial class WgPlayer : ModPlayer
 {
+    public const int DigestTime = 60;
+    public const float DigestAmount = 0.25f;
+    public const float StomachCapacity = 20f;
+
     /// <summary> The player's weight </summary>
     public Weight Weight { get; private set; } = Weight.Base;
 
-    /// <summary> How much movement will be reduced because of the player's weight, multiply this </summary>
+    // <summary> The to be digested mass inside the player's stomach. Only relevant for the local client. </summary>
+    public Mass Stomach { get; private set; }
+
+    /// <summary> How much movement will be reduced because of the player's weight. Multiply this. </summary>
     public StatModifier MovementPenalty;
 
-    /// <summary> How fast the player will lose weight due to movement, add or subtract to this </summary>
+    /// <summary> How fast the player will lose weight due to movement. Add or subtract to this. </summary>
     public StatModifier WeightLossRate;
 
-    /// <summary> How much weight the player will gain due to food, multiply this </summary>
+    /// <summary> How fast the player will gain weight from most sources. Add or subtract to this. </summary>
+    public StatModifier WeightGainRate;
+
+    /// <summary> How much weight the player will gain due to food. Multiply this. </summary>
     public StatModifier FoodAbsorption;
 
     /// <summary> The maximum weight stage that the player can reach </summary>
     public int MaxStage;
+
+    /// <summary> Whether the weight is currently fixed/pinned. No gain or loss. </summary>
+    public bool WeightFixed;
 
     public readonly int[] BuffDuration = new int[Player.MaxBuffs];
     internal int _ignoreWgBuffTimer = 2;
 
     internal float _finalKnockbackResistance;
     internal float _finalMovementFactor = 1f;
-    internal int _finalMaxStage = Weight.ImmobileStage;
+    internal int _finalMaxStage = WeightStage.Max;
+    internal bool _finalWeightFixed;
 
     internal float _buffTotalGain;
     internal int _iceBreakTimer;
     internal bool _displayWeight;
 
     Vector2 _prevVel;
+    int _digestTimer;
 
     public override void Initialize()
     {
         SetWeightForced(Weight.Base, false);
-        InitializeVisuals();
     }
 
     public override void OnEnterWorld()
@@ -52,29 +67,62 @@ public partial class WgPlayer : ModPlayer
         _ignoreWgBuffTimer = 2;
     }
 
-    public bool CanSetWeight()
+    public bool OwnsPlayer()
     {
         return !Main.dedServ && Player.whoAmI == Main.myPlayer;
     }
 
     public void SetWeight(Weight weight, bool effects = true)
     {
-        if (!CanSetWeight())
+        if (!OwnsPlayer() || _finalWeightFixed)
             return;
         if (WgClientConfig.Instance.DisableWeightGain)
-            weight = new Weight(Math.Min(weight.Mass, Weight.Mass));
+            weight = new Weight(MathF.Min(weight.Mass, Weight.Mass));
         SetWeightForced(weight, effects);
     }
 
-    void SetWeightForced(Weight weight, bool effects = true)
+    public Mass AddWeight(Mass mass, bool effects = true)
+    {
+        Weight start = Weight;
+        if (mass > 0f)
+            mass = WeightGainRate.ApplyTo(mass);
+        SetWeight(Weight + mass, effects);
+        return Weight.Mass - start.Mass;
+    }
+
+    /// <summary> Do not use this unless you know what you're doing </summary>
+    internal void SetWeightForced(Weight weight, bool effects = true)
     {
         int prevStage = Weight.GetStage();
         Weight = Weight.Clamp(weight, _finalMaxStage);
         if (Weight.GetStage() != prevStage && effects)
         {
             SoundEngine.PlaySound(WgSounds.Belly, Player.Center);
-            _squishPos += 0.06f;
+            Jiggle(3.6f);
         }
+    }
+
+    public void SetStomach(Mass mass, bool effects = true)
+    {
+        if (!OwnsPlayer())
+            return;
+        if (WgClientConfig.Instance.DisableWeightGain)
+            mass = MathF.Min(mass, Stomach);
+        SetStomachForced(mass, effects);
+    }
+
+    public Mass AddStomach(Mass mass, bool effects = true)
+    {
+        Mass start = Stomach;
+        SetStomach(Stomach + mass, effects);
+        return Stomach - start;
+    }
+
+    internal void SetStomachForced(Mass mass, bool effects = true)
+    {
+        Stomach = Math.Clamp(mass, 0f, StomachCapacity);
+        if (mass > StomachCapacity)
+            AddWeight(mass - StomachCapacity, effects);
     }
 
     public override void ResetEffects()
@@ -82,46 +130,66 @@ public partial class WgPlayer : ModPlayer
         // Custom stats
         MovementPenalty = StatModifier.Default;
         WeightLossRate = StatModifier.Default;
+        WeightGainRate = StatModifier.Default;
         FoodAbsorption = StatModifier.Default;
-        MaxStage = Weight.ImmobileStage;
+        MaxStage = WeightStage.Max;
+
+        _finalWeightFixed = WeightFixed;
+        WeightFixed = false;
     }
 
     public override void PreUpdateBuffs()
     {
-        // Ensure fat buff
-        int type = ModContent.BuffType<FatBuff>();
+        EnsureBuff<FatBuff>();
+        EnsureBuff<StomachBuff>();
+        if (Weight.GetStage() >= WeightStage.ForcedImmobile)
+            Player.AddBuff(ModContent.BuffType<Tired>(), 2);
+    }
+
+    public void EnsureBuff<T>(int time = 60) where T : ModBuff
+    {
+        int type = ModContent.BuffType<T>();
         if (!Player.HasBuff(type))
-            Player.AddBuff(type, 60);
+            Player.AddBuff(type, time);
     }
 
     public override void PostUpdateRunSpeeds()
     {
         if (WgServerConfig.Instance.DisableFatBuffs)
+        {
+            _finalMovementFactor = 1f;
             return;
+        }
 
+        const float mountReduction = 0.8f;
         if (Player.mount.Active)
-            MovementPenalty *= 0.8f;
+            MovementPenalty *= mountReduction;
 
         int stage = Weight.GetStage();
-        if (stage >= Weight.DamageReductionStage)
+        if (stage >= WeightStage.DamageReduction)
         {
-            if (stage < Weight.ImmobileStage)
-                _finalKnockbackResistance = float.Lerp(0f, 0.6f, Weight.GetClampedFactor(Weight.FromStage(Weight.DamageReductionStage), Weight.Immobile));
+            if (stage < WeightStage.Immobile)
+                _finalKnockbackResistance = float.Lerp(0f, 0.6f, Weight.GetClampedFactor(Weight.FromStage(WeightStage.DamageReduction), Weight.Immobile));
             else
                 _finalKnockbackResistance = 1f;
         }
         else
             _finalKnockbackResistance = 0f;
 
-        float basePenalty;
-        if (stage < Weight.ImmobileStage)
+        if (stage < WeightStage.ForcedImmobile)
         {
-            float immobility = Weight.ClampedImmobility;
-            basePenalty = float.Lerp(0f, 0.7f, immobility * immobility);
+            float basePenalty;
+            if (stage < WeightStage.Immobile)
+            {
+                float immobility = Weight.ClampedImmobility;
+                basePenalty = float.Lerp(0f, 0.7f, immobility * immobility);
+            }
+            else
+                basePenalty = 1f;
+            _finalMovementFactor = Math.Clamp(1f - MovementPenalty.ApplyTo(basePenalty), 0f, 1f);
         }
         else
-            basePenalty = 1f;
-        _finalMovementFactor = Math.Clamp(1f - MovementPenalty.ApplyTo(basePenalty), 0f, 1f);
+            _finalMovementFactor = Player.mount.Active ? 1f - mountReduction : 0f; // TODO: This sucks
 
         Player.runAcceleration *= _finalMovementFactor;
         Player.maxRunSpeed *= _finalMovementFactor;
@@ -142,13 +210,13 @@ public partial class WgPlayer : ModPlayer
         if (!Player.mount.Active)
         {
             float factor = MathF.Abs(Player.velocity.X);
-            factor += MathF.Abs(acc.X) * 20f;
-            factor *= 0.0002f;
+            factor += MathF.Abs(acc.X) * 10f;
+            factor *= 0.0001f;
             SetWeight(Weight - WeightLossRate.ApplyTo(factor));
         }
 
         // Ice break
-        if (stage >= Weight.HeavyStage)
+        if (stage >= WeightStage.Heavy)
         {
             const int iceBreakTime = 60;
             if (Player.velocity.Y > -0.01f && HasIceBelow())
@@ -168,15 +236,22 @@ public partial class WgPlayer : ModPlayer
     {
         // None of our business
         if ((Player.width + 12) % 16 != 0 || Player.height != Player.defaultHeight)
+        {
+            if (Player.mount.Active && Player.width != Player.defaultWidth) // However... vanilla mounts don't change the width. Cater to them.
+            {
+                float targetX = Player.position.X + Player.width * 0.5f - Player.defaultWidth * 0.5f;
+                Player.width = Player.defaultWidth;
+                Player.position.X = targetX;
+            }
             return;
+        }
 
         int targetWidth = Player.defaultWidth;
         if (!WgServerConfig.Instance.DisableFatHitbox && !Player.mount.Active && !Player.isLockedToATile)
             targetWidth = WeightValues.GetHitboxWidthInTiles(stage) * 16 - 12;
         if (Player.width != targetWidth)
         {
-            float centerX = Player.position.X + Player.width * 0.5f;
-            float targetX = centerX - targetWidth * 0.5f;
+            float targetX = Player.position.X + Player.width * 0.5f - targetWidth * 0.5f;
             // Make sure we have enough space... otherwise we'd be able to walk through walls
             if (!Collision.SolidCollision(new Vector2(targetX, Player.position.Y), targetWidth, Player.height))
             {
@@ -195,21 +270,41 @@ public partial class WgPlayer : ModPlayer
 
     public override void PostUpdate()
     {
+        if (OwnsPlayer())
+        {
+            if (Stomach > 0f)
+            {
+                if (_digestTimer < 0)
+                {
+                    float delta = Stomach - MathF.Max(Stomach - Main.rand.NextFloat(DigestAmount * 0.5f, DigestAmount), 0f);
+                    SetStomach(Stomach - delta);
+                    AddWeight(delta);
+                    if (Main.rand.NextBool(75))
+                        Gurgle(true);
+                    _digestTimer = Main.rand.Next(DigestTime, DigestTime * 2);
+                }
+                else
+                    _digestTimer--;
+            }
+            else
+                _digestTimer = DigestTime * 2;
+        }
+
         UpdateJiggle();
         PostUpdateVisuals();
 
-        _finalMaxStage = Math.Clamp(MaxStage, 0, Weight.MaxStage);
+        _finalMaxStage = Math.Clamp(MaxStage, 0, WeightStage.Max);
         if (_ignoreWgBuffTimer > 0)
             _ignoreWgBuffTimer--;
 
         int stage = Weight.GetStage();
-        if (Player.sleeping.isSleeping && Weight.GetStage() >= 4)
+        if (Player.sleeping.isSleeping && stage >= WeightStage.Obese)
         {
             Player.fullRotation = 0;
             Player.gfxOffY -= 16;
         }
 
-        if (stage >= 3)
+        if (stage >= WeightStage.Fat)
             TownNPCRespawnSystem.unlockMilkmaid = true;
     }
 

@@ -7,6 +7,8 @@ using WgMod.Content.Items.Ammo;
 
 namespace WgMod.Content.Items.Accessories.Fat;
 
+[AutoloadEquip(EquipType.HandsOn)]
+
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.the_trueterrafox)]
 [Credit(ProjectRole.Idea, Contributor.the_trueterrafox)]

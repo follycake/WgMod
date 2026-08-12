@@ -33,7 +33,7 @@ public class BarnTable : ModTile
         AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
 
         // Etc
-        AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Table"));
+        AddMapEntry(new Color(215, 186, 54), Language.GetText("MapObject.Table"));
     }
 
     public override void NumDust(int x, int y, bool fail, ref int num)

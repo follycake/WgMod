@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -35,9 +34,7 @@ public class FullOfSpider : ModBuff
         else
         {
             _cooldown = 0;
-
-            wg.SetWeight(wg.Weight + FatPerCycle);
-            CombatText.NewText(player.getRect(), Color.Yellow, FatPerCycle + " kg");
+            wg.CombatWeightText(wg.AddWeight(FatPerCycle), false);
             SoundEngine.PlaySound(WgSounds.Gulp, player.Center);
         }
     }

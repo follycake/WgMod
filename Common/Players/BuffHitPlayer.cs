@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Common.Players;
 
@@ -30,24 +28,44 @@ public partial class BuffHitPlayer : ModPlayer
         AddModNPCs();
     }
 
-    void AddBuff(int type, int timeToAdd, float weightGain)
+    void AddBuff(int type, int timeToAdd, Mass weightGain, int chance)
     {
-        if (!Player.TryGetModPlayer(out WgPlayer wg))
+        if (!Player.TryGetModPlayer(out WgPlayer wg) || Main.rand.NextBool(chance))
             return;
         Player.AddBuff(type, timeToAdd);
-        wg.SetWeight(wg.Weight + weightGain);
+        weightGain = wg.AddWeight(weightGain);
         SoundEngine.PlaySound(WgSounds.Gulp, Player.Center);
         if (weightGain > 0f)
-            CombatText.NewText(Player.getRect(), Color.Yellow, weightGain + " kg");
+            wg.CombatWeightText(weightGain, true);
     }
 
     public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
     {
         if (_slimes.Contains(npc.type))
-            AddBuff(BuffID.Slimed, 10 * hurtInfo.Damage, hurtInfo.Damage / 10);
+            AddBuff(_slimesBuff, 60 * 6 + (20 * hurtInfo.Damage), hurtInfo.Damage / 12, 4);
+
         if (_bees.Contains(npc.type))
-            AddBuff(BuffID.Slimed, 10 * hurtInfo.Damage, hurtInfo.Damage / 8);
+            AddBuff(_beesBuff, 60 * 10 + (20 * hurtInfo.Damage), hurtInfo.Damage / 10, 8);
+
         if (_feeders.Contains(npc.type))
-            AddBuff(ModContent.BuffType<ForceFed>(), 10 * hurtInfo.Damage, hurtInfo.Damage / 6);
+            AddBuff(_feedersBuff, 60 * 3 + (20 * hurtInfo.Damage), hurtInfo.Damage / 8, 6);
+
+        if (npc.type == NPCID.HallowBoss && hurtInfo.Damage < 1250)
+            AddBuff(_empressBuff, 4 * hurtInfo.Damage, hurtInfo.Damage / 6, 1);
+    }
+
+    public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
+    {
+        if (_slimeProjectiles.Contains(proj.type))
+            AddBuff(_slimesBuff, 60 * 6 + (10 * hurtInfo.Damage), hurtInfo.Damage / 12, 4);
+
+        if (_bloaters.Contains(proj.type))
+            AddBuff(_beesBuff, 60 * 10 + (10 * hurtInfo.Damage), hurtInfo.Damage / 10, 8);
+
+        if (_feederProjectiles.Contains(proj.type))
+            AddBuff(_feedersBuff, 60 * 3 + (10 * hurtInfo.Damage), hurtInfo.Damage / 8, 6);
+
+        if (_empressOfLight.Contains(proj.type) && hurtInfo.Damage < 1250)
+            AddBuff(_empressBuff, 3 * hurtInfo.Damage, hurtInfo.Damage / 7, 1);
     }
 }

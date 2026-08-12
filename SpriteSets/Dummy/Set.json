@@ -1,5 +1,6 @@
 {
     "Author": "dummy",
+    "DrawOffsetY": 4,
     "ArmCount": 4,
     "Layers": [
         {
@@ -9,7 +10,9 @@
         {
             "Name": "Belly",
             "Type": "Belly"
-        },
+        }
+    ],
+    "TopLayers": [
         {
             "Name": "Boobs",
             "Type": "Breasts"

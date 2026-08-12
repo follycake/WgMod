@@ -1,0 +1,74 @@
+{
+    "Author": "folly",
+    "DrawOffsetX": 8,
+    "DrawOffsetY": 20,
+    "ArmCount": 4,
+    "Layers": [
+        {
+            "Name": "Leg",
+            "Type": "Legs"
+        },
+        {
+            "Name": "BackBoob",
+            "Type": "Breasts"
+        },
+        {
+            "Name": "Belly",
+            "Type": "Belly"
+        }
+    ],
+    "TopLayers": [
+        {
+            "Name": "FrontBoob",
+            "Type": "Breasts"
+        }
+    ],
+    "HeadLayers": [
+        {
+            "Name": "Cheeks"
+        }
+    ],
+    "Stages": {
+        "1": {
+            "OnTop": false
+        },
+        "2": {
+            "OnTop": false
+        },
+        "3": {
+            "Arm": 0,
+            "OnTop": true
+        },
+        "4": {
+            "Arm": 0,
+            "OnTop": true,
+            "OffsetY": 2
+        },
+        "5": {
+            "Arm": 1,
+            "OnTop": true,
+            "OffsetY": 6
+        },
+        "6": {
+            "Arm": 1,
+            "OnTop": true,
+            "OffsetY": 10
+        },
+        "7": {
+            "Arm": 2,
+            "OnTop": true,
+            "OffsetY": 14
+        },
+        "8": {
+            "Arm": 2,
+            "OnTop": true,
+            "OffsetY": 18
+        },
+        "9": {
+            "Arm": 3,
+            "OnTop": true,
+            "OffsetY": 24,
+            "ArmAlwaysBelow": true
+        }
+    }
+}

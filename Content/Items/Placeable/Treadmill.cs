@@ -1,3 +1,4 @@
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,7 +13,7 @@ public class Treadmill : ModItem
         Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Treadmill>());
         Item.width = 28;
         Item.height = 20;
-        Item.value = 20000;
+        Item.value = Item.buyPrice(gold: 2);
     }
 
     public override void AddRecipes()

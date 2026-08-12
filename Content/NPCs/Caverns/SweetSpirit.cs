@@ -1,7 +1,10 @@
+using System;
 using System.IO;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,7 +18,7 @@ namespace WgMod.Content.NPCs.Caverns;
 public class SweetSpirit : ModNPC
 {
     public const int FrameCount = 20;
-    public const int WanderTime = 6 * 60;
+    public const int WanderTime = 8 * 60;
 
     enum State : byte
     {
@@ -93,10 +96,10 @@ public class SweetSpirit : ModNPC
 
     public override void AI()
     {
-        NPC.TargetClosest();
         switch (_state)
         {
             case State.Wandering:
+                NPC.TargetClosest();
                 IdleAnimation();
                 if (NPC.HasPlayerTarget)
                 {
@@ -105,6 +108,8 @@ public class SweetSpirit : ModNPC
                     {
                         if (Vector2.DistanceSquared(NPC.Center, Main.player[NPC.target].Center) < 100f * 100f)
                             SetState(State.Positioning);
+                        else
+                            Timer = WanderTime / 4;
                     }
                 }
                 else
@@ -121,6 +126,8 @@ public class SweetSpirit : ModNPC
                     if (Vector2.DistanceSquared(NPC.Center, target) < 20f * 20f)
                         SetState(State.Entering);
                 }
+                else
+                    SetState(State.Wandering);
                 break;
             case State.Entering:
                 if (NPC.HasPlayerTarget)
@@ -128,24 +135,38 @@ public class SweetSpirit : ModNPC
                     Player player = Main.player[NPC.target];
                     NPC.direction = -player.direction;
                     NPC.velocity = GetEnterPosition(player) - NPC.Center;
+
+                    NPC.frameCounter++;
+                    if (NPC.frameCounter > 5)
+                    {
+                        NPC.frameCounter = 0;
+                        if (_frame >= FrameCount - 1)
+                            SetState(State.Possess);
+                        else
+                            _frame++;
+                    }
                 }
-                NPC.frameCounter++;
-                if (NPC.frameCounter > 5)
-                {
-                    NPC.frameCounter = 0;
-                    if (_frame >= FrameCount - 1)
-                        SetState(State.Possess);
-                    else
-                        _frame++;
-                }
+                else
+                    SetState(State.Wandering);
                 break;
             case State.Possess:
                 if (NPC.HasPlayerTarget && Main.player[NPC.target].TryGetModPlayer(out WgPlayer wg))
-                    wg.SetWeight(Weight.FromStage(wg.Weight.GetStage() + 1) + 10f);
+                {
+                    int stage = wg.Weight.GetStage();
+                    Mass mass = (Weight.FromStage(stage + 1).Mass - Weight.FromStage(stage).Mass) * 0.5f + 10f;
+                    wg.CombatWeightText(wg.AddWeight(mass), false); // Add around half a stage worth of weight
+                }
                 NPC.life = 0;
                 break;
         }
         NPC.spriteDirection = NPC.direction;
+    }
+
+    public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+    {
+        Vector2 offset = new(0f, -22f);
+        spriteBatch.Draw(TextureAssets.Npc[Type].Value, NPC.Center + offset - screenPos, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+        return false;
     }
 
     void SetState(State state)

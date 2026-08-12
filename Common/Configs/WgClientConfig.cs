@@ -12,6 +12,9 @@ public class WgClientConfig : ModConfig
     [Header("General")]
     public bool DisableWeightGain;
 
+    [DefaultValue(true)]
+    public bool UseImperialUnits;
+
     [Header("Visual")]
     [DefaultValue(false)]
     public bool DisableJiggle;

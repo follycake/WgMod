@@ -11,6 +11,6 @@ public class PortableScale_InfoDisplay : InfoDisplay
     public override string DisplayValue(ref Color displayColor, ref Color displayShadowColor)
     {
         Weight weight = Main.LocalPlayer.Wg().Weight;
-        return $"{weight.Mass:0.#} kg ({weight.ToPounds():0.#} lbs)";
+        return weight.ToString();
     }
 }

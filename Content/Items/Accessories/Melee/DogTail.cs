@@ -80,9 +80,12 @@ public class DogTailPlayer : ModPlayer
 
 public class DogTailItem : GlobalItem
 {
+    public override bool InstancePerEntity => true;
+    public HashSet<DamageClass> meleeWeapons = [DamageClass.Melee, DamageClass.MeleeNoSpeed];
+
     public override void UseAnimation(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !dt._active || dt._cooldown < 180 || item.damage < 1 || player.whoAmI != Main.myPlayer)
+        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !dt._active || dt._cooldown < 180 || item.damage < 1 || player.whoAmI != Main.myPlayer || !meleeWeapons.Contains(item.DamageType))
             return;
 
         if (Main.hardMode)

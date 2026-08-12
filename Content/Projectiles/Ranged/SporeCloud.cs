@@ -7,6 +7,8 @@ using Terraria.ModLoader;
 
 namespace WgMod.Content.Projectiles.Ranged;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class SporeCloud : ModProjectile
 {
     public const int _cooldownMax = 30;

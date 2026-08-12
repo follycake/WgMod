@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Consumables.Baked;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.magicalmoondust_)]
 public class AcornCake : ModItem
 {
     public override void SetStaticDefaults()
@@ -25,7 +26,7 @@ public class AcornCake : ModItem
 
     public override void SetDefaults()
     {
-        Item.DefaultToFood(22, 22, ModContent.BuffType<Buffs.Consumables.GnomeLuck>(), 8 * 60 * 60);
+        Item.DefaultToFood(26, 22, ModContent.BuffType<Buffs.Consumables.GnomeLuck>(), 8 * 60 * 60);
         Item.value = Item.sellPrice(silver: 50);
         Item.rare = ItemRarityID.Blue;
     }

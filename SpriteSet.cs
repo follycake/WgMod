@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using ReLogic.Content;
@@ -15,14 +16,19 @@ public class SpriteSet
 {
     public const string BasePath = "SpriteSets";
     public const string JsonFileName = "Set.json";
-    public const string DefaultSet = "Folly";
+    public const string DefaultSet = "Folly2";
 
+    public static SpriteSet Fallback { get; private set; }
     public static SpriteSet Current { get; private set; }
     public static string[] FoundSets { get; private set; }
 
     public string Author = "Unknown";
+    public float DrawOffsetX;
+    public float DrawOffsetY;
     public int ArmCount;
     public Layer[] Layers = [];
+    public Layer[] TopLayers = [];
+    public Layer[] HeadLayers = [];
     public Dictionary<int, Stage> Stages = [];
 
     [JsonIgnore] public int FrameCount { get; private set; }
@@ -33,11 +39,29 @@ public class SpriteSet
     [JsonIgnore] public int ArmorAltasWidth { get; private set; }
     [JsonIgnore] public int ArmorAltasHeight { get; private set; }
 
-    public Stage GetStage(int stage)
+    public static Stage GetStage(int stage)
     {
-        if (Stages.TryGetValue(stage, out Stage result))
+        return GetStage(stage, out _);
+    }
+
+    public static Stage GetStage(int stage, out SpriteSet set)
+    {
+        if (Current.Stages.TryGetValue(stage, out Stage result))
+        {
+            set = Current;
+            return result;
+        }
+        set = Fallback;
+        if (Fallback.Stages.TryGetValue(stage, out result))
             return result;
         return Stage.Fallback;
+    }
+
+    public static SpriteSet GetSet(int stage)
+    {
+        if (Current.Stages.ContainsKey(stage))
+            return Current;
+        return Fallback;
     }
 
     public static void Initialize(Mod mod, string name)
@@ -46,7 +70,11 @@ public class SpriteSet
         FoundSets = [.. FindSets(mod)];
         if (!Exists(mod, name))
             name = DefaultSet;
-        Current = Load(mod, name);
+        Fallback = Load(mod, DefaultSet);
+        if (name == DefaultSet)
+            Current = Fallback;
+        else
+            Current = Load(mod, name);
     }
 
     public static IEnumerable<string> FindSets(Mod mod)
@@ -74,17 +102,25 @@ public class SpriteSet
 
         List<Layer> armorLayers = [];
         set.ArmorAltasWidth = 0;
-        void LoadTextures(Layer layer)
+        void LoadTextures(Layer layer, int lookup = 0)
         {
             layer.Texture = mod.Assets.Request<Texture2D>(Path.Combine(path, layer.Name));
             layer.ArmorAtlasX = set.ArmorAltasWidth;
 
             string armorName = Path.Combine(path, layer.Name + "_Armor");
-            if (mod.HasAsset(armorName))
+            bool hasArmor = mod.HasAsset(armorName);
+            bool simpleArmor = true;
+            if (!hasArmor)
+            {
+                armorName = Path.Combine(path, layer.Name + "_ExArmor");
+                hasArmor = mod.HasAsset(armorName);
+                simpleArmor = false;
+            }
+            if (hasArmor)
             {
                 layer.ArmorTexture = mod.Assets.Request<Texture2D>(armorName, AssetRequestMode.ImmediateLoad).Value;
-                if (layer.SimpleArmor)
-                    Main.RunOnMainThread(() => WgArmorLUTs.ConvertSimple(0, layer.ArmorTexture));
+                if (simpleArmor)
+                    Main.RunOnMainThread(() => WgArmorLUTs.ConvertSimple(lookup, layer.ArmorTexture));
                 set.ArmorAltasWidth += layer.ArmorTexture.Width;
                 set.ArmorAltasHeight = Math.Max(set.ArmorAltasHeight, layer.ArmorTexture.Height);
                 armorLayers.Add(layer);
@@ -94,11 +130,17 @@ public class SpriteSet
         foreach (Layer layer in set.Layers)
             LoadTextures(layer);
 
+        foreach (Layer layer in set.TopLayers)
+            LoadTextures(layer);
+
+        foreach (Layer layer in set.HeadLayers)
+            LoadTextures(layer);
+
         set.ArmLayers = new Layer[set.ArmCount];
         for (int i = 0; i < set.ArmLayers.Length; i++)
         {
-            Layer arm = new() { Name = "Arms" + i, Type = LayerType.Arms, SimpleArmor = false };
-            LoadTextures(arm);
+            Layer arm = new() { Name = "Arms" + i, Type = LayerType.Arms };
+            LoadTextures(arm, 1);
             set.ArmLayers[i] = arm;
         }
 
@@ -120,7 +162,8 @@ public class SpriteSet
 
     public enum LayerType
     {
-        Belly = 0,
+        Fixed = 0,
+        Belly,
         Legs,
         Breasts,
         Arms
@@ -139,13 +182,17 @@ public class SpriteSet
         public string Name;
         public LayerType Type;
         public RenderType Render;
-        public bool SimpleArmor = true;
 
         [JsonIgnore] public Asset<Texture2D> Texture;
         [JsonIgnore] public Texture2D ArmorTexture;
         [JsonIgnore] public int ArmorAtlasX;
 
         [JsonIgnore] public bool UVArmor => ArmorTexture != null;
+
+        public Rectangle Frame(SpriteSet set, Stage stage)
+        {
+            return Texture.Frame(1, set.FrameCount, 0, stage.Frame);
+        }
 
         public bool ShouldRender(Player player) => Render switch
         {
@@ -165,6 +212,7 @@ public class SpriteSet
         public bool OnTop;
         public float OffsetX;
         public float OffsetY;
+        public bool ArmAlwaysBelow;
 
         [JsonIgnore] public int Frame;
     }

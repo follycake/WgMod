@@ -8,7 +8,6 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs;
-using WgMod.Content.Tiles;
 
 namespace WgMod;
 
@@ -24,7 +23,6 @@ public partial class WgMod
         On_Mount.Draw += Mount_Draw;
         On_Main.GetPlayerArmPosition += Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras += Main_DrawProj_DrawExtras;
-        On_TileObject.CanPlace += TileObject_CanPlace;
     }
 
     // Always remember to unregister your hooks
@@ -37,7 +35,6 @@ public partial class WgMod
         On_Mount.Draw -= Mount_Draw;
         On_Main.GetPlayerArmPosition -= Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras -= Main_DrawProj_DrawExtras;
-        On_TileObject.CanPlace -= TileObject_CanPlace;
     }
 
     static void Player_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
@@ -67,7 +64,7 @@ public partial class WgMod
             if (gain.IsInstant)
             {
                 if (previousTime < timeToAdd - 2) // Apply once (2 ticks of leeway)
-                    wg.SetWeight(wg.Weight + gain.TotalGain);
+                    wg.AddStomach(gain.TotalGain);
             }
             else if (!self.HasBuff<GainingBuff>())
                 GainingBuff.AddBuff(wg, gain);
@@ -139,24 +136,37 @@ public partial class WgMod
 
     static void Mount_Draw(On_Mount.orig_Draw orig, Mount self, List<DrawData> playerDrawData, int drawType, Player drawPlayer, Vector2 Position, Color drawColor, SpriteEffects playerEffect, float shadow)
     {
-        float scale = 1f;
-        if (drawPlayer.TryGetModPlayer(out WgPlayer wg) && self.Active)
+        if (!drawPlayer.TryGetModPlayer(out WgPlayer wg) || !self.Active)
         {
-            int stage = wg.Weight.GetStage();
-            Position.Y += WeightValues.DrawOffsetY(stage);
-            scale = WeightValues.GetMountScale(stage);
+            orig(self, playerDrawData, drawType, drawPlayer, Position, drawColor, playerEffect, shadow);
+            return;
         }
+
+        int stage = wg.Weight.GetStage();
+        float scale = WeightValues.GetMountScale(stage);
+        Position.Y += SpriteSet.GetStage(stage).OffsetY - wg._mountOffY;
+
         int start = playerDrawData.Count;
         orig(self, playerDrawData, drawType, drawPlayer, Position, drawColor, playerEffect, shadow);
+
         if (scale > 1f)
         {
+            float averageOffset = 0f;
             Span<DrawData> span = CollectionsMarshal.AsSpan(playerDrawData);
             for (int i = start; i < playerDrawData.Count; i++)
             {
                 ref DrawData data = ref span[i];
+                Rectangle rect = data.sourceRect ?? data.texture.Frame();
+                float offset = -(rect.Height - data.origin.Y) * (scale - 1f);
+                averageOffset += offset;
+                data.position.Y += offset;
                 data.scale *= scale;
             }
+            averageOffset /= playerDrawData.Count - start;
+            wg._mountOffY = averageOffset;
         }
+        else
+            wg._mountOffY = 0f;
     }
 
     static void Main_DrawProj_DrawExtras(On_Main.orig_DrawProj_DrawExtras orig, Main self, Projectile proj, Vector2 mountedCenter, ref float polePosX, ref float polePosY)
@@ -168,13 +178,5 @@ public partial class WgMod
                 proj.gfxOffY = 0f;
         }
         orig(self, proj, mountedCenter, ref polePosX, ref polePosY);
-    }
-
-    // For custom tombstones (temporary)
-    static bool TileObject_CanPlace(On_TileObject.orig_CanPlace orig, int x, int y, int type, int style, int dir, out TileObject objectData, bool onlyCheck, int? forcedRandom, bool checkStay)
-    {
-        if (type == TileID.Tombstones && !Main.dedServ && Main.LocalPlayer.dead)
-            FatTombstones.ReplaceTombstone(Main.LocalPlayer, ref type, ref style);
-        return orig(x, y, type, style, dir, out objectData, onlyCheck, forcedRandom, checkStay);
     }
 }

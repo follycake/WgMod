@@ -8,6 +8,7 @@ using WgMod.Content.Buffs.Debuffs;
 namespace WgMod.Content.Projectiles.Ranged;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.maimaichubs)]
 public class CaramelArrowProjectile : ModProjectile
 {
     public override void SetDefaults()

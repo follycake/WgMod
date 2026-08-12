@@ -25,6 +25,16 @@ public class GuideToLiftingYourFatAss : ModItem
         if (player.TryGetModPlayer(out GuideToLiftingPlayer lp))
             lp._enabledGuideToLifting = true;
     }
+
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient(ItemID.SpellTome)
+            .AddIngredient(ItemID.SoulofFlight, 12)
+            .AddIngredient(ItemID.Cloud, 15)
+            .AddTile(TileID.Bookcases)
+            .Register();
+    }
 }
 
 public class GuideToLiftingPlayer : ModPlayer
@@ -53,7 +63,7 @@ public class GuideToLiftingPlayer : ModPlayer
 
         bool usesMana = _guideToLiftingTimer >= 10;
         float magicDamage = (Player.GetDamage(DamageClass.Magic).ApplyTo(500f) - 400f) / 100f;
-        int manaToUse = (int)Math.Round((wg.Weight.Mass - Weight.Base.Mass) / 30f / magicDamage) - 1;
+        int manaToUse = (int)Math.Round((wg.Weight.Mass - Weight.Base.Mass) / 33f / magicDamage) - 1;
 
         if (manaToUse <= 0)
             return;

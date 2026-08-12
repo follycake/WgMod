@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Content.Items.Placeable;
 
 namespace WgMod.Content.Items.Accessories.Informational;
 
@@ -32,6 +33,12 @@ public class PortableScale : ModItem
         CreateRecipe()
             .AddRecipeGroup(RecipeGroupID.PressurePlate)
             .AddRecipeGroup(RecipeGroupID.IronBar, 10)
+            .AddIngredient(ItemID.Wire, 4)
+            .AddTile(TileID.Anvils)
+            .Register();
+
+        CreateRecipe()
+            .AddIngredient<Scale>()
             .AddIngredient(ItemID.Wire, 4)
             .AddTile(TileID.Anvils)
             .Register();

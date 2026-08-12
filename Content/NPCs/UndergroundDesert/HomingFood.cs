@@ -115,7 +115,7 @@ public class HomingFood : ModNPC
         Main.instance.LoadItem(_itemId);
         Asset<Texture2D> texture = TextureAssets.Item[_itemId];
         Rectangle frame = texture.Frame(1, 3);
-        spriteBatch.Draw(texture.Value, NPC.Center - screenPos, frame, drawColor, (float)(Math.Sin(Main.timeForVisualEffects / 30.0) * 0.2), frame.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(texture.Value, NPC.Center - screenPos, frame, Color.White, (float)(Math.Sin(Main.timeForVisualEffects / 30.0) * 0.2), frame.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
         return false;
     }
 

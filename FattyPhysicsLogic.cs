@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common.Configs;
 
 namespace WgMod;
 
@@ -85,7 +86,7 @@ public static class FattyPhysicsLogic
         {
             if (!npc.active)
                 continue;
-            if (npc.type == NPCID.TargetDummy)
+            if (npc.type == NPCID.TargetDummy || npc.type == NPCID.DD2EterniaCrystal)
                 continue;
             if (npc.Hitbox.Intersects(entity.Hitbox))
                 DoPush(entity, npc);
@@ -97,7 +98,9 @@ public class FatPushPlayer : ModPlayer
 {
     public override void PostUpdateMiscEffects()
     {
-        if (Player.Wg().Weight.GetStage() > 4)
+        if (WgServerConfig.Instance.DisablePlayerPushing)
+            return;
+        if (Player.Wg().Weight.GetStage() >= WeightStage.MorbidlyObese)
             Player.PushAwayFromMe();
     }
 }

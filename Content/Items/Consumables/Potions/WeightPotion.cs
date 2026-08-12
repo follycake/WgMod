@@ -1,22 +1,18 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
+using WgMod.Content.Items.Consumables.Potions.WeightGainPotions;
+using static WgMod.Content.Projectiles.Melee.WeightPotionProjectile;
 
 namespace WgMod.Content.Items.Consumables.Potions;
 
 public abstract class WeightPotion : ModItem
 {
     public abstract float WeightEffect { get; }
-
-    public override void SetStaticDefaults()
-    {
-        Item.ResearchUnlockCount = 30;
-    }
 
     public override void SetDefaults()
     {
@@ -27,13 +23,21 @@ public abstract class WeightPotion : ModItem
         Item.UseSound = SoundID.Item3;
         Item.maxStack = Item.CommonMaxStack;
         Item.consumable = true;
+
+        Item.ammo = ModContent.ItemType<LesserWeightGainPotion>();
+        Item.shoot = ModContent.ProjectileType<LesserWeightGainPotionProjectile>();
+        Item.notAmmo = true;
+    }
+
+    public override bool CanShoot(Player player)
+    {
+        return false;
     }
 
     public override bool? UseItem(Player player)
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return false;
-
         float weightChange;
         if (player.HasBuff<MilkshakeSickness>())
             weightChange = WeightEffect * 0.1f;
@@ -42,9 +46,7 @@ public abstract class WeightPotion : ModItem
             weightChange = WeightEffect;
             player.AddBuff(ModContent.BuffType<MilkshakeSickness>(), 1 * 60 * 30);
         }
-        wg.SetWeight(wg.Weight + weightChange);
-
-        CombatText.NewText(player.getRect(), Color.Yellow, weightChange + " kg");
+        wg.CombatWeightText(wg.AddWeight(weightChange), false);
         return true;
     }
 

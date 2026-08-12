@@ -3,11 +3,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
-using WgMod.Content.NPCs.GroundedHarpy;
 
 namespace WgMod.Content.Items.Consumables;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class HornOfMore : ModItem
 {
     WgStat _healBonus = new(100, 150);
@@ -16,7 +16,7 @@ public class HornOfMore : ModItem
     {
         Item.width = 32;
         Item.height = 28;
-        Item.useStyle = ItemUseStyleID.DrinkLiquid;
+        Item.useStyle = ItemUseStyleID.EatFood;
         Item.useAnimation = 15;
         Item.useTime = 15;
         Item.useTurn = true;

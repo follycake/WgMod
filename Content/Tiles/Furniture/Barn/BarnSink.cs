@@ -8,6 +8,7 @@ using Terraria.ObjectData;
 namespace WgMod.Content.Tiles.Furniture.Barn;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.subparnitragen)]
 public class BarnSink : ModTile
 {
     public override void SetStaticDefaults()
@@ -22,7 +23,7 @@ public class BarnSink : ModTile
         TileObjectData.newTile.CoordinateHeights = [16, 18];
         TileObjectData.addTile(Type);
 
-        AddMapEntry(new Color(100, 100, 100), Language.GetText("MapObject.Sink"));
+        AddMapEntry(new Color(215, 186, 54), Language.GetText("MapObject.Sink"));
 
         DustType = DustID.WoodFurniture;
     }
