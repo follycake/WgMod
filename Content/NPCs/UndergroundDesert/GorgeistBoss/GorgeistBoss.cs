@@ -6,6 +6,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common.GlobalNPCs;
 using WgMod.Content.Items.Placeable.Furniture;
 using WgMod.Content.Projectiles.Enemy.Gorgeist;
 
@@ -208,6 +209,8 @@ public class GorgeistBossBody : ModNPC
 
 	public override void HitEffect(NPC.HitInfo hit)
 	{
+		for (int i = 0; i < 15; i++)
+			Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Sand, 0, 0);
 	}
 
 	public bool HasFlag(Flags flag)
@@ -236,6 +239,11 @@ public class GorgeistBossBody : ModNPC
 	public override void OnSpawn(IEntitySource source)
 	{
 		SwitchState(State.Idle);
+	}
+
+	public override void OnKill()
+	{
+		DownedBossSystem.downedGorgeistBoss = true;
 	}
 
 	public override void AI()

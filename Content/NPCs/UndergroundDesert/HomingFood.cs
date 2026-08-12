@@ -11,6 +11,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
+using WgMod.Common.GlobalNPCs;
 using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Content.NPCs.UndergroundDesert;
@@ -68,7 +69,10 @@ public class HomingFood : ModNPC
 
     public override float SpawnChance(NPCSpawnInfo spawnInfo)
     {
-        return SpawnCondition.DesertCave.Chance * 0.1f;
+        if (!DownedBossSystem.downedGorgeistBoss)
+            return SpawnCondition.DesertCave.Chance * 0.1f;
+        else
+            return SpawnCondition.DesertCave.Chance * 0.05f;
     }
 
     public override void OnSpawn(IEntitySource source)

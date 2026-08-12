@@ -1,6 +1,5 @@
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace WgMod.Content.Projectiles.Enemy.Gorgeist;
@@ -19,12 +18,7 @@ public class TossedPlate : ModProjectile
         Projectile.ai[0] = 1;
 
         Projectile.height = 24;
-        Projectile.width = 74;
-    }
-
-    public override void OnSpawn(IEntitySource source)
-    {
-        Projectile.velocity.X = 15f;
+        Projectile.width = 24;
     }
 
     public override void AI()
