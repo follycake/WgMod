@@ -515,7 +515,7 @@ public class GorgeistBossBody : ModNPC
 			float kitingOffsetX = Utils.Clamp(player.velocity.X * 16, -100, 100);
 			Vector2 position = player.Bottom + new Vector2(kitingOffsetX + Main.rand.Next(-100, 100), Main.rand.Next(50, 100));
 
-			int type = ProjectileID.FrostWave;
+			int type = ProjectileID.HarpyFeather;
 			int damage = NPC.damage / 2;
 			var entitySource = NPC.GetSource_FromAI();
 
