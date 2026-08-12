@@ -305,6 +305,8 @@ public class GorgeistBossBody : ModNPC
 
 	public void ThrowPlate(float offset = 0f, float speedOffset = 1f)
 	{
+		if (Main.netMode == NetmodeID.MultiplayerClient) // Needed so that we only spawn projectiles on the server
+			return;
 		Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new(15f, 5f), ModContent.ProjectileType<TossedPlate>(), NPC.damage / 2, 2f, default, TargetPlayer.Center.Y + offset, speedOffset);
 	}
 
