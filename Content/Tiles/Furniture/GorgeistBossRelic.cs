@@ -21,9 +21,9 @@ public class GorgeistBossRelicTile : ModTile
 
 	public Asset<Texture2D> RelicTexture;
 
-	public virtual string RelicTextureName => "ExampleMod/Content/Tiles/Furniture/GorgeistBossRelic";
+	public virtual string RelicTextureName => "WgMod/Content/Tiles/Furniture/GorgeistBossRelic";
 
-	public override string Texture => "ExampleMod/Content/Tiles/Furniture/RelicPedestal";
+	public override string Texture => "WgMod/Content/Tiles/Furniture/RelicPedestal";
 
 	public override void Load()
 	{

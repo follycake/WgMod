@@ -1,17 +1,14 @@
 ﻿
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.Graphics.CameraModifiers;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using WgMod.Content.Items.Placeable.Furniture;
-using WgMod.Content.Tiles.Furniture;
 
 namespace WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
 
@@ -19,10 +16,6 @@ namespace WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
 
 public class GorgeistBossBody : ModNPC
 {
-	// This boss has a second phase and we want to give it a second boss head icon, this variable keeps track of the registered texture from Load().
-	// It is applied in the BossHeadSlot hook when the boss is in its second stage
-	public static int secondStageHeadSlot = -1;
-
 	// This code here is called a property: It acts like a variable, but can modify other things. In this case it uses the NPC.ai[] array that has four entries.
 	// We use properties because it makes code more readable ("if (SecondStage)" vs "if (NPC.ai[0] == 1f)").
 	// We use NPC.ai[] because in combination with NPC.netUpdate we can make it multiplayer compatible. Otherwise (making our own fields) we would have to write extra code to make it work (not covered here)
@@ -97,44 +90,14 @@ public class GorgeistBossBody : ModNPC
 		return count;
 	}
 
-	public override void Load()
-	{
-		// We want to give it a second boss head icon, so we register one
-		string texture = BossHeadTexture + "_SecondStage"; // Our texture is called "ClassName_Head_Boss_SecondStage"
-		secondStageHeadSlot = Mod.AddBossHeadTexture(texture, -1); // -1 because we already have one registered via the [AutoloadBossHead] attribute, it would overwrite it otherwise
-	}
-
-	public override void BossHeadSlot(ref int index)
-	{
-		int slot = secondStageHeadSlot;
-		if (SecondStage && slot != -1)
-		{
-			// If the boss is in its second stage, display the other head icon instead
-			index = slot;
-		}
-	}
-
 	public override void SetStaticDefaults()
 	{
-		Main.npcFrameCount[Type] = 6;
+		Main.npcFrameCount[Type] = 4;
 
-		// Add this in for bosses that have a summon item, requires corresponding code in the item (See MinionBossSummonItem.cs)
 		NPCID.Sets.MPAllowedEnemies[Type] = true;
-		// Automatically group with other bosses
 		NPCID.Sets.BossBestiaryPriority.Add(Type);
 
-		// Specify the debuffs it is immune to. Most NPCs are immune to Confused.
 		NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
-		// This boss also becomes immune to OnFire and all buffs that inherit OnFire immunity during the second half of the fight. See the ApplySecondStageBuffImmunities method.
-
-		// Influences how the NPC looks in the Bestiary
-		NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new()
-		{
-			CustomTexturePath = "ExampleMod/Assets/Textures/Bestiary/MinionBoss_Preview",
-			PortraitScale = 0.6f, // Portrait refers to the full picture when clicking on the icon in the bestiary
-			PortraitPositionYOverride = 0f,
-		};
-		NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
 	}
 
 	public override void SetDefaults()
@@ -151,21 +114,13 @@ public class GorgeistBossBody : ModNPC
 		NPC.noTileCollide = true;
 		NPC.value = Item.buyPrice(gold: 5);
 		NPC.boss = true;
-		NPC.npcSlots = 10f; // Take up open spawn slots, preventing random NPCs from spawning during the fight
-
-		// Default buff immunities should be set in SetStaticDefaults through the NPCID.Sets.ImmuneTo{X} arrays.
-		// To dynamically adjust immunities of an active NPC, NPC.buffImmune[] can be changed in AI: NPC.buffImmune[BuffID.OnFire] = true;
-		// This approach, however, will not preserve buff immunities. To preserve buff immunities, use the NPC.BecomeImmuneTo and NPC.ClearImmuneToBuffs methods instead, as shown in the ApplySecondStageBuffImmunities method below.
-
-		// Custom AI, 0 is "bound town NPC" AI which slows the NPC down and changes sprite orientation towards the target
+		NPC.npcSlots = 10f;
 		NPC.aiStyle = -1;
 
-		// The following code assigns a music track to the boss in a simple way.
 		if (!Main.dedServ)
 		{
 			Music = MusicID.Boss1;
 
-			// If you would like to play alternate music when the otherworld soundtrack enabled, use this logic.
 			if (!Main.swapMusic == Main.drunkWorld && !Main.remixWorld)
 			{
 				Music = MusicID.OtherworldlyBoss1;
@@ -175,9 +130,8 @@ public class GorgeistBossBody : ModNPC
 
 	public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 	{
-		// Sets the description of this NPC that is listed in the bestiary
 		bestiaryEntry.Info.AddRange([
-				new MoonLordPortraitBackgroundProviderBestiaryInfoElement(), // Plain black background
+				new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
 				new FlavorTextBestiaryInfoElement("Mods.ExampleMod.Bestiary.GorgeistBossBody")
 			]);
 	}
@@ -200,7 +154,7 @@ public class GorgeistBossBody : ModNPC
 
 		// Notice we use notExpertRule.OnSuccess instead of npcLoot.Add so it only applies in normal mode
 		// Boss masks are spawned with 1/7 chance
-		notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<GorgeistBossMask>(), 7));
+		//notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<GorgeistBossMask>(), 7));
 
 		// This part is not required for a boss and is just showcasing some advanced stuff you can do with drop rules to control how items spawn
 		// We make 12-15 ExampleItems spawn randomly in all directions, like the lunar pillar fragments. Hereby we need the DropOneByOne rule,
@@ -215,19 +169,19 @@ public class GorgeistBossBody : ModNPC
 			MaximumItemDropsCount = 15,
 		};
 
-		notExpertRule.OnSuccess(new DropOneByOne(itemType, parameters)); // itemType doesn't seem to exist??
+		//notExpertRule.OnSuccess(new DropOneByOne(itemType, parameters)); // itemType doesn't seem to exist??
 
 		// Finally add the leading rule
 		npcLoot.Add(notExpertRule);
 
 		// Add the treasure bag using ItemDropRule.BossBag (automatically checks for expert mode)
-		npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<GorgeistBossBag>()));
+		//npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<GorgeistBossBag>()));
 
 		// ItemDropRule.MasterModeCommonDrop for the relic
-		npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Items.Placeable.Furniture.GorgeistBossRelic>()));
+		npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<GorgeistBossRelic>()));
 
 		// ItemDropRule.MasterModeDropOnAllPlayers for the pet
-		npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<GorgeistBossPetItem>(), 4));
+		//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<GorgeistBossPetItem>(), 4));
 	}
 
 	/* // ImmunityCooldownID.BossNoCheese doesn't seem to exist??
@@ -240,26 +194,23 @@ public class GorgeistBossBody : ModNPC
 
 	public override void FindFrame(int frameHeight)
 	{
-		// This NPC animates with a simple "go from start frame to final frame, and loop back to start frame" rule
-		// In this case: First stage: 0-1-2-0-1-2, Second stage: 3-4-5-3-4-5, 5 being "total frame count - 1"
 		int startFrame = 0;
-		int finalFrame = 2;
+		int finalFrame = 1;
 
 		if (SecondStage)
 		{
-			startFrame = 3;
+			startFrame = 2;
 			finalFrame = Main.npcFrameCount[Type] - 1;
 
 			if (NPC.frame.Y < startFrame * frameHeight)
 			{
-				// If we were animating the first stage frames and then switch to second stage, immediately change to the start frame of the second stage
 				NPC.frame.Y = startFrame * frameHeight;
 			}
 		}
 
 		int frameSpeed = 5;
 		NPC.frameCounter += 0.5f;
-		NPC.frameCounter += NPC.velocity.Length() / 10f; // Make the counter go faster with more movement speed
+		NPC.frameCounter += NPC.velocity.Length() / 10f;
 		if (NPC.frameCounter > frameSpeed)
 		{
 			NPC.frameCounter = 0;
@@ -369,8 +320,8 @@ public class GorgeistBossBody : ModNPC
 			// Now that the minion is spawned, we need to prepare it with data that is necessary for it to work
 			// This is not required usually if you simply spawn NPCs, but because the minion is tied to the body, we need to pass this information to it
 			HomingFood minion = (HomingFood)minionNPC.ModNPC;
-			minion.ParentIndex = NPC.whoAmI; // Let the minion know who the "parent" is
-			minion.PositionOffset = i / (float)count; // Give it a separate position offset
+			//minion.ParentIndex = NPC.whoAmI; // Let the minion know who the "parent" is
+			//minion.PositionOffset = i / (float)count; // Give it a separate position offset
 
 			GorgeistMaxHealthTotal += minionNPC.lifeMax; // add the total minion life for boss bar shield text
 
@@ -401,7 +352,7 @@ public class GorgeistBossBody : ModNPC
 		{
 			if (otherNPC.type == MinionType() && otherNPC.ModNPC is HomingFood minion)
 			{
-				if (minion.ParentIndex == NPC.whoAmI)
+				//if (minion.ParentIndex == NPC.whoAmI)
 				{
 					GorgeistHealthTotal += otherNPC.life;
 				}
@@ -564,7 +515,7 @@ public class GorgeistBossBody : ModNPC
 			float kitingOffsetX = Utils.Clamp(player.velocity.X * 16, -100, 100);
 			Vector2 position = player.Bottom + new Vector2(kitingOffsetX + Main.rand.Next(-100, 100), Main.rand.Next(50, 100));
 
-			int type = ModContent.ProjectileType<MinionBossEye>();
+			int type = ProjectileID.FrostWave;
 			int damage = NPC.damage / 2;
 			var entitySource = NPC.GetSource_FromAI();
 

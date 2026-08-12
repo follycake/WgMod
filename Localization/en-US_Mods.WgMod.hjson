@@ -779,6 +779,16 @@ Items: {
 			Increased projectile speed by {1}%
 			'''
 	}
+
+	GorgeistBossTrophy: {
+		Tooltip: ""
+		DisplayName: Gorgeist Boss Trophy
+	}
+
+	GorgeistBossRelic: {
+		DisplayName: Gorgeist Boss Relic
+		Tooltip: ""
+	}
 }
 
 Buffs: {
@@ -1165,6 +1175,8 @@ NPCs: {
 		DisplayName: Overflowing Mimic
 		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a mimic
 	}
+
+	GorgeistBossBody.DisplayName: Gorgeist Boss Body
 }
 
 Dialogue: {
