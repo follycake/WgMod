@@ -7,6 +7,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Content.Items.Placeable.Furniture;
+using WgMod.Content.Projectiles.Enemy.Gorgeist;
 
 namespace WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
 
@@ -302,15 +303,74 @@ public class GorgeistBossBody : ModNPC
 		}
 	}
 
+	public void ThrowPlate(float offset = 0f, float speedOffset = 1f)
+	{
+		Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new(15f, 5f), ModContent.ProjectileType<TossedPlate>(), NPC.damage / 2, 2f, default, TargetPlayer.Center.Y + offset, speedOffset);
+	}
+
+	public void ThrowPlateVariant(int variant, float speedOffset = 1)
+	{
+		switch (variant)
+		{
+			case 0: // Triple Volley
+				ThrowPlate(-100f, speedOffset);
+				ThrowPlate(0f, speedOffset);
+				ThrowPlate(100f, speedOffset);
+				break;
+			case 1: // Quad Volley
+				ThrowPlate(-170f, speedOffset);
+				ThrowPlate(-60f, speedOffset);
+				ThrowPlate(60f, speedOffset);
+				ThrowPlate(170f, speedOffset);
+				break;
+		}
+	}
+
+	public void MultiThrow(float volley1 = 1.15f, float volley2 = 1f, float volley3 = 0.85f)
+	{
+		switch (Main.rand.Next(0, 3))
+		{
+			case 0:
+				ThrowPlateVariant(1, volley1); // Quad
+				ThrowPlateVariant(0, volley2); // Triple
+				ThrowPlateVariant(1, volley3); // Quad
+				break;
+			case 1:
+				ThrowPlateVariant(1, volley1); // Quad
+				ThrowPlate(0f, volley2); // Single
+				ThrowPlate(0f, volley3); // Single
+				break;
+			case 2:
+				ThrowPlateVariant(0, volley1); // Triple
+				ThrowPlate(0, volley2); // Single
+				ThrowPlateVariant(1, volley3); // Quad
+				break;
+		}
+	}
+
 	public void Phase1()
 	{
-		Destination = TargetPlayer.Center + new Vector2(100f, -100f);
+		Destination = TargetPlayer.Center + new Vector2(300f, -300f);
 		switch (CurrentState)
 		{
 			case State.TossPlate:
 				if (!HasFlag(Flags.DidAttack))
 				{
-					// TODO: Toss plate
+					switch (Main.rand.Next(0, 4))
+					{
+						case 0:
+							ThrowPlate(); // Single
+							break;
+						case 1:
+							ThrowPlateVariant(0); // Triple
+							break;
+						case 2:
+							ThrowPlateVariant(1); // Quad
+							break;
+						case 3:
+							MultiThrow(); // Volley
+							break;
+					}
 					SetFlag(Flags.DidAttack);
 				}
 				break;
@@ -324,7 +384,7 @@ public class GorgeistBossBody : ModNPC
 				break;
 			case State.CirclingPlayer:
 				float t = StateTimer / StateDuration * MathF.Tau * 2f - MathF.PI * 0.5f;
-				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * 100f, MathF.Sin(t) * 100f);
+				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * 150f, MathF.Sin(t) * 150f);
 				break;
 		}
 	}

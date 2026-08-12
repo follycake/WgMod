@@ -1098,6 +1098,7 @@ Projectiles: {
 	SuperWeightLossPotionProjectile.DisplayName: Super Weight Loss Potion Projectile
 	WeightLossPotionProjectile.DisplayName: Weight Loss Potion Projectile
 	FatTombstone.DisplayName: Fat Tombstone
+	TossedPlate.DisplayName: Tossed Plate
 }
 
 NPCs: {
@@ -1176,7 +1177,7 @@ NPCs: {
 		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a mimic
 	}
 
-	GorgeistBossBody.DisplayName: Gorgeist Boss Body
+	GorgeistBossBody.DisplayName: Gorgeist
 }
 
 Dialogue: {
