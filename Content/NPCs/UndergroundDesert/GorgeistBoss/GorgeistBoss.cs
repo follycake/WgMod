@@ -444,8 +444,6 @@ public class GorgeistBossBody : ModNPC
 		// Fade in based on remaining total minion life
 		float remainingShields = GorgeistHealthTotal / (float)GorgeistMaxHealthTotal;
 		NPC.alpha = (int)(remainingShields * 255);
-
-		NPC.rotation = NPC.velocity.ToRotation() - MathHelper.PiOver2;
 	}
 
 	void DoSecondStage(Player player)
@@ -491,8 +489,6 @@ public class GorgeistBossBody : ModNPC
 		NPC.damage = NPC.defDamage;
 
 		NPC.alpha = 0;
-
-		NPC.rotation = toPlayer.ToRotation() - MathHelper.PiOver2;
 	}
 
 	void DoSecondStage_SpawnEyes(Player player)
