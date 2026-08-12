@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Xna.Framework;
+using rail;
 using System;
 using Terraria;
 using Terraria.Audio;
@@ -242,5 +243,15 @@ public class GorgeistBossBody : ModNPC
 			NPC.EncourageDespawn(10);
 			return;
 		}
+	}
+
+	public void Phase1()
+	{
+
+	}
+
+	public void Phase2()
+	{
+
 	}
 }
