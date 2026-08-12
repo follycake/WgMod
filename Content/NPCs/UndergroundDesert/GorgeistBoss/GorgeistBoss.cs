@@ -1,12 +1,9 @@
-﻿
+﻿using System;
 using Microsoft.Xna.Framework;
-using rail;
-using System;
 using Terraria;
-using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
-using Terraria.Graphics.CameraModifiers;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Content.Items.Placeable.Furniture;
@@ -17,55 +14,53 @@ namespace WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
 
 public class GorgeistBossBody : ModNPC
 {
-	// This code here is called a property: It acts like a variable, but can modify other things. In this case it uses the NPC.ai[] array that has four entries.
-	// We use properties because it makes code more readable ("if (SecondStage)" vs "if (NPC.ai[0] == 1f)").
-	// We use NPC.ai[] because in combination with NPC.netUpdate we can make it multiplayer compatible. Otherwise (making our own fields) we would have to write extra code to make it work (not covered here)
-	public bool SecondStage
+	public enum Flags
 	{
-		get => NPC.ai[0] == 1f;
-		set => NPC.ai[0] = value ? 1f : 0f;
+		None = 0,
+		SecondPhase = 1 << 0,
+		DidAttack = 1 << 1
 	}
-	// If your boss has more than two stages, and since this is a boolean and can only be two things (true, false), consider using an integer or enum
 
-	// More advanced usage of a property, used to wrap around to floats to act as a Vector2
-	public Vector2 FirstStageDestination
+	public enum State
 	{
-		get => new(NPC.ai[1], NPC.ai[2]);
+		None = 0,
+
+		// Phase 1
+		Idle,
+		TossPlate,
+		TossFood,
+		CirclingPlayer,
+
+		// Phase 2
+		Enraged
+	}
+
+	public Flags BossFlags
+	{
+		get => (Flags)(int)NPC.ai[0];
+		set => NPC.ai[0] = (int)value;
+	}
+
+	public State CurrentState
+	{
+		get => (State)(int)NPC.ai[1];
+		set => NPC.ai[1] = (int)value;
+	}
+
+	public Vector2 Destination
+	{
+		get => new(NPC.ai[2], NPC.ai[3]);
 		set
 		{
-			NPC.ai[1] = value.X;
-			NPC.ai[2] = value.Y;
+			NPC.ai[2] = value.X;
+			NPC.ai[3] = value.Y;
 		}
 	}
 
-	public int GorgeistMaxHealthTotal
-	{
-		get => (int)NPC.ai[3];
-		set => NPC.ai[3] = value;
-	}
+	public ref float StateTimer => ref NPC.localAI[0];
+	public ref float StateDuration => ref NPC.localAI[1];
 
-	public int GorgeistHealthTotal { get; set; }
-
-	// Auto-implemented property, acts exactly like a variable by using a hidden backing field
-	public Vector2 LastFirstStageDestination { get; set; } = Vector2.Zero;
-
-	// This property uses NPC.localAI[] instead which doesn't get synced, but because SpawnedMinions is only used on spawn as a flag, this will get set by all parties to true.
-	// Knowing what side (client, server, all) is in charge of a variable is important as NPC.ai[] only has four entries, so choose wisely which things you need synced and not synced
-	public bool SpawnedMinions
-	{
-		get => NPC.localAI[0] == 1f;
-		set => NPC.localAI[0] = value ? 1f : 0f;
-	}
-
-	const int FirstStageTimerMax = 90;
-	// This is a reference property. It lets us write FirstStageTimer as if it's NPC.localAI[1], essentially giving it our own name
-	public ref float FirstStageTimer => ref NPC.localAI[1];
-
-	// We could also repurpose FirstStageTimer since it's unused in the second stage, or write "=> ref FirstStageTimer", but then we have to reset the timer when the state switch happens
-	public ref float SecondStageTimer_SpawnEyes => ref NPC.localAI[3];
-
-	// Do NOT try to use NPC.ai[4]/NPC.localAI[4] or higher indexes, it only accepts 0, 1, 2 and 3!
-	// If you choose to go the route of "wrapping properties" for NPC.ai[], make sure they don't overlap (two properties using the same variable in different ways), and that you don't accidently use NPC.ai[] directly
+	public Player TargetPlayer;
 
 	// Helper method to determine the minion type
 	public static int MinionType()
@@ -77,17 +72,10 @@ public class GorgeistBossBody : ModNPC
 	public static int MinionCount()
 	{
 		int count = 15;
-
 		if (Main.expertMode)
-		{
 			count += 5; // Increase by 5 if expert or master mode
-		}
-
 		if (Main.getGoodWorld)
-		{
 			count += 5; // Increase by 5 if using the "For The Worthy" seed
-		}
-
 		return count;
 	}
 
@@ -121,20 +109,17 @@ public class GorgeistBossBody : ModNPC
 		if (!Main.dedServ)
 		{
 			Music = MusicID.Boss1;
-
 			if (!Main.swapMusic == Main.drunkWorld && !Main.remixWorld)
-			{
 				Music = MusicID.OtherworldlyBoss1;
-			}
 		}
 	}
 
 	public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 	{
 		bestiaryEntry.Info.AddRange([
-				new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-				new FlavorTextBestiaryInfoElement("Mods.ExampleMod.Bestiary.GorgeistBossBody")
-			]);
+			new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
+			new FlavorTextBestiaryInfoElement("Mods.ExampleMod.Bestiary.GorgeistBossBody")
+		]);
 	}
 
 	public override void ModifyNPCLoot(NPCLoot npcLoot)
@@ -160,7 +145,7 @@ public class GorgeistBossBody : ModNPC
 		// This part is not required for a boss and is just showcasing some advanced stuff you can do with drop rules to control how items spawn
 		// We make 12-15 ExampleItems spawn randomly in all directions, like the lunar pillar fragments. Hereby we need the DropOneByOne rule,
 		// which requires these parameters to be defined
-		var parameters = new DropOneByOne.Parameters()
+		/*var parameters = new DropOneByOne.Parameters()
 		{
 			ChanceNumerator = 1,
 			ChanceDenominator = 1,
@@ -168,9 +153,10 @@ public class GorgeistBossBody : ModNPC
 			MaximumStackPerChunkBase = 1,
 			MinimumItemDropsCount = 12,
 			MaximumItemDropsCount = 15,
-		};
+		};*/
 
 		//notExpertRule.OnSuccess(new DropOneByOne(itemType, parameters)); // itemType doesn't seem to exist??
+		// folly: Because you removed the line that defined it. This is where you drop items one by one on non-expert difficulties
 
 		// Finally add the leading rule
 		npcLoot.Add(notExpertRule);
@@ -185,28 +171,25 @@ public class GorgeistBossBody : ModNPC
 		//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<GorgeistBossPetItem>(), 4));
 	}
 
-	/* // ImmunityCooldownID.BossNoCheese doesn't seem to exist??
+	// ImmunityCooldownID.BossNoCheese doesn't seem to exist?? folly: That's because it's in 1.4.5
 	public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 	{
-		cooldownSlot = ImmunityCooldownID.BossNoCheese; // use the boss immunity cooldown counter, to prevent ignoring boss attacks by taking damage from other sources
+		cooldownSlot = ImmunityCooldownID.Bosses;
 		return true;
 	}
-	*/
 
 	public override void FindFrame(int frameHeight)
 	{
 		int startFrame = 0;
 		int finalFrame = 1;
 
-		if (SecondStage)
+		if (HasFlag(Flags.SecondPhase))
 		{
 			startFrame = 2;
 			finalFrame = 3;
 
 			if (NPC.frame.Y < startFrame * frameHeight)
-			{
 				NPC.frame.Y = startFrame * frameHeight;
-			}
 		}
 
 		int frameSpeed = 5;
@@ -218,9 +201,7 @@ public class GorgeistBossBody : ModNPC
 			NPC.frame.Y += frameHeight;
 
 			if (NPC.frame.Y > finalFrame * frameHeight)
-			{
 				NPC.frame.Y = startFrame * frameHeight;
-			}
 		}
 	}
 
@@ -228,30 +209,128 @@ public class GorgeistBossBody : ModNPC
 	{
 	}
 
+	public bool HasFlag(Flags flag)
+	{
+		return (BossFlags & flag) != 0;
+	}
+
+	public void SetFlag(Flags flag, bool value = true)
+	{
+		if (value)
+			BossFlags |= flag;
+		else
+			BossFlags &= ~flag;
+	}
+
+	public void SwitchState(State state, float ticks = 0f)
+	{
+		if (ticks == 0f)
+			ticks = GetStateDuration(state);
+		CurrentState = state;
+		StateTimer = 0f;
+		StateDuration = ticks;
+		SetFlag(Flags.DidAttack, false);
+	}
+
+	public override void OnSpawn(IEntitySource source)
+	{
+		SwitchState(State.Idle);
+	}
+
 	public override void AI()
 	{
 		if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
-		{
 			NPC.TargetClosest();
-		}
-
-		Player player = Main.player[NPC.target];
-
-		if (player.dead)
+		if (!NPC.HasPlayerTarget)
+			return;
+		TargetPlayer = Main.player[NPC.target];
+		if (TargetPlayer.dead)
 		{
 			NPC.velocity.Y -= 0.04f;
 			NPC.EncourageDespawn(10);
 			return;
 		}
+		if (HasFlag(Flags.SecondPhase))
+			Phase2();
+		else
+			Phase1();
+		if (StateTimer < StateDuration)
+			StateTimer++;
+		else
+			OnStateEnd();
+		NPC.velocity += (Destination - NPC.Center) * 0.01f;
+		NPC.velocity *= 0.9f;
+	}
+
+	public static float GetStateDuration(State state) => state switch
+	{
+		State.Idle => 4f * 60f,
+		State.TossPlate => 2f * 60f,
+		State.TossFood => 4f * 60f,
+		State.CirclingPlayer => 8f * 60f,
+		_ => 4f * 60f
+	};
+
+	public void OnStateEnd()
+	{
+		switch (CurrentState)
+		{
+			case State.Idle:
+				if (Main.rand.NextBool())
+					SwitchState(State.CirclingPlayer);
+				else
+				{
+					if (Main.rand.NextBool())
+						SwitchState(State.TossPlate);
+					else
+						SwitchState(State.TossFood);
+				}
+				break;
+			case State.TossPlate:
+			case State.TossFood:
+			case State.CirclingPlayer:
+				SwitchState(State.Idle);
+				break;
+			default:
+				SwitchState(CurrentState);
+				break;
+		}
+		if (!HasFlag(Flags.SecondPhase) && NPC.life < NPC.lifeMax / 2)
+		{
+			SetFlag(Flags.SecondPhase);
+			SwitchState(State.Enraged);
+		}
 	}
 
 	public void Phase1()
 	{
-
+		Destination = TargetPlayer.Center + new Vector2(100f, -100f);
+		switch (CurrentState)
+		{
+			case State.TossPlate:
+				if (!HasFlag(Flags.DidAttack))
+				{
+					// TODO: Toss plate
+					SetFlag(Flags.DidAttack);
+				}
+				break;
+			case State.TossFood:
+				Destination = TargetPlayer.Center + new Vector2(0f, -200f);
+				if (StateTimer > StateDuration * 0.5f && !HasFlag(Flags.DidAttack))
+				{
+					// TODO: Toss food
+					SetFlag(Flags.DidAttack);
+				}
+				break;
+			case State.CirclingPlayer:
+				float t = StateTimer / StateDuration * MathF.Tau * 2f - MathF.PI * 0.5f;
+				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * 100f, MathF.Sin(t) * 100f);
+				break;
+		}
 	}
 
 	public void Phase2()
 	{
-
+		// TODO
 	}
 }
