@@ -7,7 +7,8 @@ using Terraria.ModLoader;
 
 namespace WgMod.Content.Items.Consumables;
 
-// Basic code for a boss treasure bag
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class GorgeistBossBag : ModItem
 {
 	public override void SetStaticDefaults()

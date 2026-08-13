@@ -8,7 +8,8 @@ using WgMod.Content.Projectiles.Pets;
 
 namespace WgMod.Content.Items.Pets;
 
-// You can find a simple pet example in the ExampleMod\Content\Pets\ExamplePet\ folder
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class GorgeistHeart : ModItem
 {
 	public override void SetDefaults()

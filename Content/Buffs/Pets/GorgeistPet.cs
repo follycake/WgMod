@@ -4,6 +4,8 @@ using WgMod.Content.Projectiles.Pets;
 
 namespace WgMod.Content.Buffs.Pets;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class GorgeistPet : ModBuff
 {
 	public override void SetStaticDefaults()

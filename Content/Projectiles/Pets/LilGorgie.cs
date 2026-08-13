@@ -7,6 +7,8 @@ using WgMod.Content.Buffs.Pets;
 
 namespace WgMod.Content.Projectiles.Pets;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class LilGorgie : ModProjectile
 {
 	public override void SetStaticDefaults()
