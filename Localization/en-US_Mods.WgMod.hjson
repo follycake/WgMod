@@ -781,8 +781,8 @@ Items: {
 	}
 
 	GorgeistBossTrophy: {
-		Tooltip: ""
 		DisplayName: Gorgeist Boss Trophy
+		Tooltip: ""
 	}
 
 	GorgeistBossRelic: {
