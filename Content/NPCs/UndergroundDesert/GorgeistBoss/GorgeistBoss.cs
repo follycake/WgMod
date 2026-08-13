@@ -9,6 +9,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using WgMod.Common.GlobalNPCs;
+using WgMod.Content.Items.Armor.Vanity;
+using WgMod.Content.Items.Consumables;
+using WgMod.Content.Items.Pets;
 using WgMod.Content.Items.Placeable.Furniture;
 using WgMod.Content.Projectiles.Enemy.Gorgeist;
 
@@ -132,54 +135,21 @@ public class GorgeistBossBody : ModNPC
 
 	public override void ModifyNPCLoot(NPCLoot npcLoot)
 	{
-		// Do NOT misuse the ModifyNPCLoot and OnKill hooks: the former is only used for registering drops, the latter for everything else
-
-		// The order in which you add loot will appear as such in the Bestiary. To mirror vanilla boss order:
-		// 1. Trophy
-		// 2. Classic Mode ("not expert")
-		// 3. Expert Mode (usually just the treasure bag)
-		// 4. Master Mode (relic first, pet last, everything else in between)
-
-		// Trophies are spawned with 1/10 chance
 		npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<GorgeistBossTrophy>(), 10));
 
-		// All the Classic Mode drops here are based on "not expert", meaning we use .OnSuccess() to add them into the rule, which then gets added
 		LeadingConditionRule notExpertRule = new(new Conditions.NotExpert());
 
-		// Notice we use notExpertRule.OnSuccess instead of npcLoot.Add so it only applies in normal mode
-		// Boss masks are spawned with 1/7 chance
-		//notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<GorgeistBossMask>(), 7));
+		notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<GorgeistMask>(), 7));
 
-		// This part is not required for a boss and is just showcasing some advanced stuff you can do with drop rules to control how items spawn
-		// We make 12-15 ExampleItems spawn randomly in all directions, like the lunar pillar fragments. Hereby we need the DropOneByOne rule,
-		// which requires these parameters to be defined
-		/*var parameters = new DropOneByOne.Parameters()
-		{
-			ChanceNumerator = 1,
-			ChanceDenominator = 1,
-			MinimumStackPerChunkBase = 1,
-			MaximumStackPerChunkBase = 1,
-			MinimumItemDropsCount = 12,
-			MaximumItemDropsCount = 15,
-		};*/
-
-		//notExpertRule.OnSuccess(new DropOneByOne(itemType, parameters)); // itemType doesn't seem to exist??
-		// folly: Because you removed the line that defined it. This is where you drop items one by one on non-expert difficulties
-
-		// Finally add the leading rule
 		npcLoot.Add(notExpertRule);
 
-		// Add the treasure bag using ItemDropRule.BossBag (automatically checks for expert mode)
-		//npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<GorgeistBossBag>()));
+		npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<GorgeistBossBag>()));
 
-		// ItemDropRule.MasterModeCommonDrop for the relic
 		npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<GorgeistBossRelic>()));
 
-		// ItemDropRule.MasterModeDropOnAllPlayers for the pet
-		//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<GorgeistBossPetItem>(), 4));
+		npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<GorgeistHeart>(), 4));
 	}
 
-	// ImmunityCooldownID.BossNoCheese doesn't seem to exist?? folly: That's because it's in 1.4.5
 	public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 	{
 		cooldownSlot = ImmunityCooldownID.Bosses;

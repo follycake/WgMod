@@ -1,0 +1,42 @@
+﻿using WgMod.Content.Items.Armor.Vanity;
+using WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
+using Terraria;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace WgMod.Content.Items.Consumables;
+
+// Basic code for a boss treasure bag
+public class GorgeistBossBag : ModItem
+{
+	public override void SetStaticDefaults()
+	{
+		ItemID.Sets.BossBag[Type] = true;
+		ItemID.Sets.PreHardmodeLikeBossBag[Type] = true;
+
+		Item.ResearchUnlockCount = 3;
+	}
+
+	public override void SetDefaults()
+	{
+		Item.maxStack = Item.CommonMaxStack;
+		Item.consumable = true;
+		Item.width = 24;
+		Item.height = 24;
+		Item.rare = ItemRarityID.Purple;
+		Item.expert = true;
+	}
+
+	public override bool CanRightClick()
+	{
+		return true;
+	}
+
+	public override void ModifyItemLoot(ItemLoot itemLoot)
+	{
+		itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<GorgeistMask>(), 7));
+		itemLoot.Add(ItemDropRule.Common(ItemID.SandBlock, 1, 12, 16));
+		itemLoot.Add(ItemDropRule.CoinsBasedOnNPCValue(ModContent.NPCType<GorgeistBossBody>()));
+	}
+}

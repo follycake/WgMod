@@ -789,6 +789,21 @@ Items: {
 		DisplayName: Gorgeist Boss Relic
 		Tooltip: ""
 	}
+
+	GorgeistMask: {
+		DisplayName: Gorgeist Mask
+		Tooltip: ""
+	}
+
+	GorgeistBossBag: {
+		DisplayName: Gorgeist Boss Bag
+		Tooltip: ""
+	}
+
+	GorgeistHeart: {
+		DisplayName: Gorgeist Heart
+		Tooltip: Her spirit still lives in this crystal
+	}
 }
 
 Buffs: {
@@ -964,6 +979,11 @@ Buffs: {
 		Description: Mods.WgMod.Buffs.Bloated.Description
 		DisplayName: Bloated
 	}
+
+	GorgeistPet: {
+		DisplayName: Lil' Gorgie
+		Description: She's round!
+	}
 }
 
 Configs: {
@@ -1100,6 +1120,7 @@ Projectiles: {
 	FatTombstone.DisplayName: Fat Tombstone
 	TossedPlate.DisplayName: Tossed Plate
 	TossedFood.DisplayName: Tossed Food
+	LilGorgie.DisplayName: Lil' Gorgie
 }
 
 NPCs: {
