@@ -73,9 +73,9 @@ public class HomingFood : ModNPC
     public override float SpawnChance(NPCSpawnInfo spawnInfo)
     {
         if (!DownedBossSystem.downedGorgeistBoss)
-            return SpawnCondition.DesertCave.Chance * 0.1f;
-        else
             return SpawnCondition.DesertCave.Chance * 0.05f;
+        else
+            return SpawnCondition.DesertCave.Chance * 0.025f;
     }
 
     public override void OnSpawn(IEntitySource source)

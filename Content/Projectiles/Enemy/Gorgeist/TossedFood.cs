@@ -52,13 +52,16 @@ public class TossedFood : ModProjectile
     public override void AI()
     {
         Timer++;
+
         if (Timer >= 15f)
         {
             Timer = 15f;
             Projectile.velocity.Y += 0.1f;
         }
+
         if (Projectile.velocity.Y > 16f)
             Projectile.velocity.Y = 16f;
+
         if (DeathTimer < Death)
             DeathTimer++;
         else

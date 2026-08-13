@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -333,9 +332,12 @@ public class GorgeistBossBody : ModNPC
 	public void ThrowFood(int count, float offsetX = 1f)
 	{
 		SoundEngine.PlaySound(SoundID.Item1, NPC.Center);
+
 		if (Main.netMode == NetmodeID.MultiplayerClient) // Needed so that we only spawn projectiles on the server
 			return;
+
 		int propagateCount = Main.rand.Next(1, count / 2 + 1); // at least 1, at max count / 2
+
 		for (int i = 0; i < count; i++)
 		{
 			int propagate = i < propagateCount ? 1 : 0;
