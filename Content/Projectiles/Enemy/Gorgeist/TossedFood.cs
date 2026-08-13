@@ -1,6 +1,6 @@
 
-using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,6 +26,9 @@ public class TossedFood : ModProjectile
         ItemID.Milkshake
     ];
 
+    public static int Death = 3 * 30;
+
+    public int _deathTimer;
     int _itemIndex;
     int _itemId;
 
@@ -64,10 +67,21 @@ public class TossedFood : ModProjectile
         {
             Projectile.velocity.Y = 16f;
         }
+
+        if (_deathTimer < Death)
+            _deathTimer++;
+        else
+            Projectile.Kill();
     }
 
     public override void OnKill(int timeLeft)
     {
+        SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
+        for (int i = 0; i < 5; i++)
+        {
+            Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Sand);
+        }
+
         if (Projectile.ai[1] == 1)
             NPC.NewNPC(Projectile.GetSource_FromThis(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<HomingFood>(), default, 1);
     }

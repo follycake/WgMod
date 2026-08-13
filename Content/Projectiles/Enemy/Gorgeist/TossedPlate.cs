@@ -1,4 +1,6 @@
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace WgMod.Content.Projectiles.Enemy.Gorgeist;
@@ -7,7 +9,9 @@ namespace WgMod.Content.Projectiles.Enemy.Gorgeist;
 [Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class TossedPlate : ModProjectile
 {
-    public static float MaxSpeed = 15;
+    public static int Death = 3 * 60;
+
+    public int _deathTimer;
 
     public override void SetDefaults()
     {
@@ -27,5 +31,20 @@ public class TossedPlate : ModProjectile
 
         Projectile.velocity.Y += (Projectile.ai[0] - Projectile.Center.Y) * 0.01f;
         Projectile.velocity.Y *= 0.7f;
+
+        if (_deathTimer < Death)
+            _deathTimer++;
+        else
+            Projectile.Kill();
+    }
+
+
+    public override void OnKill(int timeLeft)
+    {
+        SoundEngine.PlaySound(SoundID.Shatter, Projectile.position);
+        for (int i = 0; i < 15; i++)
+        {
+            Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Glass);
+        }
     }
 }
