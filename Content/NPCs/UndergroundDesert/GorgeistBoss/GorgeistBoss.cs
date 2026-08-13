@@ -403,7 +403,12 @@ public class GorgeistBossBody : ModNPC
 			case State.TossPlate:
 				if (!HasFlag(Flags.DidAttack))
 				{
-					switch (Main.rand.Next(0, 3))
+					int value = 0;
+
+					if (NPC.life <= NPC.lifeMax * 0.75)
+						value = 1;
+
+					switch (Main.rand.Next(value, value + 2))
 					{
 						case 0:
 							ThrowPlate(); // Single

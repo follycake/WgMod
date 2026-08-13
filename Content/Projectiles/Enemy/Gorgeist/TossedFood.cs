@@ -68,10 +68,18 @@ public class TossedFood : ModProjectile
     public override void OnKill(int timeLeft)
     {
         SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
-        for (int i = 0; i < 5; i++)
-            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Sand);
+
+        int dust = DustID.Sand;
+
         if (TransformOnDeath)
+        {
             NPC.NewNPC(Projectile.GetSource_FromThis(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<HomingFood>(), ai3: Projectile.ai[1]);
+
+            dust = DustID.PinkTorch;
+        }
+
+        for (int i = 0; i < 5; i++)
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dust);
     }
 
     public override bool PreDraw(ref Color lightColor)
@@ -81,6 +89,13 @@ public class TossedFood : ModProjectile
         Asset<Texture2D> texture = TextureAssets.Item[item];
         Rectangle frame = texture.Frame(1, 3);
         Main.EntitySpriteDraw(texture.Value, Projectile.Center - Main.screenPosition, frame, Color.White, Projectile.rotation, frame.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
+
+        if (TransformOnDeath)
+        {
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.PinkTorch, Projectile.velocity.X, Projectile.velocity.Y, 0, Color.White, 1f);
+            dust.noGravity = true;
+        }
+
         return false;
     }
 }
