@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -321,12 +322,39 @@ public class GorgeistBossBody : ModNPC
 		}
 	}
 
+	public void EyeSparkle()
+	{
+		Dust dust = Dust.NewDustPerfect(new(NPC.position.X + 71f, NPC.position.Y - 4f), DustID.BlueTorch, NPC.velocity, default, default, 2);
+		dust.noGravity = true;
+
+		SoundEngine.PlaySound(WgSounds.Shing, NPC.Center);
+	}
+
+	public void ThrowFood(int projectiles, float offsetX = 1f)
+	{
+		if (Main.netMode == NetmodeID.MultiplayerClient) // Needed so that we only spawn projectiles on the server
+			return;
+
+		int propogate = 0;
+		for (int i = 0; i < projectiles; i++)
+		{
+			if (Main.rand.NextBool(6))
+				propogate = 1;
+
+			Projectile.NewProjectileDirect(NPC.GetSource_FromThis(), NPC.Center, new(Main.rand.NextFloat(-offsetX, offsetX), 5f), ModContent.ProjectileType<TossedFood>(), NPC.damage / 2, 2f, default, default, propogate);
+		}
+
+		SoundEngine.PlaySound(SoundID.Item1, NPC.Center);
+	}
+
 	public void ThrowPlate(float offsetY = 0f, float speedOffset = 1f)
 	{
 		if (Main.netMode == NetmodeID.MultiplayerClient) // Needed so that we only spawn projectiles on the server
 			return;
 
 		Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new(15f, 5f), ModContent.ProjectileType<TossedPlate>(), NPC.damage / 2, 2f, default, TargetPlayer.Center.Y + offsetY, speedOffset);
+
+		SoundEngine.PlaySound(SoundID.Item1, NPC.Center);
 	}
 
 	public void ThrowPlateVariant(int variant, float speedOffset = 1)
@@ -334,20 +362,20 @@ public class GorgeistBossBody : ModNPC
 		switch (variant)
 		{
 			case 0: // Triple Volley
-				ThrowPlate(-100f, speedOffset);
+				ThrowPlate(-120f, speedOffset);
 				ThrowPlate(0f, speedOffset);
-				ThrowPlate(100f, speedOffset);
+				ThrowPlate(120f, speedOffset);
 				break;
 			case 1: // Quad Volley
-				ThrowPlate(-170f, speedOffset);
+				ThrowPlate(-180f, speedOffset);
 				ThrowPlate(-60f, speedOffset);
 				ThrowPlate(60f, speedOffset);
-				ThrowPlate(170f, speedOffset);
+				ThrowPlate(180f, speedOffset);
 				break;
 		}
 	}
 
-	public void MultiThrow(float volley1 = 1.15f, float volley2 = 1f, float volley3 = 0.85f)
+	public void MultiThrow(float volley1 = 1.1f, float volley2 = 0.95f, float volley3 = 0.8f)
 	{
 		switch (Main.rand.Next(0, 3))
 		{
@@ -374,6 +402,10 @@ public class GorgeistBossBody : ModNPC
 		Destination = TargetPlayer.Center + new Vector2(300f, -300f);
 		switch (CurrentState)
 		{
+			case State.Idle:
+				if (StateTimer == StateDuration - 30)
+					EyeSparkle();
+				break;
 			case State.TossPlate:
 				if (!HasFlag(Flags.DidAttack))
 				{
@@ -396,13 +428,7 @@ public class GorgeistBossBody : ModNPC
 				Destination = TargetPlayer.Center + new Vector2(0f, -250f);
 				if (StateTimer > StateDuration * 0.5f && !HasFlag(Flags.DidAttack))
 				{
-					float propogate = 0;
-					for (int i = 0; i < 6; i++)
-					{
-						if (Main.rand.NextBool(4))
-							propogate = 1;
-						Projectile.NewProjectileDirect(NPC.GetSource_FromThis(), NPC.Center, new(Main.rand.NextFloat(-7, 7f), 5f), ModContent.ProjectileType<TossedFood>(), NPC.damage / 2, 2f, default, default, propogate);
-					}
+					ThrowFood(4, 7f);
 					SetFlag(Flags.DidAttack);
 				}
 				break;
