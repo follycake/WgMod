@@ -330,31 +330,25 @@ public class GorgeistBossBody : ModNPC
 		SoundEngine.PlaySound(WgSounds.Shing, NPC.Center);
 	}
 
-	public void ThrowFood(int projectiles, float offsetX = 1f)
+	public void ThrowFood(int count, float offsetX = 1f)
 	{
+		SoundEngine.PlaySound(SoundID.Item1, NPC.Center);
 		if (Main.netMode == NetmodeID.MultiplayerClient) // Needed so that we only spawn projectiles on the server
 			return;
-
-		int propogate = 0;
-		for (int i = 0; i < projectiles; i++)
+		int propagateCount = Main.rand.Next(1, count / 2 + 1); // at least 1, at max count / 2
+		for (int i = 0; i < count; i++)
 		{
-			if (Main.rand.NextBool(6))
-				propogate = 1;
-
-			Projectile.NewProjectileDirect(NPC.GetSource_FromThis(), NPC.Center, new(Main.rand.NextFloat(-offsetX, offsetX), 5f), ModContent.ProjectileType<TossedFood>(), NPC.damage / 2, 2f, default, default, propogate);
+			int propagate = i < propagateCount ? 1 : 0;
+			Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new(Main.rand.NextFloat(-offsetX, offsetX), 5f), ModContent.ProjectileType<TossedFood>(), NPC.damage / 2, 2f, -1, propagate);
 		}
-
-		SoundEngine.PlaySound(SoundID.Item1, NPC.Center);
 	}
 
 	public void ThrowPlate(float offsetY = 0f, float speedOffset = 1f)
 	{
+		SoundEngine.PlaySound(SoundID.Item1, NPC.Center);
 		if (Main.netMode == NetmodeID.MultiplayerClient) // Needed so that we only spawn projectiles on the server
 			return;
-
-		Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new(15f, 5f), ModContent.ProjectileType<TossedPlate>(), NPC.damage / 2, 2f, default, TargetPlayer.Center.Y + offsetY, speedOffset);
-
-		SoundEngine.PlaySound(SoundID.Item1, NPC.Center);
+		Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new(15f, 5f), ModContent.ProjectileType<TossedPlate>(), NPC.damage / 2, 2f, -1, TargetPlayer.Center.Y + offsetY, speedOffset);
 	}
 
 	public void ThrowPlateVariant(int variant, float speedOffset = 1)

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -20,7 +19,7 @@ namespace WgMod.Content.NPCs.UndergroundDesert;
 [Credit(ProjectRole.Idea, Contributor.haydumbb)]
 public class HomingFood : ModNPC
 {
-    static readonly int[] _items =
+    public static readonly int[] Items =
     [
         ItemID.ChristmasPudding,
         ItemID.GingerbreadCookie,
@@ -35,8 +34,13 @@ public class HomingFood : ModNPC
         ItemID.Milkshake
     ];
 
-    int _itemIndex;
-    int _itemId;
+    public int ItemIndex
+    {
+        get => (int)NPC.ai[3] - 1;
+        set => NPC.ai[3] = value + 1;
+    }
+
+    public int ItemId => Items[ItemIndex];
 
     public override void SetDefaults()
     {
@@ -55,8 +59,7 @@ public class HomingFood : ModNPC
         NPC.friendly = false;
 
         AIType = NPCID.CursedSkull;
-        _itemIndex = 0;
-        _itemId = _items[_itemIndex];
+        ItemIndex = -1;
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -77,25 +80,8 @@ public class HomingFood : ModNPC
 
     public override void OnSpawn(IEntitySource source)
     {
-        if (Main.netMode == NetmodeID.MultiplayerClient)
-            return;
-        _itemIndex = Main.rand.Next(_items.Length);
-        _itemId = _items[_itemIndex];
-    }
-
-    public override void SendExtraAI(BinaryWriter writer)
-    {
-        writer.Write(_itemIndex);
-    }
-
-    public override void ReceiveExtraAI(BinaryReader reader)
-    {
-        int index = reader.ReadInt32();
-        if (_itemIndex != index)
-        {
-            _itemIndex = index;
-            _itemId = _items[_itemIndex];
-        }
+        if (ItemIndex < 0)
+            ItemIndex = Main.rand.Next(Items.Length);
     }
 
     public override void PostAI()
@@ -116,8 +102,9 @@ public class HomingFood : ModNPC
 
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
-        Main.instance.LoadItem(_itemId);
-        Asset<Texture2D> texture = TextureAssets.Item[_itemId];
+        int item = ItemId;
+        Main.instance.LoadItem(item);
+        Asset<Texture2D> texture = TextureAssets.Item[item];
         Rectangle frame = texture.Frame(1, 3);
         spriteBatch.Draw(texture.Value, NPC.Center - screenPos, frame, Color.White, (float)(Math.Sin(Main.timeForVisualEffects / 30.0) * 0.2), frame.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
         return false;
