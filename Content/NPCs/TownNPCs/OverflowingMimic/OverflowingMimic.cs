@@ -313,7 +313,6 @@ public class OverflowingMimicNPC : ModNPC
             .Add(ItemMult(ItemID.TitanGlove), Condition.Hardmode)
             .Add(ItemMult(ItemID.StarCloak), Condition.Hardmode)
             .Add(ItemMult(ItemID.CrossNecklace), Condition.Hardmode)
-            .Add(ItemMult(ItemID.MagicDagger), Condition.Hardmode)
             // After any mech boss
             .Add(ItemMult(ItemID.ToySled), Condition.DownedMechBossAny)
             .Add(ItemMult(ItemID.Frostbrand), Condition.DownedMechBossAny)
@@ -336,7 +335,7 @@ public class OverflowingMimicNPC : ModNPC
             .Add(ItemMult(ItemID.FlyingKnife), Condition.DownedMechBossAll)
             .Add(ItemMult(ItemID.CrystalVileShard), Condition.DownedMechBossAll)
             .Add(ItemMult(ItemID.IlluminantHook), Condition.DownedMechBossAll)
-            ;
+            /* It looks wrong having the semicolon on its own line so I'm adding this to make it less lonely */;
 
         mimicShop.Register();
     }
