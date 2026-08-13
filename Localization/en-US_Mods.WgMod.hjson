@@ -802,11 +802,11 @@ Items: {
 
 	GorgeistHeart: {
 		DisplayName: Gorgeist Heart
-		Tooltip: 
-		'''
-		Summons Lil' Gorgie
-		'Her spirit still lives in this crystal'
-		'''
+		Tooltip:
+			'''
+			Summons Lil' Gorgie
+			'Her spirit still lives in this crystal'
+			'''
 	}
 }
 
