@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -6,6 +7,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 using WgMod.Common.GlobalNPCs;
 using WgMod.Content.Items.Placeable.Furniture;
 using WgMod.Content.Projectiles.Enemy.Gorgeist;
@@ -14,6 +16,8 @@ namespace WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
 
 [AutoloadBossHead]
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class GorgeistBossBody : ModNPC
 {
 	public enum Flags
@@ -108,6 +112,8 @@ public class GorgeistBossBody : ModNPC
 		NPC.npcSlots = 10f;
 		NPC.aiStyle = -1;
 
+		ContentSamples.NpcBestiaryRarityStars[Type] = 2;
+
 		if (!Main.dedServ)
 		{
 			Music = MusicID.Boss1;
@@ -119,8 +125,8 @@ public class GorgeistBossBody : ModNPC
 	public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 	{
 		bestiaryEntry.Info.AddRange([
-			new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-			new FlavorTextBestiaryInfoElement("Mods.ExampleMod.Bestiary.GorgeistBossBody")
+			BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.UndergroundDesert,
+			new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.Gorgeist")
 		]);
 	}
 
@@ -236,9 +242,15 @@ public class GorgeistBossBody : ModNPC
 		SetFlag(Flags.DidAttack, false);
 	}
 
+	public WeightedRandom<State> _attacks = new();
+
 	public override void OnSpawn(IEntitySource source)
 	{
 		SwitchState(State.Idle);
+
+		_attacks.Add(State.TossPlate, 2);
+		_attacks.Add(State.TossFood, 1);
+		_attacks.Add(State.CirclingPlayer, 1);
 	}
 
 	public override void OnKill()
@@ -250,31 +262,37 @@ public class GorgeistBossBody : ModNPC
 	{
 		if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			NPC.TargetClosest();
+
 		if (!NPC.HasPlayerTarget)
 			return;
+
 		TargetPlayer = Main.player[NPC.target];
+
 		if (TargetPlayer.dead)
 		{
 			NPC.velocity.Y -= 0.04f;
 			NPC.EncourageDespawn(10);
 			return;
 		}
+
 		if (HasFlag(Flags.SecondPhase))
 			Phase2();
 		else
 			Phase1();
+
 		if (StateTimer < StateDuration)
 			StateTimer++;
 		else
 			OnStateEnd();
+
 		NPC.velocity += (Destination - NPC.Center) * 0.01f;
 		NPC.velocity *= 0.9f;
 	}
 
 	public static float GetStateDuration(State state) => state switch
 	{
-		State.Idle => 4f * 60f,
-		State.TossPlate => 2f * 60f,
+		State.Idle => 2f * 60f,
+		State.TossPlate => 1f * 60f,
 		State.TossFood => 4f * 60f,
 		State.CirclingPlayer => 8f * 60f,
 		_ => 4f * 60f
@@ -285,15 +303,7 @@ public class GorgeistBossBody : ModNPC
 		switch (CurrentState)
 		{
 			case State.Idle:
-				if (Main.rand.NextBool())
-					SwitchState(State.CirclingPlayer);
-				else
-				{
-					if (Main.rand.NextBool())
-						SwitchState(State.TossPlate);
-					else
-						SwitchState(State.TossFood);
-				}
+				SwitchState(_attacks);
 				break;
 			case State.TossPlate:
 			case State.TossFood:
@@ -311,11 +321,12 @@ public class GorgeistBossBody : ModNPC
 		}
 	}
 
-	public void ThrowPlate(float offset = 0f, float speedOffset = 1f)
+	public void ThrowPlate(float offsetY = 0f, float speedOffset = 1f)
 	{
 		if (Main.netMode == NetmodeID.MultiplayerClient) // Needed so that we only spawn projectiles on the server
 			return;
-		Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new(15f, 5f), ModContent.ProjectileType<TossedPlate>(), NPC.damage / 2, 2f, default, TargetPlayer.Center.Y + offset, speedOffset);
+
+		Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new(15f, 5f), ModContent.ProjectileType<TossedPlate>(), NPC.damage / 2, 2f, default, TargetPlayer.Center.Y + offsetY, speedOffset);
 	}
 
 	public void ThrowPlateVariant(int variant, float speedOffset = 1)
@@ -366,7 +377,7 @@ public class GorgeistBossBody : ModNPC
 			case State.TossPlate:
 				if (!HasFlag(Flags.DidAttack))
 				{
-					switch (Main.rand.Next(0, 4))
+					switch (Main.rand.Next(0, 3))
 					{
 						case 0:
 							ThrowPlate(); // Single
@@ -375,9 +386,6 @@ public class GorgeistBossBody : ModNPC
 							ThrowPlateVariant(0); // Triple
 							break;
 						case 2:
-							ThrowPlateVariant(1); // Quad
-							break;
-						case 3:
 							MultiThrow(); // Volley
 							break;
 					}
@@ -385,10 +393,16 @@ public class GorgeistBossBody : ModNPC
 				}
 				break;
 			case State.TossFood:
-				Destination = TargetPlayer.Center + new Vector2(0f, -200f);
+				Destination = TargetPlayer.Center + new Vector2(0f, -250f);
 				if (StateTimer > StateDuration * 0.5f && !HasFlag(Flags.DidAttack))
 				{
-					// TODO: Toss food
+					float propogate = 0;
+					for (int i = 0; i < 6; i++)
+					{
+						if (Main.rand.NextBool(4))
+							propogate = 1;
+						Projectile.NewProjectileDirect(NPC.GetSource_FromThis(), NPC.Center, new(Main.rand.NextFloat(-7, 7f), 5f), ModContent.ProjectileType<TossedFood>(), NPC.damage / 2, 2f, default, default, propogate);
+					}
 					SetFlag(Flags.DidAttack);
 				}
 				break;

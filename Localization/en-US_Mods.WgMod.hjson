@@ -1099,6 +1099,7 @@ Projectiles: {
 	WeightLossPotionProjectile.DisplayName: Weight Loss Potion Projectile
 	FatTombstone.DisplayName: Fat Tombstone
 	TossedPlate.DisplayName: Tossed Plate
+	TossedFood.DisplayName: Tossed Food
 }
 
 NPCs: {
@@ -1290,6 +1291,7 @@ Bestiary: {
 	GroundedHarpy: A previously free and carefree harpy, fattened until she cannot fly! She will begrudgingly provide you with useful materials from the sky.
 	Milkmaid: Simple and kind cowgirl, her magical teats produce milkshakes that can instantly change the drinker's weight! Regularly attends lesbian bars.
 	OverflowingMimic: Mimics are a form of slime who act much like hermit crabs, moving from chest to chest as they grow. This one may be a bit big for her chest, though...
+	Gorgeist: A malevolent spirit lives deep underground in the desert, cursing food to feed and fatten up adventurers. She says she does it to make them defenseless, but this is really just her fetish.
 	HomingFood: Food cursed by a malevolent spirit to seek out and fatten up adventurers until they're defenseless.
 	SweetSpirit: These spirits that dwell in the caverns will try their best to fatten you up.
 }
