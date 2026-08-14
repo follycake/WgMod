@@ -808,6 +808,15 @@ Items: {
 			'Her spirit still lives in this crystal'
 			'''
 	}
+
+	SterlingPlatter: {
+		DisplayName: Sterling Platter
+		Tooltip:
+			'''
+			Shreds your enemies in silvery explosions
+			'So clean, you'd feel guilty if you ate off it'
+			'''
+	}
 }
 
 Buffs: {
@@ -988,6 +997,15 @@ Buffs: {
 		DisplayName: Lil' Gorgie
 		Description: She's round!
 	}
+
+	SterlingSplinters: {
+		DisplayName: Sterling Splinters
+		Description:
+			'''
+			Silver shards shred your flesh
+			'Ouch! Oof! Ow!'
+			'''
+	}
 }
 
 Configs: {
@@ -1125,6 +1143,8 @@ Projectiles: {
 	TossedPlate.DisplayName: Tossed Plate
 	TossedFood.DisplayName: Tossed Food
 	LilGorgie.DisplayName: Lil' Gorgie
+	SterlingPlatterProjectile.DisplayName: Sterling Platter Projectile
+	SterlingExplosion.DisplayName: Sterling Explosion
 }
 
 NPCs: {

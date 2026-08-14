@@ -13,6 +13,7 @@ using WgMod.Content.Items.Armor.Vanity;
 using WgMod.Content.Items.Consumables;
 using WgMod.Content.Items.Pets;
 using WgMod.Content.Items.Placeable.Furniture;
+using WgMod.Content.Items.Weapons.Melee;
 using WgMod.Content.Projectiles.Enemy.Gorgeist;
 
 namespace WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
@@ -140,6 +141,7 @@ public class GorgeistBossBody : ModNPC
 		LeadingConditionRule notExpertRule = new(new Conditions.NotExpert());
 
 		notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<GorgeistMask>(), 7));
+		notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<SterlingPlatter>(), 3));
 
 		npcLoot.Add(notExpertRule);
 
