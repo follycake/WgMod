@@ -815,8 +815,9 @@ Items: {
 			'''
 			Shreds your enemies in silvery explosions
 			'So clean, you'd feel guilty if you ate off it'
+			'''
 	}
-	
+
 	YogaHeadband: {
 		SetBonus: Moving and jumping sheds a little weight
 		DisplayName: Yoga Headband
