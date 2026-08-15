@@ -12,7 +12,7 @@ using Terraria.ObjectData;
 
 namespace WgMod.Content.Tiles.Furniture;
 
-public class GorgeistBossRelicTile : ModTile
+public class GorgeistRelic : ModTile
 {
 	public const int FrameWidth = 18 * 3;
 	public const int FrameHeight = 18 * 4;

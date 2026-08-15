@@ -7,7 +7,7 @@ using Terraria.ObjectData;
 
 namespace WgMod.Content.Tiles.Furniture;
 
-public class GorgeistBossTrophyTile : ModTile
+public class GorgeistTrophy : ModTile
 {
 	public override void SetStaticDefaults()
 	{

@@ -4,11 +4,11 @@ using Terraria.ModLoader;
 
 namespace WgMod.Content.Items.Placeable.Furniture;
 
-public class GorgeistBossRelic : ModItem
+public class GorgeistRelic : ModItem
 {
 	public override void SetDefaults()
 	{
-		Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.GorgeistBossRelicTile>(), 0);
+		Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.GorgeistRelic>(), 0);
 
 		Item.width = 30;
 		Item.height = 40;

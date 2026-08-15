@@ -22,7 +22,7 @@ namespace WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
-public class GorgeistBossBody : ModNPC
+public class Gorgeist : ModNPC
 {
 	public enum Flags
 	{
@@ -136,7 +136,7 @@ public class GorgeistBossBody : ModNPC
 
 	public override void ModifyNPCLoot(NPCLoot npcLoot)
 	{
-		npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<GorgeistBossTrophy>(), 10));
+		npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<GorgeistTrophy>(), 10));
 
 		LeadingConditionRule notExpertRule = new(new Conditions.NotExpert());
 
@@ -147,7 +147,7 @@ public class GorgeistBossBody : ModNPC
 
 		npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<GorgeistBossBag>()));
 
-		npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<GorgeistBossRelic>()));
+		npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<GorgeistRelic>()));
 
 		npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<GorgeistHeart>(), 4));
 	}
