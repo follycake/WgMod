@@ -21,7 +21,7 @@ namespace WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
 [AutoloadBossHead]
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.drarky)]
 public class Gorgeist : ModNPC
 {
 	public enum Flags
@@ -91,7 +91,7 @@ public class Gorgeist : ModNPC
 
 	public override void SetStaticDefaults()
 	{
-		Main.npcFrameCount[Type] = 4;
+		Main.npcFrameCount[Type] = 6;
 
 		NPCID.Sets.MPAllowedEnemies[Type] = true;
 		NPCID.Sets.BossBestiaryPriority.Add(Type);
@@ -161,12 +161,12 @@ public class Gorgeist : ModNPC
 	public override void FindFrame(int frameHeight)
 	{
 		int startFrame = 0;
-		int finalFrame = 1;
+		int finalFrame = 2;
 
 		if (HasFlag(Flags.SecondPhase))
 		{
-			startFrame = 2;
-			finalFrame = 3;
+			startFrame = 3;
+			finalFrame = 5;
 
 			if (NPC.frame.Y < startFrame * frameHeight)
 				NPC.frame.Y = startFrame * frameHeight;
