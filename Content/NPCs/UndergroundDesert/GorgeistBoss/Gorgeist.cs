@@ -91,7 +91,7 @@ public class Gorgeist : ModNPC
 
 	public override void SetStaticDefaults()
 	{
-		Main.npcFrameCount[Type] = 6;
+		Main.npcFrameCount[Type] = 8;
 
 		NPCID.Sets.MPAllowedEnemies[Type] = true;
 		NPCID.Sets.BossBestiaryPriority.Add(Type);
@@ -102,7 +102,7 @@ public class Gorgeist : ModNPC
 	public override void SetDefaults()
 	{
 		NPC.width = 110;
-		NPC.height = 110;
+		NPC.height = 154;
 		NPC.damage = 12;
 		NPC.defense = 10;
 		NPC.lifeMax = 2000;
@@ -161,12 +161,12 @@ public class Gorgeist : ModNPC
 	public override void FindFrame(int frameHeight)
 	{
 		int startFrame = 0;
-		int finalFrame = 2;
+		int finalFrame = 3;
 
 		if (HasFlag(Flags.SecondPhase))
 		{
-			startFrame = 3;
-			finalFrame = 5;
+			startFrame = 4;
+			finalFrame = 7;
 
 			if (NPC.frame.Y < startFrame * frameHeight)
 				NPC.frame.Y = startFrame * frameHeight;
@@ -407,7 +407,7 @@ public class Gorgeist : ModNPC
 				break;
 			case State.CirclingPlayer:
 				float t = StateTimer / StateDuration * MathF.Tau * 2f - MathF.PI * 0.5f;
-				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * 150f, MathF.Sin(t) * 150f);
+				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * (150f + TargetPlayer.width), MathF.Sin(t) * (150f + TargetPlayer.height));
 				break;
 		}
 	}
