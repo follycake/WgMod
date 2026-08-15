@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Content.Projectiles.Enemy.Gorgeist;
 
@@ -47,6 +48,11 @@ public class TossedPlate : ModProjectile
         }
     }
 
+    public override void OnHitPlayer(Player target, Player.HurtInfo info)
+    {
+        if (Main.rand.NextBool(3))
+            target.AddBuff(ModContent.BuffType<SterlingSplinters>(), 3 * 60);
+    }
 
     public override void OnKill(int timeLeft)
     {

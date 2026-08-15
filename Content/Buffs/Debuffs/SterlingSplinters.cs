@@ -9,9 +9,10 @@ namespace WgMod.Content.Buffs.Debuffs;
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 public class SterlingSplinters : ModBuff
 {
-
     public override void SetStaticDefaults()
     {
+        BuffID.Sets.LongerExpertDebuff[Type] = true;
+
         Main.debuff[Type] = true;
         Main.pvpBuff[Type] = true;
         Main.buffNoSave[Type] = true;

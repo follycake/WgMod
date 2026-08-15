@@ -286,7 +286,7 @@ public class GorgeistBossBody : ModNPC
 				SwitchState(CurrentState);
 				break;
 		}
-		if (!HasFlag(Flags.SecondPhase) && NPC.life < NPC.lifeMax / 2)
+		if (!HasFlag(Flags.SecondPhase) && NPC.life < NPC.lifeMax / 3)
 		{
 			SetFlag(Flags.SecondPhase);
 			SwitchState(State.Enraged);

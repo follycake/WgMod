@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Content.Buffs.Debuffs;
+using WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
+using WgMod.Content.Projectiles.Enemy.Gorgeist;
 
 namespace WgMod.Common.Players;
 
@@ -169,12 +171,14 @@ public partial class BuffHitPlayer
         NPCID.AncientDoom,
         NPCID.BurningSphere,
         NPCID.PresentMimic,
+        ModContent.NPCType<GorgeistBossBody>()
     ];
 
     readonly HashSet<int> _feederProjectiles =
     [
         ProjectileID.DemonSickle,
         ProjectileID.DemonScythe,
+        ModContent.ProjectileType<TossedFood>(),
     ];
 
     readonly int _empressBuff = ModContent.BuffType<PrismaticStuffing>();
