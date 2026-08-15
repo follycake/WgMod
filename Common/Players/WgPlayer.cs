@@ -27,8 +27,8 @@ public partial class WgPlayer : ModPlayer
     /// <summary> How much movement will be reduced because of the player's weight. Multiply this. </summary>
     public StatModifier MovementPenalty;
 
-    /// <summary> How fast the player will lose weight due to movement. Add or subtract to this. </summary>
-    public StatModifier WeightLossRate;
+    /// <summary> How fast the player will lose weight from movement. Add or subtract to this. </summary>
+    public StatModifier MovementWeightLossRate;
 
     /// <summary> How fast the player will gain weight from most sources. Add or subtract to this. </summary>
     public StatModifier WeightGainRate;
@@ -41,6 +41,9 @@ public partial class WgPlayer : ModPlayer
 
     /// <summary> Whether the weight is currently fixed/pinned. No gain or loss. </summary>
     public bool WeightFixed;
+
+    /// <summary> Whether the player has jumped this tick. </summary>
+    public bool JustJumped { get; private set; }
 
     public readonly int[] BuffDuration = new int[Player.MaxBuffs];
     internal int _ignoreWgBuffTimer = 2;
@@ -56,6 +59,7 @@ public partial class WgPlayer : ModPlayer
 
     Vector2 _prevVel;
     int _digestTimer;
+    bool _hasJumped;
 
     public override void Initialize()
     {
@@ -78,6 +82,7 @@ public partial class WgPlayer : ModPlayer
             return;
         if (WgClientConfig.Instance.DisableWeightGain)
             weight = new Weight(MathF.Min(weight.Mass, Weight.Mass));
+        weight = Weight.Clamp(weight, _finalMaxStage);
         SetWeightForced(weight, effects);
     }
 
@@ -94,7 +99,7 @@ public partial class WgPlayer : ModPlayer
     internal void SetWeightForced(Weight weight, bool effects = true)
     {
         int prevStage = Weight.GetStage();
-        Weight = Weight.Clamp(weight, _finalMaxStage);
+        Weight = weight;
         if (Weight.GetStage() != prevStage && effects)
         {
             SoundEngine.PlaySound(WgSounds.Belly, Player.Center);
@@ -129,20 +134,30 @@ public partial class WgPlayer : ModPlayer
     {
         // Custom stats
         MovementPenalty = StatModifier.Default;
-        WeightLossRate = StatModifier.Default;
+        MovementWeightLossRate = StatModifier.Default;
         WeightGainRate = StatModifier.Default;
         FoodAbsorption = StatModifier.Default;
-        MaxStage = WeightStage.Max;
+        MaxStage = WgClientConfig.Instance.StageCap;
 
         _finalWeightFixed = WeightFixed;
         WeightFixed = false;
+
+        // Jump detection
+        if (Player.jump <= 0)
+            _hasJumped = false;
+        JustJumped = false;
+        if (!_hasJumped && Player.jump > 0)
+        {
+            JustJumped = true;
+            _hasJumped = true;
+        }
     }
 
     public override void PreUpdateBuffs()
     {
         EnsureBuff<FatBuff>();
         EnsureBuff<StomachBuff>();
-        if (Weight.GetStage() >= WeightStage.ForcedImmobile)
+        if (Weight.GetStage() >= WeightStage.HardImmobile)
             Player.AddBuff(ModContent.BuffType<Tired>(), 2);
     }
 
@@ -168,18 +183,18 @@ public partial class WgPlayer : ModPlayer
         int stage = Weight.GetStage();
         if (stage >= WeightStage.DamageReduction)
         {
-            if (stage < WeightStage.Immobile)
-                _finalKnockbackResistance = float.Lerp(0f, 0.6f, Weight.GetClampedFactor(Weight.FromStage(WeightStage.DamageReduction), Weight.Immobile));
+            if (stage < WeightStage.SoftImmobile)
+                _finalKnockbackResistance = float.Lerp(0f, 0.6f, Weight.GetClampedFactor(Weight.FromStage(WeightStage.DamageReduction), Weight.SoftImmobile));
             else
                 _finalKnockbackResistance = 1f;
         }
         else
             _finalKnockbackResistance = 0f;
 
-        if (stage < WeightStage.ForcedImmobile)
+        if (stage < WeightStage.HardImmobile)
         {
             float basePenalty;
-            if (stage < WeightStage.Immobile)
+            if (stage < WeightStage.SoftImmobile)
             {
                 float immobility = Weight.ClampedImmobility;
                 basePenalty = float.Lerp(0f, 0.7f, immobility * immobility);
@@ -209,10 +224,12 @@ public partial class WgPlayer : ModPlayer
         // Weight loss
         if (!Player.mount.Active)
         {
-            float factor = MathF.Abs(Player.velocity.X);
-            factor += MathF.Abs(acc.X) * 10f;
-            factor *= 0.0001f;
-            SetWeight(Weight - WeightLossRate.ApplyTo(factor));
+            float factor = MathF.Abs(Player.velocity.X) * 0.5f;
+            factor += MathF.Abs(acc.X) * 5f;
+            if (JustJumped)
+                factor += 5f;
+            factor /= 60f * 60f; // ticks to minutes
+            AddWeight(-MovementWeightLossRate.ApplyTo(factor));
         }
 
         // Ice break
@@ -290,6 +307,7 @@ public partial class WgPlayer : ModPlayer
                 _digestTimer = DigestTime * 2;
         }
 
+        UpdateAnimation();
         UpdateJiggle();
         PostUpdateVisuals();
 

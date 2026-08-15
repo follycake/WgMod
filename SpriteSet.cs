@@ -9,6 +9,8 @@ using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 using WgMod.Common;
+using WgMod.Common.Players;
+using WgMod.Common.Systems;
 
 namespace WgMod;
 
@@ -31,6 +33,7 @@ public class SpriteSet
     public Layer[] HeadLayers = [];
     public Dictionary<int, Stage> Stages = [];
 
+    [JsonIgnore] public string Name { get; private set; }
     [JsonIgnore] public int FrameCount { get; private set; }
     [JsonIgnore] public Layer[] ArmLayers { get; private set; }
     [JsonIgnore] public Layer[] ArmorLayers { get; private set; }
@@ -38,6 +41,24 @@ public class SpriteSet
     [JsonIgnore] public bool UVArmor => ArmorLayers.Length > 0;
     [JsonIgnore] public int ArmorAltasWidth { get; private set; }
     [JsonIgnore] public int ArmorAltasHeight { get; private set; }
+
+    public void Unload()
+    {
+        foreach (Layer layer in Layers)
+            layer.Unload();
+        foreach (Layer layer in TopLayers)
+            layer.Unload();
+        foreach (Layer layer in HeadLayers)
+            layer.Unload();
+        foreach (Layer layer in ArmLayers)
+            layer.Unload();
+        Layers = null;
+        TopLayers = null;
+        HeadLayers = null;
+        ArmLayers = null;
+        ArmorLayers = null;
+        Stages = null;
+    }
 
     public static Stage GetStage(int stage)
     {
@@ -68,13 +89,36 @@ public class SpriteSet
     {
         Main.RunOnMainThread(() => WgArmorLUTs.Initialize(mod));
         FoundSets = [.. FindSets(mod)];
+        Fallback = Load(mod, DefaultSet);
+        SetCurrent(mod, name);
+    }
+
+    public static void SetCurrent(Mod mod, string name)
+    {
+        if (Fallback == null)
+            return;
         if (!Exists(mod, name))
             name = DefaultSet;
-        Fallback = Load(mod, DefaultSet);
-        if (name == DefaultSet)
-            Current = Fallback;
-        else
-            Current = Load(mod, name);
+        if (Current == null || Current.Name != name)
+        {
+            if (Current != Fallback)
+                Current?.Unload();
+            if (name == DefaultSet)
+                Current = Fallback;
+            else
+                Current = Load(mod, name);
+            if (!Main.gameMenu)
+            {
+                foreach (Player player in Main.player)
+                {
+                    if (!player.active || !player.TryGetModPlayer(out WgPlayer wg))
+                        continue;
+                    wg.PreUpdateVisuals();
+                    wg.PostUpdateVisuals();
+                }
+                WgMannequinSystem.Instance.PostUpdateEverything();
+            }
+        }
     }
 
     public static IEnumerable<string> FindSets(Mod mod)
@@ -99,6 +143,7 @@ public class SpriteSet
     {
         string path = Path.Combine(BasePath, name);
         SpriteSet set = JsonConvert.DeserializeObject<SpriteSet>(GetFileText(mod, Path.Combine(path, JsonFileName)));
+        set.Name = name;
 
         List<Layer> armorLayers = [];
         set.ArmorAltasWidth = 0;
@@ -120,7 +165,13 @@ public class SpriteSet
             {
                 layer.ArmorTexture = mod.Assets.Request<Texture2D>(armorName, AssetRequestMode.ImmediateLoad).Value;
                 if (simpleArmor)
-                    Main.RunOnMainThread(() => WgArmorLUTs.ConvertSimple(lookup, layer.ArmorTexture));
+                {
+                    Main.RunOnMainThread(() =>
+                    {
+                        layer.ArmorTexture = WgArmorLUTs.ConvertSimple(lookup, layer.ArmorTexture);
+                        layer.OwnsArmorTexture = true;
+                    });
+                }
                 set.ArmorAltasWidth += layer.ArmorTexture.Width;
                 set.ArmorAltasHeight = Math.Max(set.ArmorAltasHeight, layer.ArmorTexture.Height);
                 armorLayers.Add(layer);
@@ -185,9 +236,19 @@ public class SpriteSet
 
         [JsonIgnore] public Asset<Texture2D> Texture;
         [JsonIgnore] public Texture2D ArmorTexture;
+        [JsonIgnore] public bool OwnsArmorTexture;
         [JsonIgnore] public int ArmorAtlasX;
 
         [JsonIgnore] public bool UVArmor => ArmorTexture != null;
+
+        public void Unload()
+        {
+            if (OwnsArmorTexture)
+                ArmorTexture?.Dispose();
+            Texture = null;
+            ArmorTexture = null;
+            OwnsArmorTexture = false;
+        }
 
         public Rectangle Frame(SpriteSet set, Stage stage)
         {
@@ -212,7 +273,7 @@ public class SpriteSet
         public bool OnTop;
         public float OffsetX;
         public float OffsetY;
-        public bool ArmAlwaysBelow;
+        public bool ArmBelowWhenWalking;
 
         [JsonIgnore] public int Frame;
     }

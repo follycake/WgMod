@@ -22,7 +22,7 @@ public class WeightlessPotion : ModItem
 
     public override void SetDefaults()
     {
-        Item.width = 28;
+        Item.width = 32;
         Item.height = 30;
         Item.useStyle = ItemUseStyleID.DrinkLiquid;
         Item.useAnimation = 15;

@@ -24,7 +24,7 @@ public class AmuletOfStarving : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out AmuletOfStarvingPlayer wp))
             return;
-        wg.WeightLossRate += 5f;
+        wg.MovementWeightLossRate += 5f;
         wp._active = true;
         wp._hidden = hideVisual;
     }

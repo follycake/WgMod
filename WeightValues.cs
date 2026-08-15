@@ -1,4 +1,3 @@
-using System;
 using Terraria.ID;
 
 namespace WgMod;
@@ -7,7 +6,7 @@ public static class WeightValues
 {
     public static float GetMountScale(int stage)
     {
-        return float.Lerp(1f, 1.5f, stage / (float)WeightStage.Immobile);
+        return float.Lerp(1f, 1.5f, stage / (float)WeightStage.SoftImmobile);
     }
 
     public static float GetDeathPenalty(int difficulty) => difficulty switch

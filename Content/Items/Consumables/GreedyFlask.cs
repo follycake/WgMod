@@ -7,7 +7,7 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Consumables;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.magicalmoondust_)]
 [Credit(ProjectRole.Idea, Contributor.radiantluminant)]
 public class GreedyFlask : ModItem
 {
@@ -17,8 +17,8 @@ public class GreedyFlask : ModItem
 
     public override void SetDefaults()
     {
-        Item.width = 22;
-        Item.height = 28;
+        Item.width = 24;
+        Item.height = 26;
         Item.useStyle = ItemUseStyleID.DrinkLiquid;
         Item.useAnimation = 15;
         Item.useTime = 15;

@@ -26,7 +26,11 @@ public static class WgArmor
         SpriteSet set = SpriteSet.GetSet(stage);
         GraphicsDevice device = Main.graphics.GraphicsDevice;
         SpriteBatch spriteBatch = Main.spriteBatch;
-        target ??= new RenderTarget2D(device, set.ArmorAltasWidth, set.ArmorAltasHeight, false, device.PresentationParameters.BackBufferFormat, DepthFormat.None);
+        if (target == null || target.Width != set.ArmorAltasWidth || target.Height != set.ArmorAltasHeight)
+        {
+            target?.Dispose();
+            target = new RenderTarget2D(device, set.ArmorAltasWidth, set.ArmorAltasHeight, false, device.PresentationParameters.BackBufferFormat, DepthFormat.None);
+        }
 
         device.SetRenderTarget(target);
         device.Clear(Color.Transparent);

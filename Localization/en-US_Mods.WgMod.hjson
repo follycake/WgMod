@@ -815,6 +815,33 @@ Items: {
 			'''
 			Shreds your enemies in silvery explosions
 			'So clean, you'd feel guilty if you ate off it'
+	}
+	
+	YogaHeadband: {
+		SetBonus: Moving and jumping sheds a little weight
+		DisplayName: Yoga Headband
+		Tooltip:
+			'''
+			Stay determined!
+			Reduced fat movement penalty by {0}%
+			'''
+	}
+
+	YogaPants: {
+		DisplayName: Yoga Pants
+		Tooltip:
+			'''
+			Feel the burn!
+			Reduced fat movement penalty by {0}%
+			'''
+	}
+
+	YogaTop: {
+		DisplayName: Yoga Top
+		Tooltip:
+			'''
+			Move your body!
+			Reduced fat movement penalty by {0}%
 			'''
 	}
 }
@@ -831,7 +858,6 @@ Buffs: {
 			'''
 		DisabledBuffs: Fat buffs and debuffs disabled
 		HitboxIncrease: Increased hitbox horizontally by {0} tiles
-		CantMoveArms: You're so fat your arms are practically uselesss
 
 		Stages: {
 			Name0: Regular
@@ -841,8 +867,8 @@ Buffs: {
 			Name4: Obese
 			Name5: Morbidly obese
 			Name6: Barely mobile
-			Name7: Immobile
-			Name8: Encumbered
+			Name7: Encumbered
+			Name8: Immobile
 			Name9: Blob
 		}
 	}
@@ -1036,7 +1062,7 @@ Configs: {
 			General: General settings
 			Visual: Visual settings
 			Sprites: Sprites
-			Volume: Gurgle Volume
+			Volume: Volume
 		}
 
 		DisableJiggle: {
@@ -1072,6 +1098,11 @@ Configs: {
 		UseImperialUnits: {
 			Label: Use Imperial Units
 			Tooltip: Use imperial (lbs) units instead of metric (kg)
+		}
+
+		StageCap: {
+			Label: Stage Cap
+			Tooltip: The maximum weight stage that the player can reach
 		}
 	}
 

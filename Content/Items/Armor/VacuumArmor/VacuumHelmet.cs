@@ -91,7 +91,7 @@ public class VacuumHelmet : ModItem
 
         player.lifeRegen += _setBonusRegen;
         player.statLifeMax2 = (int)Math.Round(player.statLifeMax2 * (1f + _setBonusHealth));
-        wg.WeightLossRate *= SetBonusWeightLoss;
+        wg.MovementWeightLossRate *= SetBonusWeightLoss;
 
         player.setBonus = SetBonusText.Format(_setBonusRegen, _setBonusHealth.Percent(), (1f - SetBonusWeightLoss).Percent());
     }

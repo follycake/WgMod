@@ -22,6 +22,8 @@ namespace WgMod.Common.Systems;
 [Credit(ProjectRole.Idea, Contributor.anolivewine)]
 public class WgMannequinSystem : ModSystem
 {
+    public static WgMannequinSystem Instance => ModContent.GetInstance<WgMannequinSystem>();
+
     static FieldInfo _dollPlayer;
     static Dictionary<Point, int> _displayDollTileEntityPositions;
 

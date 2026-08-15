@@ -5,7 +5,7 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Buffs.Consumables;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.magicalmoondust_)]
 public class Stagnant : ModBuff
 {
     public override void Update(Player player, ref int buffIndex)

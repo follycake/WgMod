@@ -38,10 +38,11 @@ public static class WgArmorLUTs
         return _lookups[lookup].TryGetValue(color, out uv);
     }
 
-    public static void ConvertSimple(int lookup, Texture2D texture)
+    public static Texture2D ConvertSimple(int lookup, Texture2D texture)
     {
         if (texture.Format != SurfaceFormat.Color)
             throw new Exception("Invalid texture format.");
+        Texture2D result = new(texture.GraphicsDevice, texture.Width, texture.Height);
         Color[] colors = new Color[texture.Width * texture.Height];
         texture.GetData(colors);
         for (int i = 0; i < colors.Length; i++)
@@ -51,6 +52,7 @@ public static class WgArmorLUTs
             else
                 colors[i] = Color.Transparent;
         }
-        texture.SetData(colors);
+        result.SetData(colors);
+        return result;
     }
 }

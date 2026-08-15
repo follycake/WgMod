@@ -7,7 +7,7 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Consumables;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.magicalmoondust_)]
 public class HornOfMore : ModItem
 {
     WgStat _healBonus = new(100, 150);
@@ -15,7 +15,7 @@ public class HornOfMore : ModItem
     public override void SetDefaults()
     {
         Item.width = 32;
-        Item.height = 28;
+        Item.height = 32;
         Item.useStyle = ItemUseStyleID.EatFood;
         Item.useAnimation = 15;
         Item.useTime = 15;

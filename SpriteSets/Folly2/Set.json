@@ -68,7 +68,7 @@
             "Arm": 3,
             "OnTop": true,
             "OffsetY": 24,
-            "ArmAlwaysBelow": true
+            "ArmBelowWhenWalking": true
         }
     }
 }

@@ -49,18 +49,14 @@ public class WgArmsDrawLayer : PlayerDrawLayer
         SpriteSet.Layer layer = set.ArmLayers[armStage];
         bool drawArmor = WgArmor.ShouldDraw(drawInfo) && layer.UVArmor;
 
-        int frameX;
-        int frameY;
-        if (wg._armSwing)
+        int frameX = drawInfo.compFrontArmFrame.X / drawInfo.compFrontArmFrame.Width;
+        int frameY = drawInfo.compFrontArmFrame.Y / drawInfo.compFrontArmFrame.Height;
+        if (wg._fakeWalk && frameX == 2 && frameY == 0)
         {
-            frameX = 3 + wg._armSwingFrame;
-            frameY = 0;
+            frameX = 3 + (int)(Utils.PingPongFrom01To010(wg._fakeWalkTime) * 4f);
+            frameY = 1;
         }
-        else
-        {
-            frameX = drawInfo.compFrontArmFrame.X / drawInfo.compFrontArmFrame.Width;
-            frameY = drawInfo.compFrontArmFrame.Y / drawInfo.compFrontArmFrame.Height;
-        }
+
         Asset<Texture2D> texture = layer.Texture;
         Rectangle frame = texture.Frame(9, 4, frameX, frameY);
 
@@ -87,8 +83,10 @@ public class WgArmsDrawLayer : PlayerDrawLayer
                 DrawCompShoulder(ref drawInfo, shoulderPosition, bodyRotation, bodyVect);
         }
 
-        bool drawTop = stageData.ArmAlwaysBelow || (frameY == 0 && (frameX == 2 || frameX == 3)) || (frameY == 1 && frameX == 2);
-        if (drawTop)
+        bool drawArmBelow = stageData.ArmBelowWhenWalking && frameY == 1 && frameX >= 3 && frameX <= 6; // Walking and flag set
+        drawArmBelow |= frameY == 0 && (frameX == 2 || frameX == 3); // Idle or raised
+        drawArmBelow |= frameY == 1 && frameX == 2; // Jumping
+        if (drawArmBelow)
             WgPlayerDrawLayer.Draw(ref drawInfo, true);
     }
 

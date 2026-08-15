@@ -68,28 +68,8 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         position.X += stageData.OffsetX * direction;
         position += new Vector2(set.DrawOffsetX * direction, set.DrawOffsetY * player.gravDir);
 
-        Rectangle legFrame = player.legFrame;
-        int frame = legFrame.Y / legFrame.Height;
-        // Frame [0] - Idle
-        // Frame [5] - Jump
-        // Frame [6 to 19] - Walk
-
-        float legOffsetX = 0f;
-        float legOffsetY = 0f;
-        float bellyOffset = 0f;
-        if (wg._finalMovementFactor > 0.01f)
-        {
-            if (frame == 5)
-                bellyOffset = Math.Clamp(player.velocity.Y * player.gravDir / 4f, -1f, 1f) * -2f;
-            else if (frame >= 6 && frame <= 19)
-            {
-                float frameTime = (frame - 6) / 13f;
-                legOffsetX = MathF.Sin(frameTime * MathF.Tau) * 2f * direction;
-                legOffsetY = MathF.Max(MathF.Cos(frameTime * MathF.Tau), 0f) * -2f;
-                bellyOffset = MathF.Sin(frameTime * MathF.Tau * 2f) * -2f;
-            }
-        }
-        wg._bellyOffset = bellyOffset;
+        if (Main.gameMenu)
+            wg.UpdateAnimation();
 
         Color skinColor = drawInfo.colorBodySkin;
         if (drawInfo.drawPlayer.isDisplayDollOrInanimate)
@@ -108,15 +88,15 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             switch (layer.Type)
             {
                 case SpriteSet.LayerType.Belly:
-                    pos = PrepPos(position, 0f, MathF.Round(bellyOffset / 2f) * 2f, player.gravDir);
+                    pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, player.gravDir);
                     scale = new Vector2(1f / bellySquish, 1f * bellySquish);
                     break;
                 case SpriteSet.LayerType.Legs:
-                    pos = PrepPos(position, MathF.Round(legOffsetX / 2f) * 2f, MathF.Round(legOffsetY / 2f) * 2f, player.gravDir);
+                    pos = PrepPos(position, MathF.Round(wg._legOffsetX / 2f) * 2f, MathF.Round(wg._legOffsetY / 2f) * 2f, player.gravDir);
                     scale = new Vector2(1f * baseSquish, 1f / baseSquish);
                     break;
                 case SpriteSet.LayerType.Breasts:
-                    pos = PrepPos(position, 0f, MathF.Round(bellyOffset / 2f) * 2f, player.gravDir);
+                    pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, player.gravDir);
                     scale = new Vector2(1f * baseSquish, 1f / baseSquish);
                     break;
                 default:

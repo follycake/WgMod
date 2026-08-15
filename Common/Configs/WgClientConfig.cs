@@ -15,6 +15,12 @@ public class WgClientConfig : ModConfig
     [DefaultValue(true)]
     public bool UseImperialUnits;
 
+    [DefaultValue(WeightStage.Max)]
+    [Range(WeightStage.Regular, WeightStage.Max)]
+    [Slider]
+    [DrawTicks]
+    public int StageCap;
+
     [Header("Visual")]
     [DefaultValue(false)]
     public bool DisableJiggle;
@@ -35,6 +41,11 @@ public class WgClientConfig : ModConfig
 
     [Header("Sprites")]
     [CustomModConfigItem(typeof(SpriteSetElement))]
-    [DefaultValue(SpriteSet.DefaultSet), ReloadRequired]
+    [DefaultValue(SpriteSet.DefaultSet)]
     public string PlayerSpriteSet;
+
+    public override void OnChanged()
+    {
+        SpriteSet.SetCurrent(Mod, PlayerSpriteSet);
+    }
 }

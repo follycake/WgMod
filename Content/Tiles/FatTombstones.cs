@@ -4,7 +4,6 @@ using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using WgMod.Common.Players;
 
 namespace WgMod.Content.Tiles;
 
@@ -41,6 +40,16 @@ public class FatTombstones : ModTile
         TileObjectData.addTile(Type);
     }
 
+    public override void Load()
+    {
+        On_SceneMetrics.ExportTileCountsToMain += ExportTileCountsToMain;
+    }
+
+    public override void Unload()
+    {
+        On_SceneMetrics.ExportTileCountsToMain -= ExportTileCountsToMain;
+    }
+
     public override void PlaceInWorld(int i, int j, Item item)
     {
         Sign.ReadSign(i, j, true);
@@ -68,5 +77,17 @@ public class FatTombstones : ModTile
         else
             style %= RegularCount;
         return style;
+    }
+
+    static void ExportTileCountsToMain(On_SceneMetrics.orig_ExportTileCountsToMain orig, SceneMetrics self)
+    {
+        orig(self);
+        self.GraveyardTileCount = self.GetTileCount(TileID.Tombstones);
+        self.GraveyardTileCount += self.GetTileCount((ushort)ModContent.TileType<FatTombstones>());
+        self.GraveyardTileCount -= self.GetTileCount(TileID.Sunflower) / 2;
+        if (self.GraveyardTileCount > SceneMetrics.GraveyardTileMin)
+            self.HasSunflower = false;
+        if (self.GraveyardTileCount < 0)
+            self.GraveyardTileCount = 0;
     }
 }

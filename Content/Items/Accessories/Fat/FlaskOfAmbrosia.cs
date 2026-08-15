@@ -29,7 +29,7 @@ public class FlaskOfAmbrosia : ModItem
             return;
         if (!player.TryGetModPlayer(out AmbrosiaPlayer ap))
             return;
-        wg.WeightLossRate += 2f;
+        wg.MovementWeightLossRate += 2f;
         ap._active = true;
         ap._hidden = hideVisual;
     }
