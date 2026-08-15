@@ -12,6 +12,8 @@ using Terraria.ObjectData;
 
 namespace WgMod.Content.Tiles.Furniture;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class GorgeistRelic : ModTile
 {
 	public const int FrameWidth = 18 * 3;
@@ -21,7 +23,7 @@ public class GorgeistRelic : ModTile
 
 	public Asset<Texture2D> RelicTexture;
 
-	public virtual string RelicTextureName => "WgMod/Content/Tiles/Furniture/GorgeistBossRelic";
+	public virtual string RelicTextureName => "WgMod/Content/Tiles/Furniture/GorgeistRelic";
 
 	public override string Texture => "WgMod/Content/Tiles/Furniture/RelicPedestal";
 

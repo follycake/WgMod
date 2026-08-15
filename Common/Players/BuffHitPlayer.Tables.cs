@@ -171,7 +171,7 @@ public partial class BuffHitPlayer
         NPCID.AncientDoom,
         NPCID.BurningSphere,
         NPCID.PresentMimic,
-        ModContent.NPCType<GorgeistBossBody>()
+        ModContent.NPCType<Gorgeist>()
     ];
 
     readonly HashSet<int> _feederProjectiles =

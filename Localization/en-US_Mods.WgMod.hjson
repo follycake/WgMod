@@ -780,16 +780,6 @@ Items: {
 			'''
 	}
 
-	GorgeistBossTrophy: {
-		DisplayName: Gorgeist Boss Trophy
-		Tooltip: ""
-	}
-
-	GorgeistBossRelic: {
-		DisplayName: Gorgeist Boss Relic
-		Tooltip: ""
-	}
-
 	GorgeistMask: {
 		DisplayName: Gorgeist Mask
 		Tooltip: ""
@@ -844,6 +834,16 @@ Items: {
 			Move your body!
 			Reduced fat movement penalty by {0}%
 			'''
+	}
+
+	GorgeistTrophy: {
+		DisplayName: Gorgeist Trophy
+		Tooltip: ""
+	}
+
+	GorgeistRelic: {
+		DisplayName: Gorgeist Relic
+		Tooltip: ""
 	}
 }
 
@@ -1255,7 +1255,7 @@ NPCs: {
 		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a mimic
 	}
 
-	GorgeistBossBody.DisplayName: Gorgeist
+	Gorgeist.DisplayName: Gorgeist
 }
 
 Dialogue: {

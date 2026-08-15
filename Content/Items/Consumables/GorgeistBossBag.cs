@@ -40,6 +40,6 @@ public class GorgeistBossBag : ModItem
 		itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<GorgeistMask>(), 7));
 		itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<SterlingPlatter>(), 3));
 		itemLoot.Add(ItemDropRule.Common(ItemID.SandBlock, 1, 12, 16));
-		itemLoot.Add(ItemDropRule.CoinsBasedOnNPCValue(ModContent.NPCType<GorgeistBossBody>()));
+		itemLoot.Add(ItemDropRule.CoinsBasedOnNPCValue(ModContent.NPCType<Gorgeist>()));
 	}
 }

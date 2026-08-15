@@ -4,6 +4,8 @@ using Terraria.ModLoader;
 
 namespace WgMod.Content.Items.Placeable.Furniture;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class GorgeistTrophy : ModItem
 {
 	public override void SetDefaults()

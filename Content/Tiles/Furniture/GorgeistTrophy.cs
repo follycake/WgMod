@@ -7,6 +7,8 @@ using Terraria.ObjectData;
 
 namespace WgMod.Content.Tiles.Furniture;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class GorgeistTrophy : ModTile
 {
 	public override void SetStaticDefaults()
