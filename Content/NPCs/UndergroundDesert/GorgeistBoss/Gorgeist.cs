@@ -9,6 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using WgMod.Common.GlobalNPCs;
+using WgMod.Content.Dusts;
 using WgMod.Content.Items.Armor.Vanity;
 using WgMod.Content.Items.Consumables;
 using WgMod.Content.Items.Pets;
@@ -295,7 +296,7 @@ public class Gorgeist : ModNPC
 
 	public void EyeSparkle()
 	{
-		Dust dust = Dust.NewDustPerfect(new(NPC.position.X + 71f, NPC.position.Y - 4f), DustID.BlueTorch, NPC.velocity, default, default, 2);
+		Dust dust = Dust.NewDustPerfect(new(NPC.position.X + 38f, NPC.position.Y + 2f), ModContent.DustType<EyeSparkle>(), NPC.velocity, 50, default, 1);
 		dust.noGravity = true;
 
 		SoundEngine.PlaySound(WgSounds.Shing, NPC.Center);
