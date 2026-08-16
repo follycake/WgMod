@@ -1,15 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent.NetModules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace WgMod.Content.Items.Accessories.Fat;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.maimaichubs)]
 public class Tailwinds : ModItem
 {
     public override void SetDefaults()
