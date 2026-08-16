@@ -269,7 +269,7 @@ public class Gorgeist : ModNPC
 			Sandstorm.EmitDust();
 
 			if (!Main.raining)
-				Main.StartRain();
+				Main.StartRain(); // TODO: Start a storm rather than just rain
 		}
 		else
 			NPC.damage = 12;
