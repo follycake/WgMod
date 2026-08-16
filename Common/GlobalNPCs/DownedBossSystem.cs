@@ -13,12 +13,12 @@ namespace WgMod.Common.GlobalNPCs;
 // Saving and loading these flags requires TagCompounds, a guide exists on the wiki: https://github.com/tModLoader/tModLoader/wiki/Saving-and-loading-using-TagCompound
 public class DownedBossSystem : ModSystem
 {
-	public static bool downedGorgeistBoss = false;
+	public static bool downedGorgeist = false;
 	// public static bool downedOtherBoss = false;
 
 	public override void ClearWorld()
 	{
-		downedGorgeistBoss = false;
+		downedGorgeist = false;
 		// downedOtherBoss = false;
 	}
 
@@ -26,9 +26,9 @@ public class DownedBossSystem : ModSystem
 	// NOTE: The tag instance provided here is always empty by default.
 	public override void SaveWorldData(TagCompound tag)
 	{
-		if (downedGorgeistBoss)
+		if (downedGorgeist)
 		{
-			tag["downedMinionBoss"] = true;
+			tag["DownedGorgeist"] = true;
 		}
 
 		// if (downedOtherBoss) {
@@ -38,14 +38,14 @@ public class DownedBossSystem : ModSystem
 
 	public override void LoadWorldData(TagCompound tag)
 	{
-		downedGorgeistBoss = tag.ContainsKey("downedMinionBoss");
+		downedGorgeist = tag.ContainsKey("DownedGorgeist");
 		// downedOtherBoss = tag.ContainsKey("downedOtherBoss");
 	}
 
 	public override void NetSend(BinaryWriter writer)
 	{
 		// Order of parameters is important and has to match that of NetReceive
-		writer.WriteFlags(downedGorgeistBoss/*, downedOtherBoss*/);
+		writer.WriteFlags(downedGorgeist/*, downedOtherBoss*/);
 		// WriteFlags supports up to 8 entries, if you have more than 8 flags to sync, call WriteFlags again.
 
 		// If you need to send a large number of flags, such as a flag per item type or something similar, BitArray can be used to efficiently send them. See Utils.SendBitArray documentation.
@@ -54,7 +54,7 @@ public class DownedBossSystem : ModSystem
 	public override void NetReceive(BinaryReader reader)
 	{
 		// Order of parameters is important and has to match that of NetSend
-		reader.ReadFlags(out downedGorgeistBoss/*, out downedOtherBoss*/);
+		reader.ReadFlags(out downedGorgeist/*, out downedOtherBoss*/);
 		// ReadFlags supports up to 8 entries, if you have more than 8 flags to sync, call ReadFlags again.
 	}
 }

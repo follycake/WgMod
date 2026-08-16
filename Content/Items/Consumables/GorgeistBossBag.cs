@@ -5,6 +5,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Content.Items.Weapons.Melee;
+using WgMod.Content.Items.Accessories.Fat;
 
 namespace WgMod.Content.Items.Consumables;
 
@@ -39,6 +40,7 @@ public class GorgeistBossBag : ModItem
 	{
 		itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<GorgeistMask>(), 7));
 		itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<SterlingPlatter>(), 3));
+		itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Tailwinds>()));
 		itemLoot.Add(ItemDropRule.Common(ItemID.SandBlock, 1, 12, 16));
 		itemLoot.Add(ItemDropRule.CoinsBasedOnNPCValue(ModContent.NPCType<Gorgeist>()));
 	}

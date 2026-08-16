@@ -224,7 +224,7 @@ public class Gorgeist : ModNPC
 
 	public override void OnKill()
 	{
-		DownedBossSystem.downedGorgeistBoss = true;
+		DownedBossSystem.downedGorgeist = true;
 	}
 
 	public override void AI()
@@ -263,7 +263,7 @@ public class Gorgeist : ModNPC
 
 			Main.windSpeedTarget += 1f;
 
-			if (!Main.raining && Main.dedServ)
+			if (!Main.raining)
 				Main.StartRain();
 		}
 		else
