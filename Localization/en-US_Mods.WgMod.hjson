@@ -850,6 +850,26 @@ Items: {
 		DisplayName: Tailwinds
 		Tooltip: Projectiles fired in the direction of the wind gain damage and velocity
 	}
+
+	ThatOneThingFromTheWGTerrariaMod: {
+		DisplayName: That One Thing From The WG Terraria Mod
+		Tooltip: "'C. Lady'"
+	}
+
+	Abundance: {
+		DisplayName: Abundance
+		Tooltip: "'C. Lady'"
+	}
+
+	Landmark: {
+		DisplayName: Landmark
+		Tooltip: "'C. Lady'"
+	}
+
+	Grounded: {
+		DisplayName: Grounded
+		Tooltip: "'C. Lady'"
+	}
 }
 
 Buffs: {

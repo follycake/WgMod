@@ -5,14 +5,14 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Placeable.Paintings;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.maimaichubs)]
-public class CozyAfternoons : ModItem
+[Credit(ProjectRole.Artist, Contributor.igobee_)]
+public class ThatOneThingFromTheWGTerrariaMod : ModItem
 {
     public override void SetDefaults()
     {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.CozyAfternoons>());
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.ThatOneThingFromTheWGTerrariaMod>());
 
-        Item.width = 48;
+        Item.width = 32;
         Item.height = 32;
         Item.value = Item.buyPrice(gold: 2);
     }
@@ -20,7 +20,7 @@ public class CozyAfternoons : ModItem
     public override void AddRecipes()
     {
         CreateRecipe()
-            .AddIngredient(ItemID.Amethyst, 8)
+            .AddIngredient(ItemID.Topaz, 8)
             .AddTile(TileID.DemonAltar)
             .Register();
     }

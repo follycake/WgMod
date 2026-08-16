@@ -5,12 +5,12 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Placeable.Paintings;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.maimaichubs)]
-public class CozyAfternoons : ModItem
+[Credit(ProjectRole.Artist, Contributor.igobee_)]
+public class Landmark : ModItem
 {
     public override void SetDefaults()
     {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.CozyAfternoons>());
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.Landmark>());
 
         Item.width = 48;
         Item.height = 32;
@@ -20,7 +20,7 @@ public class CozyAfternoons : ModItem
     public override void AddRecipes()
     {
         CreateRecipe()
-            .AddIngredient(ItemID.Amethyst, 8)
+            .AddIngredient(ItemID.Topaz, 8)
             .AddTile(TileID.DemonAltar)
             .Register();
     }
