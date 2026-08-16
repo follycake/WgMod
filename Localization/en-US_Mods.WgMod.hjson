@@ -845,6 +845,11 @@ Items: {
 		DisplayName: Gorgeist Relic
 		Tooltip: ""
 	}
+
+	Tailwinds: {
+		DisplayName: Tailwinds
+		Tooltip: Projectiles fired in the direction of the wind gain damage and velocity
+	}
 }
 
 Buffs: {

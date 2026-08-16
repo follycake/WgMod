@@ -263,7 +263,7 @@ public class Gorgeist : ModNPC
 
 			Main.windSpeedTarget += 1f;
 
-			if (!Main.raining)
+			if (!Main.raining && Main.dedServ)
 				Main.StartRain();
 		}
 		else
