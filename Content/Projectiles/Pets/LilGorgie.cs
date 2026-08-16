@@ -8,7 +8,7 @@ using WgMod.Content.Buffs.Pets;
 namespace WgMod.Content.Projectiles.Pets;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.drarky)]
 public class LilGorgie : ModProjectile
 {
 	public override void SetStaticDefaults()
@@ -34,6 +34,8 @@ public class LilGorgie : ModProjectile
 		Projectile.CloneDefaults(ProjectileID.EyeOfCthulhuPet);
 
 		Projectile.aiStyle = -1;
+		Projectile.width = 38;
+		Projectile.height = 54;
 	}
 
 	public override void AI()
@@ -61,7 +63,7 @@ public class LilGorgie : ModProjectile
 	{
 		float velDistanceChange = 2f;
 
-		Vector2 desiredCenterRelative = new(30, -30f);
+		Vector2 desiredCenterRelative = new(20f + player.width / 2, -player.height);
 
 		desiredCenterRelative.Y += (float)Math.Sin(Main.GameUpdateCount / 120f * MathHelper.TwoPi) * 5;
 
