@@ -9,7 +9,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
-using WgMod.Common.GlobalNPCs;
+using WgMod.Common.Systems;
 using WgMod.Content.Dusts;
 using WgMod.Content.Items.Armor.Vanity;
 using WgMod.Content.Items.Consumables;

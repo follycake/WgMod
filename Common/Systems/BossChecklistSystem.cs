@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;
-using WgMod.Common.GlobalNPCs;
 using WgMod.Content.Items.Armor.Vanity;
-using WgMod.Content.Items.Weapons.Melee;
-using WgMod.Content.Items.Placeable.Furniture;
 using WgMod.Content.Items.Pets;
+using WgMod.Content.Items.Placeable.Furniture;
 using WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
-using Terraria.ID;
 
 namespace WgMod.Common.Systems;
 

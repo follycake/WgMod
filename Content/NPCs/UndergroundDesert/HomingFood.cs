@@ -10,7 +10,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
-using WgMod.Common.GlobalNPCs;
+using WgMod.Common.Systems;
 using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Content.NPCs.UndergroundDesert;
