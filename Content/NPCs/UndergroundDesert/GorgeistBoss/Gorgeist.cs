@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.Events;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -262,6 +263,10 @@ public class Gorgeist : ModNPC
 			NPC.damage = 24;
 
 			Main.windSpeedTarget += 1f;
+			Main.UseStormEffects = true;
+
+			Sandstorm.HandleEffectAndSky(true);
+			Sandstorm.EmitDust();
 
 			if (!Main.raining)
 				Main.StartRain();
