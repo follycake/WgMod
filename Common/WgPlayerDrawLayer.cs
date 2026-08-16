@@ -41,6 +41,14 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
 
     public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => true;
 
+    public static Color GetSkinColor(in PlayerDrawSet drawInfo)
+    {
+        Color skinColor = drawInfo.colorBodySkin;
+        if (drawInfo.drawPlayer.isDisplayDollOrInanimate)
+            skinColor = new Color(154, 115, 85).MultiplyRGB(skinColor);
+        return skinColor;
+    }
+
     protected override void Draw(ref PlayerDrawSet drawInfo)
     {
         Draw(ref drawInfo, false);
@@ -71,9 +79,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         if (Main.gameMenu)
             wg.UpdateAnimation();
 
-        Color skinColor = drawInfo.colorBodySkin;
-        if (drawInfo.drawPlayer.isDisplayDollOrInanimate)
-            skinColor = new Color(154, 115, 85).MultiplyRGB(skinColor);
+        Color skinColor = GetSkinColor(drawInfo);
         float t = wg.Weight.ClampedImmobility;
         float bellySquish = float.Lerp(wg._squishPos, 1f, t * t * 0.2f);
         float baseSquish = (bellySquish + 1f) * 0.5f;

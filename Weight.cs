@@ -24,7 +24,18 @@ public readonly record struct Weight(Mass Mass)
     public readonly float GetFactor(Weight start, Weight end) => Curve((Mass - start.Mass) / (end.Mass - start.Mass)); // Inverese lerp
     public readonly float GetClampedFactor(Weight start, Weight end) => Math.Clamp(GetFactor(start, end), 0f, 1f);
 
-    public static Weight FromStage(int stage) => FromImmobility(stage / (float)WeightStage.SoftImmobile);
+    public readonly float GetFactor(int startStage, int endStage) => GetFactor(FromStage(startStage), FromStage(endStage));
+    public readonly float GetClampedFactor(int startStage, int endStage) => GetClampedFactor(FromStage(startStage), FromStage(endStage));
+
+    public static Weight FromStage(int stage)
+    {
+        if (stage == WeightStage.Regular)
+            return Base;
+        if (stage == WeightStage.SoftImmobile)
+            return SoftImmobile;
+        return FromImmobility(stage / (float)WeightStage.SoftImmobile);
+    }
+
     public static Weight FromImmobility(float factor) => new(float.Lerp(Base.Mass, SoftImmobile.Mass, InverseCurve(factor)));
 
     public static Weight Clamp(Weight weight) => Clamp(weight, WeightStage.Max);

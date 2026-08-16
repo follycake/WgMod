@@ -99,7 +99,7 @@ public partial class WgPlayer : ModPlayer
     internal void SetWeightForced(Weight weight, bool effects = true)
     {
         int prevStage = Weight.GetStage();
-        Weight = weight;
+        Weight = Weight.Clamp(weight);
         if (Weight.GetStage() != prevStage && effects)
         {
             SoundEngine.PlaySound(WgSounds.Belly, Player.Center);
@@ -157,7 +157,7 @@ public partial class WgPlayer : ModPlayer
     {
         EnsureBuff<FatBuff>();
         EnsureBuff<StomachBuff>();
-        if (Weight.GetStage() >= WeightStage.HardImmobile)
+        if (Weight.GetStage() >= Tired.StartStage)
             Player.AddBuff(ModContent.BuffType<Tired>(), 2);
     }
 
@@ -184,7 +184,7 @@ public partial class WgPlayer : ModPlayer
         if (stage >= WeightStage.DamageReduction)
         {
             if (stage < WeightStage.SoftImmobile)
-                _finalKnockbackResistance = float.Lerp(0f, 0.6f, Weight.GetClampedFactor(Weight.FromStage(WeightStage.DamageReduction), Weight.SoftImmobile));
+                _finalKnockbackResistance = float.Lerp(0f, 0.6f, Weight.GetClampedFactor(WeightStage.DamageReduction, WeightStage.SoftImmobile));
             else
                 _finalKnockbackResistance = 1f;
         }

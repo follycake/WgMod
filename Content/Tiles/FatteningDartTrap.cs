@@ -20,7 +20,7 @@ public class FatteningDartTrap : ModTile
         Main.tileBlockLight[Type] = true;
         Main.tileFrameImportant[Type] = true;
 
-        AddMapEntry(new Color(255,225,25), Language.GetText("MapObject.Trap"));
+        AddMapEntry(new Color(255, 225, 25), Language.GetText("MapObject.Trap"));
     }
 
     public override bool IsTileDangerous(int i, int j, Player player) => true;
@@ -60,7 +60,6 @@ public class FatteningDartTrap : ModTile
         if (Wiring.CheckMech(i, j, 200))
         {
             spawnPosition = new Vector2(i * 16 + 8 + 0 * horizontalDirection, j * 16 + 9 + 0 * verticalDirection);
-
             Projectile.NewProjectile(Wiring.GetProjectileSource(i, j), spawnPosition, new Vector2(horizontalDirection, verticalDirection) * 12f, ModContent.ProjectileType<FatteningDart>(), 25, 2f, Main.myPlayer);
         }
     }

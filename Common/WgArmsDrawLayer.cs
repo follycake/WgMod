@@ -53,7 +53,7 @@ public class WgArmsDrawLayer : PlayerDrawLayer
         int frameY = drawInfo.compFrontArmFrame.Y / drawInfo.compFrontArmFrame.Height;
         if (wg._fakeWalk && frameX == 2 && frameY == 0)
         {
-            frameX = 3 + (int)(Utils.PingPongFrom01To010(wg._fakeWalkTime) * 4f);
+            frameX = wg._fakeWalkFrameX;
             frameY = 1;
         }
 
@@ -67,9 +67,7 @@ public class WgArmsDrawLayer : PlayerDrawLayer
         if (drawArmor && !drawInfo.compShoulderOverFrontArm)
             DrawCompShoulder(ref drawInfo, shoulderPosition, bodyRotation, bodyVect);
 
-        Color skinColor = drawInfo.colorBodySkin;
-        if (player.isDisplayDollOrInanimate)
-            skinColor = new Color(154, 115, 85).MultiplyRGB(skinColor);
+        Color skinColor = WgPlayerDrawLayer.GetSkinColor(drawInfo);
         DrawData drawData = new(texture.Value, armPosition, frame, skinColor, rotation, bodyVectBig, 1f, drawInfo.playerEffect)
         {
             shader = drawInfo.skinDyePacked

@@ -149,6 +149,12 @@ public partial class WgMod
         int start = playerDrawData.Count;
         orig(self, playerDrawData, drawType, drawPlayer, Position, drawColor, playerEffect, shadow);
 
+        if (self.Type == MountID.Scutlix) // Temporary fix
+        {
+            wg._mountOffY = 0f;
+            return;
+        }
+
         if (scale > 1f)
         {
             float averageOffset = 0f;

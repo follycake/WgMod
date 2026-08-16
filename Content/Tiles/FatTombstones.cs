@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.ObjectInteractions;
@@ -38,6 +39,8 @@ public class FatTombstones : ModTile
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.LavaDeath = false;
         TileObjectData.addTile(Type);
+
+        AddMapEntry(new Color(192, 192, 192), Mod.GetLocalization("Projectiles.FatTombstone.DisplayName"));
     }
 
     public override void Load()

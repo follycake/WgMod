@@ -1,4 +1,5 @@
 using System;
+using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -21,6 +22,8 @@ public partial class WgPlayer
 
     internal bool _fakeWalk;
     internal float _fakeWalkTime;
+    internal int _fakeWalkFrameX;
+    internal float _fakeWalkJiggle;
 
     internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[4];
     internal RenderTarget2D _armorTarget;
@@ -74,13 +77,49 @@ public partial class WgPlayer
         _fakeWalk = _finalMovementFactor < 0.01f && (Player.controlLeft || Player.controlRight);
         if (_fakeWalk)
         {
-            _fakeWalkTime += 1f / 60f;
-            _fakeWalkTime %= 1f;
+            _fakeWalkTime += 0.2f;
+            _fakeWalkTime %= 13f;
+            switch ((int)(6f + _fakeWalkTime))
+            {
+                case 6:
+                    _fakeWalkFrameX = 3;
+                    break;
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    _fakeWalkFrameX = 4;
+                    break;
+                case 11:
+                case 12:
+                case 13:
+                    _fakeWalkFrameX = 3;
+                    break;
+                case 14:
+                    _fakeWalkFrameX = 5;
+                    break;
+                case 15:
+                case 16:
+                    _fakeWalkFrameX = 6;
+                    break;
+                case 17:
+                    _fakeWalkFrameX = 5;
+                    break;
+                case 18:
+                case 19:
+                    _fakeWalkFrameX = 3;
+                    break;
+            }
         }
         else
+        {
             _fakeWalkTime = 0f;
+            _fakeWalkFrameX = 3;
+        }
 
         int frame = Player.legFrame.Y / Player.legFrame.Height;
+        if (_fakeWalk)
+            frame = (int)(6f + _fakeWalkTime);
         // Frame [0] - Idle
         // Frame [5] - Jump
         // Frame [6 to 19] - Walk
@@ -88,6 +127,7 @@ public partial class WgPlayer
         _legOffsetX = 0f;
         _legOffsetY = 0f;
         _bellyOffset = 0f;
+        _fakeWalkJiggle = 0f;
         if (_finalMovementFactor > 0.01f)
         {
             if (frame == 5)
@@ -99,6 +139,11 @@ public partial class WgPlayer
                 _legOffsetY = MathF.Max(MathF.Cos(frameTime * MathF.Tau), 0f) * -2f;
                 _bellyOffset = MathF.Sin(frameTime * MathF.Tau * 2f) * -2f;
             }
+        }
+        if (_fakeWalk)
+        {
+            float frameTime = (frame - 6) / 13f;
+            _fakeWalkJiggle = MathF.Sin(frameTime * MathF.Tau * 2f) * -3f;
         }
     }
 
@@ -113,7 +158,7 @@ public partial class WgPlayer
         else
         {
             Vector2 vel = Player.velocity;
-            vel.Y += _bellyOffset * 0.6f;
+            vel.Y += (_bellyOffset + _fakeWalkJiggle) * 0.6f;
 
             _squishPos += MathF.Abs(vel.X) * 0.005f;
             _squishPos += vel.Y * 0.008f;
@@ -147,11 +192,5 @@ public partial class WgPlayer
     {
         if (Player.isDisplayDollOrInanimate)
             drawInfo.Position.Y += Player.gfxOffY;
-        /*if (Player.mount.Active)
-        {
-            drawInfo.Position.Y += drawInfo.mountOffSet;
-            drawInfo.mountOffSet *= WeightValues.GetMountScale(Weight.GetStage());
-            drawInfo.Position.Y -= drawInfo.mountOffSet;
-        }*/
     }
 }

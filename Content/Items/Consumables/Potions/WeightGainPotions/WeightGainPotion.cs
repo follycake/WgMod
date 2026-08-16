@@ -6,6 +6,52 @@ using static WgMod.Content.Projectiles.Melee.WeightPotionProjectile;
 
 namespace WgMod.Content.Items.Consumables.Potions.WeightGainPotions;
 
+public class DecorativeWeightGainPotion : ModItem
+{
+    public override void SetStaticDefaults()
+    {
+        Item.ResearchUnlockCount = 30;
+    }
+
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.DecorativeWeightPotions>(), 0);
+        Item.rare = ItemRarityID.Blue;
+        Item.value = Item.buyPrice(silver: 6);
+    }
+
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient<WeightGainPotion>()
+            .AddTile(TileID.HeavyWorkBench)
+            .Register();
+    }
+}
+
+public class DecorativeSuperWeightGainPotion : ModItem
+{
+    public override void SetStaticDefaults()
+    {
+        Item.ResearchUnlockCount = 30;
+    }
+
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.DecorativeWeightPotions>(), 1);
+        Item.rare = ItemRarityID.Lime;
+        Item.value = Item.buyPrice(silver: 30);
+    }
+
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient<SuperWeightGainPotion>()
+            .AddTile(TileID.HeavyWorkBench)
+            .Register();
+    }
+}
+
 public class LesserWeightGainPotion : WeightPotion
 {
     public override float WeightEffect => 10f;

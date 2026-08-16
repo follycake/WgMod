@@ -5,7 +5,7 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Buffs.Debuffs;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.magicalmoondust_)]
 public class Bloated : ModBuff
 {
     public override void SetStaticDefaults()

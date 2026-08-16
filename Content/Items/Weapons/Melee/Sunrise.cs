@@ -8,7 +8,7 @@ namespace WgMod.Content.Items.Weapons.Melee;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.maimaichubs)]
-public class Sunrise : ModItem
+public class Sunrise : RecoilItem
 {
     WgStat _damage = new(1f, 1.25f);
     WgStat _knockback = new(1f, 1.25f);
@@ -40,10 +40,15 @@ public class Sunrise : ModItem
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
         float immobility = wg.Weight.ClampedImmobility;
-
         _damage.Lerp(immobility);
         _knockback.Lerp(immobility);
         _velocity.Lerp(immobility);
+    }
+
+    public override void ModifyRecoilStats(ref float recoilStrength, ref float airTimeFactor, ref bool flipRecoil)
+    {
+        recoilStrength = 3f;
+        airTimeFactor = 0.1f;
     }
 
     public override void ModifyWeaponDamage(Player player, ref StatModifier damage)

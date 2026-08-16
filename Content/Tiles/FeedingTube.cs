@@ -37,6 +37,8 @@ public class FeedingTube : ModTile
         TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 18];
         TileObjectData.newTile.HookPostPlaceMyPlayer = ModContent.GetInstance<TEFeedingTube>().Generic_HookPostPlaceMyPlayer;
         TileObjectData.addTile(Type);
+
+        AddMapEntry(new Color(192, 192, 192), Mod.GetLocalization("Items.FeedingTube.DisplayName"));
     }
 
     public override void KillMultiTile(int i, int j, int frameX, int frameY)

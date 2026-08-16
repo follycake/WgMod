@@ -86,12 +86,13 @@ public class WgMannequinSystem : ModSystem
     {
         if (!GetPlayer(doll).TryGetModPlayer(out WgPlayer wg))
             return;
-        wg.SetWeightForced(Weight.FromStage(stage), false);
+        stage = Math.Clamp(stage, 0, WeightStage.Max);
+        wg.SetWeightForced(Weight.FromStage(stage) + 10f, false);
         if (network && Main.netMode != NetmodeID.SinglePlayer)
         {
             ModPacket packet = _mod.GetPacket(WgMod.MessageType.MannequinSetStage);
             packet.Write(doll.ID);
-            packet.Write((byte)Math.Clamp(stage, 0, 255));
+            packet.Write((byte)stage);
             packet.Send();
         }
     }

@@ -63,7 +63,7 @@ public class WgHeadDrawLayer : PlayerDrawLayer
                 layer.Texture.Value,
                 position,
                 frame,
-                drawInfo.colorBodySkin,
+                WgPlayerDrawLayer.GetSkinColor(drawInfo),
                 player.headRotation,
                 drawInfo.headVect,
                 1f,

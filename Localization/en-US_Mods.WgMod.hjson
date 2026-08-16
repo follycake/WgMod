@@ -451,7 +451,11 @@ Items: {
 
 	Sunrise: {
 		DisplayName: Sunrise
-		Tooltip: Stats scale with your obesity
+		Tooltip:
+			'''
+			Medium recoil
+			Stats scale with your obesity
+			'''
 	}
 
 	AmazonHeaddress: {
@@ -497,6 +501,7 @@ Items: {
 		DisplayName: Endocannon
 		Tooltip:
 			'''
+			Low recoil
 			Every fifth shot becomes a high damage but low velocity dinner plate
 			Stats scale with your obesity
 			'''
@@ -869,6 +874,41 @@ Items: {
 	Grounded: {
 		DisplayName: Grounded
 		Tooltip: "'C. Lady'"
+	}
+
+	DecorativeSuperWeightGainPotion: {
+		DisplayName: Decorative Super Weight Gain Potion
+		Tooltip: ""
+	}
+
+	DecorativeWeightGainPotion: {
+		DisplayName: Decorative Weight Gain Potion
+		Tooltip: ""
+	}
+
+	DecorativeWeightLossPotion: {
+		DisplayName: Decorative Weight Loss Potion
+		Tooltip: ""
+	}
+
+	ThatOneThingFromTheWGTerrariaMod: {
+		DisplayName: That One Thing From The WG Terraria Mod
+		Tooltip: "'C. Lady"
+	}
+
+	Landmark: {
+		DisplayName: Landmark
+		Tooltip: "'C. Lady"
+	}
+
+	Grounded: {
+		DisplayName: Grounded
+		Tooltip: "'C. Lady"
+	}
+
+	Abundance: {
+		DisplayName: Abundance
+		Tooltip: "'C. Lady"
 	}
 }
 
@@ -1438,3 +1478,5 @@ Prefixes: {
 		AdditionalTooltip: uwu
 	}
 }
+
+MapObject.DecorativeWeightPotions: Decorative Weight Potion

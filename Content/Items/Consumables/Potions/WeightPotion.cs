@@ -10,6 +10,9 @@ using static WgMod.Content.Projectiles.Melee.WeightPotionProjectile;
 
 namespace WgMod.Content.Items.Consumables.Potions;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Programmer, Contributor.follycake)]
+[Credit(ProjectRole.Artist, Contributor.igobee_)]
 public abstract class WeightPotion : ModItem
 {
     public abstract float WeightEffect { get; }
