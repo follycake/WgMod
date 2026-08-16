@@ -277,12 +277,10 @@ public class Gorgeist : ModNPC
 		{
 			NPC.damage = 24;
 
-			// TODO: This leaves the game broken
-			/*Main.windSpeedTarget += 1f;
-			Main.UseStormEffects = true;
+			Main.windSpeedTarget = 1f;
 
-			Sandstorm.HandleEffectAndSky(true);
-			Sandstorm.EmitDust();*/
+			if (!Sandstorm.Happening)
+				Sandstorm.StartSandstorm();
 
 			if (!Main.raining && Main.netMode != NetmodeID.MultiplayerClient)
 				Main.StartRain(); // TODO: Start a storm rather than just rain
