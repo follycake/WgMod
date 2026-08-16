@@ -890,26 +890,6 @@ Items: {
 		DisplayName: Decorative Weight Loss Potion
 		Tooltip: ""
 	}
-
-	ThatOneThingFromTheWGTerrariaMod: {
-		DisplayName: That One Thing From The WG Terraria Mod
-		Tooltip: "'C. Lady"
-	}
-
-	Landmark: {
-		DisplayName: Landmark
-		Tooltip: "'C. Lady"
-	}
-
-	Grounded: {
-		DisplayName: Grounded
-		Tooltip: "'C. Lady"
-	}
-
-	Abundance: {
-		DisplayName: Abundance
-		Tooltip: "'C. Lady"
-	}
 }
 
 Buffs: {
