@@ -30,7 +30,8 @@ public class Gorgeist : ModNPC
 	{
 		None = 0,
 		SecondPhase = 1 << 0,
-		DidAttack = 1 << 1
+		DidAttack = 1 << 1,
+		CircledPlayer = 1 << 2
 	}
 
 	public enum State
@@ -44,7 +45,7 @@ public class Gorgeist : ModNPC
 		CirclingPlayer,
 
 		// Phase 2
-		Enraged
+		Angry
 	}
 
 	public Flags BossFlags
@@ -69,20 +70,12 @@ public class Gorgeist : ModNPC
 		}
 	}
 
-	public static bool Enraged(Player player)
-	{
-		if (player.ZoneDesert || player.ZoneUndergroundDesert || player.ZoneSandstorm)
-			return false;
-		else
-			return true;
-	}
-
-	public bool _circledPlayer = false;
-
-	public ref float StateTimer => ref NPC.localAI[0];
-	public ref float StateDuration => ref NPC.localAI[1];
+	public int StateTimer;
+	public int StateDuration;
 
 	public Player TargetPlayer;
+
+	public static readonly WeightedRandom<State> Phase1Attacks = new();
 
 	public override void SetStaticDefaults()
 	{
@@ -92,6 +85,11 @@ public class Gorgeist : ModNPC
 		NPCID.Sets.BossBestiaryPriority.Add(Type);
 
 		NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
+
+		Phase1Attacks.Clear();
+		Phase1Attacks.Add(State.TossPlate, 2);
+		Phase1Attacks.Add(State.TossFood, 1);
+		Phase1Attacks.Add(State.CirclingPlayer, 1);
 	}
 
 	public override void SetDefaults()
@@ -199,28 +197,28 @@ public class Gorgeist : ModNPC
 			BossFlags &= ~flag;
 	}
 
-	public void SwitchState(State state, float ticks = 0f)
+	public void SwitchState(State state, int ticks = 0)
 	{
-		if (ticks == 0f)
-			if (Enraged(Main.player[NPC.target]))
-				ticks = GetStateDuration(state) * 0.5f;
-			else
-				ticks = GetStateDuration(state);
+		if (ticks == 0)
+			ticks = GetStateDuration(state);
+		if (Enraged())
+			ticks /= 2;
 		CurrentState = state;
-		StateTimer = 0f;
+		StateTimer = 0;
 		StateDuration = ticks;
 		SetFlag(Flags.DidAttack, false);
 	}
 
-	public WeightedRandom<State> _attacks = new();
+	public bool Enraged()
+	{
+		if (TargetPlayer == null || TargetPlayer.ZoneDesert || TargetPlayer.ZoneUndergroundDesert || TargetPlayer.ZoneSandstorm)
+			return false;
+		return true;
+	}
 
 	public override void OnSpawn(IEntitySource source)
 	{
 		SwitchState(State.Idle);
-
-		_attacks.Add(State.TossPlate, 2);
-		_attacks.Add(State.TossFood, 1);
-		_attacks.Add(State.CirclingPlayer, 1);
 	}
 
 	public override void OnKill()
@@ -234,10 +232,12 @@ public class Gorgeist : ModNPC
 			NPC.TargetClosest();
 
 		if (!NPC.HasPlayerTarget)
+		{
+			TargetPlayer = null;
 			return;
+		}
 
 		TargetPlayer = Main.player[NPC.target];
-
 		if (TargetPlayer.dead)
 		{
 			NPC.velocity.Y -= 0.04f;
@@ -258,7 +258,7 @@ public class Gorgeist : ModNPC
 		NPC.velocity += (Destination - NPC.Center) * 0.01f;
 		NPC.velocity *= 0.9f;
 
-		if (Enraged(TargetPlayer))
+		if (Enraged())
 		{
 			NPC.damage = 24;
 
@@ -275,13 +275,13 @@ public class Gorgeist : ModNPC
 			NPC.damage = 12;
 	}
 
-	public static float GetStateDuration(State state) => state switch
+	public static int GetStateDuration(State state) => state switch
 	{
-		State.Idle => 2f * 60f,
-		State.TossPlate => 1f * 60f,
-		State.TossFood => 4f * 60f,
-		State.CirclingPlayer => 8f * 60f,
-		_ => 4f * 60f
+		State.Idle => 2 * 60,
+		State.TossPlate => 1 * 60,
+		State.TossFood => 4 * 60,
+		State.CirclingPlayer => 8 * 60,
+		_ => 4 * 60
 	};
 
 	public void OnStateEnd()
@@ -289,7 +289,7 @@ public class Gorgeist : ModNPC
 		switch (CurrentState)
 		{
 			case State.Idle:
-				SwitchState(_attacks);
+				SwitchState(Phase1Attacks);
 				break;
 			case State.TossPlate:
 			case State.TossFood:
@@ -303,7 +303,7 @@ public class Gorgeist : ModNPC
 		if (!HasFlag(Flags.SecondPhase) && NPC.life < NPC.lifeMax / 2)
 		{
 			SetFlag(Flags.SecondPhase);
-			SwitchState(State.Enraged);
+			SwitchState(State.Angry);
 		}
 	}
 
@@ -311,24 +311,20 @@ public class Gorgeist : ModNPC
 	{
 		Dust dust = Dust.NewDustPerfect(new(NPC.position.X + 38f, NPC.position.Y + 2f), ModContent.DustType<EyeSparkle>(), NPC.velocity, 50, default, 1);
 		dust.noGravity = true;
-
 		SoundEngine.PlaySound(WgSounds.Shing, NPC.Center);
 	}
 
 	public void ThrowFood(int count, float offsetX = 1f)
 	{
 		SoundEngine.PlaySound(SoundID.Item1, NPC.Center);
-
 		if (Main.netMode == NetmodeID.MultiplayerClient) // Needed so that we only spawn projectiles on the server
 			return;
 
 		int propogateFactor = 1;
-
 		if (Main.expertMode)
 			propogateFactor = 2;
 
 		int propagateCount = Main.rand.Next(propogateFactor, count / 2 + propogateFactor); // at least 1, at max count / 2
-
 		for (int i = 0; i < count; i++)
 		{
 			int propagate = i < propagateCount ? 1 : 0;
@@ -394,14 +390,12 @@ public class Gorgeist : ModNPC
 					EyeSparkle();
 				break;
 			case State.TossPlate:
-				_circledPlayer = false;
+				SetFlag(Flags.CircledPlayer, false);
 				if (!HasFlag(Flags.DidAttack))
 				{
 					int value = 0;
-
 					if (Main.expertMode)
 						value = 1;
-
 					switch (Main.rand.Next(value, value + 2))
 					{
 						case 0:
@@ -418,23 +412,21 @@ public class Gorgeist : ModNPC
 				}
 				break;
 			case State.TossFood:
-				_circledPlayer = false;
+				SetFlag(Flags.CircledPlayer, false);
 				Destination = TargetPlayer.Center + new Vector2(0f, -250f);
 				if (StateTimer > StateDuration * 0.5f && !HasFlag(Flags.DidAttack))
 				{
 					int count = 4;
-
 					if (Main.expertMode)
 						count = 6;
-
 					ThrowFood(count, 7f);
 					SetFlag(Flags.DidAttack);
 				}
 				break;
 			case State.CirclingPlayer:
-				if (_circledPlayer && StateTimer == 0)
+				if (HasFlag(Flags.CircledPlayer) && StateTimer == 0)
 					SwitchState(State.TossPlate);
-				_circledPlayer = true;
+				SetFlag(Flags.CircledPlayer);
 				float t = StateTimer / StateDuration * MathF.Tau * 2f - MathF.PI * 0.5f;
 				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * (150f + TargetPlayer.width), MathF.Sin(t) * (150f + TargetPlayer.height));
 				break;
@@ -448,9 +440,7 @@ public class Gorgeist : ModNPC
 
 	public override void DrawEffects(ref Color drawColor)
 	{
-		TargetPlayer = Main.player[NPC.target];
-
-		if (!Enraged(TargetPlayer))
+		if (!Enraged())
 			return;
 
 		float velocityX = NPC.velocity.X + Main.windSpeedCurrent;
