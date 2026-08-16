@@ -68,6 +68,16 @@ public class Gorgeist : ModNPC
 		}
 	}
 
+	public static bool Enraged(Player player)
+	{
+		if (player.ZoneDesert || player.ZoneUndergroundDesert || player.ZoneSandstorm)
+			return false;
+		else
+			return true;
+	}
+
+	public bool _circledPlayer = false;
+
 	public ref float StateTimer => ref NPC.localAI[0];
 	public ref float StateDuration => ref NPC.localAI[1];
 
@@ -191,7 +201,10 @@ public class Gorgeist : ModNPC
 	public void SwitchState(State state, float ticks = 0f)
 	{
 		if (ticks == 0f)
-			ticks = GetStateDuration(state);
+			if (Enraged(Main.player[NPC.target]))
+				ticks = GetStateDuration(state) * 0.5f;
+			else
+				ticks = GetStateDuration(state);
 		CurrentState = state;
 		StateTimer = 0f;
 		StateDuration = ticks;
@@ -243,6 +256,18 @@ public class Gorgeist : ModNPC
 
 		NPC.velocity += (Destination - NPC.Center) * 0.01f;
 		NPC.velocity *= 0.9f;
+
+		if (Enraged(TargetPlayer))
+		{
+			NPC.damage = 24;
+
+			Main.windSpeedTarget += 1f;
+
+			if (!Main.raining)
+				Main.StartRain();
+		}
+		else
+			NPC.damage = 12;
 	}
 
 	public static float GetStateDuration(State state) => state switch
@@ -364,6 +389,7 @@ public class Gorgeist : ModNPC
 					EyeSparkle();
 				break;
 			case State.TossPlate:
+				_circledPlayer = false;
 				if (!HasFlag(Flags.DidAttack))
 				{
 					int value = 0;
@@ -387,6 +413,7 @@ public class Gorgeist : ModNPC
 				}
 				break;
 			case State.TossFood:
+				_circledPlayer = false;
 				Destination = TargetPlayer.Center + new Vector2(0f, -250f);
 				if (StateTimer > StateDuration * 0.5f && !HasFlag(Flags.DidAttack))
 				{
@@ -400,6 +427,9 @@ public class Gorgeist : ModNPC
 				}
 				break;
 			case State.CirclingPlayer:
+				if (_circledPlayer && StateTimer == 0)
+					SwitchState(State.TossPlate);
+				_circledPlayer = true;
 				float t = StateTimer / StateDuration * MathF.Tau * 2f - MathF.PI * 0.5f;
 				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * (150f + TargetPlayer.width), MathF.Sin(t) * (150f + TargetPlayer.height));
 				break;
@@ -409,5 +439,22 @@ public class Gorgeist : ModNPC
 	public void Phase2()
 	{
 		// TODO
+	}
+
+	public override void DrawEffects(ref Color drawColor)
+	{
+		TargetPlayer = Main.player[NPC.target];
+
+		if (!Enraged(TargetPlayer))
+			return;
+
+		float velocityX = NPC.velocity.X + Main.windSpeedCurrent;
+		float velocityY = NPC.velocity.Y;
+
+		drawColor = new(212, 148, 88);
+
+		Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Sand, 0f + velocityX, -7f + velocityY);
+		Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Sand, 5f + velocityX, -5f + velocityY);
+		Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Sand, -5f + velocityX, -5f + velocityY);
 	}
 }
