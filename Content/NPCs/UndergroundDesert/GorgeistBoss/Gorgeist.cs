@@ -453,7 +453,7 @@ public class Gorgeist : ModNPC
 					int value = 0;
 					if (Main.expertMode)
 						value = 1;
-					switch (Main.rand.Next(value, value + 2))
+					switch (Main.rand.Next(value, value + 1))
 					{
 						case 0:
 							ThrowPlate(); // Single
