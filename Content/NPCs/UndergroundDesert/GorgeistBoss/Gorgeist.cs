@@ -73,23 +73,6 @@ public class Gorgeist : ModNPC
 
 	public Player TargetPlayer;
 
-	// Helper method to determine the minion type
-	public static int MinionType()
-	{
-		return ModContent.NPCType<HomingFood>();
-	}
-
-	// Helper method to determine the amount of minions summoned
-	public static int MinionCount()
-	{
-		int count = 15;
-		if (Main.expertMode)
-			count += 5; // Increase by 5 if expert or master mode
-		if (Main.getGoodWorld)
-			count += 5; // Increase by 5 if using the "For The Worthy" seed
-		return count;
-	}
-
 	public override void SetStaticDefaults()
 	{
 		Main.npcFrameCount[Type] = 8;
@@ -287,7 +270,7 @@ public class Gorgeist : ModNPC
 				SwitchState(CurrentState);
 				break;
 		}
-		if (!HasFlag(Flags.SecondPhase) && NPC.life < NPC.lifeMax / 3)
+		if (!HasFlag(Flags.SecondPhase) && NPC.life < NPC.lifeMax / 2)
 		{
 			SetFlag(Flags.SecondPhase);
 			SwitchState(State.Enraged);
@@ -309,7 +292,12 @@ public class Gorgeist : ModNPC
 		if (Main.netMode == NetmodeID.MultiplayerClient) // Needed so that we only spawn projectiles on the server
 			return;
 
-		int propagateCount = Main.rand.Next(1, count / 2 + 1); // at least 1, at max count / 2
+		int propogateFactor = 1;
+
+		if (Main.expertMode)
+			propogateFactor = 2;
+
+		int propagateCount = Main.rand.Next(propogateFactor, count / 2 + propogateFactor); // at least 1, at max count / 2
 
 		for (int i = 0; i < count; i++)
 		{
@@ -380,7 +368,7 @@ public class Gorgeist : ModNPC
 				{
 					int value = 0;
 
-					if (NPC.life <= NPC.lifeMax * 0.75)
+					if (Main.expertMode)
 						value = 1;
 
 					switch (Main.rand.Next(value, value + 2))
@@ -402,7 +390,12 @@ public class Gorgeist : ModNPC
 				Destination = TargetPlayer.Center + new Vector2(0f, -250f);
 				if (StateTimer > StateDuration * 0.5f && !HasFlag(Flags.DidAttack))
 				{
-					ThrowFood(4, 7f);
+					int count = 4;
+
+					if (Main.expertMode)
+						count = 6;
+
+					ThrowFood(count, 7f);
 					SetFlag(Flags.DidAttack);
 				}
 				break;

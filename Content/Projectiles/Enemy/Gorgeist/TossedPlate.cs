@@ -50,7 +50,12 @@ public class TossedPlate : ModProjectile
 
     public override void OnHitPlayer(Player target, Player.HurtInfo info)
     {
-        if (Main.rand.NextBool(3))
+        int chance = 3;
+
+        if (Main.expertMode)
+            chance = 2;
+
+        if (Main.rand.NextBool(chance))
             target.AddBuff(ModContent.BuffType<SterlingSplinters>(), 3 * 60);
     }
 
