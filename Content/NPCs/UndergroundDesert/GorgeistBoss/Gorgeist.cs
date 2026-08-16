@@ -1,4 +1,5 @@
 ﻿using System;
+using Humanizer;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -31,7 +32,8 @@ public class Gorgeist : ModNPC
 		None = 0,
 		SecondPhase = 1 << 0,
 		DidAttack = 1 << 1,
-		CircledPlayer = 1 << 2
+		CircledPlayer = 1 << 2,
+		DashUp = 1 << 3
 	}
 
 	public enum State
@@ -45,7 +47,8 @@ public class Gorgeist : ModNPC
 		CirclingPlayer,
 
 		// Phase 2
-		Angry
+		Angry,
+		Dash
 	}
 
 	public Flags BossFlags
@@ -72,6 +75,9 @@ public class Gorgeist : ModNPC
 
 	public int StateTimer;
 	public int StateDuration;
+
+	public int DashIndex;
+	public int DashCount;
 
 	public Player TargetPlayer;
 
@@ -255,20 +261,30 @@ public class Gorgeist : ModNPC
 		else
 			OnStateEnd();
 
-		NPC.velocity += (Destination - NPC.Center) * 0.01f;
-		NPC.velocity *= 0.9f;
+		if (CurrentState == State.Dash)
+		{
+			NPC.velocity += (Destination - NPC.Center) * 0.1f;
+			NPC.velocity *= 0.7f;
+		}
+		else
+		{
+			NPC.velocity += (Destination - NPC.Center) * 0.01f;
+			NPC.velocity *= 0.9f;
+		}
+		NPC.spriteDirection = NPC.direction;
 
 		if (Enraged())
 		{
 			NPC.damage = 24;
 
-			Main.windSpeedTarget += 1f;
+			// TODO: This leaves the game broken
+			/*Main.windSpeedTarget += 1f;
 			Main.UseStormEffects = true;
 
 			Sandstorm.HandleEffectAndSky(true);
-			Sandstorm.EmitDust();
+			Sandstorm.EmitDust();*/
 
-			if (!Main.raining)
+			if (!Main.raining && Main.netMode != NetmodeID.MultiplayerClient)
 				Main.StartRain(); // TODO: Start a storm rather than just rain
 		}
 		else
@@ -277,10 +293,17 @@ public class Gorgeist : ModNPC
 
 	public static int GetStateDuration(State state) => state switch
 	{
+		// Phase 1
 		State.Idle => 2 * 60,
 		State.TossPlate => 1 * 60,
 		State.TossFood => 4 * 60,
 		State.CirclingPlayer => 8 * 60,
+
+		// Phase 2
+		State.Angry => 2 * 60,
+		State.Dash => 40,
+
+		// Fallback
 		_ => 4 * 60
 	};
 
@@ -289,12 +312,29 @@ public class Gorgeist : ModNPC
 		switch (CurrentState)
 		{
 			case State.Idle:
-				SwitchState(Phase1Attacks);
+				if (!HasFlag(Flags.SecondPhase))
+					SwitchState(Phase1Attacks);
+				else
+					Dash();
 				break;
 			case State.TossPlate:
 			case State.TossFood:
 			case State.CirclingPlayer:
+			case State.Angry:
 				SwitchState(State.Idle);
+				break;
+			case State.Dash:
+				DashIndex++;
+				if (DashIndex >= DashCount)
+				{
+					SwitchState(State.Idle);
+					DashIndex = 0;
+				}
+				else
+				{
+					SetFlag(Flags.DashUp, DashIndex % 2 != 0);
+					SwitchState(State.Dash);
+				}
 				break;
 			default:
 				SwitchState(CurrentState);
@@ -312,6 +352,21 @@ public class Gorgeist : ModNPC
 		Dust dust = Dust.NewDustPerfect(new(NPC.position.X + 38f, NPC.position.Y + 2f), ModContent.DustType<EyeSparkle>(), NPC.velocity, 50, default, 1);
 		dust.noGravity = true;
 		SoundEngine.PlaySound(WgSounds.Shing, NPC.Center);
+	}
+
+	public void FacePlayer()
+	{
+		if (TargetPlayer.Center.X > NPC.Center.X)
+			NPC.direction = 1;
+		else
+			NPC.direction = -1;
+	}
+
+	public void Dash(int count = 4)
+	{
+		DashCount = count;
+		SetFlag(Flags.DashUp, false);
+		SwitchState(State.Dash);
 	}
 
 	public void ThrowFood(int count, float offsetX = 1f)
@@ -386,10 +441,12 @@ public class Gorgeist : ModNPC
 		switch (CurrentState)
 		{
 			case State.Idle:
+				FacePlayer();
 				if (StateTimer == StateDuration - 30)
 					EyeSparkle();
 				break;
 			case State.TossPlate:
+				FacePlayer();
 				SetFlag(Flags.CircledPlayer, false);
 				if (!HasFlag(Flags.DidAttack))
 				{
@@ -424,10 +481,10 @@ public class Gorgeist : ModNPC
 				}
 				break;
 			case State.CirclingPlayer:
+				FacePlayer();
 				if (HasFlag(Flags.CircledPlayer) && StateTimer == 0)
 					SwitchState(State.TossPlate);
-				SetFlag(Flags.CircledPlayer);
-				float t = StateTimer / StateDuration * MathF.Tau * 2f - MathF.PI * 0.5f;
+				float t = StateTimer / (float)StateDuration * MathF.Tau * 2f - MathF.PI * 0.5f;
 				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * (150f + TargetPlayer.width), MathF.Sin(t) * (150f + TargetPlayer.height));
 				break;
 		}
@@ -435,7 +492,22 @@ public class Gorgeist : ModNPC
 
 	public void Phase2()
 	{
-		// TODO
+		switch (CurrentState)
+		{
+			case State.Idle:
+				FacePlayer();
+				Destination = TargetPlayer.Center + new Vector2(300f, -300f);
+				if (StateTimer == StateDuration - 30)
+					EyeSparkle();
+				break;
+			case State.Dash:
+				if (StateTimer == 0)
+				{
+					int up = HasFlag(Flags.DashUp) ? -1 : 1;
+					Destination += new Vector2(NPC.direction * 100f, up * 400f);
+				}
+				break;
+		}
 	}
 
 	public override void DrawEffects(ref Color drawColor)
