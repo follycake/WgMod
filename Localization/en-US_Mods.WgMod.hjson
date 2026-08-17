@@ -1464,6 +1464,6 @@ MapObject.DecorativeWeightPotions: Decorative Weight Potion
 Achievements: {
 	GorgeistBeaten: {
 		FriendlyName: Gorgeist Beaten
-		Description: Defeat Gorgeist, a malevolent spirit who seaks to fatten up all who oppose her.
+		Description: Defeat Gorgeist, a malevolent spirit who seeks to fatten up all who oppose her.
 	}
 }
