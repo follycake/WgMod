@@ -516,7 +516,7 @@ public class Gorgeist : ModNPC
 		float velocityX = NPC.velocity.X + Main.windSpeedCurrent;
 		float velocityY = NPC.velocity.Y;
 
-		drawColor = new(212, 148, 88);
+		drawColor = new(212, 148, 88); // TODO: Apply lighting to her while enraged
 
 		Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Sand, 0f + velocityX, -7f + velocityY);
 		Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Sand, 5f + velocityX, -5f + velocityY);
