@@ -45,6 +45,7 @@ public class TerraskeletonLegs : ModItem
 
         if (prevRocketBoots > 0 || !player.TryGetModPlayer(out WgPlayer wg))
             return;
+
         float immobility = wg.Weight.ClampedImmobility;
         wg.MovementPenalty *= float.Lerp(1f, 0.6f, immobility);
     }

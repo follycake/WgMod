@@ -13,6 +13,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using WgMod.Common.Systems;
+using WgMod.Content.Projectiles;
 
 namespace WgMod.Content.NPCs.TownNPCs.OverflowingMimic;
 
@@ -371,6 +372,11 @@ public class OverflowingMimicNPC : ModNPC
 
         if (NPC.velocity.Y == 0 && NPC.velocity.X != 0)
             NPC.velocity.X = 0.1f * NPC.direction;  //*/
+    }
+
+    public override void HitEffect(NPC.HitInfo hit)
+    {
+        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.position, new(0f, 0f), ModContent.ProjectileType<MimicAttack>(), NPC.damage, 5f);
     }
 }
 

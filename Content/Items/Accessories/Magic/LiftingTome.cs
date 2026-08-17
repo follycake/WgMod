@@ -25,6 +25,7 @@ public class LiftingTome : ModItem
     WgStat _manaCost = new(0.96f, 0.92f);
     WgStat _maxMana = new(20, 60);
     WgStat _flight = new(1f, 1.5f);
+
     public string _texture;
 
     public override void SetStaticDefaults()
@@ -43,9 +44,7 @@ public class LiftingTome : ModItem
 
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
-        if (!player.TryGetModPlayer(out LiftingTomePlayer lt))
-            return;
-        if (!player.TryGetModPlayer(out WgPlayer wg))
+        if (!player.TryGetModPlayer(out LiftingTomePlayer lt) || !player.TryGetModPlayer(out WgPlayer wg))
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
@@ -128,11 +127,7 @@ public class LiftingTome : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(
-            (1 - _manaCost).Percent(),
-            _maxMana,
-            _magicDamage.Percent()
-        );
+        tooltips.FormatLines((1 - _manaCost).Percent(), _maxMana, _magicDamage.Percent());
     }
 }
 

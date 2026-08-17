@@ -30,6 +30,7 @@ public class ExoskeletonLegs : ModItem
 
         if (prevRocketBoots > 0 || !player.TryGetModPlayer(out WgPlayer wg))
             return;
+
         float immobility = wg.Weight.ClampedImmobility;
         wg.MovementPenalty *= float.Lerp(1f, 0.8f, immobility);
     }

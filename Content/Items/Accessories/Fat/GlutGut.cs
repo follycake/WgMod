@@ -34,6 +34,7 @@ public class GlutGut : ModItem
     {
         if (!player.TryGetModPlayer(out GlutGutPlayer gp))
             return;
+
         gp._active = true;
     }
 }
@@ -54,6 +55,7 @@ public class GlutGutItem : GlobalItem
     {
         if (!player.TryGetModPlayer(out GlutGutPlayer gp))
             return base.ConsumeItem(item, player);
+
         if (gp._active)
         {
             switch (item.useStyle)
@@ -67,6 +69,7 @@ public class GlutGutItem : GlobalItem
                     break;
             }
         }
+
         return base.ConsumeItem(item, player);
     }
 }

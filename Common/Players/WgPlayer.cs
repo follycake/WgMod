@@ -7,6 +7,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Configs;
 using WgMod.Common.Systems;
+using WgMod.Content.Achievements;
 using WgMod.Content.Buffs;
 using WgMod.Content.Buffs.Debuffs;
 
@@ -246,6 +247,14 @@ public partial class WgPlayer : ModPlayer
             }
             else
                 _iceBreakTimer = 0;
+        }
+    }
+
+    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+    {
+        if (Weight.GetStage() == WeightStage.Blob && target.life - damageDone <= 0 && target.type == NPCID.KingSlime)
+        {
+            ImBigger.Condition.Complete();
         }
     }
 

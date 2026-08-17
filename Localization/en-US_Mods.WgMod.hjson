@@ -52,8 +52,8 @@ Items: {
 		DisplayName: Queenly Gluttony
 		Tooltip:
 			'''
-			Increases melee damage, critical strike chance, and armor penetration
-			Decreases melee speed
+			Increases melee damage by {0}%, critical strike chance by {2}%, and armor penetration by {3}
+			Decreases melee speed by {1}%
 			Melee attacks inflict pretty sparkle slime!
 			Effects scale with your obesity
 			'''
@@ -285,9 +285,9 @@ Items: {
 		DisplayName: Honeyed Ham Bat
 		Tooltip:
 			'''
-			Grows more powerful the more obese you are
 			Hitting enemies temporarily improves life regeneration
 			Honey globs fling off of the weapon to damage your enemies
+			Stats scale with your obesity
 			'You can't go wrong dousing something in honey.'
 			'''
 	}
@@ -890,6 +890,20 @@ Items: {
 		DisplayName: Decorative Weight Loss Potion
 		Tooltip: ""
 	}
+
+	SolDrive: {
+		DisplayName: Sol Drive
+		Tooltip:
+			'''
+			Increases melee damage by {0}%, critical strike chance by {2}%, 
+			armor penetration by {3}, and increases melee size by {4}%
+			Reduces melee speed by {1}%
+			Doubles knockback
+			Attacks inflict a variety of debuffs
+			Effects scale with your obesity
+			'Still, my heart is blazing!'
+			'''
+	}
 }
 
 Buffs: {
@@ -1222,6 +1236,7 @@ Projectiles: {
 	LilGorgie.DisplayName: Lil' Gorgie
 	SterlingPlatterProjectile.DisplayName: Sterling Platter Projectile
 	SterlingExplosion.DisplayName: Sterling Explosion
+	MimicAttack.DisplayName: Mimic Attack
 }
 
 NPCs: {
@@ -1426,6 +1441,11 @@ Conditions: {
 Interface.Milk: Milk
 DeathReason.Milkmaid: Next time listen, honey.
 
+GlobalItem: {
+	Disabled: "[c/963232:Disabled by {0}]"
+	Ineffective: "[c/963232:Less effective when paired with {0}]"
+}
+
 Emotes: {
 	GroundedHarpyEmote.Command: groundedharpy
 	MilkmaidEmote.Command: milkmaid
@@ -1470,6 +1490,21 @@ Achievements: {
 	Reshaped: {
 		FriendlyName: Reshaped
 		Description: Fatten up an eligible enemy using {$Items.PowderedSugar.DisplayName}.
+	}
+
+	Playtime: {
+		FriendlyName: Playtime!
+		Description: Have the Overflowing Mimic 'play with' a boss.
+	}
+
+	ImBigger: {
+		FriendlyName: I'm Bigger
+		Description: Defeat King Slime while at weight level Blob.
+	}
+
+	LetsGetPhysical: {
+		FriendlyName: Let's Get Physical!
+		Description: Mount a {$Items.Treadmill.DisplayName} while wearing the full Yoga Armor set.
 	}
 
 	GorgeistBeaten: {

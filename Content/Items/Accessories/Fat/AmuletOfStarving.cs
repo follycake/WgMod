@@ -10,6 +10,8 @@ namespace WgMod.Content.Items.Accessories.Fat;
 [Credit(ProjectRole.Artist, Contributor.trilophyte)]
 public class AmuletOfStarving : ModItem
 {
+    public const float WeightLossRate = 5f;
+
     public override void SetDefaults()
     {
         Item.width = 24;
@@ -24,7 +26,8 @@ public class AmuletOfStarving : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out AmuletOfStarvingPlayer wp))
             return;
-        wg.MovementWeightLossRate += 5f;
+        wg.MovementWeightLossRate += WeightLossRate;
+
         wp._active = true;
         wp._hidden = hideVisual;
     }
@@ -32,9 +35,8 @@ public class AmuletOfStarving : ModItem
 
 public class AmuletOfStarvingPlayer : ModPlayer
 {
-    internal bool _active;
-    internal bool _hidden;
-    internal int _dustRate;
+    public bool _active;
+    public bool _hidden;
 
     public override void ResetEffects()
     {
@@ -42,18 +44,9 @@ public class AmuletOfStarvingPlayer : ModPlayer
         _hidden = false;
     }
 
-    public override void DrawEffects(
-        PlayerDrawSet drawInfo,
-        ref float r,
-        ref float g,
-        ref float b,
-        ref float a,
-        ref bool fullBright
-    )
+    public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
     {
-        _dustRate = 30;
-
-        if (Main.rand.NextBool(_dustRate) && _active == true && _hidden == false)
+        if (Main.rand.NextBool(30) && _active == true && _hidden == false)
         {
             Dust.NewDust(
                 Player.position,

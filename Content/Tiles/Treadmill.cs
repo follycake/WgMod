@@ -7,6 +7,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using WgMod.Common.Players;
+using WgMod.Content.Achievements;
+using WgMod.Content.Items.Armor.YogaClothes;
 
 namespace WgMod.Content.Tiles;
 
@@ -82,6 +84,9 @@ public class Treadmill : ModTile
             player.sitting.SitDown(player, i, j);
             tp._treadmillX = player.Center.X;
             tp._onTreadmill = true;
+
+            if (player.armor[0].type == ModContent.ItemType<YogaHeadband>() && player.armor[1].type == ModContent.ItemType<YogaTop>() && player.armor[2].type == ModContent.ItemType<YogaPants>())
+                LetsGetPhysical.Condition.Complete();
         }
         return true;
     }

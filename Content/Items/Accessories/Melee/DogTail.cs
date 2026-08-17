@@ -54,14 +54,7 @@ public class DogTail : GlobalItem
             return;
 
         tooltips.LineBeforeTooltip(out TooltipLine line);
-        tooltips.Insert(
-            tooltips.IndexOf(line) + 1,
-            new TooltipLine(
-                Mod,
-                "NewTooltip",
-                Language.GetTextValue("Mods.WgMod.Items.DogTail.Tooltip")
-            )
-        );
+        tooltips.Insert(tooltips.IndexOf(line) + 1, new TooltipLine(Mod, "NewTooltip", Language.GetTextValue("Mods.WgMod.Items.DogTail.Tooltip")));
     }
 }
 

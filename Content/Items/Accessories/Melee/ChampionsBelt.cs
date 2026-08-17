@@ -21,11 +21,10 @@ public class ChampionsBelt : ModItem
 
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
-        if (!player.TryGetModPlayer(out WgPlayer wg))
-            return;
-        if (!player.TryGetModPlayer(out ChampionsBeltPlayer cb))
+        if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out ChampionsBeltPlayer cb))
             return;
         float immobility = wg.Weight.ClampedImmobility;
+
         cb._active = true;
         cb._meleeScale = float.Lerp(1.25f, 2f, immobility);
     }
