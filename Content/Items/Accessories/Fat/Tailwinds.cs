@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -70,19 +71,20 @@ public class TailwindsItem : GlobalItem
         if (!player.TryGetModPlayer(out TailwindsPlayer tp) || !tp._active)
             return;
 
-        _modifier = 1 + (Main.windSpeedCurrent / 2.5f);
+        _modifier = 1 + MathF.Abs(Main.windSpeedCurrent) / 2.5f;
 
-        int particles = (int)((_modifier - 1) * 10);
+
+        int particles = (int)((_modifier - 1f) * 10f);
 
         //Main.NewText($"modifier: {_modifier}");
         //Main.NewText($"particles: {particles}");
 
-        if (Main.windSpeedCurrent > 0)
+        if (Main.windSpeedCurrent > 0f)
             _windDirection = 1;
         else
             _windDirection = -1;
 
-        if (velocity.X > 0)
+        if (velocity.X > 0f)
             _projectileDirection = 1;
         else
             _projectileDirection = -1;
