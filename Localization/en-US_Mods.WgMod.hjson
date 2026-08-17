@@ -869,17 +869,10 @@ Items: {
 	Landmark: {
 		DisplayName: Landmark
 		Tooltip: "'C. Lady'"
-		Tooltip: "'C. Lady'"
 	}
 
 	Grounded: {
 		DisplayName: Grounded
-		Tooltip: "'C. Lady'"
-		Tooltip: "'C. Lady'"
-	}
-
-	Abundance: {
-		DisplayName: Abundance
 		Tooltip: "'C. Lady'"
 	}
 
@@ -1478,7 +1471,7 @@ Achievements: {
 		FriendlyName: Reshaped
 		Description: Fatten up an eligible enemy using {$Items.PowderedSugar.DisplayName}.
 	}
-	
+
 	GorgeistBeaten: {
 		FriendlyName: Gorgeist Beaten
 		Description: Defeat Gorgeist, a malevolent spirit who seeks to fatten up all who oppose her.
