@@ -10,7 +10,7 @@ namespace WgMod.Content.Items.Accessories.Fat;
 [Credit(ProjectRole.Artist, Contributor.trilophyte)]
 public class AmuletOfStarving : ModItem
 {
-    public const float WeightLossRate = 5f;
+    public const float WeightLossRate = 10f;
 
     public override void SetDefaults()
     {
