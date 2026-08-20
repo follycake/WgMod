@@ -1388,7 +1388,8 @@ Prefixes: {
 	DamageAttackSpeedTooltip:
 		'''
 		+{0}% damage
-		{1}% attack speed
+		+{2}% critical strike chance
+		-{1}% attack speed
 		'''
 
 	Padded: {
