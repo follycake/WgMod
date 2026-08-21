@@ -46,10 +46,10 @@ public class WgSound
         Channel = channel;
     }
 
-    public SoundStyle Build() => new(SoundPath, NumVariants)
+    public SoundStyle Build(float volume = 1f) => new(SoundPath, NumVariants)
     {
         PitchVariance = PitchVariance,
-        Volume = WgClientConfig.Instance.GetVolume(Channel) / 100f
+        Volume = WgClientConfig.Instance.GetVolume(Channel) / 100f * volume
     };
 
     public static implicit operator SoundStyle(WgSound sound) => sound.Build();
