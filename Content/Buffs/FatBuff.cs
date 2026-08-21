@@ -12,11 +12,11 @@ namespace WgMod.Content.Buffs;
 
 public class FatBuff : WgBuffBase
 {
-    public const float MaxLifeIncreasePercentage = 0.2f;
+    public const float MaxLifeIncreasePercentage = 0.3f;
     public const int MaxStageGraphic = WeightStage.SoftImmobile;
 
-    WgStat _damageReduction = new(0f, 0.05f);
-    WgStat _lifeIncrease = new(0f, 100f);
+    WgStat _damageReduction = new(0f, 0.06f);
+    WgStat _lifeIncrease = new(0f, 150f);
 
     Asset<Texture2D> _stagesTexture;
 
@@ -70,13 +70,13 @@ public class FatBuff : WgBuffBase
         // Calculate factors
         int stage = wg.Weight.GetStage();
         if (stage >= WeightStage.DamageReduction)
-            _damageReduction.Lerp(wg.Weight.GetClampedFactor(WeightStage.DamageReduction, WeightStage.SoftImmobile));
+            _damageReduction.Lerp(wg.Weight.GetClampedFactor(WeightStage.DamageReduction, WeightStage.Max));
         else
             _damageReduction.Reset();
 
         if (stage >= WeightStage.Heavy)
         {
-            float t = wg.Weight.GetClampedFactor(WeightStage.Heavy, WeightStage.SoftImmobile) * MaxLifeIncreasePercentage;
+            float t = wg.Weight.GetClampedFactor(WeightStage.Heavy, WeightStage.Max) * MaxLifeIncreasePercentage;
             _lifeIncrease.Value = MathF.Floor(player.statLifeMax * t / 5f) * 5f;
             _lifeIncrease.Clamp();
         }
