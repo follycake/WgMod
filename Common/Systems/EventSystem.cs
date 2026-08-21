@@ -9,8 +9,7 @@ public class EventSystem : ModSystem
     public const int MonthLength = 30;
 
     public static int dayNumber;
-
-    public static bool harpyMigration = false;
+    public static bool harpyMigration;
 
     public override void PostWorldGen()
     {
@@ -39,7 +38,5 @@ public class EventSystem : ModSystem
     public override void LoadWorldData(TagCompound tag)
     {
         dayNumber = tag.GetInt(nameof(dayNumber));
-
-        Main.NewText($"Day Number: {dayNumber}");
     }
 }

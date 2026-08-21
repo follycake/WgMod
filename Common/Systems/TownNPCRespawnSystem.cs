@@ -10,9 +10,9 @@ namespace WgMod.Common.Systems;
 
 public class TownNPCRespawnSystem : ModSystem
 {
-    public static bool unlockGroundedHarpy = false;
-    public static bool unlockMilkmaid = false;
-    public static bool unlockOverflowingMimic = false;
+    public static bool unlockGroundedHarpy;
+    public static bool unlockMilkmaid;
+    public static bool unlockOverflowingMimic;
 
     public override void ClearWorld()
     {
@@ -40,15 +40,11 @@ public class TownNPCRespawnSystem : ModSystem
 
     public override void NetSend(BinaryWriter writer)
     {
-        writer.WriteFlags(unlockGroundedHarpy);
-        writer.WriteFlags(unlockMilkmaid);
-        writer.WriteFlags(unlockOverflowingMimic);
+        writer.WriteFlags(unlockGroundedHarpy, unlockMilkmaid, unlockOverflowingMimic);
     }
 
     public override void NetReceive(BinaryReader reader)
     {
-        reader.ReadFlags(out unlockGroundedHarpy);
-        reader.ReadFlags(out unlockMilkmaid);
-        reader.ReadFlags(out unlockOverflowingMimic);
+        reader.ReadFlags(out unlockGroundedHarpy, out unlockMilkmaid, out unlockOverflowingMimic);
     }
 }
