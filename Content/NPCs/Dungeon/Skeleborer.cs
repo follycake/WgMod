@@ -46,7 +46,7 @@ public class SkeleborerHead : WormHead
 		NPC.aiStyle = -1;
 		NPC.width = 58;
 		NPC.height = 58;
-		NPC.lifeMax = 4000;
+		NPC.lifeMax = 2000;
 		NPC.damage = 40;
 		NPC.defense = 0;
 		NPC.lifeRegen += 6;
@@ -71,7 +71,7 @@ public class SkeleborerHead : WormHead
 
 	public override float SpawnChance(NPCSpawnInfo spawnInfo)
 	{
-		return SpawnCondition.DungeonNormal.Chance * 0.01f;
+		return SpawnCondition.DungeonNormal.Chance * 0.001f;
 	}
 
 	public override void Init()
