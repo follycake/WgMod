@@ -21,11 +21,11 @@ public class SkeleborerHead : WormHead
 	int _attackCounter;
 
 	public override int BodyType => ModContent.NPCType<SkeleborerBody>();
-
 	public override int TailType => ModContent.NPCType<SkeleborerTail>();
 
-	readonly WeightedRandom<int> _commonDrops = new();
-	readonly WeightedRandom<int> _rareDrops = new();
+	// Server only
+	WeightedRandom<int> _commonDrops;
+	WeightedRandom<int> _rareDrops;
 
 	public override void SetStaticDefaults()
 	{
@@ -98,16 +98,17 @@ public class SkeleborerHead : WormHead
 		_attackCounter = reader.ReadInt32();
 	}
 
-	public override void OnSpawn(IEntitySource source)
+	public override void OnSpawn(IEntitySource source) // Only called on the server
 	{
+		_commonDrops = new();
 		_commonDrops.Add(ItemID.BlueBrick, 2);
 		_commonDrops.Add(ItemID.PinkBrick, 2);
 		_commonDrops.Add(ItemID.GreenBrick, 2);
 		_commonDrops.Add(ItemID.Book, 1);
-
 		if (NPC.downedPlantBoss)
 			_commonDrops.Add(ItemID.Ectoplasm, 1);
 
+		_rareDrops = new();
 		_rareDrops.Add(ModContent.ItemType<SkeleborerIOU>(), 2);
 		_rareDrops.Add(ItemID.WaterCandle, 1);
 	}
