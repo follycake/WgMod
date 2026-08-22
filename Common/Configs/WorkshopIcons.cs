@@ -13,12 +13,11 @@ namespace WgMod.Common.Configs;
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 public class WorkshopIconsConfig : ModConfig
 {
-    public static WorkshopIconsConfig Instance => ModContent.GetInstance<WorkshopIconsConfig>();
     public override ConfigScope Mode => ConfigScope.ClientSide;
 
     [Header("WorkshopIcons")]
     [DefaultValue(1)]
-    [Range(1, 1)]
+    [Range(1, 2)]
     [Increment(1)]
     [Slider]
     [DrawTicks]
@@ -30,6 +29,7 @@ public class WorkshopIconsConfig : ModConfig
     public string GetDescription() => WorkshopIcons switch
     {
         1 => "Grounded Harpy Art by @_d_u_m_m_y_",
+        2 => "Overflowing Mimic Art by @igobee_",
         _ => "UwU"
     };
 }
@@ -50,7 +50,7 @@ public class WorkshopIconsElement : ConfigElement<string>
             MarginTop = 36, // This too
             RemoveFloatingPointsFromDrawPosition = true
         };
-        _text = new UIAutoScaleTextTextPanel<string>(WorkshopIconsConfig.Instance.GetDescription());
+        _text = new UIAutoScaleTextTextPanel<string>(GetDescription());
         _text.SetPadding(0f);
         _text.Width.Set(458, 0f);
         _text.UseInnerDimensions = true;
@@ -68,9 +68,16 @@ public class WorkshopIconsElement : ConfigElement<string>
         base.Update(gameTime);
         if (Value != _lastValue)
         {
-            _text.SetText(WorkshopIconsConfig.Instance.GetDescription());
+            _text.SetText(GetDescription());
             _image.SetImage(ModContent.Request<Texture2D>(Value));
         }
         _lastValue = Value;
+    }
+
+    string GetDescription()
+    {
+        if (Item is WorkshopIconsConfig config)
+            return config.GetDescription();
+        return "ERROR";
     }
 }
