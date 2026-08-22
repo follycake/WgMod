@@ -17,7 +17,7 @@ Discord tags of the people that helped make this possible
 - @divine_lumine (Armor sprites)
 - @the_trueterrafox (Item idea and sprites)
 - @tea_kettles (i-frames visual bugfix)
-- @anolivewine (Fat mannquins idea)
+- @altaber (Fat mannquins idea)
 - @thegungis (Shoddy scale idea)
 - @radiantluminant (Greedy Flask idea)
 - @robinn9283 (Item sprites)
