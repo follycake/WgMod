@@ -43,6 +43,9 @@ public partial class WgPlayer : ModPlayer
     /// <summary> Whether the weight is currently fixed/pinned. No gain or loss. </summary>
     public bool WeightFixed;
 
+    /// <summary> Whether a softening curve gets applied to the movement penalty allowing the player to move no matter how high it gets. </summary>
+    public bool PreventImmobility;
+
     /// <summary> Whether the player has jumped this tick. </summary>
     public bool JustJumped { get; private set; }
 
@@ -142,6 +145,7 @@ public partial class WgPlayer : ModPlayer
 
         _finalWeightFixed = WeightFixed;
         WeightFixed = false;
+        PreventImmobility = false;
 
         // Jump detection
         if (Player.jump <= 0)
@@ -210,7 +214,10 @@ public partial class WgPlayer : ModPlayer
             float factor = Weight.GetFactor(WeightStage.SoftImmobile, WeightStage.HardImmobile);
             basePenalty = float.Lerp(1f, 2f, factor);
         }
-        _finalMovementFactor = Math.Clamp(1f - MovementPenalty.ApplyTo(basePenalty), 0f, 1f);
+        basePenalty = MovementPenalty.ApplyTo(basePenalty);
+        if (PreventImmobility)
+            basePenalty = -1f / (2f * basePenalty + 1f) + 1f;
+        _finalMovementFactor = Math.Clamp(1f - basePenalty, 0f, 1f);
 
         Player.runAcceleration *= _finalMovementFactor;
         Player.maxRunSpeed *= _finalMovementFactor;
