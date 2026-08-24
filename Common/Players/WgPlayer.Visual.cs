@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Configs;
 
@@ -176,7 +177,19 @@ public partial class WgPlayer
 
     public bool IsSittingVisual()
     {
-        return Player.sitting.isSitting || _finalMovementFactor < 0.01f;
+        if (Player.mount.Active)
+        {
+            switch (Player.mount.Type)
+            {
+                case MountID.GolfCartSomebodySaveMe:
+                case MountID.WitchBroom:
+                case MountID.SpookyWood:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        return (Player.sitting.isSitting && !Player.GetModPlayer<TreadmillPlayer>()._onTreadmill) || _finalMovementFactor < 0.01f;
     }
 
     public override void HideDrawLayers(PlayerDrawSet drawInfo)
