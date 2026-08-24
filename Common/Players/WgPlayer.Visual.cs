@@ -174,6 +174,11 @@ public partial class WgPlayer
         _squishVel += amount;
     }
 
+    public bool IsSittingVisual()
+    {
+        return Player.sitting.isSitting || _finalMovementFactor < 0.01f;
+    }
+
     public override void HideDrawLayers(PlayerDrawSet drawInfo)
     {
         int stage = Weight.GetStage();

@@ -227,7 +227,9 @@ public class SpriteSet
         Show = 0,
         Hide,
         FemaleOnly,
-        MaleOnly
+        MaleOnly,
+        WhenSitting,
+        WhenStanding
     }
 
     public class Layer
@@ -264,6 +266,8 @@ public class SpriteSet
             RenderType.Hide => false,
             RenderType.FemaleOnly => !player.Male,
             RenderType.MaleOnly => player.Male,
+            RenderType.WhenSitting => player.Wg().IsSittingVisual(),
+            RenderType.WhenStanding => !player.Wg().IsSittingVisual(),
             _ => true,
         };
     }
