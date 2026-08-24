@@ -199,20 +199,18 @@ public partial class WgPlayer : ModPlayer
         else
             _finalKnockbackResistance = 0f;
 
-        if (stage < WeightStage.HardImmobile)
+        float basePenalty;
+        if (stage < WeightStage.SoftImmobile)
         {
-            float basePenalty;
-            if (stage < WeightStage.SoftImmobile)
-            {
-                float immobility = Weight.ClampedImmobility;
-                basePenalty = float.Lerp(0f, 0.7f, immobility * immobility);
-            }
-            else
-                basePenalty = 1f;
-            _finalMovementFactor = Math.Clamp(1f - MovementPenalty.ApplyTo(basePenalty), 0f, 1f);
+            float immobility = Weight.ClampedImmobility;
+            basePenalty = float.Lerp(0f, 0.7f, immobility * immobility);
         }
         else
-            _finalMovementFactor = Player.mount.Active ? 1f - mountReduction : 0f; // TODO: This sucks
+        {
+            float factor = Weight.GetFactor(WeightStage.SoftImmobile, WeightStage.HardImmobile);
+            basePenalty = float.Lerp(1f, 2f, factor);
+        }
+        _finalMovementFactor = Math.Clamp(1f - MovementPenalty.ApplyTo(basePenalty), 0f, 1f);
 
         Player.runAcceleration *= _finalMovementFactor;
         Player.maxRunSpeed *= _finalMovementFactor;
@@ -259,10 +257,8 @@ public partial class WgPlayer : ModPlayer
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        if (Weight.GetStage() == WeightStage.Blob && target.life - damageDone <= 0 && target.type == NPCID.KingSlime)
-        {
+        if (target.type == NPCID.KingSlime && target.life - damageDone <= 0 && Weight.GetStage() == WeightStage.Blob)
             ImBigger.Condition.Complete();
-        }
     }
 
     void ResizeHitbox(int stage)
