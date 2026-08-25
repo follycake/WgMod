@@ -88,7 +88,7 @@ public class YogaClothesPlayer : ModPlayer
         if (!_active || !Player.TryGetModPlayer(out WgPlayer wg))
             return;
         if (Player.controlRight || Player.controlLeft)
-            wg.AddWeight(-0.05f);
+            wg.AddWeight(-0.025f);
         if (wg.JustJumped)
             wg.AddWeight(-0.1f);
     }

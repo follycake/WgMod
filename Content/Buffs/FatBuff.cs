@@ -100,10 +100,7 @@ public class FatBuff : WgBuffBase
 
     public override float GetProgress(WgPlayer wg, int buffIndex)
     {
-        int stage = wg.Weight.GetStage();
-        if (stage < WeightStage.Max)
-            return wg.Weight.GetStageFactor();
-        return 1f;
+        return wg.Weight.GetStageFactor();
     }
 
     public override bool RightClick(int buffIndex)
