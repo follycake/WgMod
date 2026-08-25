@@ -8,6 +8,7 @@ using Terraria.ObjectData;
 namespace WgMod.Content.Tiles.Furniture.Barn;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.subparnitragen)]
 public class BarnTable : ModTile
 {
     public override void SetStaticDefaults()

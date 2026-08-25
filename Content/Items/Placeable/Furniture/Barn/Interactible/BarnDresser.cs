@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Placeable.Furniture.Barn.Interactible;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.subparnitragen)]
 public class BarnDresser : ModItem
 {
     public override void SetStaticDefaults()

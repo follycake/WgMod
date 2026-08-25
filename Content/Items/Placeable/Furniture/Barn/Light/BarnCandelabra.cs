@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Placeable.Furniture.Barn.Light;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.subparnitragen)]
 public class BarnCandelabra : ModItem
 {
     public override void SetDefaults()

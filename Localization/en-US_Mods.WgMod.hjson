@@ -860,6 +860,11 @@ Items: {
 			- Maimai
 			'''
 	}
+
+	BarnChandelier: {
+		DisplayName: Barn Chandelier
+		Tooltip: ""
+	}
 }
 
 Buffs: {

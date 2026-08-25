@@ -12,6 +12,7 @@ using Terraria.ObjectData;
 namespace WgMod.Content.Tiles.Furniture.Barn.Light;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.subparnitragen)]
 public class BarnCandle : ModTile
 {
     public Asset<Texture2D> _flameTexture;
@@ -60,14 +61,12 @@ public class BarnCandle : ModTile
     {
         Tile tile = Main.tile[i, j];
         int topY = j - tile.TileFrameY / 18 % 3;
-        short frameAdjustment = (short)(tile.TileFrameX > 0 ? -18 : 18);
+        short frameAdjustment = (short)(tile.TileFrameX > 0 ? -20 : 20);
 
         Main.tile[i, topY].TileFrameX += frameAdjustment;
 
         if (Main.netMode != NetmodeID.SinglePlayer)
-        {
             NetMessage.SendTileSquare(-1, i, topY + 1, 3, TileChangeType.None);
-        }
     }
 
     public override void HitWire(int i, int j)
@@ -119,9 +118,7 @@ public class BarnCandle : ModTile
             var dust = Dust.NewDustDirect(new Vector2(i * 16 + 4, j * 16 + 2), 4, 4, DustID.Torch, 0f, 0f, 100, default, 1f);
 
             if (!Main.rand.NextBool(3))
-            {
                 dust.noGravity = true;
-            }
 
             dust.velocity *= 0.3f;
             dust.velocity.Y -= 1.5f;
@@ -133,9 +130,7 @@ public class BarnCandle : ModTile
         Tile tile = Main.tile[i, j];
 
         if (!TileDrawing.IsVisible(tile))
-        {
             return;
-        }
 
         SpriteEffects effects = SpriteEffects.None;
 

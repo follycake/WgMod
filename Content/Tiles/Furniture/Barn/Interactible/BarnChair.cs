@@ -24,7 +24,7 @@ public class BarnChair : ModTile
         Main.tileLavaDeath[Type] = true;
         TileID.Sets.HasOutlines[Type] = true;
         TileID.Sets.CanBeSatOnForNPCs[Type] = true;
-        TileID.Sets.CanBeSatOnForPlayers[Type] = true; //
+        TileID.Sets.CanBeSatOnForPlayers[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
 
         AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
