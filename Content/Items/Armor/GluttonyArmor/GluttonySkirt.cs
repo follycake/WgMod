@@ -46,6 +46,11 @@ public class GluttonySkirt : ModItem
         player.endurance += _resist;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Pants;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

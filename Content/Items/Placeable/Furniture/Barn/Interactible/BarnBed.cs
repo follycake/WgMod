@@ -16,6 +16,11 @@ public class BarnBed : ModItem
         Item.value = 2000;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

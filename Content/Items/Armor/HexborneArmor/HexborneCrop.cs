@@ -37,6 +37,11 @@ public class HexborneCrop : ModItem
         player.manaCost *= _manaCost;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Torso;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

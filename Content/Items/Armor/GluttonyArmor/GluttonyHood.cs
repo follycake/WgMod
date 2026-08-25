@@ -87,6 +87,11 @@ public class GluttonyHood : ModItem
         player.setBonus = SetBonusText.Format(SetBonusSummoner, (1 - _setBonusMage).Percent(), (_setBonusMelee - 1).Percent(), (1 - _setBonusSpeed).Percent());
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

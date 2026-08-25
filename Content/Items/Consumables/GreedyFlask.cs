@@ -45,6 +45,11 @@ public class GreedyFlask : ModItem
         Item.healLife = _healBonus;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.LifePotions;
+    }
+
     public override bool ConsumeItem(Player player)
     {
         return false;

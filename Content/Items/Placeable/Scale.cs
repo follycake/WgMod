@@ -16,6 +16,11 @@ public class Scale : ModItem
         Item.height = 28;
         Item.value = Item.buyPrice(gold: 1);
     }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
+    }
 }
 
 public class SellScale : GlobalNPC

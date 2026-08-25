@@ -32,6 +32,11 @@ public class CaramelArrow : ModItem
         Item.ammo = AmmoID.Arrow;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Ammo;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe(25)

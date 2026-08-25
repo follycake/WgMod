@@ -36,6 +36,11 @@ public class NopalesEmpanadas : ModItem
         Item.rare = ItemRarityID.Blue;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Food;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

@@ -106,6 +106,11 @@ public class AmazonHeaddress : ModItem
         tooltips.FormatLines(_damage.Percent());
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

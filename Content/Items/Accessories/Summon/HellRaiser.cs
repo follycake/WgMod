@@ -39,6 +39,11 @@ public class HellRaiser : ModItem
         player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _whipSpeed;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

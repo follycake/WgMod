@@ -58,6 +58,11 @@ public class TwinEyes : ModItem
         knockback *= _knockback;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.MeleeWeapon;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

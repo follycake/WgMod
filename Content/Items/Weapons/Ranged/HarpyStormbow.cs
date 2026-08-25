@@ -89,4 +89,9 @@ public class HarpyStormbow : ModItem
                 knockback
             );
     }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.RangedWeapon;
+    }
 }

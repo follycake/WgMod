@@ -47,6 +47,11 @@ public class GluttonyCrop : ModItem
         player.endurance += _resist;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Torso;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

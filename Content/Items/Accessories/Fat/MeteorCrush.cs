@@ -30,6 +30,11 @@ public class MeteorCrush : ModItem
         if (player.TryGetModPlayer(out MeteorCrushPlayer crush))
             crush._crushEffect = true;
     }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
 }
 
 public class MeteorCrushPlayer : ModPlayer

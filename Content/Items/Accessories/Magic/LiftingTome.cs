@@ -98,6 +98,11 @@ public class LiftingTome : ModItem
         constantAscend *= _flight;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
+
     public override void AddRecipes()
     {
         if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))

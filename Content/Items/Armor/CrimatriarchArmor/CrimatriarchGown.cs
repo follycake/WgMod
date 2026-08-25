@@ -37,6 +37,11 @@ public class CrimatriarchGown : ModItem
         player.maxMinions += MinionCount;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Torso;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

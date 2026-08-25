@@ -102,6 +102,11 @@ public class Endocannon : RecoilItem
             recoilStrength = 0.5f;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.RangedWeapon;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

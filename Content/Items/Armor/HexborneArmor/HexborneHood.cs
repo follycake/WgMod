@@ -68,6 +68,11 @@ public class HexborneHood : ModItem
         player.setBonus = SetBonusText.Format(_setBonusDamage.Percent(), _setBonusDefense);
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

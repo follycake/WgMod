@@ -18,6 +18,11 @@ public class FatteningDartTrap : ModItem
         Item.mech = true; // lets you see wires while holding.
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Wiring;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

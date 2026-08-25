@@ -37,6 +37,11 @@ public class YogaTop : ModItem
         tooltips.FormatLines((1f - _movePenalty).Percent());
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Torso;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

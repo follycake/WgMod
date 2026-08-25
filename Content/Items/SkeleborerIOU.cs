@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace WgMod.Content.Items;
@@ -11,5 +12,10 @@ public class SkeleborerIOU : ModItem
         Item.height = 28;
 
         Item.maxStack = Item.CommonMaxStack;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Material;
     }
 }

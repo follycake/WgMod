@@ -14,6 +14,11 @@ public class FollyPlush : ModItem
         Item.height = 15;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

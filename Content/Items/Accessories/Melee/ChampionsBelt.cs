@@ -29,6 +29,11 @@ public class ChampionsBelt : ModItem
         cb.meleeScale = float.Lerp(1.25f, 2f, immobility);
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

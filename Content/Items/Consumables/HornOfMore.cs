@@ -46,4 +46,9 @@ public class HornOfMore : ModItem
     {
         return false;
     }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.LifePotions;
+    }
 }

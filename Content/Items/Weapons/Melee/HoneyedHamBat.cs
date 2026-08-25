@@ -75,6 +75,11 @@ public class HoneyedHamBat : ModItem
         player.AddBuff(BuffID.HeartyMeal, 7 * 60);
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.MeleeWeapon;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

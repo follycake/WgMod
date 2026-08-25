@@ -59,6 +59,11 @@ public class QueenlyGluttony : ModItem
         }
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
+
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
         tooltips.FormatLines(_damage.Percent(), _attackSpeed.Percent(), _critChance, _armorPenetration);
