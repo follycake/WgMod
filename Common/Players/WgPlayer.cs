@@ -64,6 +64,7 @@ public partial class WgPlayer : ModPlayer
     Vector2 _prevVel;
     float _digestTimer;
     bool _hasJumped;
+    int _lastLegFrame;
 
     public override void Initialize()
     {
@@ -326,6 +327,15 @@ public partial class WgPlayer : ModPlayer
             else
                 _digestTimer = DigestTime * 2;
         }
+
+        int frame = Player.legFrame.Y / Player.legFrame.Height;
+        if (frame != _lastLegFrame && (frame == 9 || frame == 16) && MathF.Abs(Player.velocity.X) < 10f)
+        {
+            float volume = Weight.GetClampedFactor(WeightStage.MorbidlyObese, WeightStage.SoftImmobile) * 0.25f;
+            if (volume > 0.01f)
+                SoundEngine.PlaySound(WgSounds.Thump.Build(volume), Player.Center);
+        }
+        _lastLegFrame = frame;
 
         UpdateAnimation();
         UpdateJiggle();

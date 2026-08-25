@@ -17,7 +17,11 @@ public static class WgSounds
 {
     public static readonly List<WgSound> AllSounds = [];
 
+    // follycake
     public static readonly WgSound Belly = new("WgMod/Assets/Sounds/Belly_", 3, VolumeChannel.Belly);
+    public static readonly WgSound Thump = new("WgMod/Assets/Sounds/Thump") { MaxInstances = 4, PitchVariance = 0.1f };
+
+    // purple_circle
     public static readonly WgSound Gulp = new("WgMod/Assets/Sounds/Gulp_", 4);
     public static readonly WgSound Stomp = new("WgMod/Assets/Sounds/Stomp_", 5);
     public static readonly WgSound Squeaky = new("WgMod/Assets/Sounds/Squeaky");
@@ -29,6 +33,7 @@ public class WgSound
     public readonly int Id;
 
     public string SoundPath;
+    public int MaxInstances = 1;
     public int NumVariants = 1;
     public float PitchVariance = 0f;
     public VolumeChannel Channel = VolumeChannel.Misc;
@@ -48,6 +53,7 @@ public class WgSound
 
     public SoundStyle Build(float volume = 1f) => new(SoundPath, NumVariants)
     {
+        MaxInstances = MaxInstances,
         PitchVariance = PitchVariance,
         Volume = WgClientConfig.Instance.GetVolume(Channel) / 100f * volume
     };
