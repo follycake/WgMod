@@ -865,6 +865,15 @@ Items: {
 		DisplayName: Barn Chandelier
 		Tooltip: ""
 	}
+
+	MobilityBadge: {
+		DisplayName: Mobility Badge
+		Tooltip:
+			'''
+			Prevents immobility, allowing big walkies
+			Very popular item among the lihzahrd folk
+			'''
+	}
 }
 
 Buffs: {

@@ -14,24 +14,13 @@ public class LootGlobalNPC : GlobalNPC
         switch (npc.type)
         {
             case NPCID.Deerclops:
-                npcLoot.Add(
-                    ItemDropRule.ByCondition(
-                        Condition.DownedDeerclops.ToDropCondition(ShowItemDropInUI.Always),
-                        ModContent.ItemType<AmuletOfStarving>(),
-                        chanceDenominator: 2,
-                        chanceNumerator: 1
-                    )
-                );
+                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<AmuletOfStarving>(), 2));
                 break;
             case NPCID.QueenSlimeBoss:
-                npcLoot.Add(
-                    ItemDropRule.ByCondition(
-                        Condition.DownedQueenSlime.ToDropCondition(ShowItemDropInUI.Always),
-                        ModContent.ItemType<QueenlyGluttony>(),
-                        chanceDenominator: 2,
-                        chanceNumerator: 1
-                    )
-                );
+                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<QueenlyGluttony>(), 2));
+                break;
+            case NPCID.Golem:
+                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MobilityBadge>(), 5));
                 break;
         }
     }
