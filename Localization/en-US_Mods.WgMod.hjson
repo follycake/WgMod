@@ -1341,7 +1341,6 @@ NPCs: {
 	SkeleborerHead.DisplayName: Skeleborer
 	SkeleborerBody.DisplayName: Skeleborer
 	SkeleborerTail.DisplayName: Skeleborer
-
 	Gorgeist.DisplayName: Gorgeist
 }
 
@@ -1448,6 +1447,15 @@ Dialogue: {
 		NightDialogue1: "{0} love nighttime, so many friends out to play!"
 		LoveStruckDialogue1: "{1}... {0} kinda wants to... bite {1} face..."
 		PostMechDialogue1: "{0} ate the flesh of big robots... {0} feels so powerful..."
+	}
+
+	Gorgeist: {
+		PlateTossDialogue1: Hah!
+		PlateTossDialogue2: Sterling Platter!
+		PlateTossDialogue3: Like this?
+		FoodTossDialogue1: Have a bite!
+		FoodTossDialogue2: Feeling full?
+		FoodTossDialogue3: A round on me!
 	}
 }
 

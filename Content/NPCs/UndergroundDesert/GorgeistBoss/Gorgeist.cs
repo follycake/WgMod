@@ -8,8 +8,10 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.Events;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Utilities;
+using WgMod.Common.Players;
 using WgMod.Common.Systems;
 using WgMod.Content.Dusts;
 using WgMod.Content.Items.Armor.Vanity;
@@ -85,7 +87,7 @@ public class Gorgeist : ModNPC
 
 	public override void SetStaticDefaults()
 	{
-		Main.npcFrameCount[Type] = 8;
+		Main.npcFrameCount[Type] = 10;
 
 		NPCID.Sets.MPAllowedEnemies[Type] = true;
 		NPCID.Sets.BossBestiaryPriority.Add(Type);
@@ -166,6 +168,15 @@ public class Gorgeist : ModNPC
 		{
 			startFrame = 4;
 			finalFrame = 7;
+
+			if (NPC.frame.Y < startFrame * frameHeight)
+				NPC.frame.Y = startFrame * frameHeight;
+		}
+
+		if (CurrentState == State.CirclingPlayer)
+		{
+			startFrame = 8;
+			finalFrame = 9;
 
 			if (NPC.frame.Y < startFrame * frameHeight)
 				NPC.frame.Y = startFrame * frameHeight;
@@ -345,11 +356,32 @@ public class Gorgeist : ModNPC
 		}
 	}
 
+	public WeightedRandom<string> WittyDialogue;
+
+	public void WittyBanter(int type)
+	{
+		/*switch (type)
+		{
+			case 0:
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.PlateTossDialogue1"), 1);
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.PlateTossDialogue2"), 1);
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.PlateTossDialogue3"), 1);
+				break;
+			case 1:
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.FoodTossDialogue1"), 1);
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.FoodTossDialogue2"), 1);
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.FoodTossDialogue3"), 1);
+				break;
+		}
+
+		Terraria.Chat.ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral(WittyDialogue), Color.AliceBlue);*/
+	}
+
 	public void EyeSparkle()
 	{
 		Dust dust = Dust.NewDustPerfect(new(NPC.position.X + 38f, NPC.position.Y + 2f), ModContent.DustType<EyeSparkle>(), NPC.velocity, 50, default, 1);
 		dust.noGravity = true;
-		SoundEngine.PlaySound(WgSounds.Shing, NPC.Center);
+		SoundEngine.PlaySound(SoundID.MaxMana, NPC.Center);
 	}
 
 	public void FacePlayer()
@@ -463,6 +495,7 @@ public class Gorgeist : ModNPC
 							MultiThrow(); // Volley
 							break;
 					}
+					WittyBanter(0);
 					SetFlag(Flags.DidAttack);
 				}
 				break;
@@ -475,6 +508,7 @@ public class Gorgeist : ModNPC
 					if (Main.expertMode)
 						count = 6;
 					ThrowFood(count, 7f);
+					WittyBanter(1);
 					SetFlag(Flags.DidAttack);
 				}
 				break;

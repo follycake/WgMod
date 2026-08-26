@@ -21,10 +21,6 @@ public class EyeSparkle : ModDust
 
         dust.frame = new Rectangle(0, (int)(dust.fadeIn * 9) * 30, 30, 30);
 
-        float light = 0.35f * dust.scale;
-
-        Lighting.AddLight(dust.position, light * 2, light, light * 2);
-
         return false;
     }
 }
