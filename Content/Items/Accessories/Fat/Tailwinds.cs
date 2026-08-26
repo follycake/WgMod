@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common.Systems;
 
 namespace WgMod.Content.Items.Accessories.Fat;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 public class Tailwinds : ModItem
 {
+    WgStat _modifier = new(1.15f, 1.5f);
+
     public override void SetDefaults()
     {
-        Item.width = 26;
-        Item.height = 26;
+        Item.width = 64;
+        Item.height = 64;
 
         Item.expert = true;
         Item.accessory = true;
@@ -24,8 +29,21 @@ public class Tailwinds : ModItem
     {
         if (!player.TryGetModPlayer(out TailwindsPlayer tp))
             return;
+
+        _modifier.Lerp(WindSystem.clampedWind);
+
+        tp.modifier = _modifier;
+
         tp.active = true;
         tp.hidden = hideVisual;
+    }
+
+    public override void ModifyTooltips(List<TooltipLine> tooltips)
+    {
+        if (!Item.TryGetGlobalItem(out TailwindsItem ti))
+            return;
+
+        tooltips.FormatLines((_modifier - 1).Percent());
     }
 }
 
@@ -34,7 +52,7 @@ public class TailwindsPlayer : ModPlayer
     public bool active;
     public bool hidden;
 
-    int _windDirection = 0;
+    public float modifier;
 
     public override void ResetEffects()
     {
@@ -47,48 +65,30 @@ public class TailwindsPlayer : ModPlayer
         if (!active || Player != Main.LocalPlayer || hidden)
             return;
 
-        if (Main.windSpeedCurrent > 0)
-            _windDirection = 1;
-        else
-            _windDirection = -1;
-
-        if (_windDirection == Player.direction && Main.rand.NextBool(60))
+        if (WindSystem.windDirection == Player.direction && Main.rand.NextBool(60))
             Dust.NewDust(Player.position, Player.width, Player.height, DustID.Cloud, Player.velocity.X + Main.windSpeedCurrent, Player.velocity.Y, 50);
     }
 }
 
 public class TailwindsItem : GlobalItem
 {
-    public override bool InstancePerEntity => true;
-
-    int _windDirection = 0;
-    int _projectileDirection = 0;
-
-    float _modifier;
-
     public override void ModifyShootStats(Item item, Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
     {
-        if (!player.TryGetModPlayer(out TailwindsPlayer tp) || !tp.active)
+        if (!player.TryGetModPlayer(out TailwindsPlayer tp) || !tp.active || player != Main.LocalPlayer)
             return;
 
-        _modifier = 1 + MathF.Abs(Main.windSpeedCurrent) / 2.5f;
-
-        int particles = (int)((_modifier - 1f) * 10f);
-
-        if (Main.windSpeedCurrent > 0f)
-            _windDirection = 1;
-        else
-            _windDirection = -1;
+        int particles = (int)((tp.modifier - 1f) * 10f);
+        int projectileDirection;
 
         if (velocity.X > 0f)
-            _projectileDirection = 1;
+            projectileDirection = 1;
         else
-            _projectileDirection = -1;
+            projectileDirection = -1;
 
-        if (_projectileDirection == _windDirection)
+        if (projectileDirection == WindSystem.windDirection)
         {
-            damage = (int)(damage * _modifier);
-            velocity *= _modifier;
+            damage = (int)(damage * tp.modifier);
+            velocity *= tp.modifier;
 
             for (int i = 0; i < particles; i++)
                 Dust.NewDustDirect(position, 0, 0, DustID.Sand, velocity.X, velocity.Y, 50);

@@ -6,6 +6,8 @@ using WgMod.Common.Players;
 using Microsoft.Xna.Framework;
 using System;
 using WgMod.Content.Items.Accessories.Fat;
+using System.Collections.Generic;
+using WgMod.Common.Systems;
 
 namespace WgMod.Content.Items.Weapons.Melee;
 
@@ -15,10 +17,7 @@ public class SterlingPlatter : ModItem
 {
 	WgStat _damage = new(1f, 1.5f);
 	WgStat _knockback = new(1f, 1.5f);
-
-	float _modifier;
-
-	int _windDirection = 0;
+	WgStat _modifier = new(1f, 1.3f);
 
 	public override void SetDefaults()
 	{
@@ -38,6 +37,8 @@ public class SterlingPlatter : ModItem
 		if (!player.TryGetModPlayer(out WgPlayer wg))
 			return;
 		float immobility = wg.Weight.ClampedImmobility;
+
+		_modifier.Lerp(WindSystem.clampedWind);
 
 		_damage.Lerp(immobility);
 		_knockback.Lerp(immobility);
@@ -60,20 +61,18 @@ public class SterlingPlatter : ModItem
 
 		int particles = (int)((_modifier - 1f) * 10f);
 
-		_modifier = 1 + MathF.Abs(Main.windSpeedCurrent) / 2.5f;
-
-		if (Main.windSpeedCurrent > 0)
-			_windDirection = 1;
-		else
-			_windDirection = -1;
-
-		if (player.direction == _windDirection)
+		if (player.direction == WindSystem.windDirection)
 		{
-			damage = (int)(damage * _modifier);
+			damage *= _modifier;
 
 			if (!tp.active)
 				for (int i = 0; i < particles; i++)
 					Dust.NewDustDirect(position, 0, 0, DustID.Sand, velocity.X, velocity.Y, 50);
 		}
+	}
+
+	public override void ModifyTooltips(List<TooltipLine> tooltips)
+	{
+		tooltips.FormatLines((_modifier - 1f).Percent());
 	}
 }

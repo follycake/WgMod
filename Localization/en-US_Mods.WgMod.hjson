@@ -794,6 +794,7 @@ Items: {
 		Tooltip:
 			'''
 			Shreds your enemies in silvery explosions
+			Deals {0}% increased damage when thrown in the direction of the wind
 			'So clean, you'd feel guilty if you ate off it'
 			'''
 	}
@@ -838,7 +839,11 @@ Items: {
 
 	Tailwinds: {
 		DisplayName: Tailwinds
-		Tooltip: Projectiles fired in the direction of the wind gain damage and velocity
+		Tooltip:
+			'''
+			Projectiles fired in the direction of the wind gain {0}% damage and velocity
+			Effects scale based on the wind speed
+			'''
 	}
 
 	ThatOneThingFromTheWGTerrariaMod: {
