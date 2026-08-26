@@ -9,11 +9,11 @@ namespace WgMod.Content.Projectiles.Melee;
 [Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class SterlingPlatterProjectile : ModProjectile
 {
-	public static int CooldownMax = 36;
+	static readonly int _cooldownMax = 36;
 
-	public int _cooldown;
+	int _cooldown;
 
-	public bool _exhausted = false;
+	bool _exhausted = false;
 
 	public override void SetDefaults()
 	{
@@ -35,7 +35,7 @@ public class SterlingPlatterProjectile : ModProjectile
 	{
 		_cooldown++;
 
-		if (_cooldown == CooldownMax)
+		if (_cooldown == _cooldownMax)
 			SpawnSterlingExplosion();
 	}
 

@@ -83,6 +83,11 @@ public class Gorgeist : ModNPC
 
 	public Player TargetPlayer;
 
+	readonly int _plateTossDialogue = 0;
+	readonly int _foodTossDialogue = 1;
+	readonly int _evilLaugh = 2;
+	readonly int _introDialogue = 3;
+
 	public static readonly WeightedRandom<State> Phase1Attacks = new();
 
 	public override void SetStaticDefaults()
@@ -230,12 +235,15 @@ public class Gorgeist : ModNPC
 	{
 		if (TargetPlayer == null || TargetPlayer.ZoneDesert || TargetPlayer.ZoneUndergroundDesert || TargetPlayer.ZoneSandstorm)
 			return false;
+
 		return true;
 	}
 
 	public override void OnSpawn(IEntitySource source)
 	{
 		SwitchState(State.Idle);
+
+		WittyBanter(_introDialogue, true);
 	}
 
 	public override void OnKill()
@@ -356,11 +364,16 @@ public class Gorgeist : ModNPC
 		}
 	}
 
-	public WeightedRandom<string> WittyDialogue;
+	public WeightedRandom<string> WittyDialogue = new();
 
-	public void WittyBanter(int type)
+	public void WittyBanter(int type, bool guaranteed = false)
 	{
-		/*switch (type)
+		if (!guaranteed && Main.rand.NextBool(3))
+			return;
+
+		WittyDialogue.Clear();
+
+		switch (type)
 		{
 			case 0:
 				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.PlateTossDialogue1"), 1);
@@ -372,9 +385,17 @@ public class Gorgeist : ModNPC
 				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.FoodTossDialogue2"), 1);
 				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.FoodTossDialogue3"), 1);
 				break;
+			case 2:
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.EvilLaugh1"), 1);
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.EvilLaugh2"), 1);
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.EvilLaugh3"), 1);
+				break;
+			case 3:
+				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.IntroDialogue1"), 1);
+				break;
 		}
 
-		Terraria.Chat.ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral(WittyDialogue), Color.AliceBlue);*/
+		PopupText.NewText(new AdvancedPopupRequest() { Text = WittyDialogue, Color = Color.RoyalBlue, DurationInFrames = 60, Velocity = NPC.velocity }, NPC.position);
 	}
 
 	public void EyeSparkle()
@@ -495,7 +516,7 @@ public class Gorgeist : ModNPC
 							MultiThrow(); // Volley
 							break;
 					}
-					WittyBanter(0);
+					WittyBanter(_plateTossDialogue);
 					SetFlag(Flags.DidAttack);
 				}
 				break;
@@ -508,7 +529,7 @@ public class Gorgeist : ModNPC
 					if (Main.expertMode)
 						count = 6;
 					ThrowFood(count, 7f);
-					WittyBanter(1);
+					WittyBanter(_foodTossDialogue);
 					SetFlag(Flags.DidAttack);
 				}
 				break;
@@ -518,6 +539,10 @@ public class Gorgeist : ModNPC
 					SwitchState(State.TossPlate);
 				float t = StateTimer / (float)StateDuration * MathF.Tau * 2f - MathF.PI * 0.5f;
 				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * (150f + TargetPlayer.width), MathF.Sin(t) * (150f + TargetPlayer.height));
+
+				if (StateTimer % 10 == 0)
+					WittyBanter(_evilLaugh);
+
 				break;
 		}
 	}

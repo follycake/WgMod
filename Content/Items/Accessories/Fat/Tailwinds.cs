@@ -24,27 +24,27 @@ public class Tailwinds : ModItem
     {
         if (!player.TryGetModPlayer(out TailwindsPlayer tp))
             return;
-        tp._active = true;
-        tp._hidden = hideVisual;
+        tp.active = true;
+        tp.hidden = hideVisual;
     }
 }
 
 public class TailwindsPlayer : ModPlayer
 {
-    public bool _active;
-    public bool _hidden;
+    public bool active;
+    public bool hidden;
 
-    public int _windDirection = 0;
+    int _windDirection = 0;
 
     public override void ResetEffects()
     {
-        _active = false;
-        _hidden = false;
+        active = false;
+        hidden = false;
     }
 
     public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
     {
-        if (!_active || Player != Main.LocalPlayer || _hidden)
+        if (!active || Player != Main.LocalPlayer || hidden)
             return;
 
         if (Main.windSpeedCurrent > 0)
@@ -61,23 +61,19 @@ public class TailwindsItem : GlobalItem
 {
     public override bool InstancePerEntity => true;
 
-    public int _windDirection = 0;
-    public int _projectileDirection = 0;
+    int _windDirection = 0;
+    int _projectileDirection = 0;
 
-    public float _modifier;
+    float _modifier;
 
     public override void ModifyShootStats(Item item, Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
     {
-        if (!player.TryGetModPlayer(out TailwindsPlayer tp) || !tp._active)
+        if (!player.TryGetModPlayer(out TailwindsPlayer tp) || !tp.active)
             return;
 
         _modifier = 1 + MathF.Abs(Main.windSpeedCurrent) / 2.5f;
 
-
         int particles = (int)((_modifier - 1f) * 10f);
-
-        //Main.NewText($"modifier: {_modifier}");
-        //Main.NewText($"particles: {particles}");
 
         if (Main.windSpeedCurrent > 0f)
             _windDirection = 1;
@@ -95,7 +91,7 @@ public class TailwindsItem : GlobalItem
             velocity *= _modifier;
 
             for (int i = 0; i < particles; i++)
-                Dust.NewDustDirect(position, 0, 0, DustID.Cloud, velocity.X, velocity.Y, 50);
+                Dust.NewDustDirect(position, 0, 0, DustID.Sand, velocity.X, velocity.Y, 50);
         }
     }
 }

@@ -1450,12 +1450,16 @@ Dialogue: {
 	}
 
 	Gorgeist: {
+		IntroDialogue1: Who dares?
 		PlateTossDialogue1: Hah!
 		PlateTossDialogue2: Sterling Platter!
 		PlateTossDialogue3: Like this?
 		FoodTossDialogue1: Have a bite!
 		FoodTossDialogue2: Feeling full?
 		FoodTossDialogue3: A round on me!
+		EvilLaugh1: Ahahahahaha!
+		EvilLaugh2: Fufufu!
+		EvilLaugh3: Mwahahahahaha!
 	}
 }
 
