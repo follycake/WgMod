@@ -9,7 +9,7 @@ namespace WgMod.Content.Prefixes;
 
 public class Padded : ModPrefix
 {
-    WgStat _health = new(5f, 20f);
+    WgStat _health = new(5f, 40f);
 
     public override PrefixCategory Category => PrefixCategory.Accessory;
 

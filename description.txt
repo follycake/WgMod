@@ -8,7 +8,6 @@ Discord tags of the people that helped make this possible
 - @jumpsu2
 - @_d_u_m_m_y_
 - @igobee_
-- @minty0985
 [c/C42254:Contributions]
 - @ubulumn (Buff sprites)
 - @trilophyte (Accessory sprites, armor sprites)
@@ -18,7 +17,7 @@ Discord tags of the people that helped make this possible
 - @divine_lumine (Armor sprites)
 - @the_trueterrafox (Item idea and sprites)
 - @tea_kettles (i-frames visual bugfix)
-- @anolivewine (Fat mannquins idea)
+- @altaber (Fat mannquins idea)
 - @thegungis (Shoddy scale idea)
 - @radiantluminant (Greedy Flask idea)
 - @robinn9283 (Item sprites)

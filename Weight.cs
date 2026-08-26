@@ -39,7 +39,7 @@ public readonly record struct Weight(Mass Mass)
     public static Weight FromImmobility(float factor) => new(float.Lerp(Base.Mass, SoftImmobile.Mass, InverseCurve(factor)));
 
     public static Weight Clamp(Weight weight) => Clamp(weight, WeightStage.Max);
-    public static Weight Clamp(Weight weight, int maxStage) => new(Math.Clamp(weight.Mass, Base.Mass, FromStage(maxStage).Mass + 10f));
+    public static Weight Clamp(Weight weight, int maxStage) => new(Math.Clamp(weight.Mass, Base.Mass, FromStage(maxStage + 1).Mass - 1f));
 
     public static float Curve(float x) => MathF.Pow(x, 2f / 3f);
     public static float InverseCurve(float x) => MathF.Pow(x, 3f / 2f);

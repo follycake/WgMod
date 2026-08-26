@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common.GlobalItems;
 using WgMod.Common.Players;
 using WgMod.Content.Items.Ammo;
 
@@ -14,8 +15,8 @@ namespace WgMod.Content.Items.Accessories.Fat;
 [Credit(ProjectRole.Idea, Contributor.the_trueterrafox)]
 public class CharmOfSweets : ModItem
 {
-    WgStat _regen = new(4f, 16f);
-    WgStat _potionDelay = new(0.85f, 0.7f);
+    WgStat _regen = new(4f, 10f);
+    WgStat _potionDelay = new(0.85f, 0.6f);
 
     public override void SetDefaults()
     {
@@ -33,11 +34,19 @@ public class CharmOfSweets : ModItem
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
-        _regen.Lerp(immobility);
-        _potionDelay.Lerp(immobility);
+        if (!ItemDisabling.BandLine)
+        {
+            _regen.Lerp(immobility);
+            _potionDelay.Lerp(immobility);
 
-        player.lifeRegen += _regen;
-        player.PotionDelayModifier *= _potionDelay;
+            player.lifeRegen += _regen;
+            player.PotionDelayModifier *= _potionDelay;
+        }
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 
     public override void AddRecipes()

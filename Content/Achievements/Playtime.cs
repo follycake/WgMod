@@ -5,12 +5,12 @@ namespace WgMod.Content.Achievements;
 
 public class Playtime : ModAchievement
 {
-	public static AchievementCondition Condition { get; private set; }
+    public static AchievementCondition Condition { get; private set; }
 
-	public override void SetStaticDefaults()
-	{
-		Achievement.SetCategory(AchievementCategory.Slayer);
+    public override void SetStaticDefaults()
+    {
+        Achievement.SetCategory(AchievementCategory.Slayer);
 
-		Condition = AddCondition();
-	}
+        Condition = AddCondition();
+    }
 }

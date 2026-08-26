@@ -26,6 +26,11 @@ public class GuideToLiftingYourFatAss : ModItem
             lp._enabledGuideToLifting = true;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

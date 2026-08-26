@@ -45,6 +45,11 @@ public class PowderedSugar : ModItem
         }
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Ammo;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe(5)

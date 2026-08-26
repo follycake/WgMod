@@ -9,16 +9,18 @@ public class WgClientConfig : ModConfig
     public static WgClientConfig Instance => ModContent.GetInstance<WgClientConfig>();
     public override ConfigScope Mode => ConfigScope.ClientSide;
 
+    [Header("Sprites")]
+    [CustomModConfigItem(typeof(SpriteSetElement))]
+    [DefaultValue(SpriteSet.DefaultSet)]
+    public string PlayerSpriteSet;
+
     [Header("General")]
     public bool DisableWeightGain;
 
     [DefaultValue(true)]
     public bool UseImperialUnits;
 
-    [DefaultValue(WeightStage.Max)]
-    [Range(WeightStage.Regular, WeightStage.Max)]
-    [Slider]
-    [DrawTicks]
+    [Slider, DrawTicks, Range(WeightStage.Regular, WeightStage.Max), DefaultValue(WeightStage.Max)]
     public int StageCap;
 
     [Header("Visual")]
@@ -32,17 +34,27 @@ public class WgClientConfig : ModConfig
     public bool ShowCredits;
 
     [Header("Volume")]
-    [DefaultValue(100)]
-    [Range(0, 100)]
-    [Increment(5)]
-    [Slider]
-    [DrawTicks]
+    [Slider, DrawTicks, Increment(10), Range(0, 100), DefaultValue(100)]
+    public int BellyVolume;
+
+    [Slider, DrawTicks, Increment(10), Range(0, 100), DefaultValue(100)]
     public int GurgleVolume;
 
-    [Header("Sprites")]
-    [CustomModConfigItem(typeof(SpriteSetElement))]
-    [DefaultValue(SpriteSet.DefaultSet)]
-    public string PlayerSpriteSet;
+    [Slider, DrawTicks, Increment(10), Range(0, 100), DefaultValue(100)]
+    public int MiscVolume;
+
+    public ref int GetVolume(VolumeChannel channel)
+    {
+        switch (channel)
+        {
+            case VolumeChannel.Belly:
+                return ref BellyVolume;
+            case VolumeChannel.Gurgle:
+                return ref GurgleVolume;
+            default:
+                return ref MiscVolume;
+        }
+    }
 
     public override void OnChanged()
     {

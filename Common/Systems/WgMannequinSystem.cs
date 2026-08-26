@@ -19,7 +19,7 @@ using WgMod.Common.Players;
 namespace WgMod.Common.Systems;
 
 [Credit(ProjectRole.Programmer, Contributor.follycake)]
-[Credit(ProjectRole.Idea, Contributor.anolivewine)]
+[Credit(ProjectRole.Idea, Contributor.altaber)]
 public class WgMannequinSystem : ModSystem
 {
     public static WgMannequinSystem Instance => ModContent.GetInstance<WgMannequinSystem>();

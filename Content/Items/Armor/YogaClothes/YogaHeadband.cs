@@ -60,6 +60,11 @@ public class YogaHeadband : ModItem
         player.setBonus = SetBonusText.Format();
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()
@@ -83,7 +88,7 @@ public class YogaClothesPlayer : ModPlayer
         if (!_active || !Player.TryGetModPlayer(out WgPlayer wg))
             return;
         if (Player.controlRight || Player.controlLeft)
-            wg.AddWeight(-0.05f);
+            wg.AddWeight(-0.025f);
         if (wg.JustJumped)
             wg.AddWeight(-0.1f);
     }

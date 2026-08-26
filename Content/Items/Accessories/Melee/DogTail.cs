@@ -34,7 +34,7 @@ public class DogTail : GlobalItem
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
-        dt._active = true;
+        dt.active = true;
 
         _damageModifier.Lerp(immobility);
         dt._damageModifier = _damageModifier;
@@ -60,25 +60,25 @@ public class DogTail : GlobalItem
 
 public class DogTailPlayer : ModPlayer
 {
-    public bool _active;
-    public int _cooldown = 180;
-    public int _damage;
-    public float _damageModifier;
+    public bool active;
+    internal int _cooldown = 180;
+    internal int _damage;
+    internal float _damageModifier;
 
     public override void ResetEffects()
     {
-        _active = false;
+        active = false;
     }
 }
 
 public class DogTailItem : GlobalItem
 {
     public override bool InstancePerEntity => true;
-    public HashSet<DamageClass> meleeWeapons = [DamageClass.Melee, DamageClass.MeleeNoSpeed];
+    readonly HashSet<DamageClass> _meleeWeapons = [DamageClass.Melee, DamageClass.MeleeNoSpeed];
 
     public override void UseAnimation(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !dt._active || dt._cooldown < 180 || item.damage < 1 || player.whoAmI != Main.myPlayer || !meleeWeapons.Contains(item.DamageType))
+        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !dt.active || dt._cooldown < 180 || item.damage < 1 || player.whoAmI != Main.myPlayer || !_meleeWeapons.Contains(item.DamageType))
             return;
 
         if (Main.hardMode)
@@ -87,9 +87,7 @@ public class DogTailItem : GlobalItem
             dt._cooldown = 0;
 
         if (player.wereWolf)
-        {
             dt._cooldown += 30;
-        }
 
         Vector2 mousePosition = Main.MouseWorld;
         float angle = Utils.AngleTo(player.Center, mousePosition);

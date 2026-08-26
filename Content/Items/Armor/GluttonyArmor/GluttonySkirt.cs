@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -12,10 +13,10 @@ namespace WgMod.Content.Items.Armor.GluttonyArmor;
 [Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class GluttonySkirt : ModItem
 {
-    WgStat _damage = new(0f, 0.05f);
-    WgStat _critChance = new(0f, 6f);
-    WgStat _defense = new(0f, 6f);
-    WgStat _resist = new(0f, 0.01f);
+    WgStat _attackSpeed = new(0f, 0.02f);
+    WgStat _critChance = new(0f, 3f);
+    WgStat _health = new(10f, 40f);
+    WgStat _resist = new(0f, 0.02f);
 
     public override void SetDefaults()
     {
@@ -23,7 +24,7 @@ public class GluttonySkirt : ModItem
         Item.height = 20;
         Item.value = Item.sellPrice(gold: 1, silver: 20);
         Item.rare = ItemRarityID.Orange;
-        Item.defense = 10;
+        Item.defense = 8;
     }
 
     public override void UpdateEquip(Player player)
@@ -31,15 +32,23 @@ public class GluttonySkirt : ModItem
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
         float immobility = wg.Weight.ClampedImmobility;
-        _damage.Lerp(immobility);
+
+        _attackSpeed.Lerp(immobility);
         _critChance.Lerp(immobility);
-        _defense.Lerp(immobility);
+        _health.Lerp(immobility);
         _resist.Lerp(immobility);
 
-        player.GetDamage(DamageClass.Generic) += _damage;
+        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
+
+        player.GetAttackSpeed(DamageClass.Generic) -= _attackSpeed;
         player.GetCritChance(DamageClass.Generic) += _critChance;
-        player.statDefense += _defense;
+        player.statLifeMax2 += _health;
         player.endurance += _resist;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Pants;
     }
 
     public override void AddRecipes()
@@ -55,6 +64,6 @@ public class GluttonySkirt : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(_damage.Percent(), _critChance, _defense, _resist.Percent());
+        tooltips.FormatLines(_attackSpeed.Percent(), _critChance, _health, _resist.Percent());
     }
 }

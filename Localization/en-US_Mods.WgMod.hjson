@@ -296,16 +296,16 @@ Items: {
 		DisplayName: Gluttony Hood
 		Tooltip:
 			'''
-			Increases damage by {0}%
-			Increases critical stirike chance by {1}%
-			{2} increased defense
+			Increases critical strike chance by {1}%
+			Decreased attack speed by {0}%
+			{2} increased max life
 			{3}% reduced damage taken
 			'''
 		SetBonus:
 			'''
-			Melee weapons are larger, ranged weapons use less ammo
-			Magic weapons cost less mana, increases the maximum number of minions by {0}
-			Slightly reduces the movement penalty from high weights!
+			Melee weapons are {2}% larger, ranged weapons use 20% less ammo
+			Magic weapons cost {1}% less mana, increases the maximum number of turrets by {0}
+			{3}% reduced movement penalty from high weights
 			Effects scale with your obesity
 			'''
 	}
@@ -316,7 +316,7 @@ Items: {
 			'''
 			Increases damage by {0}%
 			Decreased attack speed by {1}%
-			{2} increased defense
+			{2} increased max life
 			{3}% reduced damage taken
 			'''
 	}
@@ -325,9 +325,9 @@ Items: {
 		DisplayName: Gluttony Skirt
 		Tooltip:
 			'''
-			Increases damage by {0}%
-			Increases critical stirike chance by {1}%
-			{2} increased defense
+			Increases critical strike chance by {1}%
+			Decreased attack speed by {0}%
+			{2} increased max life
 			{3}% reduced damage taken
 			'''
 	}
@@ -660,16 +660,6 @@ Items: {
 		Tooltip: Used in special crafting
 	}
 
-	MintyTail: {
-		DisplayName: Minty Tail
-		Tooltip: ""
-	}
-
-	MintyEars: {
-		DisplayName: Minty Ears
-		Tooltip: ""
-	}
-
 	FollyPlush: {
 		DisplayName: Folly Plush
 		Tooltip: I'm a very wawa fox :3
@@ -694,11 +684,6 @@ Items: {
 			Right click to weigh yourself!
 			Just don't expect this to work with a land whale...
 			'''
-	}
-
-	HoneyGun: {
-		DisplayName: Honey Gun
-		Tooltip: Sprays tasty honey! (WIP)
 	}
 
 	BarnBathtub: {
@@ -902,6 +887,34 @@ Items: {
 			Attacks inflict a variety of debuffs
 			Effects scale with your obesity
 			'Still, my heart is blazing!'
+			'''
+	}
+
+	SkeleborerBanner: {
+		DisplayName: Skeleborer Banner
+		Tooltip: Nearby players gain a bonus against: Skeleborer
+	}
+
+	SkeleborerIOU: {
+		DisplayName: I.O.U.
+		Tooltip:
+			'''
+			'I owe you one (1) Skeleborer drop'
+			- Maimai
+			'''
+	}
+
+	BarnChandelier: {
+		DisplayName: Barn Chandelier
+		Tooltip: ""
+	}
+
+	MobilityBadge: {
+		DisplayName: Mobility Badge
+		Tooltip:
+			'''
+			Prevents immobility, allowing big walkies
+			Very popular item among the lihzahrd folk
 			'''
 	}
 }
@@ -1150,11 +1163,6 @@ Configs: {
 			Tooltip: Controls the aspect of fat player sprites
 		}
 
-		GurgleVolume: {
-			Tooltip: The volume of gurgles compared to the rest of the game's audio, setting it to 0 mutes gurgles entirely.
-			Label: Gurgle Volume
-		}
-
 		UseImperialUnits: {
 			Label: Use Imperial Units
 			Tooltip: Use imperial (lbs) units instead of metric (kg)
@@ -1163,6 +1171,21 @@ Configs: {
 		StageCap: {
 			Label: Stage Cap
 			Tooltip: The maximum weight stage that the player can reach
+		}
+
+		BellyVolume: {
+			Label: Belly
+			Tooltip: Volume of belly related sounds
+		}
+
+		GurgleVolume: {
+			Label: Gurgle
+			Tooltip: Volume of gurgle sounds
+		}
+
+		MiscVolume: {
+			Label: Miscellaneous
+			Tooltip: Volume of the remaining sounds
 		}
 	}
 
@@ -1216,7 +1239,6 @@ Projectiles: {
 	SunriseProjectile.DisplayName: Sunrise
 	SporeCloud.DisplayName: Spore Cloud
 	Plate.DisplayName: Plate
-	HoneySprayProjectile.DisplayName: Honey Spray Projectile
 	FatteningDart.DisplayName: Fattening Dart
 	CursedFlameFriendly.DisplayName: Cursed Flame
 	DeathLaserFriendly.DisplayName: Death Laser
@@ -1314,6 +1336,11 @@ NPCs: {
 		DisplayName: Overflowing Mimic
 		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a mimic
 	}
+
+	SugarSpecter.DisplayName: Sugar Specter
+	SkeleborerHead.DisplayName: Skeleborer
+	SkeleborerBody.DisplayName: Skeleborer
+	SkeleborerTail.DisplayName: Skeleborer
 
 	Gorgeist.DisplayName: Gorgeist
 }
@@ -1431,13 +1458,11 @@ Bestiary: {
 	Gorgeist: A malevolent spirit lives deep underground in the desert, cursing food to feed and fatten up adventurers. She says she does it to make them defenseless, but this is really just her fetish.
 	HomingFood: Food cursed by a malevolent spirit to seek out and fatten up adventurers until they're defenseless.
 	SweetSpirit: These spirits that dwell in the caverns will try their best to fatten you up.
+	SugarSpecter: Specters made of condensed sugar and cotton candy. Kill them before they bloat you up in size...
+	Skeleborer: Sometimes large amounts of ectoplasm coalesce, and come to life! She's haunted by the screaming of thousands of souls, but she doesn't really care.
 }
 
-Conditions: {
-	BlackRiderDev: Mods.WgMod.Conditions.BlackRiderDev
-	MintyDev: Mods.WgMod.Conditions.MintyDev
-}
-
+Conditions.BlackRiderDev: Mods.WgMod.Conditions.BlackRiderDev
 Interface.Milk: Milk
 DeathReason.Milkmaid: Next time listen, honey.
 
@@ -1460,7 +1485,8 @@ Prefixes: {
 	DamageAttackSpeedTooltip:
 		'''
 		+{0}% damage
-		{1}% attack speed
+		+{2}% critical strike chance
+		-{1}% attack speed
 		'''
 
 	Padded: {

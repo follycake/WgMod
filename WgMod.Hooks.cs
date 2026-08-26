@@ -5,11 +5,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs;
 
 namespace WgMod;
+
+public interface IUpdateCloud
+{
+    /// <summary> Return true to do vanilla cloud updating </summary>
+    bool PreUpdate(Cloud cloud);
+    void PostUpdate(Cloud cloud);
+}
 
 public partial class WgMod
 {
@@ -23,6 +31,7 @@ public partial class WgMod
         On_Mount.Draw += Mount_Draw;
         On_Main.GetPlayerArmPosition += Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras += Main_DrawProj_DrawExtras;
+        On_Cloud.Update += Cloud_Update;
     }
 
     // Always remember to unregister your hooks
@@ -35,6 +44,7 @@ public partial class WgMod
         On_Mount.Draw -= Mount_Draw;
         On_Main.GetPlayerArmPosition -= Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras -= Main_DrawProj_DrawExtras;
+        On_Cloud.Update -= Cloud_Update;
     }
 
     static void Player_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
@@ -184,5 +194,44 @@ public partial class WgMod
                 proj.gfxOffY = 0f;
         }
         orig(self, proj, mountedCenter, ref polePosX, ref polePosY);
+    }
+
+    static void Cloud_Update(On_Cloud.orig_Update orig, Cloud self)
+    {
+        if (self.ModCloud is IUpdateCloud update)
+        {
+            if (update.PreUpdate(self))
+                orig(self);
+            else
+            {
+                if (Main.bgAlphaFrontLayer[4] == 1f && self.position.Y > 200f)
+                {
+                    self.kill = true;
+                    self.Alpha -= 0.005f * (float)Main.dayRate;
+                }
+                if (!self.kill)
+                {
+                    if (self.Alpha < 1f)
+                    {
+                        self.Alpha += 0.001f * (float)Main.dayRate;
+                        if (self.Alpha > 1f)
+                            self.Alpha = 1f;
+                    }
+                }
+                else
+                {
+                    self.Alpha -= 0.001f * (float)Main.dayRate;
+                    if (self.Alpha <= 0f)
+                        self.active = false;
+                }
+                if (self.position.X + TextureAssets.Cloud[self.type].Width() * self.scale < 0f - 600f || self.position.X > Main.screenWidth + 600f)
+                    self.active = false;
+                self.width = (int)(TextureAssets.Cloud[self.type].Width() * self.scale);
+                self.height = (int)(TextureAssets.Cloud[self.type].Height() * self.scale);
+            }
+            update.PostUpdate(self);
+        }
+        else
+            orig(self);
     }
 }

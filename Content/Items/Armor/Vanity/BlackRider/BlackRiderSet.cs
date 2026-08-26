@@ -36,6 +36,11 @@ public class BlackRiderHair : ModItem
         Item.vanity = true;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()
@@ -59,6 +64,11 @@ public class BlackRiderChest : ModItem
         Item.vanity = true;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Torso;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()
@@ -80,6 +90,11 @@ public class BlackRiderSkirt : ModItem
         Item.rare = ItemRarityID.Cyan;
         //Item.value = Item.buyPrice(gold: 5);
         Item.vanity = true;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Pants;
     }
 
     public override void AddRecipes()

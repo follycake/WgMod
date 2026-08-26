@@ -16,7 +16,7 @@ partial class WgMod
     {
         Invalid = 0,
         WgPlayerSync,
-        WgPlayerGurgle,
+        WgPlayerPlaySound,
         WgPlayerCombatWeightText,
         MannequinSetStage,
         FeedingTubeSetLiquid,
@@ -26,23 +26,27 @@ partial class WgMod
     public override void HandlePacket(BinaryReader reader, int whoAmI)
     {
         MessageType type = (MessageType)reader.ReadByte();
+        int id;
         switch (type)
         {
             case MessageType.WgPlayerSync:
-                WgPlayer player = Main.player[reader.ReadByte()].Wg();
-                player.ReceivePlayerSync(reader);
+                WgPlayer wg = Main.player[reader.ReadByte()].Wg();
+                wg.ReceivePlayerSync(reader);
                 if (Main.netMode == NetmodeID.Server) // Forward the changes to the other clients
-                    player.SyncPlayer(-1, whoAmI, false);
+                    wg.SyncPlayer(-1, whoAmI, false);
                 break;
-            case MessageType.WgPlayerGurgle:
+            case MessageType.WgPlayerPlaySound:
+                id = reader.ReadByte();
+                wg = Main.player[id].Wg();
+                byte soundId = reader.ReadByte();
+                wg.PlaySound(WgSounds.AllSounds[soundId], false);
                 if (Main.netMode == NetmodeID.Server)
                 {
                     ModPacket packet = this.GetPacket(type);
-                    packet.Write(reader.ReadByte());
-                    packet.Send();
+                    packet.Write((byte)wg.Player.whoAmI);
+                    packet.Write(soundId);
+                    packet.Send(ignoreClient: id);
                 }
-                else
-                    Main.player[reader.ReadByte()].Wg().Gurgle(false);
                 break;
             case MessageType.WgPlayerCombatWeightText:
                 if (Main.netMode == NetmodeID.Server)
@@ -56,7 +60,7 @@ partial class WgMod
                     Main.player[reader.ReadByte()].Wg().CombatWeightText(reader.ReadSingle(), false);
                 break;
             case MessageType.MannequinSetStage:
-                int id = reader.ReadInt32();
+                id = reader.ReadInt32();
                 byte stage = reader.ReadByte();
                 WgMannequinSystem.SetStage((TEDisplayDoll)TileEntity.ByID[id], stage, false);
                 if (Main.netMode == NetmodeID.Server)

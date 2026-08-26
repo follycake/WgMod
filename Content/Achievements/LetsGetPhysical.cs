@@ -5,12 +5,12 @@ namespace WgMod.Content.Achievements;
 
 public class LetsGetPhysical : ModAchievement
 {
-	public static AchievementCondition Condition { get; private set; }
+    public static AchievementCondition Condition { get; private set; }
 
-	public override void SetStaticDefaults()
-	{
-		Achievement.SetCategory(AchievementCategory.Challenger);
+    public override void SetStaticDefaults()
+    {
+        Achievement.SetCategory(AchievementCategory.Challenger);
 
-		Condition = AddCondition();
-	}
+        Condition = AddCondition();
+    }
 }

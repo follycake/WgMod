@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Placeable.Furniture.Barn.Light;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.subparnitragen)]
 public class BarnCandelabra : ModItem
 {
     public override void SetDefaults()
@@ -13,6 +14,11 @@ public class BarnCandelabra : ModItem
         Item.width = 12;
         Item.height = 30;
         Item.value = 150;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
     }
 
     public override void AddRecipes()

@@ -151,7 +151,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         int direction = drawPlayer.direction;
         Vector2 layerPos = drawPos;
         layerPos.X += stageData.OffsetX * direction;
-        layerPos += new Vector2(set.DrawOffsetX * direction, set.DrawOffsetY * drawPlayer.gravDir);
+        layerPos += new Vector2(set.DrawOffsetX * direction, (set.DrawOffsetY - 4f) * drawPlayer.gravDir);
 
         void DrawLayers(SpriteSet.Layer[] layers)
         {

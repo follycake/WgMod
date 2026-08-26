@@ -25,8 +25,13 @@ public class ChampionsBelt : ModItem
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
-        cb._active = true;
-        cb._meleeScale = float.Lerp(1.25f, 2f, immobility);
+        cb.active = true;
+        cb.meleeScale = float.Lerp(1.25f, 2f, immobility);
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 
     public override void AddRecipes()
@@ -51,12 +56,12 @@ public class ChampionsBelt : ModItem
 
 public class ChampionsBeltPlayer : ModPlayer
 {
-    internal bool _active;
-    internal float _meleeScale;
+    public bool active;
+    public float meleeScale;
 
     public override void ResetEffects()
     {
-        _active = false;
+        active = false;
     }
 }
 
@@ -64,9 +69,9 @@ public class ChampionsBeltScaling : GlobalItem
 {
     public override void ModifyItemScale(Item item, Player player, ref float scale)
     {
-        if (!player.TryGetModPlayer(out ChampionsBeltPlayer cb))
+        if (!player.TryGetModPlayer(out ChampionsBeltPlayer cb) || !cb.active || !item.CountsAsClass(DamageClass.Melee))
             return;
-        if (cb._active && item.CountsAsClass(DamageClass.Melee))
-            scale *= cb._meleeScale;
+
+        scale *= cb.meleeScale;
     }
 }

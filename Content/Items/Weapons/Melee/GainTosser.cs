@@ -57,6 +57,11 @@ public class GainTosser : ModItem
         tooltips.FormatLines((_damage - 1f).Percent(), (_velocity - 1f).Percent());
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.MeleeWeapon;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

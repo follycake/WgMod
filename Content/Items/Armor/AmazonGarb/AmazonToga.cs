@@ -48,6 +48,11 @@ public class AmazonToga : ModItem
         tooltips.FormatLines(_damage.Percent(), _critChance);
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Torso;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

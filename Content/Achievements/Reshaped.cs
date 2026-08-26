@@ -5,12 +5,12 @@ namespace WgMod.Content.Achievements;
 
 public class Reshaped : ModAchievement
 {
-	public static AchievementCondition Condition { get; private set; }
+    public static AchievementCondition Condition { get; private set; }
 
-	public override void SetStaticDefaults()
-	{
-		Achievement.SetCategory(AchievementCategory.Collector);
+    public override void SetStaticDefaults()
+    {
+        Achievement.SetCategory(AchievementCategory.Collector);
 
-		Condition = AddCondition();
-	}
+        Condition = AddCondition();
+    }
 }

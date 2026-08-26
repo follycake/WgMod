@@ -57,4 +57,9 @@ public abstract class WeightPotion : ModItem
     {
         tooltips.FormatLines(MathF.Abs(WeightEffect));
     }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.ConsumableThatDoesNotDamage;
+    }
 }

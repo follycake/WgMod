@@ -73,7 +73,7 @@ public class MilkshakeSicknessPlayer : ModPlayer
             {
                 _requestDust = true;
                 if (Player.whoAmI == Main.myPlayer && Main.rand.NextBool(gurgleRate))
-                    Player.Wg().Gurgle(true);
+                    Player.Wg().PlaySound(WgSounds.Gurgle);
             }
         }
     }

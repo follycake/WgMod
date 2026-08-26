@@ -16,6 +16,11 @@ public class BarnSink : ModItem
         Item.value = 3000;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.CraftingObjects;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

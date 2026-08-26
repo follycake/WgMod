@@ -20,6 +20,11 @@ public class DecorativeWeightGainPotion : ModItem
         Item.value = Item.buyPrice(silver: 6);
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()
@@ -41,6 +46,11 @@ public class DecorativeSuperWeightGainPotion : ModItem
         Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.DecorativeWeightPotions>(), 1);
         Item.rare = ItemRarityID.Lime;
         Item.value = Item.buyPrice(silver: 30);
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
     }
 
     public override void AddRecipes()

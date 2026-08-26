@@ -1,0 +1,24 @@
+﻿using WgMod.Content.Tiles.Banners;
+using Terraria;
+using Terraria.Enums;
+using Terraria.ModLoader;
+using Terraria.ID;
+
+namespace WgMod.Content.Items.Placeable.Banners;
+
+public class SkeleborerBanner : ModItem
+{
+	public override void SetDefaults()
+	{
+		Item.DefaultToPlaceableTile(ModContent.TileType<EnemyBanner>());
+		Item.width = 10;
+		Item.height = 24;
+		Item.SetShopValues(ItemRarityColor.Blue1, Item.buyPrice(silver: 10));
+	}
+
+	public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+	{
+		itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
+	}
+}
+

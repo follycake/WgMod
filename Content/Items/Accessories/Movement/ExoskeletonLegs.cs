@@ -35,6 +35,11 @@ public class ExoskeletonLegs : ModItem
         wg.MovementPenalty *= float.Lerp(1f, 0.8f, immobility);
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
+
     public override void AddRecipes()
     {
         if (ModLoader.TryGetMod("CalamityFables", out Mod calamityFables))

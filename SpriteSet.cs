@@ -166,6 +166,8 @@ public class SpriteSet
                 layer.ArmorTexture = mod.Assets.Request<Texture2D>(armorName, AssetRequestMode.ImmediateLoad).Value;
                 if (simpleArmor)
                 {
+                    if (layer.LegArmor)
+                        lookup = 2;
                     Main.RunOnMainThread(() =>
                     {
                         layer.ArmorTexture = WgArmorLUTs.ConvertSimple(lookup, layer.ArmorTexture);
@@ -225,7 +227,9 @@ public class SpriteSet
         Show = 0,
         Hide,
         FemaleOnly,
-        MaleOnly
+        MaleOnly,
+        WhenSitting,
+        WhenStanding
     }
 
     public class Layer
@@ -233,6 +237,7 @@ public class SpriteSet
         public string Name;
         public LayerType Type;
         public RenderType Render;
+        public bool LegArmor;
 
         [JsonIgnore] public Asset<Texture2D> Texture;
         [JsonIgnore] public Texture2D ArmorTexture;
@@ -261,6 +266,8 @@ public class SpriteSet
             RenderType.Hide => false,
             RenderType.FemaleOnly => !player.Male,
             RenderType.MaleOnly => player.Male,
+            RenderType.WhenSitting => player.Wg().IsSittingVisual(),
+            RenderType.WhenStanding => !player.Wg().IsSittingVisual(),
             _ => true,
         };
     }

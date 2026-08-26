@@ -16,16 +16,18 @@ namespace WgMod.Content.NPCs.Caverns;
 [Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class SweetSpirit : ModNPC
 {
-    public const int FrameCount = 20;
-    public const int WanderTime = 8 * 60;
-
-    enum State : byte
+    public enum State : byte
     {
         Wandering = 0,
         Positioning,
         Entering,
         Possess
     }
+
+    public virtual int FrameCount => 20;
+    public virtual int IdleFrames => 4;
+    public virtual int WanderTime => 8 * 60;
+    public virtual float WeightGain => 0.5f;
 
     ref float Timer => ref NPC.ai[3];
 
@@ -57,12 +59,14 @@ public class SweetSpirit : ModNPC
     {
         bestiaryEntry.Info.AddRange([
             BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Caverns,
-            new FlavorTextBestiaryInfoElement(Mod.GetLocalizationKey("Bestiary." + nameof(SweetSpirit)))
+            new FlavorTextBestiaryInfoElement(Mod.GetLocalizationKey("Bestiary." + GetType().Name))
         ]);
     }
 
     public override float SpawnChance(NPCSpawnInfo spawnInfo)
     {
+        if (Main.hardMode)
+            return 0f;
         return SpawnCondition.Cavern.Chance * 0.02f;
     }
 
@@ -152,7 +156,7 @@ public class SweetSpirit : ModNPC
                 if (NPC.HasPlayerTarget && Main.player[NPC.target].TryGetModPlayer(out WgPlayer wg))
                 {
                     int stage = wg.Weight.GetStage();
-                    Mass mass = (Weight.FromStage(stage + 1).Mass - Weight.FromStage(stage).Mass) * 0.5f + 10f;
+                    Mass mass = (Weight.FromStage(stage + 1).Mass - Weight.FromStage(stage).Mass) * WeightGain + 10f;
                     wg.CombatWeightText(wg.AddWeight(mass), false); // Add around half a stage worth of weight
                 }
                 NPC.life = 0;
@@ -168,7 +172,7 @@ public class SweetSpirit : ModNPC
         return false;
     }
 
-    void SetState(State state)
+    public void SetState(State state)
     {
         if (_state == state)
             return;
@@ -180,7 +184,7 @@ public class SweetSpirit : ModNPC
                 _frame = 0;
                 break;
             case State.Entering:
-                _frame = 4;
+                _frame = IdleFrames;
                 break;
         }
         NPC.frameCounter = 0;
@@ -194,12 +198,18 @@ public class SweetSpirit : ModNPC
         {
             NPC.frameCounter = 0;
             _frame++;
-            _frame %= 4;
+            _frame %= IdleFrames;
         }
     }
 
-    static Vector2 GetEnterPosition(Player player)
+    public Vector2 GetEnterPosition(Player player)
     {
-        return new Vector2(player.Center.X + player.direction * 32f, player.VisualPosition.Y + 31f);
+        Vector2 offset = GetEnterOffset();
+        return new Vector2(player.Center.X + player.direction * offset.X, player.VisualPosition.Y + offset.Y);
+    }
+
+    public virtual Vector2 GetEnterOffset()
+    {
+        return new Vector2(32f, 31f);
     }
 }

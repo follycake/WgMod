@@ -16,6 +16,11 @@ public class Treadmill : ModItem
         Item.value = Item.buyPrice(gold: 2);
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

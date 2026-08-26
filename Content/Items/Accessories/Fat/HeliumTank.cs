@@ -30,6 +30,11 @@ public class HeliumTank : ModItem
         _gravity.Lerp(immobility);
         player.gravity *= _gravity;
     }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
 }
 
 public class SellHeliumTank : GlobalNPC

@@ -51,8 +51,16 @@ public class BottledCaramel : ModItem
         healValue = Item.healLife;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.ConsumableThatDoesNotDamage;
+    }
+
     public override void AddRecipes()
     {
-        CreateRecipe().AddIngredient(ItemID.BottledHoney, 2).AddTile(TileID.Hellforge).Register();
+        CreateRecipe()
+            .AddIngredient(ItemID.BottledHoney, 2)
+            .AddTile(TileID.Hellforge)
+            .Register();
     }
 }

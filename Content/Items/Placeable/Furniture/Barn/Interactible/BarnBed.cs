@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Placeable.Furniture.Barn.Interactible;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.subparnitragen)]
 public class BarnBed : ModItem
 {
     public override void SetDefaults()
@@ -13,6 +14,11 @@ public class BarnBed : ModItem
         Item.width = 28;
         Item.height = 20;
         Item.value = 2000;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
     }
 
     public override void AddRecipes()

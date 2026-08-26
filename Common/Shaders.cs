@@ -9,6 +9,7 @@ namespace WgMod.Common;
 public class Shaders : ILoadable
 {
     public static Asset<Effect> FatArmor { get; private set; }
+    public static Asset<Effect> FatArmorLegs { get; private set; }
     public static Asset<Effect> FatArmorSoften { get; private set; }
     public static Asset<Effect> Stone { get; private set; }
     static Asset<Texture2D> _stonePattern;
@@ -18,6 +19,7 @@ public class Shaders : ILoadable
         if (Main.dedServ)
             return;
         FatArmor = mod.Assets.Request<Effect>("Assets/Effects/FatArmor");
+        FatArmorLegs = mod.Assets.Request<Effect>("Assets/Effects/FatArmorLegs");
         FatArmorSoften = mod.Assets.Request<Effect>("Assets/Effects/FatArmorSoften");
         Stone = mod.Assets.Request<Effect>("Assets/Effects/Stone");
         _stonePattern = mod.Assets.Request<Texture2D>("Assets/Textures/StonePattern");

@@ -33,7 +33,6 @@ public enum Contributor
     jumpsu2,
     _d_u_m_m_y_,
     igobee_,
-    minty0985,
 
     [Category("Contributors")]
     ubulumn,
@@ -44,7 +43,7 @@ public enum Contributor
     divine_lumine,
     the_trueterrafox,
     tea_kettles,
-    anolivewine,
+    altaber,
     thegungis,
     radiantluminant,
     robinn9283,

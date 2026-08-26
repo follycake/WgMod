@@ -24,6 +24,7 @@ public class VacuumSkirt : ModItem
 
     public override void SetStaticDefaults()
     {
+        ArmorIDs.Legs.Sets.OverridesLegs[Item.legSlot] = true;
         _glowMask = GlowMaskUtility.AddGlowMask(Texture + "_Legs_Glow");
     }
 
@@ -40,16 +41,15 @@ public class VacuumSkirt : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-
         float immobility = wg.Weight.ClampedImmobility;
+
         _attackSpeed.Lerp(immobility);
-
         _health.Lerp(immobility);
-        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
-
         _defense.Lerp(immobility);
         _resist.Lerp(immobility);
         _movePenalty.Lerp(immobility);
+
+        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
 
         player.GetAttackSpeed(DamageClass.Generic) *= _attackSpeed;
         player.statLifeMax2 += _health;
@@ -63,6 +63,11 @@ public class VacuumSkirt : ModItem
 
         if (!Main.dedServ)
             Lighting.AddLight(player.Center, light);
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Pants;
     }
 
     public override void AddRecipes()

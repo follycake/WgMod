@@ -6,7 +6,15 @@
     "Layers": [
         {
             "Name": "Leg",
-            "Type": "Legs"
+            "Type": "Legs",
+            "Render": "WhenStanding",
+            "LegArmor": true
+        },
+        {
+            "Name": "LegSit",
+            "Type": "Legs",
+            "Render": "WhenSitting",
+            "LegArmor": true
         },
         {
             "Name": "BackBoob",

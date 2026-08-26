@@ -10,7 +10,7 @@ namespace WgMod.Content.Items.Accessories.Fat;
 [Credit(ProjectRole.Artist, Contributor.trilophyte)]
 public class AmuletOfStarving : ModItem
 {
-    public const float WeightLossRate = 5f;
+    public const float WeightLossRate = 10f;
 
     public override void SetDefaults()
     {
@@ -30,6 +30,11 @@ public class AmuletOfStarving : ModItem
 
         wp._active = true;
         wp._hidden = hideVisual;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 }
 

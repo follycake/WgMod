@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Configs;
 
@@ -41,7 +42,7 @@ public partial class WgPlayer
         {
             Main.RunOnMainThread(() =>
             {
-                WgArmor.SetupArmorLayers(this);
+                WgArmor.SetupArmorLayers(Player, _armorLayers);
                 WgArmor.Render(Weight.GetStage(), ref _armorTarget, _armorLayers, Player.Male);
             });
         }
@@ -66,7 +67,7 @@ public partial class WgPlayer
             return;
         if (WgArmor.Enabled)
         {
-            WgArmor.SetupArmorLayers(this);
+            WgArmor.SetupArmorLayers(Player, _armorLayers);
             WgArmor.Render(Weight.GetStage(), ref _armorTarget, _armorLayers, Player.Male);
         }
     }
@@ -172,6 +173,23 @@ public partial class WgPlayer
     public void Jiggle(float amount)
     {
         _squishVel += amount;
+    }
+
+    public bool IsSittingVisual()
+    {
+        if (Player.mount.Active)
+        {
+            switch (Player.mount.Type)
+            {
+                case MountID.GolfCartSomebodySaveMe:
+                case MountID.WitchBroom:
+                case MountID.SpookyWood:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        return (Player.sitting.isSitting && !Player.GetModPlayer<TreadmillPlayer>()._onTreadmill) || _finalMovementFactor < 0.01f;
     }
 
     public override void HideDrawLayers(PlayerDrawSet drawInfo)

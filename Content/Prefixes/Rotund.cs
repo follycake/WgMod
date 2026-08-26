@@ -8,8 +8,9 @@ namespace WgMod.Content.Prefixes;
 
 public class Rotund : ModPrefix
 {
-    WgStat _damage = new(0.01f, 0.08f);
-    WgStat _attackSpeed = new(0.99f, 0.96f);
+    WgStat _damage = new(0.01f, 0.04f);
+    WgStat _critChance = new(0.01f, 0.04f);
+    WgStat _attackSpeed = new(0.01f, 0.04f);
 
     public override PrefixCategory Category => PrefixCategory.Accessory;
 
@@ -35,15 +36,17 @@ public class Rotund : ModPrefix
         float immobility = wg.Weight.ClampedImmobility;
 
         _damage.Lerp(immobility);
+        _critChance.Lerp(immobility);
         _attackSpeed.Lerp(immobility);
 
         player.GetDamage(DamageClass.Generic) += _damage;
-        player.GetAttackSpeed(DamageClass.Generic) *= _attackSpeed;
+        player.GetCritChance(DamageClass.Generic) += _critChance;
+        player.GetAttackSpeed(DamageClass.Generic) -= _attackSpeed;
     }
 
     public override IEnumerable<TooltipLine> GetTooltipLines(Item item)
     {
-        yield return new TooltipLine(Mod, "Rotund", DamageAttackSpeedTooltip.Format(_damage.Percent(), (_attackSpeed - 1).Percent()))
+        yield return new TooltipLine(Mod, "Rotund", DamageAttackSpeedTooltip.Format(_damage.Percent(), _attackSpeed.Percent(), _critChance.Percent()))
         {
             OverrideColor = Terraria.ID.Colors.RarityPink,
         };

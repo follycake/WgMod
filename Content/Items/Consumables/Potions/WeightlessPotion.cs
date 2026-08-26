@@ -37,6 +37,11 @@ public class WeightlessPotion : ModItem
         Item.buffTime = 8 * 60 * 60;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.ConsumableThatDoesNotDamage;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

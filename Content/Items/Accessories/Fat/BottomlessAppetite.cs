@@ -35,6 +35,11 @@ public class BottomlessAppetite : ModItem
         ba._hidden = hideVisual;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

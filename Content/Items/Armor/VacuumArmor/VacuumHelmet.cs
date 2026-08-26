@@ -49,16 +49,15 @@ public class VacuumHelmet : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-
         float immobility = wg.Weight.ClampedImmobility;
+
         _critChance.Lerp(immobility);
-
         _health.Lerp(immobility);
-        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
-
         _defense.Lerp(immobility);
         _resist.Lerp(immobility);
         _movePenalty.Lerp(immobility);
+
+        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
 
         player.GetCritChance(DamageClass.Generic) += _critChance;
         player.statLifeMax2 += _health;
@@ -84,8 +83,8 @@ public class VacuumHelmet : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-
         float immobility = wg.Weight.ClampedImmobility;
+
         _setBonusRegen.Lerp(immobility);
         _setBonusHealth.Lerp(immobility);
 
@@ -99,6 +98,11 @@ public class VacuumHelmet : ModItem
     public override void ArmorSetShadows(Player player)
     {
         player.armorEffectDrawOutlines = true;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
     }
 
     public override void AddRecipes()

@@ -37,6 +37,11 @@ public class CrimatriarchLeggings : ModItem
         player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _attackSpeed;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Pants;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common.GlobalItems;
 using WgMod.Common.Players;
 using WgMod.Content.Items.Ammo;
 
@@ -14,7 +15,7 @@ namespace WgMod.Content.Items.Accessories.Fat;
 [Credit(ProjectRole.Idea, Contributor.the_trueterrafox)]
 public class BandOfSweetening : ModItem
 {
-    WgStat _regen = new(2f, 8f);
+    WgStat _regen = new(2f, 6f);
 
     public override void SetDefaults()
     {
@@ -32,9 +33,17 @@ public class BandOfSweetening : ModItem
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
-        _regen.Lerp(immobility);
+        if (!ItemDisabling.BandLine)
+        {
+            _regen.Lerp(immobility);
 
-        player.lifeRegen += _regen;
+            player.lifeRegen += _regen;
+        }
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 
     public override void AddRecipes()

@@ -37,6 +37,11 @@ public class GlutGut : ModItem
 
         gp._active = true;
     }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
 }
 
 public class GlutGutPlayer : ModPlayer

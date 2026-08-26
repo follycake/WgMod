@@ -71,6 +71,11 @@ public class CrimatriarchHood : ModItem
         player.setBonus = SetBonusText.Format(SetBonusMinions, _setBonusDamage.Percent(), (1f - _setBonusAttackSpeed).Percent());
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

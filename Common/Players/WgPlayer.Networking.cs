@@ -16,37 +16,43 @@ public partial class WgPlayer
         ModPacket packet = Mod.GetPacket(WgMod.MessageType.WgPlayerSync);
         packet.Write((byte)Player.whoAmI);
         packet.Write(Weight.Mass);
+        packet.Write(Stomach);
         packet.Send(toWho, fromWho);
     }
 
     public void ReceivePlayerSync(BinaryReader reader)
     {
         SetWeightForced(new Weight(reader.ReadSingle()));
+        SetStomachForced(reader.ReadSingle(), false);
     }
 
     public override void CopyClientState(ModPlayer targetCopy)
     {
         WgPlayer clone = (WgPlayer)targetCopy;
         clone.SetWeightForced(Weight, false);
+        clone.SetStomachForced(Stomach, false);
     }
 
     public override void SendClientChanges(ModPlayer clientPlayer)
     {
         WgPlayer clone = (WgPlayer)clientPlayer;
-        if (Weight != clone.Weight)
+        if (Weight != clone.Weight || Stomach != clone.Stomach)
             SyncPlayer(-1, Main.myPlayer, false);
     }
 
-    public void Gurgle(bool network)
+    /// <summary>
+    /// Plays a sound and by default syncs it to other players.
+    /// </summary>
+    public void PlaySound(WgSound sound, bool network = true)
     {
-        if (Main.netMode == NetmodeID.SinglePlayer || !network)
+        SoundEngine.PlaySound(sound, Player.Center);
+        if (network && Main.netMode != NetmodeID.SinglePlayer)
         {
-            SoundEngine.PlaySound(WgSounds.Gurgle, Player.Center);
-            return;
+            ModPacket packet = Mod.GetPacket(WgMod.MessageType.WgPlayerPlaySound);
+            packet.Write((byte)Player.whoAmI);
+            packet.Write((byte)sound.Id);
+            packet.Send();
         }
-        ModPacket packet = Mod.GetPacket(WgMod.MessageType.WgPlayerGurgle);
-        packet.Write((byte)Player.whoAmI);
-        packet.Send();
     }
 
     public void CombatWeightText(Mass amount, bool network)

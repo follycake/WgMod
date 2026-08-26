@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Terraria;
-using Terraria.Achievements;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Systems;

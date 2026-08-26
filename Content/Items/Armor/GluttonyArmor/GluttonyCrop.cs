@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,9 +14,9 @@ namespace WgMod.Content.Items.Armor.GluttonyArmor;
 public class GluttonyCrop : ModItem
 {
     WgStat _damage = new(0f, 0.05f);
-    WgStat _attackSpeed = new(1f, 0.96f);
-    WgStat _defense = new(0f, 6f);
-    WgStat _resist = new(0f, 0.01f);
+    WgStat _attackSpeed = new(0f, 0.04f);
+    WgStat _health = new(10f, 40f);
+    WgStat _resist = new(0f, 0.02f);
 
     public override void SetDefaults()
     {
@@ -23,7 +24,7 @@ public class GluttonyCrop : ModItem
         Item.height = 14;
         Item.value = Item.sellPrice(silver: 60);
         Item.rare = ItemRarityID.Orange;
-        Item.defense = 11;
+        Item.defense = 9;
     }
 
     public override void UpdateEquip(Player player)
@@ -32,15 +33,23 @@ public class GluttonyCrop : ModItem
             return;
 
         float immobility = wg.Weight.ClampedImmobility;
+
         _damage.Lerp(immobility);
         _attackSpeed.Lerp(immobility);
-        _defense.Lerp(immobility);
+        _health.Lerp(immobility);
         _resist.Lerp(immobility);
 
+        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
+
         player.GetDamage(DamageClass.Generic) += _damage;
-        player.GetAttackSpeed(DamageClass.Generic) *= _attackSpeed;
-        player.statDefense += _defense;
+        player.GetAttackSpeed(DamageClass.Generic) -= _attackSpeed;
+        player.statLifeMax2 += _health;
         player.endurance += _resist;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Torso;
     }
 
     public override void AddRecipes()
@@ -56,6 +65,6 @@ public class GluttonyCrop : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(_damage.Percent(), (1f - _attackSpeed).Percent(), _defense, _resist.Percent());
+        tooltips.FormatLines(_damage.Percent(), _attackSpeed.Percent(), _health, _resist.Percent());
     }
 }

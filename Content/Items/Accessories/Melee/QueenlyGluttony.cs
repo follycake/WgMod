@@ -3,8 +3,8 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
+using WgMod.Common.GlobalItems;
 using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Accessories.Melee;
@@ -40,7 +40,7 @@ public class QueenlyGluttony : ModItem
 
         float immobility = wg.Weight.ClampedImmobility;
 
-        if (!sd._active)
+        if (!ItemDisabling.GauntletLine)
         {
             _damage.Lerp(immobility);
             _attackSpeed.Lerp(immobility);
@@ -55,36 +55,30 @@ public class QueenlyGluttony : ModItem
                 player.GetArmorPenetration(item) += _armorPenetration;
             }
 
-            qg._active = true;
+            qg.active = true;
         }
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        Player player = Main.LocalPlayer;
-
-        if (!player.TryGetModPlayer(out SolDrivePlayer sd))
-            return;
-
         tooltips.FormatLines(_damage.Percent(), _attackSpeed.Percent(), _critChance, _armorPenetration);
-
-        if (sd._active)
-        {
-            tooltips.LineBeforeTooltip(out TooltipLine line);
-            tooltips.Insert(tooltips.IndexOf(line) + 1, new TooltipLine(Mod, "NewTooltip", Language.GetTextValue("Mods.WgMod.GlobalItem.Disabled", ModContent.GetInstance<SolDrive>().DisplayName)));
-        }
     }
 }
 
 public class QueenlyGluttonyPlayer : ModPlayer
 {
-    public bool _active;
+    public bool active;
 
     public int _dust = DustID.PinkSlime;
 
     public override void ResetEffects()
     {
-        _active = false;
+        active = false;
     }
 
     public static readonly DamageClass[] Melee = [
@@ -94,7 +88,7 @@ public class QueenlyGluttonyPlayer : ModPlayer
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        if (_active || !Melee.Contains(hit.DamageType))
+        if (!active || !Melee.Contains(hit.DamageType))
             return;
 
         if (Main.rand.NextBool(50))
@@ -105,7 +99,7 @@ public class QueenlyGluttonyPlayer : ModPlayer
 
     public override void MeleeEffects(Item item, Rectangle hitbox)
     {
-        if (!_active || !Melee.Contains(item.DamageType))
+        if (!active || !Melee.Contains(item.DamageType))
             return;
 
         if (Main.rand.NextBool(3))
@@ -117,7 +111,7 @@ public class QueenlyGluttonyPlayer : ModPlayer
 
     public override void EmitEnchantmentVisualsAt(Projectile projectile, Vector2 boxPosition, int boxWidth, int boxHeight)
     {
-        if (!_active || !Melee.Contains(projectile.DamageType))
+        if (!active || !Melee.Contains(projectile.DamageType))
             return;
 
         if (Main.rand.NextBool(3))
