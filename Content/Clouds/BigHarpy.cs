@@ -19,7 +19,7 @@ public class BigHarpy : AnimatedCloud, IUpdateCloud
             return 10f;
 
         if (Main.dayTime)
-            return 1f;
+            return 0.5f;
 
         return 0f;
     }
@@ -41,7 +41,9 @@ public class BigHarpy : AnimatedCloud, IUpdateCloud
 
     public void PostUpdate(Cloud cloud)
     {
+        Player player = Main.LocalPlayer;
 
+        cloud.position.X += -(player.velocity.X * 0.25f);
     }
 
     public override bool Draw(SpriteBatch spriteBatch, Cloud cloud, int cloudIndex, ref DrawData drawData)
