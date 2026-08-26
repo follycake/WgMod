@@ -387,8 +387,6 @@ public class Gorgeist : ModNPC
 				break;
 			case 2:
 				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.EvilLaugh1"), 1);
-				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.EvilLaugh2"), 1);
-				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.EvilLaugh3"), 1);
 				break;
 			case 3:
 				WittyDialogue.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Gorgeist.IntroDialogue1"), 1);
@@ -540,7 +538,7 @@ public class Gorgeist : ModNPC
 				float t = StateTimer / (float)StateDuration * MathF.Tau * 2f - MathF.PI * 0.5f;
 				Destination = TargetPlayer.Center + new Vector2(MathF.Cos(t) * (150f + TargetPlayer.width), MathF.Sin(t) * (150f + TargetPlayer.height));
 
-				if (StateTimer % 10 == 0)
+				if (StateTimer % 5 == 0)
 					WittyBanter(_evilLaugh);
 
 				break;

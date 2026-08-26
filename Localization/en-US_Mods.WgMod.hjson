@@ -1457,9 +1457,7 @@ Dialogue: {
 		FoodTossDialogue1: Have a bite!
 		FoodTossDialogue2: Feeling full?
 		FoodTossDialogue3: A round on me!
-		EvilLaugh1: Ahahahahaha!
-		EvilLaugh2: Fufufu!
-		EvilLaugh3: Mwahahahahaha!
+		EvilLaugh1: Ha!
 	}
 }
 
