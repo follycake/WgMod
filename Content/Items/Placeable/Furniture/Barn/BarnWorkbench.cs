@@ -11,8 +11,8 @@ public class BarnWorkbench : ModItem
 	public override void SetDefaults()
 	{
 		Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Barn.BarnWorkbench>());
-		Item.width = 28;
-		Item.height = 14;
+		Item.width = 32;
+		Item.height = 18;
 		Item.value = 150;
 	}
 
