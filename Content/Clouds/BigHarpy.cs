@@ -30,6 +30,8 @@ public class BigHarpy : AnimatedCloud, IUpdateCloud
             SetDir(cloud, -1);
         else
             SetDir(cloud, Main.rand.NextBool() ? 1 : -1);
+
+        cloud.position.Y += 100f;
     }
 
     public bool PreUpdate(Cloud cloud)
@@ -43,7 +45,7 @@ public class BigHarpy : AnimatedCloud, IUpdateCloud
     {
         Player player = Main.LocalPlayer;
 
-        cloud.position.X += -(player.velocity.X * 0.25f);
+        cloud.position.X += -(player.velocity.X * (0.2f * cloud.scale));
     }
 
     public override bool Draw(SpriteBatch spriteBatch, Cloud cloud, int cloudIndex, ref DrawData drawData)
