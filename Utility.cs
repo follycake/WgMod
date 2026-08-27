@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common;
 using WgMod.Common.Players;
 
 namespace WgMod;
@@ -180,5 +183,15 @@ public static class Utility
             }
             player.lavaWet = true;
         }
+    }
+
+    static readonly VertexPositionColor[] _lineVertexData = new VertexPositionColor[2];
+
+    public static void DrawLine(this GraphicsDevice device, Vector2 start, Vector2 end, Color color)
+    {
+        _lineVertexData[0] = new VertexPositionColor(new Vector3(start, 0f), color);
+        _lineVertexData[1] = new VertexPositionColor(new Vector3(end, 0f), color);
+        device.Textures[0] = Shaders.White.Value;
+        device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertexData, 0, 1);
     }
 }
