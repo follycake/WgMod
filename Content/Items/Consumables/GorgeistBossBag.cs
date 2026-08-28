@@ -10,7 +10,7 @@ using WgMod.Content.NPCs.UndergroundDesert.GorgeistBoss;
 namespace WgMod.Content.Items.Consumables;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.rosiamn)]
 public class GorgeistBossBag : ModItem
 {
     public override void SetStaticDefaults()
@@ -25,8 +25,8 @@ public class GorgeistBossBag : ModItem
     {
         Item.maxStack = Item.CommonMaxStack;
         Item.consumable = true;
-        Item.width = 24;
-        Item.height = 24;
+        Item.width = 32;
+        Item.height = 32;
         Item.rare = ItemRarityID.Purple;
         Item.expert = true;
     }

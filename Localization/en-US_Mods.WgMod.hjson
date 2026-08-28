@@ -776,7 +776,7 @@ Items: {
 	}
 
 	GorgeistBossBag: {
-		DisplayName: Gorgeist Boss Bag
+		DisplayName: Treasure Bag (Gorgeist)
 		Tooltip: ""
 	}
 
@@ -1261,7 +1261,7 @@ Projectiles: {
 	TossedPlate.DisplayName: Tossed Plate
 	TossedFood.DisplayName: Tossed Food
 	LilGorgie.DisplayName: Lil' Gorgie
-	SterlingPlatterProjectile.DisplayName: Sterling Platter Projectile
+	SterlingPlatter.DisplayName: Sterling Platter
 	SterlingExplosion.DisplayName: Sterling Explosion
 	MimicAttack.DisplayName: Mimic Attack
 }

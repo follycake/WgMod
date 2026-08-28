@@ -50,6 +50,7 @@ public enum Contributor
     magicalmoondust_,
     alphas0,
     drarky,
+    rosiamn,
 
     [Category("Other")]
     purple_circle,

@@ -7,12 +7,11 @@ using Terraria.ModLoader;
 using WgMod.Common.Players;
 using WgMod.Common.Systems;
 using WgMod.Content.Items.Accessories.Fat;
-using WgMod.Content.Projectiles.Melee;
 
 namespace WgMod.Content.Items.Weapons.Melee;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.rosiamn)]
 public class SterlingPlatter : ModItem
 {
     WgStat _damage = new(1f, 1.5f);
@@ -22,7 +21,7 @@ public class SterlingPlatter : ModItem
     public override void SetDefaults()
     {
         Item.CloneDefaults(ItemID.LightDisc);
-        Item.shoot = ModContent.ProjectileType<SterlingPlatterProjectile>();
+        Item.shoot = ModContent.ProjectileType<Projectiles.Melee.SterlingPlatter>();
 
         Item.damage = 18;
         Item.knockBack = 3f;

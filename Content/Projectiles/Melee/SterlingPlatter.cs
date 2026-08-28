@@ -6,8 +6,8 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Projectiles.Melee;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
-public class SterlingPlatterProjectile : ModProjectile
+[Credit(ProjectRole.Artist, Contributor.rosiamn)]
+public class SterlingPlatter : ModProjectile
 {
     static readonly int _cooldownMax = 36;
 
