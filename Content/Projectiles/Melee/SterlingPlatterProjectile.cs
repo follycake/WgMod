@@ -9,55 +9,55 @@ namespace WgMod.Content.Projectiles.Melee;
 [Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class SterlingPlatterProjectile : ModProjectile
 {
-	static readonly int _cooldownMax = 36;
+    static readonly int _cooldownMax = 36;
 
-	int _cooldown;
+    int _cooldown;
 
-	bool _exhausted = false;
+    bool _exhausted = false;
 
-	public override void SetDefaults()
-	{
-		Projectile.CloneDefaults(ProjectileID.LightDisc);
-		AIType = ProjectileID.LightDisc;
-	}
+    public override void SetDefaults()
+    {
+        Projectile.CloneDefaults(ProjectileID.LightDisc);
+        AIType = ProjectileID.LightDisc;
+    }
 
-	public void SpawnSterlingExplosion()
-	{
-		if (Main.netMode == NetmodeID.MultiplayerClient || _exhausted)
-			return;
+    public void SpawnSterlingExplosion()
+    {
+        if (Main.netMode == NetmodeID.MultiplayerClient || _exhausted)
+            return;
 
-		Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new(0f, 0f), ModContent.ProjectileType<SterlingExplosion>(), Projectile.damage * 2, Projectile.knockBack * 2);
+        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new(0f, 0f), ModContent.ProjectileType<SterlingExplosion>(), Projectile.damage * 2, Projectile.knockBack * 2);
 
-		_exhausted = true;
-	}
+        _exhausted = true;
+    }
 
-	public override void AI()
-	{
-		_cooldown++;
+    public override void AI()
+    {
+        _cooldown++;
 
-		if (_cooldown == _cooldownMax)
-			SpawnSterlingExplosion();
-	}
+        if (_cooldown == _cooldownMax)
+            SpawnSterlingExplosion();
+    }
 
-	public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-	{
-		SpawnSterlingExplosion();
-	}
+    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+    {
+        SpawnSterlingExplosion();
+    }
 
-	public override void OnHitPlayer(Player target, Player.HurtInfo info)
-	{
-		SpawnSterlingExplosion();
-	}
+    public override void OnHitPlayer(Player target, Player.HurtInfo info)
+    {
+        SpawnSterlingExplosion();
+    }
 
-	public override bool OnTileCollide(Vector2 oldVelocity)
-	{
-		SpawnSterlingExplosion();
+    public override bool OnTileCollide(Vector2 oldVelocity)
+    {
+        SpawnSterlingExplosion();
 
-		return true;
-	}
+        return true;
+    }
 
-	public override void OnKill(int timeLeft)
-	{
-		SpawnSterlingExplosion();
-	}
+    public override void OnKill(int timeLeft)
+    {
+        SpawnSterlingExplosion();
+    }
 }
