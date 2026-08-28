@@ -72,9 +72,8 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             return;
 
         int direction = ((drawInfo.playerEffect & SpriteEffects.FlipHorizontally) == 0).ToDirectionInt();
-        Vector2 position = new Vector2((int)(drawInfo.Position.X - Main.screenPosition.X - drawInfo.drawPlayer.bodyFrame.Width / 2 + drawInfo.drawPlayer.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + drawInfo.drawPlayer.height - drawInfo.drawPlayer.bodyFrame.Height + 4f)) + drawInfo.drawPlayer.bodyPosition + new Vector2(drawInfo.drawPlayer.bodyFrame.Width / 2, drawInfo.drawPlayer.bodyFrame.Height / 2);
-        position.X += stageData.OffsetX * direction;
-        position += new Vector2(set.DrawOffsetX * direction, set.DrawOffsetY * player.gravDir);
+        Vector2 position = new Vector2((int)(drawInfo.Position.X - Main.screenPosition.X - drawInfo.drawPlayer.bodyFrame.Width / 2 + drawInfo.drawPlayer.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + drawInfo.drawPlayer.height - drawInfo.drawPlayer.bodyFrame.Height)) + drawInfo.drawPlayer.bodyPosition + new Vector2(drawInfo.drawPlayer.bodyFrame.Width / 2, drawInfo.drawPlayer.bodyFrame.Height / 2);
+        position += SpriteSet.GetOffset(set, stageData, direction, player.gravDir);
 
         if (Main.gameMenu)
             wg.UpdateAnimation();
@@ -150,8 +149,8 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
 
         int direction = drawPlayer.direction;
         Vector2 layerPos = drawPos;
-        layerPos.X += stageData.OffsetX * direction;
-        layerPos += new Vector2(set.DrawOffsetX * direction, (set.DrawOffsetY - 4f) * drawPlayer.gravDir);
+        layerPos += SpriteSet.GetOffset(set, stageData, direction, drawPlayer.gravDir);
+        layerPos.Y -= 8f;
 
         void DrawLayers(SpriteSet.Layer[] layers)
         {

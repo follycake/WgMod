@@ -12,6 +12,8 @@ public class Shaders : ILoadable
     public static Asset<Effect> FatArmorLegs { get; private set; }
     public static Asset<Effect> FatArmorSoften { get; private set; }
     public static Asset<Effect> Stone { get; private set; }
+
+    public static Asset<Texture2D> White { get; private set; }
     static Asset<Texture2D> _stonePattern;
 
     public void Load(Mod mod)
@@ -22,6 +24,8 @@ public class Shaders : ILoadable
         FatArmorLegs = mod.Assets.Request<Effect>("Assets/Effects/FatArmorLegs");
         FatArmorSoften = mod.Assets.Request<Effect>("Assets/Effects/FatArmorSoften");
         Stone = mod.Assets.Request<Effect>("Assets/Effects/Stone");
+
+        White = mod.Assets.Request<Texture2D>("Assets/Textures/White");
         _stonePattern = mod.Assets.Request<Texture2D>("Assets/Textures/StonePattern");
     }
 

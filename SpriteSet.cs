@@ -85,6 +85,11 @@ public class SpriteSet
         return Fallback;
     }
 
+    public static Vector2 GetOffset(SpriteSet set, Stage stageData, int direction, float gravDir)
+    {
+        return new Vector2(set.DrawOffsetX * direction + stageData.OffsetX * direction, set.DrawOffsetY * gravDir);
+    }
+
     public static void Initialize(Mod mod, string name)
     {
         Main.RunOnMainThread(() => WgArmorLUTs.Initialize(mod));

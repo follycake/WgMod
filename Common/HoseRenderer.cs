@@ -16,13 +16,11 @@ public class HoseRenderer : ILoadable
     public const int IndexCount = TriangleCount * 3;
     public const float BaseRadius = 1.5f;
 
-    static Asset<Texture2D> _white;
     static VertexPositionColorTexture[] _vertexData;
     static short[] _indexData;
 
     public void Load(Mod mod)
     {
-        _white = mod.Assets.Request<Texture2D>("Assets/Textures/White");
         _vertexData = new VertexPositionColorTexture[VertexCount];
         _indexData = new short[IndexCount];
         int j = 0;
@@ -80,7 +78,7 @@ public class HoseRenderer : ILoadable
 
     public static void Draw(GraphicsDevice device, Texture2D texture = null)
     {
-        device.Textures[0] = texture ?? _white.Value;
+        device.Textures[0] = texture ?? Shaders.White.Value;
         device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, _vertexData, 0, VertexCount, _indexData, 0, TriangleCount);
     }
 }

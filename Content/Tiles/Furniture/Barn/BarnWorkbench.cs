@@ -22,18 +22,15 @@ public class BarnWorkbench : ModTile
         TileID.Sets.IgnoredByNpcStepUp[Type] = true;
 
         AdjTiles = [TileID.WorkBenches];
+        DustType = DustID.WoodFurniture;
+
+        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
 
         TileObjectData.newTile.CopyFrom(TileObjectData.Style2x1);
         TileObjectData.newTile.CoordinateHeights = [18];
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
-
-        AddMapEntry(new Color(215, 186, 54), Language.GetText("MapObject.Chandelier"));
-
-        DustType = DustID.WoodFurniture;
-
-        TileObjectData.addTile(Type);
+        AddMapEntry(new Color(215, 186, 54), Mod.GetLocalization("Items.BarnWorkbench.DisplayName"));
     }
 
     public override void NumDust(int x, int y, bool fail, ref int num)

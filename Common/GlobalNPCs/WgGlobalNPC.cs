@@ -15,6 +15,7 @@ namespace WgMod.Common.GlobalNPCs;
 
 [Credit(ProjectRole.Programmer, Contributor.follycake)]
 [Credit(ProjectRole.Artist, Contributor.igobee_)]
+[Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
 public class WgGlobalNPC : GlobalNPC
 {
     public const int StageCount = 2;
@@ -25,7 +26,10 @@ public class WgGlobalNPC : GlobalNPC
 
     static readonly Dictionary<int, string> _fatNameLookup = new()
     {
-        [NPCID.Dryad] = "Dryad"
+        // igobee_
+        [NPCID.Dryad] = "Dryad",
+        // sinnerdrip
+        [NPCID.BestiaryGirl] = "Zoologist"
     };
 
     public NPC NPC { get; private set; }
@@ -117,6 +121,8 @@ public class WgGlobalNPC : GlobalNPC
     public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
         if (Stage <= 0)
+            return true;
+        if (npc.type == NPCID.BestiaryGirl && npc.ShouldBestiaryGirlBeLycantrope())
             return true;
         DrawTownNPC(npc, spriteBatch, screenPos, drawColor, _stageTextures[Stage].Value);
         return false;
