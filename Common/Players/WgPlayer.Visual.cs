@@ -45,13 +45,15 @@ public partial class WgPlayer
 
     public override void Load()
     {
-        On_Player.StopVanityActions += StopVanityActions;
+        On_Player.Spawn += Spawn;
+        On_Player.Teleport += Teleport;
         On_PlayerDrawLayers.DrawPlayer_RenderAllLayers += RenderAllLayers;
     }
 
     public override void Unload()
     {
-        On_Player.StopVanityActions -= StopVanityActions;
+        On_Player.Spawn -= Spawn;
+        On_Player.Teleport -= Teleport;
         On_PlayerDrawLayers.DrawPlayer_RenderAllLayers -= RenderAllLayers;
     }
 
@@ -248,9 +250,16 @@ public partial class WgPlayer
             drawInfo.Position.Y += Player.gfxOffY;
     }
 
-    static void StopVanityActions(On_Player.orig_StopVanityActions orig, Player self, bool multiplayerBroadcast)
+    static void Spawn(On_Player.orig_Spawn orig, Player self, PlayerSpawnContext context)
     {
-        orig(self, multiplayerBroadcast);
+        orig(self, context);
+        if (self.TryGetModPlayer(out WgPlayer wg))
+            wg._requestPhysicsSetup = true;
+    }
+
+    static void Teleport(On_Player.orig_Teleport orig, Player self, Vector2 newPos, int Style, int extraInfo)
+    {
+        orig(self, newPos, Style, extraInfo);
         if (self.TryGetModPlayer(out WgPlayer wg))
             wg._requestPhysicsSetup = true;
     }
