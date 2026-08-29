@@ -39,6 +39,7 @@ public partial class WgPlayer
     internal float _addedGfxOffY;
     float _lastGfxOffY;
 
+    bool _requestPhysicsSetup;
     static SpriteDrawBuffer _spriteBuffer;
 
     public override void Load()
@@ -86,6 +87,11 @@ public partial class WgPlayer
         {
             WgArmor.SetupArmorLayers(Player, _armorLayers);
             WgArmor.Render(Weight.GetStage(), ref _armorTarget, _armorLayers, Player.Male);
+        }
+        if (_requestPhysicsSetup)
+        {
+            WgPhysics.Setup(this);
+            _requestPhysicsSetup = false;
         }
         WgPhysics.Update(this);
     }

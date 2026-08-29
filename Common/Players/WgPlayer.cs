@@ -109,7 +109,7 @@ public partial class WgPlayer : ModPlayer
         {
             SoundEngine.PlaySound(WgSounds.Belly, Player.Center);
             Jiggle(3.6f);
-            WgPhysics.Setup(this);
+            _requestPhysicsSetup = true;
         }
     }
 
