@@ -8,27 +8,32 @@
             "Name": "Leg",
             "Type": "Legs",
             "Render": "WhenStanding",
-            "LegArmor": true
+            "LegArmor": true,
+            "Physics": true
         },
         {
             "Name": "LegSit",
             "Type": "Legs",
             "Render": "WhenSitting",
-            "LegArmor": true
+            "LegArmor": true,
+            "Physics": true
         },
         {
             "Name": "BackBoob",
-            "Type": "Breasts"
+            "Type": "Breasts",
+            "Physics": true
         },
         {
             "Name": "Belly",
-            "Type": "Belly"
+            "Type": "Belly",
+            "Physics": true
         }
     ],
     "TopLayers": [
         {
             "Name": "FrontBoob",
-            "Type": "Breasts"
+            "Type": "Breasts",
+            "Physics": true
         }
     ],
     "HeadLayers": [

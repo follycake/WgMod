@@ -9,7 +9,8 @@
         },
         {
             "Name": "Belly",
-            "Type": "Belly"
+            "Type": "Belly",
+            "Physics": true
         }
     ],
     "Stages": {

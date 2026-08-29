@@ -28,6 +28,9 @@ public class WgClientConfig : ModConfig
     public bool DisableJiggle;
 
     [DefaultValue(false)]
+    public bool DisableAdvancedJiggle;
+
+    [DefaultValue(false)]
     public bool DisableUVClothes;
 
     [DefaultValue(true)]

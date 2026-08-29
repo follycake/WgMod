@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Graphics;
+using Terraria.Graphics.Renderers;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Configs;
@@ -28,11 +32,24 @@ public partial class WgPlayer
     internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[4];
     internal RenderTarget2D _armorTarget;
 
+    internal List<WgPhysics.Layer> _physicsLayers;
     internal Asset<Texture2D> _headOverride;
 
     internal float _mountOffY;
     internal float _addedGfxOffY;
     float _lastGfxOffY;
+
+    static SpriteDrawBuffer _spriteBuffer;
+
+    public override void Load()
+    {
+        On_PlayerDrawLayers.DrawPlayer_RenderAllLayers += RenderAllLayers;
+    }
+
+    public override void Unload()
+    {
+        On_PlayerDrawLayers.DrawPlayer_RenderAllLayers -= RenderAllLayers;
+    }
 
     void InitializeVisuals()
     {
@@ -70,6 +87,12 @@ public partial class WgPlayer
             WgArmor.SetupArmorLayers(Player, _armorLayers);
             WgArmor.Render(Weight.GetStage(), ref _armorTarget, _armorLayers, Player.Male);
         }
+        WgPhysics.Update(this);
+    }
+
+    internal void OnSwitchSpriteSet()
+    {
+        WgPhysics.Setup(this);
     }
 
     internal void UpdateAnimation()
@@ -207,7 +230,84 @@ public partial class WgPlayer
 
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
+        if (_physicsLayers != null)
+        {
+            foreach (WgPhysics.Layer layer in _physicsLayers)
+                layer.DrawDataOverrides.Clear();
+        }
         if (Player.isDisplayDollOrInanimate)
             drawInfo.Position.Y += Player.gfxOffY;
+    }
+
+    static void DrawHeldProj(PlayerDrawSet drawinfo, Projectile proj)
+    {
+        if (!ProjectileID.Sets.HeldProjDoesNotUsePlayerGfxOffY[proj.type])
+            proj.gfxOffY = drawinfo.drawPlayer.gfxOffY;
+        try
+        {
+            Main.instance.DrawProjDirect(proj);
+        }
+        catch
+        {
+            proj.active = false;
+        }
+    }
+
+    static void RenderAllLayers(On_PlayerDrawLayers.orig_DrawPlayer_RenderAllLayers orig, ref PlayerDrawSet drawinfo)
+    {
+        if (!drawinfo.drawPlayer.TryGetModPlayer(out WgPlayer wg) || wg._physicsLayers == null)
+        {
+            orig(ref drawinfo);
+            return;
+        }
+        List<DrawData> drawDataCache = drawinfo.DrawDataCache;
+        if (_spriteBuffer == null)
+            _spriteBuffer = new SpriteDrawBuffer(Main.graphics.GraphicsDevice, 200);
+        else
+            _spriteBuffer.CheckGraphicsDevice(Main.graphics.GraphicsDevice);
+        for (int i = 0; i < drawDataCache.Count; i++)
+        {
+            DrawData drawData = drawDataCache[i];
+            if (wg._physicsLayers != null && wg._physicsLayers.Exists(phys => phys.DrawDataOverrides.Contains(i)))
+                continue;
+            if (drawData.texture != null)
+                drawData.Draw(_spriteBuffer);
+        }
+        _spriteBuffer.UploadAndBind();
+        DrawData cdd = default;
+        int drawCount = 0;
+        for (int i = 0; i <= drawDataCache.Count; i++)
+        {
+            if (drawinfo.projectileDrawPosition == i)
+            {
+                if (cdd.shader != 0)
+                    Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+                _spriteBuffer.Unbind();
+                DrawHeldProj(drawinfo, Main.projectile[drawinfo.drawPlayer.heldProj]);
+                _spriteBuffer.Bind();
+            }
+            if (i != drawDataCache.Count)
+            {
+                cdd = drawDataCache[i];
+                if (!cdd.sourceRect.HasValue)
+                    cdd.sourceRect = cdd.texture.Frame();
+                PlayerDrawHelper.SetShaderForData(drawinfo.drawPlayer, drawinfo.cHead, ref cdd);
+                if (wg._physicsLayers != null)
+                {
+                    WgPhysics.Layer layer = wg._physicsLayers.Find(phys => phys.DrawDataOverrides.Contains(i));
+                    if (layer != null)
+                    {
+                        _spriteBuffer.Unbind();
+                        layer.Draw(Main.graphics.GraphicsDevice, cdd.texture, cdd.sourceRect.Value, cdd.color);
+                        _spriteBuffer.Bind();
+                        continue;
+                    }
+                }
+                if (cdd.texture != null)
+                    _spriteBuffer.DrawSingle(drawCount++);
+            }
+        }
+        _spriteBuffer.Unbind();
+        Main.pixelShader.CurrentTechnique.Passes[0].Apply();
     }
 }

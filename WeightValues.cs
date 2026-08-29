@@ -19,12 +19,11 @@ public static class WeightValues
 
     public static int GetHitboxWidthInTiles(int stage) => stage switch
     {
-        4 => 3,
-        5 => 4,
-        6 => 5,
-        7 => 6,
-        8 => 7,
-        9 => 8,
+        5 => 3,
+        6 => 4,
+        7 => 5,
+        8 => 6,
+        9 => 7,
         _ => 2,
     };
 }

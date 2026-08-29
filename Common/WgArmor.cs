@@ -161,7 +161,7 @@ public static class WgArmor
         return Lighting.GetColorClamped((int)(position.X + player.width * 0.5) / 16, (int)((position.Y + player.height * 0.5) / 16.0), color);
     }
 
-    static Vector2 GetDrawPosition(Player player)
+    public static Vector2 GetDrawPosition(Player player)
     {
         if (Main.gameMenu)
             return player.position;
