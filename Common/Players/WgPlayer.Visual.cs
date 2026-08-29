@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -44,11 +45,13 @@ public partial class WgPlayer
 
     public override void Load()
     {
+        On_Player.StopVanityActions += StopVanityActions;
         On_PlayerDrawLayers.DrawPlayer_RenderAllLayers += RenderAllLayers;
     }
 
     public override void Unload()
     {
+        On_Player.StopVanityActions -= StopVanityActions;
         On_PlayerDrawLayers.DrawPlayer_RenderAllLayers -= RenderAllLayers;
     }
 
@@ -243,6 +246,13 @@ public partial class WgPlayer
         }
         if (Player.isDisplayDollOrInanimate)
             drawInfo.Position.Y += Player.gfxOffY;
+    }
+
+    static void StopVanityActions(On_Player.orig_StopVanityActions orig, Player self, bool multiplayerBroadcast)
+    {
+        orig(self, multiplayerBroadcast);
+        if (self.TryGetModPlayer(out WgPlayer wg))
+            wg._requestPhysicsSetup = true;
     }
 
     static void DrawHeldProj(PlayerDrawSet drawinfo, Projectile proj)
