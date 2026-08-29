@@ -126,8 +126,8 @@ public static class WgPhysics
                 {
                     Vector2 dir = a.Position.DirectionTo(b.Position);
                     float force = spring.Rigid ? 1f : (springForce * spring.Strength);
-                    a.Position += dir * error * 0.5f * force;
-                    b.Position -= dir * error * 0.5f * force;
+                    a.Position += dir * (error * 0.5f * force);
+                    b.Position -= dir * (error * 0.5f * force);
                 }
             }
 
@@ -144,7 +144,7 @@ public static class WgPhysics
                 if (distance > 0.01f)
                 {
                     Vector2 dir = point.Position.DirectionTo(target);
-                    point.Position += dir * distance * 0.5f * guidanceForce;
+                    point.Position += dir * (distance * 0.5f * guidanceForce);
                 }
             }
 
@@ -382,11 +382,11 @@ public static class WgPhysics
                 Join(quad.TopLeft, quad.BottomRight);
                 Join(quad.TopRight, quad.BottomLeft);
             }
-            for (int a = 0; a < points.Count - 1; a++)
+            /*for (int a = 0; a < points.Count - 1; a++)
             {
                 for (int b = a + 1; b < points.Count; b++)
                     Join(a, b, 0.01f);
-            }
+            }*/
 
             layer.PhysicsIndex = wg._physicsLayers.Count;
             layer.Points = pointsArray;

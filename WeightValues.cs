@@ -26,4 +26,6 @@ public static class WeightValues
         9 => 7,
         _ => 2,
     };
+
+    public static bool EnableSoftHitbox(int stage) => stage >= 4;
 }

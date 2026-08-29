@@ -235,6 +235,7 @@ public partial class WgPlayer : ModPlayer
 
         int stage = Weight.GetStage();
         ResizeHitbox(stage);
+        SoftHitbox(stage);
 
         // Weight loss
         if (!Player.mount.Active)
@@ -299,6 +300,28 @@ public partial class WgPlayer : ModPlayer
             else
                 _squishRest = 1.2f;
         }
+    }
+
+    void SoftHitbox(int stage)
+    {
+        if (Player.mount.Active || !WeightValues.EnableSoftHitbox(stage))
+            return;
+        const float pushForce = 1f;
+        const float width = 16f;
+
+        void Push(int dir)
+        {
+            Vector2 origin = Player.Center + new Vector2(dir * (Player.width * 0.5f - 1f), 0f);
+            if (PhysicsUtility.RayIntersectSolid(origin, dir * Vector2.UnitX, width, out Vector2 point, out _))
+            {
+                float distance = MathF.Abs(point.X - origin.X);
+                float force = (1f - distance / width) * pushForce;
+                Player.velocity.X -= dir * force;
+            }
+        }
+
+        Push(-1);
+        Push(1);
     }
 
     public override void PreUpdate()
