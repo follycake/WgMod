@@ -148,7 +148,7 @@ public static class WgPhysics
                 }
             }
 
-            Vector2 center = drawPosition + wg.Player.Size * 0.5f;
+            Vector2 center = drawPosition + wg.Player.Size * 0.5f - new Vector2(0f, wg.Player.gfxOffY);
             foreach (ref Point point in span)
             {
                 Vector2 diff = point.Position - center;
