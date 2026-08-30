@@ -194,4 +194,11 @@ public static class Utility
         device.Textures[0] = Shaders.White.Value;
         device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertexData, 0, 1);
     }
+
+    // https://github.com/godotengine/godot/blob/master/core/math/math_funcs.h
+    public static float AngleDifference(float from, float to)
+    {
+        float difference = (to - from) % MathF.Tau;
+        return 2f * difference % MathF.Tau - difference;
+    }
 }

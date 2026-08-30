@@ -13,13 +13,40 @@ public static class WgPhysics
 {
     public static bool Enabled => !WgClientConfig.Instance.DisableAdvancedJiggle && !WgClientConfig.Instance.DisableJiggle;
 
-    public record struct Quad(int TopLeft, int TopRight, int BottomRight, int BottomLeft);
+    public record struct Quad(int TopLeft, int TopRight, int BottomRight, int BottomLeft, Vector2 Size)
+    {
+        public static readonly Vector2[] Frame =
+        [
+            new Vector2(-0.5f, -0.5f),
+            new Vector2(0.5f, -0.5f),
+            new Vector2(0.5f, 0.5f),
+            new Vector2(-0.5f, 0.5f)
+        ];
+
+        public readonly Vector2 GetFrame(int index, int direction, int gravDir)
+        {
+            Vector2 frame = Frame[index] * Size;
+            frame.X *= direction;
+            frame.Y *= gravDir;
+            return frame;
+        }
+
+        public readonly int GetPoint(int index) => index switch
+        {
+            0 => TopLeft,
+            1 => TopRight,
+            2 => BottomRight,
+            3 => BottomLeft,
+            _ => -1
+        };
+    }
 
     public struct Point(Vector2 position)
     {
         public Vector2 Position = position;
         public Vector2 LastPosition = position;
 
+        public Vector2 QuadFrame;
         public Vector2 Offset;
         public Vector2 UV;
         public bool Pinned;
@@ -51,6 +78,7 @@ public static class WgPhysics
 
         public Point[] Points;
         public Spring[] Springs;
+        public Dictionary<(int, int), Quad> Quads;
 
         public VertexPositionColorTexture[] VertexData;
         public short[] IndexData;
@@ -78,8 +106,9 @@ public static class WgPhysics
 
         public void Update(WgPlayer wg)
         {
-            const float springForce = 0.3f;
-            const float guidanceForce = 0.3f;
+            const float springForce = 0.2f;
+            const float quadForce = 0.8f;
+            const float guidanceForce = 0.2f;
 
             if (!Active)
             {
@@ -108,6 +137,7 @@ public static class WgPhysics
             _lastDirection = direction;
             _lastGravDir = gravDir;
 
+            // Verlet integration
             foreach (ref Point point in span)
             {
                 Vector2 velocity = point.Position - point.LastPosition;
@@ -116,6 +146,7 @@ public static class WgPhysics
                 point.Position += velocity;
             }
 
+            // Springs
             foreach (Spring spring in Springs)
             {
                 ref Point a = ref Points[spring.A];
@@ -131,6 +162,37 @@ public static class WgPhysics
                 }
             }
 
+            // Shape matching
+            foreach (Quad quad in Quads.Values)
+            {
+                Vector2 quadCenter = Vector2.Zero;
+                for (int i = 0; i < 4; i++)
+                    quadCenter += span[quad.GetPoint(i)].Position;
+                quadCenter /= 4f;
+                Vector2 quadVect = Vector2.Zero;
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector2 frame = quad.GetFrame(i, direction, gravDir);
+                    Vector2 pos = span[quad.GetPoint(i)].Position - quadCenter;
+                    float angle = Utility.AngleDifference(frame.ToRotation(), pos.ToRotation());
+                    quadVect += new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+                }
+                quadVect /= 4f;
+                float quadAngle = quadVect.ToRotation();
+                for (int i = 0; i < 4; i++)
+                {
+                    ref Point point = ref span[quad.GetPoint(i)];
+                    Vector2 target = quadCenter + quad.GetFrame(i, direction, gravDir).RotatedBy(quadAngle);
+                    float distance = point.Position.Distance(target);
+                    if (distance > 0.01f)
+                    {
+                        Vector2 dir = point.Position.DirectionTo(target);
+                        point.Position += dir * (distance * 0.5f * quadForce);
+                    }
+                }
+            }
+
+            // Guidance and pinning
             _basePosition = CalculateBasePosition(wg, drawPosition);
             foreach (ref Point point in span)
             {
@@ -148,6 +210,7 @@ public static class WgPhysics
                 }
             }
 
+            // Collision
             Vector2 center = drawPosition + wg.Player.Size * 0.5f - new Vector2(0f, wg.Player.gfxOffY);
             foreach (ref Point point in span)
             {
@@ -183,10 +246,7 @@ public static class WgPhysics
         {
             Vector2 offset = -Main.screenPosition;
             foreach (Spring spring in Springs)
-            {
-                if (spring.Rigid)
-                    device.DrawLine(Points[spring.A].Position + offset, Points[spring.B].Position + offset, Color.Red);
-            }
+                device.DrawLine(Points[spring.A].Position + offset, Points[spring.B].Position + offset, Color.Red);
         }
 
         public static Vector2 CalculateDrawPosition(WgPlayer wg)
@@ -330,7 +390,7 @@ public static class WgPhysics
                     int b = CreatePoint(xEnd, y);
                     int c = CreatePoint(xEnd, yEnd);
                     int d = CreatePoint(x, yEnd);
-                    quads.Add((x / Layer.GridSize, y / Layer.GridSize), new Quad(a, b, c, d));
+                    quads.Add((x / Layer.GridSize, y / Layer.GridSize), new Quad(a, b, c, d, new Vector2(xEnd - x, yEnd - y)));
 
                     // Front
                     indexData.Add((short)a);
@@ -394,15 +454,11 @@ public static class WgPhysics
                 Join(quad.TopLeft, quad.BottomRight);
                 Join(quad.TopRight, quad.BottomLeft);
             }
-            /*for (int a = 0; a < points.Count - 1; a++)
-            {
-                for (int b = a + 1; b < points.Count; b++)
-                    Join(a, b, 0.01f);
-            }*/
 
             layer.PhysicsIndex = wg._physicsLayers.Count;
             layer.Points = pointsArray;
             layer.Springs = [.. springs];
+            layer.Quads = quads;
             layer.VertexData = new VertexPositionColorTexture[points.Count];
             layer.IndexData = [.. indexData];
             wg._physicsLayers.Add(layer);
