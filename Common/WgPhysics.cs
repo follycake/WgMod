@@ -283,7 +283,7 @@ public static class WgPhysics
 
     public static bool IsEnabled(WgPlayer wg)
     {
-        return wg._physicsLayers != null;
+        return wg._physicsLayers != null && wg._physicsLayers.Count > 0;
     }
 
     public static void Clear(WgPlayer wg)
