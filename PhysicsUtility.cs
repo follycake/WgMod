@@ -7,18 +7,20 @@ namespace WgMod;
 
 public static class PhysicsUtility
 {
-    public static bool IsTileSolid(Tile tile)
+    public static bool IsTileSolid(Tile tile, bool tileSolidTop = false)
     {
         if (tile == null)
             return false;
+        if (tileSolidTop)
+            return tile.HasUnactuatedTile && !tile.IsHalfBlock && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]);
         return tile.HasUnactuatedTile && !tile.IsHalfBlock && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType];
     }
 
-    public static bool IsTileSolid(int x, int y)
+    public static bool IsTileSolid(int x, int y, bool tileSolidTop = false)
     {
         if (x < 0 || y < 0 || x >= Main.maxTilesX || y >= Main.maxTilesY)
             return true;
-        return IsTileSolid(Main.tile[x, y]);
+        return IsTileSolid(Main.tile[x, y], tileSolidTop);
     }
 
     public static bool SolvePenetration(Vector2 position, out Vector2 normal, out float depth, int maxScan = 100)
@@ -81,7 +83,7 @@ public static class PhysicsUtility
     }
 
     // https://lodev.org/cgtutor/raycasting.html
-    public static bool RayIntersectSolid(Vector2 origin, Vector2 dir, float maxDistance, out Vector2 point, out Vector2 normal)
+    public static bool RayIntersectSolid(Vector2 origin, Vector2 dir, float maxDistance, out Vector2 point, out Vector2 normal, bool tileSolidTop = false)
     {
         Point map = origin.ToTileCoordinates();
         Vector2 sideDist = Vector2.Zero;
@@ -129,7 +131,7 @@ public static class PhysicsUtility
             }
             if (distance > maxDistance)
                 break;
-            if (IsTileSolid(map.X, map.Y))
+            if (IsTileSolid(map.X, map.Y, normal.Y < 0f && tileSolidTop))
             {
                 point = origin + dir * distance;
                 return true;

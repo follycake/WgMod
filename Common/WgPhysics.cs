@@ -106,8 +106,8 @@ public static class WgPhysics
 
         public void Update(WgPlayer wg)
         {
-            const float springForce = 0.2f;
-            const float quadForce = 0.8f;
+            const float springForce = 0.3f;
+            const float quadForce = 1f;
             const float guidanceForce = 0.2f;
 
             if (!Active)
@@ -212,12 +212,13 @@ public static class WgPhysics
 
             // Collision
             Vector2 center = drawPosition + wg.Player.Size * 0.5f - new Vector2(0f, wg.Player.gfxOffY);
+            bool tileSolidTop = Set.PhysicsLayers[PhysicsIndex].Type == SpriteSet.LayerType.Legs;
             foreach (ref Point point in span)
             {
                 Vector2 diff = point.Position - center;
                 Vector2 dir = Vector2.Normalize(diff);
                 float dist = diff.Length();
-                if (PhysicsUtility.RayIntersectSolid(center, dir, dist, out Vector2 p, out _))
+                if (PhysicsUtility.RayIntersectSolid(center, dir, dist, out Vector2 p, out _, tileSolidTop))
                     point.Position = p;
             }
         }
