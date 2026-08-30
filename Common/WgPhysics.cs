@@ -211,8 +211,15 @@ public static class WgPhysics
             }
 
             // Collision
-            Vector2 center = drawPosition + wg.Player.Size * 0.5f - new Vector2(0f, wg.Player.gfxOffY);
             bool tileSolidTop = Set.PhysicsLayers[PhysicsIndex].Type == SpriteSet.LayerType.Legs;
+            Vector2 center = drawPosition - new Vector2(0f, wg.Player.gfxOffY);
+            if (tileSolidTop)
+            {
+                center.X += wg.Player.width * 0.5f;
+                center.Y += wg.Player.height - 16;
+            }
+            else
+                center += wg.Player.Size * 0.5f;
             foreach (ref Point point in span)
             {
                 Vector2 diff = point.Position - center;

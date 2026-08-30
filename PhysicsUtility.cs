@@ -131,7 +131,7 @@ public static class PhysicsUtility
             }
             if (distance > maxDistance)
                 break;
-            if (IsTileSolid(map.X, map.Y, normal.Y < 0f && tileSolidTop))
+            if (IsTileSolid(map.X, map.Y, tileSolidTop && normal.Y < 0f))
             {
                 point = origin + dir * distance;
                 return true;
