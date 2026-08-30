@@ -306,7 +306,7 @@ public partial class WgPlayer : ModPlayer
     {
         if (Player.mount.Active || !WeightValues.EnableSoftHitbox(stage))
             return;
-        const float pushForce = 1f;
+        const float pushForce = 0.5f;
         const float width = 16f;
 
         void Push(int dir)
@@ -315,7 +315,8 @@ public partial class WgPlayer : ModPlayer
             if (PhysicsUtility.RayIntersectSolid(origin, dir * Vector2.UnitX, width, out Vector2 point, out _))
             {
                 float distance = MathF.Abs(point.X - origin.X);
-                float force = (1f - distance / width) * pushForce;
+                float factor = 1f - distance / width;
+                float force = factor * factor * pushForce;
                 Player.velocity.X -= dir * force;
             }
         }
