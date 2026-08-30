@@ -13,8 +13,19 @@ public static class WgPhysics
 {
     public static bool Enabled => !WgClientConfig.Instance.DisableAdvancedJiggle && !WgClientConfig.Instance.DisableJiggle;
 
-    public record struct Quad(int TopLeft, int TopRight, int BottomRight, int BottomLeft, Vector2 Size)
+    public struct Quad(int topLeft, int topRight, int bottomRight, int bottomLeft, Vector2 size)
     {
+        // Fixed data
+        public int TopLeft = topLeft;
+        public int TopRight = topRight;
+        public int BottomRight = bottomRight;
+        public int BottomLeft = bottomLeft;
+        public Vector2 Size = size;
+
+        // Dynamic data
+        public Vector2 Center;
+        public float Angle;
+
         public static readonly Vector2[] Frame =
         [
             new Vector2(-0.5f, -0.5f),
@@ -46,7 +57,6 @@ public static class WgPhysics
         public Vector2 Position = position;
         public Vector2 LastPosition = position;
 
-        public Vector2 QuadFrame;
         public Vector2 Offset;
         public Vector2 UV;
         public bool Pinned;
@@ -78,7 +88,7 @@ public static class WgPhysics
 
         public Point[] Points;
         public Spring[] Springs;
-        public Dictionary<(int, int), Quad> Quads;
+        public Quad[] Quads;
 
         public VertexPositionColorTexture[] VertexData;
         public short[] IndexData;
@@ -116,7 +126,7 @@ public static class WgPhysics
                 Active = true;
             }
 
-            Span<Point> span = Points;
+            Span<Point> pointSpan = Points;
             int direction = wg.Player.direction;
             int gravDir = (int)wg.Player.gravDir;
 
@@ -125,7 +135,7 @@ public static class WgPhysics
             Vector2 flipCenter = wg.Player.Center;
             if (direction != _lastDirection || gravDir != _lastGravDir)
             {
-                foreach (ref Point point in span)
+                foreach (ref Point point in pointSpan)
                 {
                     Vector2 pos = point.Position.RotatedBy(-wg.Player.fullRotation, rotationCenter) - flipCenter;
                     pos.X *= direction * _lastDirection;
@@ -138,7 +148,7 @@ public static class WgPhysics
             _lastGravDir = gravDir;
 
             // Verlet integration
-            foreach (ref Point point in span)
+            foreach (ref Point point in pointSpan)
             {
                 Vector2 velocity = point.Position - point.LastPosition;
                 velocity.Y += Player.defaultGravity * 2f * gravDir;
@@ -162,27 +172,32 @@ public static class WgPhysics
                 }
             }
 
-            // Shape matching
-            foreach (Quad quad in Quads.Values)
+            // Compute quad data
+            foreach (ref Quad quad in Quads.AsSpan())
             {
-                Vector2 quadCenter = Vector2.Zero;
+                quad.Center = Vector2.Zero;
                 for (int i = 0; i < 4; i++)
-                    quadCenter += span[quad.GetPoint(i)].Position;
-                quadCenter /= 4f;
+                    quad.Center += pointSpan[quad.GetPoint(i)].Position;
+                quad.Center /= 4f;
                 Vector2 quadVect = Vector2.Zero;
                 for (int i = 0; i < 4; i++)
                 {
                     Vector2 frame = quad.GetFrame(i, direction, gravDir);
-                    Vector2 pos = span[quad.GetPoint(i)].Position - quadCenter;
+                    Vector2 pos = pointSpan[quad.GetPoint(i)].Position - quad.Center;
                     float angle = Utility.AngleDifference(frame.ToRotation(), pos.ToRotation());
                     quadVect += new Vector2(MathF.Cos(angle), MathF.Sin(angle));
                 }
                 quadVect /= 4f;
-                float quadAngle = quadVect.ToRotation();
+                quad.Angle = quadVect.ToRotation();
+            }
+
+            // Shape matching
+            foreach (Quad quad in Quads)
+            {
                 for (int i = 0; i < 4; i++)
                 {
-                    ref Point point = ref span[quad.GetPoint(i)];
-                    Vector2 target = quadCenter + quad.GetFrame(i, direction, gravDir).RotatedBy(quadAngle);
+                    ref Point point = ref pointSpan[quad.GetPoint(i)];
+                    Vector2 target = quad.Center + quad.GetFrame(i, direction, gravDir).RotatedBy(quad.Angle);
                     float distance = point.Position.Distance(target);
                     if (distance > 0.01f)
                     {
@@ -195,7 +210,7 @@ public static class WgPhysics
             // Guidance and pinning
             Vector2 basePosition = CalculateBasePosition(wg, drawPosition);
             _basePositionRotated = basePosition.RotatedBy(wg.Player.fullRotation, drawPosition + wg.Player.fullRotationOrigin);
-            foreach (ref Point point in span)
+            foreach (ref Point point in pointSpan)
             {
                 Vector2 target = CalculateFromOffset(wg, drawPosition, basePosition, point.Offset);
                 if (point.Pinned)
@@ -221,13 +236,13 @@ public static class WgPhysics
             }
             else
                 center += wg.Player.Size * 0.5f;
-            foreach (ref Point point in span)
+            foreach (ref Point point in pointSpan)
             {
                 Vector2 diff = point.Position - center;
                 Vector2 dir = Vector2.Normalize(diff);
                 float dist = diff.Length();
-                if (PhysicsUtility.RayIntersectSolid(center, dir, dist, out Vector2 p, out _, tileSolidTop))
-                    point.Position = p;
+                if (PhysicsUtility.RayIntersectSolid(center, dir, dist, out Vector2 intersection, out Vector2 normal, tileSolidTop))
+                    point.Position = point.Position - normal * Vector2.Dot(normal, point.Position) + normal * Vector2.Dot(normal, intersection);
             }
         }
 
@@ -385,7 +400,8 @@ public static class WgPhysics
             }
 
             List<short> indexData = [];
-            Dictionary<(int, int), Quad> quads = [];
+            List<Quad> quads = [];
+            Dictionary<(int, int), int> quadMap = [];
             for (int y = 0; y < h; y += Layer.GridSize)
             {
                 for (int x = 0; x < w; x += Layer.GridSize)
@@ -399,7 +415,11 @@ public static class WgPhysics
                     int b = CreatePoint(xEnd, y);
                     int c = CreatePoint(xEnd, yEnd);
                     int d = CreatePoint(x, yEnd);
-                    quads.Add((x / Layer.GridSize, y / Layer.GridSize), new Quad(a, b, c, d, new Vector2(xEnd - x, yEnd - y)));
+
+                    int quadX = x / Layer.GridSize;
+                    int quadY = y / Layer.GridSize;
+                    quadMap.Add((quadX, quadY), quads.Count);
+                    quads.Add(new Quad(a, b, c, d, new Vector2(xEnd - x, yEnd - y)));
 
                     // Front
                     indexData.Add((short)a);
@@ -433,27 +453,27 @@ public static class WgPhysics
             }
 
             Point[] pointsArray = [.. points];
-            foreach (KeyValuePair<(int, int), Quad> pair in quads)
+            foreach (KeyValuePair<(int, int), int> pair in quadMap)
             {
                 var (x, y) = pair.Key;
-                Quad quad = pair.Value;
-                if (!quads.ContainsKey((x, y - 1)) && !quads.ContainsKey((x - 1, y - 1)))
+                Quad quad = quads[pair.Value];
+                if (!quadMap.ContainsKey((x, y - 1)) && !quadMap.ContainsKey((x - 1, y - 1)))
                 {
                     pointsArray[quad.TopLeft].Pinned = true;
                     pointsArray[quad.TopRight].Pinned = true;
                     pointsArray[quad.BottomLeft].Pinned = true;
                     pointsArray[quad.BottomRight].Pinned = true;
                 }
-                if (!quads.ContainsKey((x, y - 1)))
+                if (!quadMap.ContainsKey((x, y - 1)))
                     Join(quad.TopLeft, quad.TopRight, -1f);
-                if (!quads.ContainsKey((x + 1, y)))
+                if (!quadMap.ContainsKey((x + 1, y)))
                     Join(quad.TopRight, quad.BottomRight, -1f);
-                if (!quads.ContainsKey((x, y + 1)))
+                if (!quadMap.ContainsKey((x, y + 1)))
                     Join(quad.BottomLeft, quad.BottomRight, -1f);
-                if (!quads.ContainsKey((x - 1, y)))
+                if (!quadMap.ContainsKey((x - 1, y)))
                     Join(quad.TopLeft, quad.BottomLeft, -1f);
             }
-            foreach (Quad quad in quads.Values)
+            foreach (Quad quad in quads)
             {
                 Join(quad.TopLeft, quad.TopRight);
                 Join(quad.TopLeft, quad.BottomLeft);
@@ -467,7 +487,7 @@ public static class WgPhysics
             layer.PhysicsIndex = wg._physicsLayers.Count;
             layer.Points = pointsArray;
             layer.Springs = [.. springs];
-            layer.Quads = quads;
+            layer.Quads = [.. quads];
             layer.VertexData = new VertexPositionColorTexture[points.Count];
             layer.IndexData = [.. indexData];
             wg._physicsLayers.Add(layer);
