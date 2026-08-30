@@ -23,30 +23,30 @@ namespace WgMod.Content.NPCs.TownNPCs.OverflowingMimic;
 [Credit(ProjectRole.Artist, Contributor.follycake)]
 public class OverflowingMimicNPC : ModNPC
 {
-    public static int _headIndexGold;
-    public static int _headIndexIce;
-    public static int _headIndexShadow;
-    public static int _headIndexGolden;
-    public static int _headIndexDeadMan;
+    public static int headIndexGold;
+    public static int headIndexIce;
+    public static int headIndexShadow;
+    public static int headIndexGolden;
+    public static int headIndexDeadMan;
 
     /// <summary> How long it's been since her last jump. </summary>
-    public int _jumpCooldown = 0;
+    int _jumpCooldown = 0;
     /// <summary> The cooldown between each jump. </summary>
-    public static int _jumpCooldownMax = 60;
+    static readonly int _jumpCooldownMax = 60;
     /// <summary> Whether or not she wants to slow down. </summary>
-    public bool _jumpStop = false;
+    bool _jumpStop = false;
     /// <summary> Her average speed. </summary>
-    public static float _jumpSpeed = 5f;
+    static readonly float _jumpSpeed = 5f;
 
     static ITownNPCProfile _overflowingMimicProfile;
 
     public override void Load()
     {
-        _headIndexGold = Mod.AddNPCHeadTexture(Type, $"{Texture}_Gold_Head");
-        _headIndexIce = Mod.AddNPCHeadTexture(Type, $"{Texture}_Ice_Head");
-        _headIndexShadow = Mod.AddNPCHeadTexture(Type, $"{Texture}_Shadow_Head");
-        _headIndexGolden = Mod.AddNPCHeadTexture(Type, $"{Texture}_Golden_Head");
-        _headIndexDeadMan = Mod.AddNPCHeadTexture(Type, $"{Texture}_DeadMan_Head");
+        headIndexGold = Mod.AddNPCHeadTexture(Type, $"{Texture}_Gold_Head");
+        headIndexIce = Mod.AddNPCHeadTexture(Type, $"{Texture}_Ice_Head");
+        headIndexShadow = Mod.AddNPCHeadTexture(Type, $"{Texture}_Shadow_Head");
+        headIndexGolden = Mod.AddNPCHeadTexture(Type, $"{Texture}_Golden_Head");
+        headIndexDeadMan = Mod.AddNPCHeadTexture(Type, $"{Texture}_DeadMan_Head");
     }
 
     public override string Texture => "WgMod/Content/NPCs/TownNPCs/OverflowingMimic/OverflowingMimic";
@@ -419,11 +419,11 @@ public class OverflowingMimicProfile : ITownNPCProfile
         return npc.townNpcVariationIndex switch
         {
             0 => _headIndexWood,
-            1 => OverflowingMimicNPC._headIndexGold,
-            2 => OverflowingMimicNPC._headIndexShadow,
-            3 => OverflowingMimicNPC._headIndexIce,
-            4 => OverflowingMimicNPC._headIndexGolden,
-            5 => OverflowingMimicNPC._headIndexDeadMan,
+            1 => OverflowingMimicNPC.headIndexGold,
+            2 => OverflowingMimicNPC.headIndexShadow,
+            3 => OverflowingMimicNPC.headIndexIce,
+            4 => OverflowingMimicNPC.headIndexGolden,
+            5 => OverflowingMimicNPC.headIndexDeadMan,
             _ => _headIndexWood
         };
     }
