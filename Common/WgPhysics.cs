@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using WgMod.Common.Configs;
 using WgMod.Common.Players;
 
@@ -54,10 +55,9 @@ public static class WgPhysics
         public VertexPositionColorTexture[] VertexData;
         public short[] IndexData;
 
-        public HashSet<int> DrawDataOverrides = [];
-
         int _lastDirection = 1;
         int _lastGravDir = 1;
+        Vector2 _basePosition;
 
         public void Setup(WgPlayer wg)
         {
@@ -131,10 +131,10 @@ public static class WgPhysics
                 }
             }
 
-            Vector2 position = CalculateBasePosition(wg, drawPosition);
+            _basePosition = CalculateBasePosition(wg, drawPosition);
             foreach (ref Point point in span)
             {
-                Vector2 target = CalculateFromOffset(wg, drawPosition, position, point.Offset);
+                Vector2 target = CalculateFromOffset(wg, drawPosition, _basePosition, point.Offset);
                 if (point.Pinned)
                 {
                     point.Teleport(target);
@@ -156,8 +156,6 @@ public static class WgPhysics
                 float dist = diff.Length();
                 if (PhysicsUtility.RayIntersectSolid(center, dir, dist, out Vector2 p, out _))
                     point.Position = p;
-                //if (PhysicsUtility.SolvePenetration(point.Position, out Vector2 normal, out float depth))
-                //    point.Position += normal * depth;
             }
         }
 
@@ -172,12 +170,13 @@ public static class WgPhysics
             }
         }
 
-        public void Draw(GraphicsDevice device, Texture2D texture, Rectangle sourceRect, Color tint)
+        public void Draw(GraphicsDevice device, DrawData drawData)
         {
-            UpdateVertexData(-Main.screenPosition, sourceRect, texture.Size(), tint);
-            device.Textures[0] = texture;
+            Vector2 offset = drawData.position - _basePosition;
+            UpdateVertexData(offset, drawData.sourceRect.Value, drawData.texture.Size(), drawData.color);
+            device.Textures[0] = drawData.texture;
             device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, VertexData, 0, VertexData.Length, IndexData, 0, IndexData.Length / 3);
-            //layer.DrawDebug(device);
+            //DrawDebug(device);
         }
 
         public void DrawDebug(GraphicsDevice device)
@@ -213,15 +212,28 @@ public static class WgPhysics
         }
     }
 
+    public static bool IsEnabled(WgPlayer wg)
+    {
+        return wg._physicsLayers != null;
+    }
+
+    public static void Clear(WgPlayer wg)
+    {
+        wg._physicsLayers = null;
+        wg._physicsDrawOverride = null;
+    }
+
     public static bool Setup(WgPlayer wg)
     {
         if (!Enabled || wg.Player.isDisplayDollOrInanimate)
         {
-            wg._physicsLayers = null;
+            Clear(wg);
             return false;
         }
         wg._physicsLayers ??= [];
         wg._physicsLayers.Clear();
+        wg._physicsDrawOverride ??= [];
+        wg._physicsDrawOverride.Clear();
         int stage = wg.Weight.GetStage();
         if (stage <= 0)
             return true;
@@ -404,10 +416,10 @@ public static class WgPhysics
     {
         if (!Enabled)
         {
-            wg._physicsLayers = null;
+            Clear(wg);
             return;
         }
-        if (wg._physicsLayers == null && !Setup(wg))
+        if (!IsEnabled(wg) && !Setup(wg))
             return;
         foreach (Layer layer in wg._physicsLayers)
         {

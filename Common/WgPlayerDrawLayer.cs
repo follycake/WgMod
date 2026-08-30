@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -100,12 +99,12 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
                 scale, // Scale.
                 drawInfo.playerEffect
             );
-            if (layer.Physics && wg._physicsLayers != null)
+            if (layer.Physics && WgPhysics.IsEnabled(wg))
             {
                 WgPhysics.Layer phys = wg._physicsLayers[layer.PhysicsIndex];
-                phys.DrawDataOverrides.Add(drawInfo.DrawDataCache.Count);
+                wg._physicsDrawOverride.Add(drawInfo.DrawDataCache.Count, phys);
                 if (drawArmor && layer.UVArmor)
-                    phys.DrawDataOverrides.Add(drawInfo.DrawDataCache.Count + 1);
+                    wg._physicsDrawOverride.Add(drawInfo.DrawDataCache.Count + 1, phys);
             }
             drawInfo.DrawDataCache.Add(drawData);
             if (drawArmor && layer.UVArmor)

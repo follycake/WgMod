@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.Graphics;
-using Terraria.Graphics.Renderers;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Configs;
@@ -34,6 +30,7 @@ public partial class WgPlayer
     internal RenderTarget2D _armorTarget;
 
     internal List<WgPhysics.Layer> _physicsLayers;
+    internal Dictionary<int, WgPhysics.Layer> _physicsDrawOverride;
     internal Asset<Texture2D> _headOverride;
 
     internal float _mountOffY;
@@ -241,11 +238,8 @@ public partial class WgPlayer
 
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
-        if (_physicsLayers != null)
-        {
-            foreach (WgPhysics.Layer layer in _physicsLayers)
-                layer.DrawDataOverrides.Clear();
-        }
+        if (WgPhysics.IsEnabled(this))
+            _physicsDrawOverride.Clear();
         if (Player.isDisplayDollOrInanimate)
             drawInfo.Position.Y += Player.gfxOffY;
     }
@@ -264,23 +258,9 @@ public partial class WgPlayer
             wg._requestPhysicsSetup = true;
     }
 
-    static void DrawHeldProj(PlayerDrawSet drawinfo, Projectile proj)
-    {
-        if (!ProjectileID.Sets.HeldProjDoesNotUsePlayerGfxOffY[proj.type])
-            proj.gfxOffY = drawinfo.drawPlayer.gfxOffY;
-        try
-        {
-            Main.instance.DrawProjDirect(proj);
-        }
-        catch
-        {
-            proj.active = false;
-        }
-    }
-
     static void RenderAllLayers(On_PlayerDrawLayers.orig_DrawPlayer_RenderAllLayers orig, ref PlayerDrawSet drawinfo)
     {
-        if (!drawinfo.drawPlayer.TryGetModPlayer(out WgPlayer wg) || wg._physicsLayers == null)
+        if (!drawinfo.drawPlayer.TryGetModPlayer(out WgPlayer wg) || !WgPhysics.IsEnabled(wg))
         {
             orig(ref drawinfo);
             return;
@@ -293,7 +273,7 @@ public partial class WgPlayer
         for (int i = 0; i < drawDataCache.Count; i++)
         {
             DrawData drawData = drawDataCache[i];
-            if (wg._physicsLayers != null && wg._physicsLayers.Exists(phys => phys.DrawDataOverrides.Contains(i)))
+            if (wg._physicsDrawOverride.ContainsKey(i))
                 continue;
             if (drawData.texture != null)
                 drawData.Draw(_spriteBuffer);
@@ -317,16 +297,12 @@ public partial class WgPlayer
                 if (!cdd.sourceRect.HasValue)
                     cdd.sourceRect = cdd.texture.Frame();
                 PlayerDrawHelper.SetShaderForData(drawinfo.drawPlayer, drawinfo.cHead, ref cdd);
-                if (wg._physicsLayers != null)
+                if (wg._physicsDrawOverride.TryGetValue(i, out WgPhysics.Layer layer))
                 {
-                    WgPhysics.Layer layer = wg._physicsLayers.Find(phys => phys.DrawDataOverrides.Contains(i));
-                    if (layer != null)
-                    {
-                        _spriteBuffer.Unbind();
-                        layer.Draw(Main.graphics.GraphicsDevice, cdd.texture, cdd.sourceRect.Value, cdd.color);
-                        _spriteBuffer.Bind();
-                        continue;
-                    }
+                    _spriteBuffer.Unbind();
+                    layer.Draw(Main.graphics.GraphicsDevice, cdd);
+                    _spriteBuffer.Bind();
+                    continue;
                 }
                 if (cdd.texture != null)
                     _spriteBuffer.DrawSingle(drawCount++);
@@ -334,5 +310,19 @@ public partial class WgPlayer
         }
         _spriteBuffer.Unbind();
         Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+    }
+
+    static void DrawHeldProj(PlayerDrawSet drawinfo, Projectile proj)
+    {
+        if (!ProjectileID.Sets.HeldProjDoesNotUsePlayerGfxOffY[proj.type])
+            proj.gfxOffY = drawinfo.drawPlayer.gfxOffY;
+        try
+        {
+            Main.instance.DrawProjDirect(proj);
+        }
+        catch
+        {
+            proj.active = false;
+        }
     }
 }
