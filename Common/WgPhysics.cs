@@ -85,7 +85,7 @@ public static class WgPhysics
 
         int _lastDirection = 1;
         int _lastGravDir = 1;
-        Vector2 _basePosition;
+        Vector2 _basePositionRotated;
 
         public void Setup(WgPlayer wg)
         {
@@ -193,10 +193,11 @@ public static class WgPhysics
             }
 
             // Guidance and pinning
-            _basePosition = CalculateBasePosition(wg, drawPosition);
+            Vector2 basePosition = CalculateBasePosition(wg, drawPosition);
+            _basePositionRotated = basePosition.RotatedBy(wg.Player.fullRotation, drawPosition + wg.Player.fullRotationOrigin);
             foreach (ref Point point in span)
             {
-                Vector2 target = CalculateFromOffset(wg, drawPosition, _basePosition, point.Offset);
+                Vector2 target = CalculateFromOffset(wg, drawPosition, basePosition, point.Offset);
                 if (point.Pinned)
                 {
                     point.Teleport(target);
@@ -243,7 +244,7 @@ public static class WgPhysics
 
         public void Draw(GraphicsDevice device, DrawData drawData)
         {
-            Vector2 offset = drawData.position - _basePosition;
+            Vector2 offset = drawData.position - _basePositionRotated;
             UpdateVertexData(offset, drawData.sourceRect.Value, drawData.texture.Size(), drawData.color);
             device.Textures[0] = drawData.texture;
             device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, VertexData, 0, VertexData.Length, IndexData, 0, IndexData.Length / 3);
@@ -270,13 +271,13 @@ public static class WgPhysics
             return pos;
         }
 
-        public static Vector2 CalculateFromOffset(WgPlayer wg, Vector2 drawPosition, Vector2 position, Vector2 offset)
+        public static Vector2 CalculateFromOffset(WgPlayer wg, Vector2 drawPosition, Vector2 basePosition, Vector2 offset)
         {
             offset.X *= wg.Player.direction;
             offset.Y *= wg.Player.gravDir;
-            position += offset;
-            position = position.RotatedBy(wg.Player.fullRotation, drawPosition + wg.Player.fullRotationOrigin);
-            return position;
+            basePosition += offset;
+            basePosition = basePosition.RotatedBy(wg.Player.fullRotation, drawPosition + wg.Player.fullRotationOrigin);
+            return basePosition;
         }
     }
 
