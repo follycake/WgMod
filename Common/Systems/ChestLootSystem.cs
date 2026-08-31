@@ -2,7 +2,6 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Utilities;
 using WgMod.Content.Items.Accessories.Fat;
 using WgMod.Content.Items.Accessories.Ranged;
 using WgMod.Content.Items.Ammo;
@@ -15,26 +14,21 @@ namespace WgMod.Common.Systems;
 
 public class ChestLootSystem : ModSystem
 {
-    record struct LootEntry(int Type, int Chance, int MinAmount = 1, int MaxAmount = 1, bool Ignore = false);
+    record struct LootEntry(int Type, int Chance, int MinAmount = 1, int MaxAmount = 1);
 
-    const int AccessoryChance = 6;
-    const int BuffPotionChance = 4;
-    const int TieredPotionChance = 3;
+    public const int AccessoryChance = 6;
+    public const int BuffPotionChance = 4;
+    public const int TieredPotionChance = 3;
 
-    readonly WeightedRandom<int> _lesserWeightPotions = new();
-    readonly WeightedRandom<int> _weightPotions = new();
-    readonly WeightedRandom<int> _skywareLoot = new();
+    public static int[] LesserWeightPotions { get; private set; }
+    public static int[] WeightPotions { get; private set; }
+    public static int[] SkywareLoot { get; private set; }
 
-    public override void PostSetupContent()
+    public override void SetStaticDefaults()
     {
-        _lesserWeightPotions.Add(ModContent.ItemType<LesserWeightGainPotion>());
-        _lesserWeightPotions.Add(ModContent.ItemType<LesserWeightLossPotion>());
-
-        _weightPotions.Add(ModContent.ItemType<WeightGainPotion>());
-        _weightPotions.Add(ModContent.ItemType<WeightLossPotion>());
-
-        _skywareLoot.Add(ModContent.ItemType<MeteorCrush>());
-        _skywareLoot.Add(ModContent.ItemType<HeliumTank>());
+        LesserWeightPotions = [ModContent.ItemType<LesserWeightGainPotion>(), ModContent.ItemType<LesserWeightLossPotion>()];
+        WeightPotions = [ModContent.ItemType<WeightGainPotion>(), ModContent.ItemType<WeightLossPotion>()];
+        SkywareLoot = [ModContent.ItemType<MeteorCrush>(), ModContent.ItemType<HeliumTank>()];
     }
 
     public override void PostWorldGen()
@@ -55,9 +49,7 @@ public class ChestLootSystem : ModSystem
 
                 // Skyware chest
                 case 13 * 36:
-                    FillChest(chest, [
-                        new(_skywareLoot, AccessoryChance)
-                    ]);
+                    FillChest(chest, [new(OneFromOptions(SkywareLoot), AccessoryChance)]);
                     break;
 
                 // Mushroom chest
@@ -74,7 +66,7 @@ public class ChestLootSystem : ModSystem
                 case 16 * 36:
                     FillChest(chest, [
                         new(ModContent.ItemType<WeightlessPotion>(), BuffPotionChance, 1, 2),
-                        new(_weightPotions, TieredPotionChance, 3, 5),
+                        new(OneFromOptions(WeightPotions), TieredPotionChance, 3, 5),
                     ]);
                     break;
 
@@ -89,10 +81,15 @@ public class ChestLootSystem : ModSystem
             {
                 FillChest(chest, [
                     new(ModContent.ItemType<WeightlessPotion>(), BuffPotionChance, 1, 2),
-                    new(_lesserWeightPotions, TieredPotionChance, 3, 5),
+                    new(OneFromOptions(LesserWeightPotions), TieredPotionChance, 3, 5),
                 ]);
             }
         }
+    }
+
+    static int OneFromOptions(params int[] options)
+    {
+        return options[Main.rand.Next(options.Length)];
     }
 
     static void FillChest(Chest chest, Span<LootEntry> loot)
