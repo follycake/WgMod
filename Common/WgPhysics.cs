@@ -24,6 +24,7 @@ public static class WgPhysics
 
         // Dynamic data
         public Vector2 Center;
+        public Vector2 Scale;
         public float Angle;
 
         public static readonly Vector2[] Frame =
@@ -56,6 +57,9 @@ public static class WgPhysics
     {
         public Vector2 Position = position;
         public Vector2 LastPosition = position;
+
+        public Vector2 Accumulated;
+        public int AccumulatedCount;
 
         public Vector2 Offset;
         public Vector2 UV;
@@ -116,9 +120,9 @@ public static class WgPhysics
 
         public void Update(WgPlayer wg)
         {
-            const float springForce = 0.3f;
-            const float quadForce = 1f;
-            const float guidanceForce = 0.2f;
+            const float springForce = 0.4f;
+            const float shapeMatchingForce = 1f;
+            const float guidanceForce = 0.3f;
 
             if (!Active)
             {
@@ -189,6 +193,14 @@ public static class WgPhysics
                 }
                 quadVect /= 4f;
                 quad.Angle = quadVect.ToRotation();
+
+                Vector2 topLeft = pointSpan[quad.TopLeft].Position;
+                Vector2 topRight = pointSpan[quad.TopRight].Position;
+                Vector2 bottomRight = pointSpan[quad.BottomRight].Position;
+                Vector2 bottomLeft = pointSpan[quad.BottomLeft].Position;
+                float sizeX = (topLeft.Distance(topRight) + bottomLeft.Distance(bottomRight)) * 0.5f;
+                float sizeY = (topLeft.Distance(bottomLeft) + topRight.Distance(bottomRight)) * 0.5f;
+                quad.Scale = new Vector2((quad.Size.Y / sizeY + 1f) * 0.5f, (quad.Size.X / sizeX + 1f) * 0.5f);
             }
 
             // Shape matching
@@ -197,12 +209,12 @@ public static class WgPhysics
                 for (int i = 0; i < 4; i++)
                 {
                     ref Point point = ref pointSpan[quad.GetPoint(i)];
-                    Vector2 target = quad.Center + quad.GetFrame(i, direction, gravDir).RotatedBy(quad.Angle);
+                    Vector2 target = quad.Center + (quad.GetFrame(i, direction, gravDir) * quad.Scale).RotatedBy(quad.Angle);
                     float distance = point.Position.Distance(target);
                     if (distance > 0.01f)
                     {
                         Vector2 dir = point.Position.DirectionTo(target);
-                        point.Position += dir * (distance * 0.5f * quadForce);
+                        point.Position += dir * (distance * 0.5f * shapeMatchingForce);
                     }
                 }
             }
@@ -452,12 +464,22 @@ public static class WgPhysics
                 springs.Add(new Spring(a, b, Vector2.Distance(points[a].Position, points[b].Position), strength));
             }
 
+            bool ScanForQuads(int x, int y, int radius)
+            {
+                for (int delta = -radius; delta <= radius; delta++)
+                {
+                    if (quadMap.ContainsKey((x + delta, y)))
+                        return true;
+                }
+                return false;
+            }
+
             Point[] pointsArray = [.. points];
             foreach (KeyValuePair<(int, int), int> pair in quadMap)
             {
                 var (x, y) = pair.Key;
                 Quad quad = quads[pair.Value];
-                if (!quadMap.ContainsKey((x, y - 1)) && !quadMap.ContainsKey((x - 1, y - 1)))
+                if (!ScanForQuads(x, y - 1, 2))
                 {
                     pointsArray[quad.TopLeft].Pinned = true;
                     pointsArray[quad.TopRight].Pinned = true;
