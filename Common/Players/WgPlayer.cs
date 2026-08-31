@@ -61,6 +61,9 @@ public partial class WgPlayer : ModPlayer
     internal int _iceBreakTimer;
     internal bool _displayWeight;
 
+    internal float _softSquishLeft;
+    internal float _softSquishRight;
+
     Vector2 _prevVel;
     float _digestTimer;
     bool _hasJumped;
@@ -305,11 +308,16 @@ public partial class WgPlayer : ModPlayer
     void SoftHitbox(int stage)
     {
         if (Player.mount.Active || !WeightValues.EnableSoftHitbox(stage))
+        {
+            _softSquishLeft = 0f;
+            _softSquishRight = 0f;
             return;
+        }
+
         const float pushForce = 0.5f;
         const float width = 16f;
 
-        void Push(int dir)
+        float Push(int dir)
         {
             Vector2 origin = Player.Center + new Vector2(dir * (Player.width * 0.5f - 1f), 0f);
             if (PhysicsUtility.RayIntersectSolid(origin, dir * Vector2.UnitX, width, out Vector2 point, out _))
@@ -318,11 +326,13 @@ public partial class WgPlayer : ModPlayer
                 float factor = 1f - distance / width;
                 float force = factor * factor * pushForce;
                 Player.velocity.X -= dir * force;
+                return factor;
             }
+            return 0f;
         }
 
-        Push(-1);
-        Push(1);
+        _softSquishLeft = Push(-Player.direction);
+        _softSquishRight = Push(Player.direction);
     }
 
     public override void PreUpdate()

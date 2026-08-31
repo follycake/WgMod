@@ -289,21 +289,35 @@ public class SpriteSet
             _ => true,
         };
 
+        public Vector2 Squish(float squish)
+        {
+            switch (Type)
+            {
+                case LayerType.Belly:
+                    return new Vector2(1f / squish, 1f * squish);
+                case LayerType.Legs:
+                case LayerType.Breasts:
+                    return new Vector2(1f * squish, 1f / squish);
+                default:
+                    return Vector2.One;
+            }
+        }
+
         public void Animate(WgPlayer wg, Vector2 position, float bellySquish, float baseSquish, out Vector2 pos, out Vector2 scale)
         {
             switch (Type)
             {
                 case LayerType.Belly:
                     pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, wg.Player.gravDir);
-                    scale = new Vector2(1f / bellySquish, 1f * bellySquish);
+                    scale = Squish(bellySquish);
                     break;
                 case LayerType.Legs:
                     pos = PrepPos(position, MathF.Round(wg._legOffsetX / 2f) * 2f, MathF.Round(wg._legOffsetY / 2f) * 2f, wg.Player.gravDir);
-                    scale = new Vector2(1f * baseSquish, 1f / baseSquish);
+                    scale = Squish(baseSquish);
                     break;
                 case LayerType.Breasts:
                     pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, wg.Player.gravDir);
-                    scale = new Vector2(1f * baseSquish, 1f / baseSquish);
+                    scale = Squish(baseSquish);
                     break;
                 default:
                     pos = PrepPos(position, 0f, 0f, wg.Player.gravDir);

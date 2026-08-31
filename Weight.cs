@@ -21,7 +21,7 @@ public readonly record struct Weight(Mass Mass)
         return (Mass - a) / (b - a);
     }
 
-    public readonly float GetFactor(Weight start, Weight end) => Curve((Mass - start.Mass) / (end.Mass - start.Mass)); // Inverese lerp
+    public readonly float GetFactor(Weight start, Weight end) => Curve(Utility.InverseLerp(start.Mass, end.Mass, Mass));
     public readonly float GetClampedFactor(Weight start, Weight end) => Math.Clamp(GetFactor(start, end), 0f, 1f);
 
     public readonly float GetFactor(int startStage, int endStage) => GetFactor(FromStage(startStage), FromStage(endStage));

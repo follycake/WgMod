@@ -58,9 +58,6 @@ public static class WgPhysics
         public Vector2 Position = position;
         public Vector2 LastPosition = position;
 
-        public Vector2 Accumulated;
-        public int AccumulatedCount;
-
         public Vector2 Offset;
         public Vector2 UV;
         public bool Pinned;
@@ -101,6 +98,9 @@ public static class WgPhysics
         public Vector2 AABBMax;
         public Vector2 AABBSize => AABBMax - AABBMin;
 
+        public Vector2 OffsetMin;
+        public Vector2 OffsetMax;
+
         int _lastDirection = 1;
         int _lastGravDir = 1;
         Vector2 _basePositionRotated;
@@ -121,6 +121,21 @@ public static class WgPhysics
             Vector2 position = CalculateBasePosition(wg, drawPosition);
             foreach (ref Point point in Points.AsSpan())
                 point.Teleport(CalculateFromOffset(wg, drawPosition, position, point.Offset));
+        }
+
+        public void Jiggle(float amount)
+        {
+            Vector2 squish = Set.PhysicsLayers[PhysicsIndex].Squish(1f + amount / 60f);
+            Vector2 center = Vector2.Zero;
+            foreach (Point point in Points)
+                center += point.Position;
+            center /= Points.Length;
+            foreach (ref Point point in Points.AsSpan())
+            {
+                Vector2 offset = point.Position - center;
+                offset *= squish;
+                point.Position = center + offset;
+            }
         }
 
         public void Update(WgPlayer wg)
@@ -229,7 +244,11 @@ public static class WgPhysics
             _basePositionRotated = basePosition.RotatedBy(wg.Player.fullRotation, drawPosition + wg.Player.fullRotationOrigin);
             foreach (ref Point point in pointSpan)
             {
-                Vector2 target = CalculateFromOffset(wg, drawPosition, basePosition, point.Offset);
+                float t = Utility.InverseLerp(OffsetMin.X, OffsetMax.X, point.Offset.X);
+                Vector2 offset = point.Offset;
+                offset.Y *= float.Lerp(1f, 1.8f, t * t * wg._softSquishRight);
+                offset.Y *= float.Lerp(1f, 1.8f, (1f - t) * (1f - t) * wg._softSquishLeft);
+                Vector2 target = CalculateFromOffset(wg, drawPosition, basePosition, offset);
                 if (point.Pinned)
                 {
                     point.Teleport(target);
@@ -437,12 +456,16 @@ public static class WgPhysics
             Vector2 position = layer.CalculateBasePosition(wg, drawPosition);
 
             List<Point> points = [];
+            layer.OffsetMin = new(float.PositiveInfinity, float.PositiveInfinity);
+            layer.OffsetMax = new(float.NegativeInfinity, float.NegativeInfinity);
             int CreatePoint(int x, int y)
             {
                 Vector2 offset = new(x - w * 0.5f, y - h * 0.5f);
                 int existing = points.FindIndex(p => p.Offset == offset);
                 if (existing >= 0)
                     return existing;
+                layer.OffsetMin = Vector2.Min(layer.OffsetMin, offset);
+                layer.OffsetMax = Vector2.Max(layer.OffsetMax, offset);
                 points.Add(new Point(Layer.CalculateFromOffset(wg, drawPosition, position, offset))
                 {
                     Offset = offset,
@@ -579,6 +602,17 @@ public static class WgPhysics
         {
             if (layer.Active)
                 layer.FindOverlappingPlayers(wg.Player.whoAmI);
+        }
+    }
+
+    public static void Jiggle(WgPlayer wg, float amount)
+    {
+        if (!IsEnabled(wg))
+            return;
+        foreach (Layer layer in wg._physicsLayers)
+        {
+            if (layer.Active)
+                layer.Jiggle(amount);
         }
     }
 }

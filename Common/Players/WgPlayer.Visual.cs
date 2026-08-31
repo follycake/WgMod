@@ -204,6 +204,7 @@ public partial class WgPlayer
     public void Jiggle(float amount)
     {
         _squishVel += amount;
+        WgPhysics.Jiggle(this, amount);
     }
 
     public bool IsSittingVisual()
