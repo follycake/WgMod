@@ -230,6 +230,11 @@ public static class WgPhysics
                     point.Teleport(target);
                     continue;
                 }
+                if (float.IsNaN(point.Position.X) || float.IsNaN(point.Position.Y)) // Sometimes the simulation gets funky
+                {
+                    point.Teleport(target);
+                    continue;
+                }
                 float distance = point.Position.Distance(target);
                 if (distance > 0.01f)
                 {
