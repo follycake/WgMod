@@ -97,9 +97,14 @@ public static class WgPhysics
         public VertexPositionColorTexture[] VertexData;
         public short[] IndexData;
 
+        public Vector2 AABBMin;
+        public Vector2 AABBMax;
+        public Vector2 AABBSize => AABBMax - AABBMin;
+
         int _lastDirection = 1;
         int _lastGravDir = 1;
         Vector2 _basePositionRotated;
+        readonly List<Player> _overlappingPlayers = [];
 
         public void Setup(WgPlayer wg)
         {
@@ -260,6 +265,36 @@ public static class WgPhysics
                 float dist = diff.Length();
                 if (PhysicsUtility.RayIntersectSolid(center, dir, dist, out Vector2 intersection, out Vector2 normal, tileSolidTop))
                     point.Position = point.Position - normal * Vector2.Dot(normal, point.Position) + normal * Vector2.Dot(normal, intersection);
+                foreach (Player player in _overlappingPlayers)
+                {
+                    float collision = 0f;
+                    if (Collision.CheckAABBvLineCollision(player.position, player.Size, center, point.Position, 1f, ref collision))
+                        point.Position = center + dir * collision;
+                }
+            }
+
+            // Bounding box
+            AABBMin = new(float.PositiveInfinity, float.PositiveInfinity);
+            AABBMax = new(float.NegativeInfinity, float.NegativeInfinity);
+            foreach (ref Point point in pointSpan)
+            {
+                AABBMin = Vector2.Min(AABBMin, point.Position);
+                AABBMax = Vector2.Max(AABBMax, point.Position);
+            }
+            AABBMin -= Vector2.One;
+            AABBMax += Vector2.One;
+        }
+
+        public void FindOverlappingPlayers(int ignore)
+        {
+            _overlappingPlayers.Clear();
+            for (int i = 0; i < Main.maxPlayers; i++)
+            {
+                if (i == ignore)
+                    continue;
+                Player player = Main.player[i];
+                if (player.active && Collision.CheckAABBvAABBCollision(AABBMin, AABBSize, player.position, player.Size))
+                    _overlappingPlayers.Add(player);
             }
         }
 
@@ -539,6 +574,11 @@ public static class WgPhysics
                 layer.Update(wg);
             else
                 layer.Active = false;
+        }
+        foreach (Layer layer in wg._physicsLayers)
+        {
+            if (layer.Active)
+                layer.FindOverlappingPlayers(wg.Player.whoAmI);
         }
     }
 }
