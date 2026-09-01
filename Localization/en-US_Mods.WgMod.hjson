@@ -916,6 +916,16 @@ Items: {
 			Stats scale with your obesity
 			'''
 	}
+	
+	EncumberedStatueBanner: {
+		DisplayName: Encumbered Statue Banner
+		Tooltip: Nearby players gain a bonus against: Encumbered Statue
+	}
+
+	OverindulgentStatueBanner: {
+		DisplayName: Overindulgent Statue Banner
+		Tooltip: Nearby players gain a bonus against: Overindulgent Statue
+	}
 }
 
 Buffs: {
@@ -1090,6 +1100,11 @@ Buffs: {
 		DisplayName: Bloated
 		Description: Your belly has bloated ouf of control!
 	}
+
+	Infatuated: {
+		DisplayName: In'fat'uated
+		Description: Weight gain rate increased by {0}%
+	}
 }
 
 Configs: {
@@ -1239,6 +1254,20 @@ Projectiles: {
 	WeightLossPotionProjectile.DisplayName: Weight Loss Potion
 	FatTombstone.DisplayName: Fat Tombstone
 	MimicAttack.DisplayName: Mimic Attack
+	HeartyHeart_Surround.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Blue.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Green.DisplayName: Hearty Heart
+	HeartyHeart_Direct.DisplayName: Hearty Heart
+	HeartyHeart_Direct_Blue.DisplayName: Hearty Heart
+	HeartyHeart_Direct_Green.DisplayName: Hearty Heart
+	HeartyHeart_Direct_Spawner.DisplayName: Hearty Heart Hearter
+	HeartyHeart_Wave.DisplayName: Hearty Heart
+	HeartyHeart_Wave_Blue.DisplayName: Hearty Heart
+	HeartyHeart_Wave_Green.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Blue_Strong.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Green_Strong.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Strong.DisplayName: Hearty Heart
+	HeartyHeart_Direct_Spawner_Strong.DisplayName: Hearty Heart Hearter
 }
 
 NPCs: {
@@ -1321,6 +1350,12 @@ NPCs: {
 	SkeleborerHead.DisplayName: Skeleborer
 	SkeleborerBody.DisplayName: Skeleborer
 	SkeleborerTail.DisplayName: Skeleborer
+	EncumberedStatueTop.DisplayName: Encumbered Statue
+	EncumberedStatueMiddle.DisplayName: Encumbered Statue
+	EncumberedStatueBottom.DisplayName: Encumbered Statue
+	OverindulgentStatueTop.DisplayName: Overindulgent Statue
+	OverindulgentStatueMiddle.DisplayName: Overindulgent Statue
+	OverindulgentStatueBottom.DisplayName: Overindulgent Statue
 }
 
 Dialogue: {
@@ -1437,6 +1472,8 @@ Bestiary: {
 	SweetSpirit: These spirits that dwell in the caverns will try their best to fatten you up.
 	SugarSpecter: Specters made of condensed sugar and cotton candy. Kill them before they bloat you up in size...
 	Skeleborer: Sometimes large amounts of ectoplasm coalesce, and come to life! She's haunted by the screaming of thousands of souls, but she doesn't really care.
+	EncumberedStatue: to do: write this
+	OverindulgedStatue: to do: also write this
 }
 
 Conditions.BlackRiderDev: Be super awesome cool

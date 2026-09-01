@@ -86,7 +86,7 @@ public static class FattyPhysicsLogic
         {
             if (!npc.active)
                 continue;
-            if (npc.type == NPCID.TargetDummy || npc.type == NPCID.DD2EterniaCrystal)
+            if (npc.type == NPCID.TargetDummy || npc.type == NPCID.DD2EterniaCrystal || npc.knockBackResist == 0f)
                 continue;
             if (npc.Hitbox.Intersects(entity.Hitbox))
                 DoPush(entity, npc);
