@@ -78,7 +78,7 @@ public static class WgPhysics
         public readonly bool Rigid => Strength < 0f;
     }
 
-    public class Layer
+    public sealed class Layer : IDisposable
     {
         public const int GridSize = 8;
 
@@ -93,6 +93,9 @@ public static class WgPhysics
 
         public VertexPositionColorTexture[] VertexData;
         public short[] IndexData;
+
+        public DynamicVertexBuffer VertexBuffer;
+        public IndexBuffer IndexBuffer;
 
         public Vector2 AABBMin;
         public Vector2 AABBMax;
@@ -121,6 +124,15 @@ public static class WgPhysics
             Vector2 position = CalculateBasePosition(wg, drawPosition);
             foreach (ref Point point in Points.AsSpan())
                 point.Teleport(CalculateFromOffset(wg, drawPosition, position, point.Offset));
+        }
+
+        public void Dispose()
+        {
+            VertexBuffer?.Dispose();
+            VertexBuffer = null;
+            IndexBuffer?.Dispose();
+            IndexBuffer = null;
+            Active = false;
         }
 
         public void Jiggle(float amount)
@@ -333,8 +345,31 @@ public static class WgPhysics
             Vector2 offset = drawData.position - _basePositionRotated;
             UpdateVertexData(offset, drawData.sourceRect.Value, drawData.texture.Size(), drawData.color);
             device.Textures[0] = drawData.texture;
-            device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, VertexData, 0, VertexData.Length, IndexData, 0, IndexData.Length / 3);
+
+            VertexBufferBinding[] prevVertexBuffers = device.GetVertexBuffers();
+            IndexBuffer prevIndices = device.Indices;
+
+            if (IndexBuffer == null || IndexBuffer.GraphicsDevice != device)
+            {
+                IndexBuffer?.Dispose();
+                IndexBuffer = new IndexBuffer(device, IndexElementSize.SixteenBits, IndexData.Length, BufferUsage.WriteOnly);
+                IndexBuffer.SetData(IndexData);
+            }
+            if (VertexBuffer == null || VertexBuffer.GraphicsDevice != device)
+            {
+                VertexBuffer?.Dispose();
+                VertexBuffer = new DynamicVertexBuffer(device, typeof(VertexPositionColorTexture), VertexData.Length, BufferUsage.WriteOnly);
+            }
+            VertexBuffer.SetData(VertexData);
+
+            device.SetVertexBuffer(VertexBuffer);
+            device.Indices = IndexBuffer;
+
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, VertexData.Length, 0, IndexData.Length / 3);
             //DrawDebug(device);
+
+            device.SetVertexBuffers(prevVertexBuffers);
+            device.Indices = prevIndices;
         }
 
         public void DrawDebug(GraphicsDevice device)
@@ -372,8 +407,21 @@ public static class WgPhysics
         return wg._physicsLayers != null && wg._physicsLayers.Count > 0;
     }
 
+    public static bool Dispose(WgPlayer wg)
+    {
+        if (IsEnabled(wg))
+        {
+            foreach (Layer layer in wg._physicsLayers)
+                layer.Dispose();
+            wg._physicsLayers.Clear();
+            return true;
+        }
+        return false;
+    }
+
     public static void Clear(WgPlayer wg)
     {
+        Dispose(wg);
         wg._physicsLayers = null;
         wg._physicsDrawOverride = null;
     }
@@ -385,13 +433,18 @@ public static class WgPhysics
             Clear(wg);
             return false;
         }
-        wg._physicsLayers ??= [];
-        wg._physicsLayers.Clear();
-        wg._physicsDrawOverride ??= [];
-        wg._physicsDrawOverride.Clear();
         int stage = wg.Weight.GetStage();
         if (stage <= 0)
-            return true;
+        {
+            Clear(wg);
+            return false;
+        }
+        if (wg._physicsLayers != null)
+            Dispose(wg);
+        else
+            wg._physicsLayers = [];
+        wg._physicsDrawOverride ??= [];
+        wg._physicsDrawOverride.Clear();
         SpriteSet.Stage stageData = SpriteSet.GetStage(stage, out SpriteSet set);
         foreach (SpriteSet.Layer spriteLayer in set.PhysicsLayers)
         {
