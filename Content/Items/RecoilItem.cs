@@ -49,7 +49,7 @@ public abstract class RecoilItem : ModItem
         float angle = Utils.AngleFrom(player.Center, mousePosition);
         Vector2 velocity = new(MathF.Cos(angle), MathF.Sin(angle));
 
-        if (!CheckForSolidGround(player))
+        if (!player.CheckForSolidGround())
         {
             recoilStrength *= _airTime;
             if (_airTime > airTimeFactor)
@@ -76,26 +76,7 @@ public abstract class RecoilItem : ModItem
 
     public override void UpdateInventory(Player player)
     {
-        if (CheckForSolidGround(player))
+        if (player.CheckForSolidGround())
             _airTime = 1;
-    }
-
-    /// <summary> Returns true when the player is grounded. </summary>
-    static bool CheckForSolidGround(Player player)
-    {
-        List<Point> tiles = Collision.GetTilesIn(player.Hitbox.BottomLeft() - new Vector2(-2, -2), player.Hitbox.BottomRight() + new Vector2(2, 6));
-        bool hasSolidTile = false;
-        foreach (var point in tiles)
-        {
-            Tile tile = Framing.GetTileSafely(point);
-            if (tile.HasTile)
-            {
-                if (Main.tileSolid[tile.TileType])
-                    hasSolidTile = true;
-                if (Main.tileSolidTop[tile.TileType])
-                    hasSolidTile = true;
-            }
-        }
-        return hasSolidTile;
     }
 }

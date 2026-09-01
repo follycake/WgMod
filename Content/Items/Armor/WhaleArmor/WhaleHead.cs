@@ -125,7 +125,7 @@ public class WhaleHead : ModItem
 
     public void FallSpeedAccelerate(Player player, float rate)
     {
-        if (!CheckForSolidGround(player))
+        if (!player.CheckForSolidGround())
         {
             if (player.maxFallSpeed < 15f)
                 _setBonusFallSpeed += rate;
@@ -134,23 +134,6 @@ public class WhaleHead : ModItem
             _setBonusFallSpeed = 0f;
 
         player.maxFallSpeed += _setBonusFallSpeed;
-    }
-
-    static bool CheckForSolidGround(Player player)
-    {
-        List<Point> tiles = Collision.GetTilesIn(player.Hitbox.BottomLeft() - new Vector2(-2, -2), player.Hitbox.BottomRight() + new Vector2(2, 6));
-        bool hasSolidTile = false;
-        foreach (var point in tiles)
-        {
-            Tile tile = Framing.GetTileSafely(point);
-            if (tile.HasTile)
-            {
-                if (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType])
-                    hasSolidTile = true;
-            }
-        }
-
-        return hasSolidTile;
     }
 
     public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
