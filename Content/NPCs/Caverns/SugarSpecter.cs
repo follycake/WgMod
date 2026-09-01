@@ -36,4 +36,10 @@ public class SugarSpecter : SweetSpirit
     {
         return new Vector2(40f, 21f);
     }
+
+    public override void OnKill()
+    {
+        if (NPC.GetWereThereAnyInteractions())
+            Utility.RegisterKill<SweetSpirit>();
+    }
 }

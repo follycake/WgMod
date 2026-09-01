@@ -194,4 +194,11 @@ public static class Utility
         device.Textures[0] = Shaders.White.Value;
         device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertexData, 0, 1);
     }
+
+    public static void RegisterKill<T>() where T : ModNPC
+    {
+        T instance = ModContent.GetInstance<T>();
+        instance.NPC.netID = instance.Type;
+        Main.BestiaryTracker.Kills.RegisterKill(instance.NPC);
+    }
 }
