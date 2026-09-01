@@ -40,7 +40,7 @@ public class WhaleHead : ModItem
         Item.height = 20;
         Item.value = Item.sellPrice(gold: 3);
         Item.rare = ItemRarityID.LightRed;
-        Item.defense = 20;
+        Item.defense = 17;
     }
 
     public override void SetStaticDefaults()

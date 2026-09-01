@@ -23,7 +23,7 @@ public class WhaleLegs : ModItem
         Item.height = 20;
         Item.value = Item.sellPrice(gold: 1, silver: 80);
         Item.rare = ItemRarityID.LightRed;
-        Item.defense = 17;
+        Item.defense = 15;
     }
 
     public override void UpdateEquip(Player player)
