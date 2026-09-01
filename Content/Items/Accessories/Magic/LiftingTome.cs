@@ -284,12 +284,11 @@ public class LiftingTomeWingLayer : PlayerDrawLayer
 
 public class LiftingTomeItem : GlobalItem
 {
-    public override bool InstancePerEntity => true;
-    public HashSet<DamageClass> magicWeapons = [DamageClass.Magic, DamageClass.MagicSummonHybrid];
+    static readonly HashSet<DamageClass> _magicWeapons = [DamageClass.Magic, DamageClass.MagicSummonHybrid];
 
     public override void UseAnimation(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out LiftingTomePlayer lt) || !player.TryGetModPlayer(out WgPlayer wg) || !lt._active || item.damage < 1 || player.whoAmI != Main.myPlayer || !magicWeapons.Contains(item.DamageType))
+        if (!player.TryGetModPlayer(out LiftingTomePlayer lt) || !player.TryGetModPlayer(out WgPlayer wg) || !lt._active || item.damage < 1 || player.whoAmI != Main.myPlayer || !_magicWeapons.Contains(item.DamageType))
             return;
         float immobility = wg.Weight.ClampedImmobility;
 

@@ -23,8 +23,6 @@ public class Caramelized : ModBuff
 
     public override void Update(NPC npc, ref int buffIndex)
     {
-        npc.GetGlobalNPC<CaramelizedNPC>().CaramelizedEffect = true;
-
         int dustRate = 15;
         if (Main.rand.NextBool(dustRate))
             Dust.NewDust(
@@ -62,43 +60,28 @@ public class Caramelized : ModBuff
 
 public class CaramelizedNPC : GlobalNPC
 {
-    public bool CaramelizedEffect;
-
-    public override void ResetEffects(NPC npc)
-    {
-        CaramelizedEffect = false;
-    }
-
     public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
     {
         if (projectile.npcProj || projectile.trap || !projectile.IsMinionOrSentryRelated)
             return;
-
         var projTagMultiplier = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
         if (npc.HasBuff<Caramelized>())
-        {
             modifiers.FlatBonusDamage += Caramelized.TagDamage * projTagMultiplier;
-        }
     }
-
-    public override bool InstancePerEntity => true;
 
     public override void UpdateLifeRegen(NPC npc, ref int damage)
     {
-        if (!CaramelizedEffect)
+        if (!npc.HasBuff<Caramelized>())
             return;
-
         damage = 5;
-
         if (npc.lifeRegen > 0)
             npc.lifeRegen = 0;
-
         npc.lifeRegen -= 20;
     }
 
     public override void DrawEffects(NPC npc, ref Color drawColor)
     {
-        if (!CaramelizedEffect)
+        if (!npc.HasBuff<Caramelized>())
             return;
         drawColor = new Color(151, 93, 15);
     }
@@ -117,10 +100,8 @@ public class CrispyDebuffPlayer : ModPlayer
     {
         if (!CaramelizedEffect)
             return;
-
         if (Player.lifeRegen > 0)
             Player.lifeRegen = 0;
-
         Player.lifeRegenTime = 0;
         Player.lifeRegen -= 20;
     }
@@ -129,7 +110,6 @@ public class CrispyDebuffPlayer : ModPlayer
     {
         if (!CaramelizedEffect)
             return;
-
         r = 151f / 255f;
         g = 93f / 255f;
         b = 15f / 255f;

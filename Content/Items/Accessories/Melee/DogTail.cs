@@ -71,8 +71,7 @@ public class DogTailPlayer : ModPlayer
 
 public class DogTailItem : GlobalItem
 {
-    public override bool InstancePerEntity => true;
-    readonly HashSet<DamageClass> _meleeWeapons = [DamageClass.Melee, DamageClass.MeleeNoSpeed];
+    static readonly HashSet<DamageClass> _meleeWeapons = [DamageClass.Melee, DamageClass.MeleeNoSpeed];
 
     public override void UseAnimation(Item item, Player player)
     {
@@ -91,25 +90,23 @@ public class DogTailItem : GlobalItem
         float angle = Utils.AngleTo(player.Center, mousePosition);
         Vector2 velocity = new(MathF.Cos(angle), MathF.Sin(angle));
 
+        switch (item.useStyle)
         {
-            switch (item.useStyle)
-            {
-                case ItemUseStyleID.Swing:
-                case ItemUseStyleID.Thrust:
-                case ItemUseStyleID.Shoot:
-                case ItemUseStyleID.Guitar:
-                case ItemUseStyleID.Rapier:
-                case ItemUseStyleID.RaiseLamp:
-                    Projectile.NewProjectile(
-                        player.GetSource_FromThis(),
-                        player.Center,
-                        velocity * 6f,
-                        ModContent.ProjectileType<BouncyBall>(),
-                        (int)(dt._damage * dt._damageModifier),
-                        5
-                    );
-                    break;
-            }
+            case ItemUseStyleID.Swing:
+            case ItemUseStyleID.Thrust:
+            case ItemUseStyleID.Shoot:
+            case ItemUseStyleID.Guitar:
+            case ItemUseStyleID.Rapier:
+            case ItemUseStyleID.RaiseLamp:
+                Projectile.NewProjectile(
+                    player.GetSource_FromThis(),
+                    player.Center,
+                    velocity * 6f,
+                    ModContent.ProjectileType<BouncyBall>(),
+                    (int)(dt._damage * dt._damageModifier),
+                    5
+                );
+                break;
         }
     }
 }
