@@ -18,7 +18,7 @@ public static class PhysicsUtility
 
     public static bool IsTileSolid(int x, int y, bool tileSolidTop = false)
     {
-        if (x < 0 || y < 0 || x >= Main.maxTilesX || y >= Main.maxTilesY)
+        if (!WorldGen.InWorld(x, y))
             return true;
         return IsTileSolid(Main.tile[x, y], tileSolidTop);
     }
