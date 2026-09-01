@@ -887,7 +887,7 @@ Items: {
 			'''
 		SetBonus:
 			'''
-			Breach by leaving the water, firing {2} water streams
+			Breach by leaving the water, firing {2} damage water streams
 			Greatly increased movement speed and acceleration while underwater
 			Grants the ability to swim and greatly extends underwater breathing
 			Decreased movement penalty by {0}%
