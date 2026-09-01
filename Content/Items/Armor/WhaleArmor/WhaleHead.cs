@@ -27,7 +27,7 @@ public class WhaleHead : ModItem
     WgStat _setBonusSpeed = new(1f, 0.5f);
     WgStat _setBonusJump = new(5f, 10f);
     WgStat _setBonusFallSpeedRate = new(0.1f, 0.2f);
-    WgStat _setBonusWaterSpeed = new(2f, 15f);
+    WgStat _setBonusWaterSpeed = new(2f, 10f);
     WgStat _blowholeDamage = new(200f, 500f);
 
     float _setBonusFallSpeed = 0f;
