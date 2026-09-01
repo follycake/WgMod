@@ -879,8 +879,7 @@ Items: {
 		DisplayName: Whale Head
 		Tooltip:
 			'''
-			+{2} additional defense
-			Increases critical strike chance by {3}%
+			Increases critical strike chance by {2}%
 			Increases max life by {0}
 			Increases fishing power by {1}
 			Stats scale with your obesity
@@ -900,8 +899,7 @@ Items: {
 		DisplayName: Whale Body
 		Tooltip:
 			'''
-			+{2} additional defense
-			Increases damage by {3}%
+			Increases damage by {2}%
 			Increases max life by {0}
 			Increases fishing power by {1}
 			Stats scale with your obesity
@@ -912,8 +910,7 @@ Items: {
 		DisplayName: Whale Legs
 		Tooltip:
 			'''
-			+{2} additional defense
-			Increases critical strike chance by {3}%
+			Increases critical strike chance by {2}%
 			Increases max life by {0}
 			Increases fishing power by {1}
 			Stats scale with your obesity

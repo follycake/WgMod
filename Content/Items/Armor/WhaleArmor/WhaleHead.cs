@@ -21,12 +21,11 @@ public class WhaleHead : ModItem
     const int TimerMax = 120;
 
     WgStat _crit = new(0.02f, 0.06f);
-    WgStat _defense = new(20f, 25f);
     WgStat _health = new(50f, 100f);
-    WgStat _fishing = new(10f, 25f);
+    WgStat _fishing = new(5f, 10f);
 
     WgStat _setBonusSpeed = new(1f, 0.5f);
-    WgStat _setBonusJump = new(5f, 15f);
+    WgStat _setBonusJump = new(5f, 10f);
     WgStat _setBonusFallSpeedRate = new(0.1f, 0.2f);
     WgStat _setBonusWaterSpeed = new(2f, 15f);
     WgStat _blowholeDamage = new(200f, 500f);
@@ -58,13 +57,11 @@ public class WhaleHead : ModItem
         float immobility = wg.Weight.GetClampedFactor(WeightStage.Regular, WeightStage.Blob);
 
         _crit.Lerp(immobility);
-        _defense.Lerp(immobility);
         _health.Lerp(immobility);
         _fishing.Lerp(immobility);
 
         _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
 
-        Item.defense = _defense;
         player.GetCritChance(DamageClass.Generic) += _crit;
         player.statLifeMax2 += _health;
         player.fishingSkill += _fishing;
@@ -178,6 +175,6 @@ public class WhaleHead : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(_health, _fishing, _defense - _defense.Min, _crit.Percent());
+        tooltips.FormatLines(_health, _fishing, _crit.Percent());
     }
 }

@@ -14,9 +14,8 @@ namespace WgMod.Content.Items.Armor.WhaleArmor;
 public class WhaleLegs : ModItem
 {
     WgStat _crit = new(0.02f, 0.06f);
-    WgStat _defense = new(15f, 20f);
     WgStat _health = new(50f, 100f);
-    WgStat _fishing = new(10f, 25f);
+    WgStat _fishing = new(5f, 10f);
 
     public override void SetDefaults()
     {
@@ -24,7 +23,7 @@ public class WhaleLegs : ModItem
         Item.height = 20;
         Item.value = Item.sellPrice(gold: 1, silver: 80);
         Item.rare = ItemRarityID.LightRed;
-        Item.defense = 15;
+        Item.defense = 17;
     }
 
     public override void UpdateEquip(Player player)
@@ -34,13 +33,11 @@ public class WhaleLegs : ModItem
         float immobility = wg.Weight.GetClampedFactor(WeightStage.Regular, WeightStage.Blob);
 
         _crit.Lerp(immobility);
-        _defense.Lerp(immobility);
         _health.Lerp(immobility);
         _fishing.Lerp(immobility);
 
         _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
 
-        Item.defense = _defense;
         player.GetCritChance(DamageClass.Generic) += _crit;
         player.statLifeMax2 += _health;
         player.fishingSkill += _fishing;
@@ -68,6 +65,6 @@ public class WhaleLegs : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(_health, _fishing, _defense - _defense.Min, _crit.Percent());
+        tooltips.FormatLines(_health, _fishing, _crit.Percent());
     }
 }
