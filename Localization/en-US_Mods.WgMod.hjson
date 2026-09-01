@@ -874,6 +874,51 @@ Items: {
 			Very popular item among the lihzahrd folk
 			'''
 	}
+
+	WhaleHead: {
+		DisplayName: Whale Head
+		Tooltip:
+			'''
+			+{2} additional defense
+			+{3}% critical strike chance
+			Increases max life by {0}
+			Increases fishing power by {1}
+			Stats scale with your obesity
+			'''
+		SetBonus:
+			'''
+			Breach by leaving the water, firing {2} water streams
+			Greatly increased movement speed and acceleration while underwater
+			Grants the ability to swim and greatly extends underwater breathing
+			Decreased movement penalty by {0}%
+			Losing weight is {1}% harder
+			Effects scale with your obesity
+			'''
+	}
+
+	WhaleBody: {
+		DisplayName: Whale Body
+		Tooltip:
+			'''
+			+{2} additional defense
+			+{3}% damage
+			Increases max life by {0}
+			Increases fishing power by {1}
+			Stats scale with your obesity
+			'''
+	}
+
+	WhaleLegs: {
+		DisplayName: Whale Legs
+		Tooltip:
+			'''
+			+{2} additional defense
+			+{3}% critical strike chance
+			Increases max life by {0}
+			Increases fishing power by {1}
+			Stats scale with your obesity
+			'''
+	}
 }
 
 Buffs: {
