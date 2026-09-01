@@ -259,7 +259,7 @@ public static class WgPhysics
                 float t = Utility.InverseLerp(OffsetMin.X, OffsetMax.X, point.Offset.X);
                 Vector2 offset = point.Offset;
                 offset.Y *= float.Lerp(1f, 1.8f, t * t * wg._softSquishRight);
-                offset.Y *= float.Lerp(1f, 1.8f, (1f - t) * (1f - t) * wg._softSquishLeft);
+                offset.Y *= float.Lerp(1f, 1.8f, (1f - t) * (1f - t) * wg._softSquishLeft * wg._softSquishLeft);
                 Vector2 target = CalculateFromOffset(wg, drawPosition, basePosition, offset);
                 if (point.Pinned)
                 {
