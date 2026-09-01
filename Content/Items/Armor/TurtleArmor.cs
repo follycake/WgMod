@@ -10,15 +10,15 @@ namespace WgMod.Content.Items.Armor;
 public class TurtleArmor : GlobalItem
 {
     WgStat _helmetDamage = new(0.03f, 0.09f);
-    WgStat _helmetDefense = new(3, 7);
+    WgStat _helmetDefense = new(16, 25);
     WgStat _helmetHealth = new(10, 20);
 
     WgStat _scaleMailDamageCrit = new(0.04f, 0.1f);
-    WgStat _scaleMailDefense = new(5, 9);
+    WgStat _scaleMailDefense = new(20, 32);
     WgStat _scaleMailHealth = new(10, 20);
 
     WgStat _leggingsCrit = new(2f, 6f);
-    WgStat _leggingsDefense = new(2, 6);
+    WgStat _leggingsDefense = new(13, 20);
     WgStat _leggingsHealth = new(5, 10);
 
     public override bool InstancePerEntity => true;
@@ -26,13 +26,13 @@ public class TurtleArmor : GlobalItem
     public override void SetDefaults(Item item)
     {
         if (item.type == ItemID.TurtleHelmet)
-            item.defense -= 5;
+            item.defense = 16;
 
         if (item.type == ItemID.TurtleScaleMail)
-            item.defense -= 7;
+            item.defense = 20;
 
         if (item.type == ItemID.TurtleLeggings)
-            item.defense -= 4;
+            item.defense = 13;
     }
 
     public override void UpdateEquip(Item item, Player player)
@@ -50,7 +50,7 @@ public class TurtleArmor : GlobalItem
             _helmetHealth.Lerp(immobility);
 
             player.GetDamage(DamageClass.Generic) += _helmetDamage;
-            player.statDefense += _helmetDefense;
+            item.defense = _helmetDefense;
             player.statLifeMax2 += _helmetHealth;
         }
 
@@ -65,7 +65,7 @@ public class TurtleArmor : GlobalItem
 
             player.GetDamage(DamageClass.Generic) += _scaleMailDamageCrit;
             player.GetCritChance(DamageClass.Generic) += _scaleMailDamageCrit * 100;
-            player.statDefense += _scaleMailDefense;
+            item.defense = _scaleMailDefense;
             player.statLifeMax2 += _scaleMailHealth;
         }
 
@@ -78,7 +78,7 @@ public class TurtleArmor : GlobalItem
             _leggingsHealth.Lerp(immobility);
 
             player.GetCritChance(DamageClass.Generic) += _leggingsCrit;
-            player.statDefense += _leggingsDefense;
+            item.defense = _leggingsDefense;
             player.statLifeMax2 += _leggingsHealth;
         }
     }
@@ -89,21 +89,21 @@ public class TurtleArmor : GlobalItem
         {
             tooltips.Find(t => t.Name == "Tooltip0")
             .Text = Mod.GetLocalization("Items.TurtleLeggings.Tooltip")
-            .Format(_leggingsCrit, _leggingsHealth, _leggingsDefense);
+            .Format(_leggingsCrit, _leggingsHealth, _leggingsDefense - _leggingsDefense.Min);
         }
 
         if (item.type == ItemID.TurtleScaleMail)
         {
             tooltips.Find(t => t.Name == "Tooltip0")
             .Text = Mod.GetLocalization("Items.TurtleScaleMail.Tooltip")
-            .Format(_scaleMailDamageCrit.Percent(), _scaleMailHealth, _scaleMailDefense);
+            .Format(_scaleMailDamageCrit.Percent(), _scaleMailHealth, _scaleMailDefense - _scaleMailDefense.Min);
         }
 
         if (item.type == ItemID.TurtleHelmet)
         {
             tooltips.Find(t => t.Name == "Tooltip0")
             .Text = Mod.GetLocalization("Items.TurtleHelmet.Tooltip")
-            .Format(_helmetDamage.Percent(), _helmetHealth, _helmetDefense);
+            .Format(_helmetDamage.Percent(), _helmetHealth, _helmetDefense - _helmetDefense.Min);
         }
     }
 }

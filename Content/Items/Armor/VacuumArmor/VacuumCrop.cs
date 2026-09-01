@@ -16,7 +16,7 @@ public class VacuumCrop : ModItem
 {
     WgStat _attack = new(0.03f, 0.12f);
     WgStat _health = new(20, 200);
-    WgStat _defense = new(0, 24 * 2);
+    WgStat _defense = new(24, 72);
     WgStat _resist = new(0f, 0.02f);
     WgStat _movePenalty = new(1.2f, 1.05f);
 
@@ -26,7 +26,7 @@ public class VacuumCrop : ModItem
         Item.height = 18;
         Item.value = Item.sellPrice(gold: 2);
         Item.rare = ItemRarityID.Red;
-        Item.defense = 46 / 2 + 1;
+        Item.defense = 24;
     }
 
     public override void UpdateEquip(Player player)
@@ -45,7 +45,7 @@ public class VacuumCrop : ModItem
 
         player.GetDamage(DamageClass.Generic) += _attack;
         player.statLifeMax2 += _health;
-        player.statDefense += _defense;
+        Item.defense = _defense;
         player.endurance += _resist;
         wg.MovementPenalty *= _movePenalty;
 
@@ -76,7 +76,7 @@ public class VacuumCrop : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(_attack.Percent(), _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+        tooltips.FormatLines(_attack.Percent(), _health, _defense - _defense.Min, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
     }
 
     public override void ArmorArmGlowMask(Player drawPlayer, float shadow, ref int glowMask, ref Color color)
