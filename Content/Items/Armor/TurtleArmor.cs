@@ -23,6 +23,11 @@ public class TurtleArmor : GlobalItem
 
     public override bool InstancePerEntity => true;
 
+    public override bool AppliesToEntity(Item entity, bool lateInstantiation)
+    {
+        return entity.type == ItemID.TurtleHelmet || entity.type == ItemID.TurtleScaleMail || entity.type == ItemID.TurtleLeggings;
+    }
+
     public override void SetDefaults(Item item)
     {
         if (item.type == ItemID.TurtleHelmet)
@@ -39,8 +44,8 @@ public class TurtleArmor : GlobalItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-        float immobility = wg.Weight.ClampedImmobility;
 
+        float immobility = wg.Weight.ClampedImmobility;
         if (item.type == ItemID.TurtleHelmet)
         {
             player.GetDamage(DamageClass.Melee) -= 0.06f;
@@ -88,22 +93,22 @@ public class TurtleArmor : GlobalItem
         if (item.type == ItemID.TurtleLeggings)
         {
             tooltips.Find(t => t.Name == "Tooltip0")
-            .Text = Mod.GetLocalization("Items.TurtleLeggings.Tooltip")
-            .Format(_leggingsCrit, _leggingsHealth, _leggingsDefense - _leggingsDefense.Min);
+                .Text = Mod.GetLocalization("Items.TurtleLeggings.Tooltip")
+                .Format(_leggingsCrit, _leggingsHealth, _leggingsDefense - _leggingsDefense.Min);
         }
 
         if (item.type == ItemID.TurtleScaleMail)
         {
             tooltips.Find(t => t.Name == "Tooltip0")
-            .Text = Mod.GetLocalization("Items.TurtleScaleMail.Tooltip")
-            .Format(_scaleMailDamageCrit.Percent(), _scaleMailHealth, _scaleMailDefense - _scaleMailDefense.Min);
+                .Text = Mod.GetLocalization("Items.TurtleScaleMail.Tooltip")
+                .Format(_scaleMailDamageCrit.Percent(), _scaleMailHealth, _scaleMailDefense - _scaleMailDefense.Min);
         }
 
         if (item.type == ItemID.TurtleHelmet)
         {
             tooltips.Find(t => t.Name == "Tooltip0")
-            .Text = Mod.GetLocalization("Items.TurtleHelmet.Tooltip")
-            .Format(_helmetDamage.Percent(), _helmetHealth, _helmetDefense - _helmetDefense.Min);
+                .Text = Mod.GetLocalization("Items.TurtleHelmet.Tooltip")
+                .Format(_helmetDamage.Percent(), _helmetHealth, _helmetDefense - _helmetDefense.Min);
         }
     }
 }
