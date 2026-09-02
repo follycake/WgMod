@@ -102,9 +102,12 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             if (layer.Physics && WgPhysics.IsEnabled(wg))
             {
                 WgPhysics.Layer phys = wg._physicsLayers[layer.PhysicsIndex];
-                wg._physicsDrawOverride.Add(drawInfo.DrawDataCache.Count, phys);
-                if (drawArmor && layer.UVArmor)
-                    wg._physicsDrawOverride.Add(drawInfo.DrawDataCache.Count + 1, phys);
+                if (phys.Active)
+                {
+                    wg._physicsDrawOverride.Add(drawInfo.DrawDataCache.Count, phys);
+                    if (drawArmor && layer.UVArmor)
+                        wg._physicsDrawOverride.Add(drawInfo.DrawDataCache.Count + 1, phys);
+                }
             }
             drawInfo.DrawDataCache.Add(drawData);
             if (drawArmor && layer.UVArmor)

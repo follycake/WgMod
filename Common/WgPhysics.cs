@@ -91,6 +91,7 @@ public static class WgPhysics
         public Spring[] Springs;
         public Quad[] Quads;
 
+        public bool IsEmpty => VertexData.Length <= 0 || IndexData.Length <= 0;
         public VertexPositionColorTexture[] VertexData;
         public short[] IndexData;
 
@@ -148,6 +149,11 @@ public static class WgPhysics
                 offset *= squish;
                 point.Position = center + offset;
             }
+        }
+
+        public bool ShouldBeActive(WgPlayer wg)
+        {
+            return !IsEmpty && Set.PhysicsLayers[PhysicsIndex].ShouldRender(wg.Player);
         }
 
         public void Update(WgPlayer wg)
@@ -342,6 +348,9 @@ public static class WgPhysics
 
         public void Draw(GraphicsDevice device, DrawData drawData)
         {
+            if (IsEmpty)
+                return;
+
             Vector2 offset = drawData.position - _basePositionRotated;
             UpdateVertexData(offset, drawData.sourceRect.Value, drawData.texture.Size(), drawData.color);
             device.Textures[0] = drawData.texture;
@@ -646,7 +655,7 @@ public static class WgPhysics
             return;
         foreach (Layer layer in wg._physicsLayers)
         {
-            if (layer.Set.PhysicsLayers[layer.PhysicsIndex].ShouldRender(wg.Player))
+            if (layer.ShouldBeActive(wg))
                 layer.Update(wg);
             else
                 layer.Active = false;
