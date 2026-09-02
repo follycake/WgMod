@@ -16,6 +16,11 @@ public class TileBreakerPlayer : ModPlayer
         On_Player.CheckCrackedBrickBreak += CheckCrackedBrickBreak;
     }
 
+    public override void Unload()
+    {
+        On_Player.CheckCrackedBrickBreak -= CheckCrackedBrickBreak;
+    }
+
     void CheckCrackedBrickBreak(On_Player.orig_CheckCrackedBrickBreak orig, Player self)
     {
         if (!self.TryGetModPlayer(out WgPlayer wg))
