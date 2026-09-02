@@ -181,8 +181,7 @@ public class OverindulgentStatueBottom : ModNPC
         NPC.frameCounter++;
         if (NPC.frameCounter >= 20)
             NPC.frameCounter = 0;
-        NPC.frame.Width = NPC.width;
-        NPC.frame.Height = NPC.height;
+        NPC.frame = new Rectangle(156, 0, 78, 60);
     }
 
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

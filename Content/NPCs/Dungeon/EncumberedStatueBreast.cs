@@ -175,8 +175,7 @@ public class EncumberedStatueTop : ModNPC
         NPC.frameCounter++;
         if (NPC.frameCounter >= 20)
             NPC.frameCounter = 0;
-        NPC.frame.Width = NPC.width;
-        NPC.frame.Height = NPC.height;
+        NPC.frame = new Rectangle(58, 0, 58, 58);
     }
 
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
