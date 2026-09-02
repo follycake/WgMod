@@ -76,7 +76,8 @@ public class VacuumCrop : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(_attack.Percent(), _health, _defense - _defense.Min, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+        tooltips.ReplaceDefense(_defense.ToString());
+        tooltips.FormatLines(_attack.Percent(), _health, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
     }
 
     public override void ArmorArmGlowMask(Player drawPlayer, float shadow, ref int glowMask, ref Color color)

@@ -92,23 +92,26 @@ public class TurtleArmor : GlobalItem
     {
         if (item.type == ItemID.TurtleLeggings)
         {
+            tooltips.ReplaceDefense(_leggingsDefense.ToString());
             tooltips.Find(t => t.Name == "Tooltip0")
                 .Text = Mod.GetLocalization("Items.TurtleLeggings.Tooltip")
-                .Format(_leggingsCrit, _leggingsHealth, _leggingsDefense - _leggingsDefense.Min);
+                .Format(_leggingsCrit, _leggingsHealth);
         }
 
         if (item.type == ItemID.TurtleScaleMail)
         {
+            tooltips.ReplaceDefense(_scaleMailDefense.ToString());
             tooltips.Find(t => t.Name == "Tooltip0")
                 .Text = Mod.GetLocalization("Items.TurtleScaleMail.Tooltip")
-                .Format(_scaleMailDamageCrit.Percent(), _scaleMailHealth, _scaleMailDefense - _scaleMailDefense.Min);
+                .Format(_scaleMailDamageCrit.Percent(), _scaleMailHealth);
         }
 
         if (item.type == ItemID.TurtleHelmet)
         {
+            tooltips.ReplaceDefense(_helmetDefense.ToString());
             tooltips.Find(t => t.Name == "Tooltip0")
                 .Text = Mod.GetLocalization("Items.TurtleHelmet.Tooltip")
-                .Format(_helmetDamage.Percent(), _helmetHealth, _helmetDefense - _helmetDefense.Min);
+                .Format(_helmetDamage.Percent(), _helmetHealth);
         }
     }
 }

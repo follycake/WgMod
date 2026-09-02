@@ -84,7 +84,8 @@ public class VacuumSkirt : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines((_attackSpeed - 1f).Percent(), _health, _defense - _defense.Min, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+        tooltips.ReplaceDefense(_defense.ToString());
+        tooltips.FormatLines((_attackSpeed - 1f).Percent(), _health, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
     }
 
     public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)

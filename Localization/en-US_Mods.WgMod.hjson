@@ -74,11 +74,10 @@ Items: {
 		DisplayName: Vacuum Skirt
 		Tooltip:
 			'''
-			+{2} additional defense
 			Increases attack speed by {0}%
 			Increases max life by {1}
-			Reduces damage taken by {3}%
-			Movement effects of fatness are {4}% more punishing
+			Reduces damage taken by {2}%
+			Movement effects of fatness are {3}% more punishing
 			Effects scale with your obesity
 			'''
 	}
@@ -87,11 +86,10 @@ Items: {
 		DisplayName: Vacuum Helmet
 		Tooltip:
 			'''
-			+{2} additional defense
 			Increases critical strike chance by {0}%
 			Increases max life by {1}
-			Reduces damage taken by {3}%
-			Movement effects of fatness are {4}% more punishing
+			Reduces damage taken by {2}%
+			Movement effects of fatness are {3}% more punishing
 			Effects scale with your obesity
 			'''
 		SetBonus:
@@ -106,11 +104,10 @@ Items: {
 		DisplayName: Vacuum Crop
 		Tooltip:
 			'''
-			+{2} additional defense
 			Increases damage by {0}%
 			Increases max life by {1}
-			Reduces damage taken by {3}%
-			Movement effects of fatness are {4}% more punishing
+			Reduces damage taken by {2}%
+			Movement effects of fatness are {3}% more punishing
 			Effects scale with your obesity
 			'''
 	}
@@ -369,19 +366,16 @@ Items: {
 		'''
 	TurtleHelmet.Tooltip:
 		'''
-		+{2} additional defense
 		Increases damage by {0}%
 		Increases max life by {1}
 		'''
 	TurtleScaleMail.Tooltip:
 		'''
-		+{2} additional defense
 		Increases damage and critical strike chance by {0}%
 		Increases max life by {1}
 		'''
 	TurtleLeggings.Tooltip:
 		'''
-		+{2} additional defense
 		Increases critical strike chance by {0}%
 		Increases max life by {1}
 		'''
