@@ -965,7 +965,7 @@ Items: {
 		DisplayName: Pink Butt Statue
 		Tooltip: "'Unfortunately, it isn't soft.'"
 	}
-	
+
 	BlueBellyOverindulgentStatueItem: {
 		DisplayName: Blue Hefty Belly Statue
 		Tooltip: "'Unfortunately, it still isn't soft.'"
