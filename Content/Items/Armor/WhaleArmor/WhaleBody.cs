@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Humanizer;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;

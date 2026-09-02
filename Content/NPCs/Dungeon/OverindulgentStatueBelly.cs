@@ -15,6 +15,7 @@ using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Content.NPCs.Dungeon;
+
 public class OverindulgentStatueMiddle : ModNPC
 {
     public override string Texture => "WgMod/Content/NPCs/Dungeon/OverindulgentStatueSheet";
@@ -22,17 +23,21 @@ public class OverindulgentStatueMiddle : ModNPC
     const string HeadPath = "WgMod/Content/NPCs/Dungeon/OverindulgentStatueHeadSheet";
 
     static Asset<Texture2D> _headTexture;
+
     public override void Load()
     {
         _headTexture = ModContent.Request<Texture2D>(HeadPath);
     }
+
     int _style = -1;
+
     public override void SetStaticDefaults()
     {
         NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
         NPCID.Sets.CantTakeLunchMoney[NPC.type] = true;
         NPCID.Sets.ImmuneToRegularBuffs[NPC.type] = true;
     }
+
     public override void SetDefaults()
     {
         NPC.width = 32;
@@ -44,6 +49,7 @@ public class OverindulgentStatueMiddle : ModNPC
         NPC.DeathSound = SoundID.Item127;
         NPC.value = 4525;
     }
+
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
     {
         bestiaryEntry.Info.AddRange([
@@ -51,11 +57,13 @@ public class OverindulgentStatueMiddle : ModNPC
             new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.OverindulgentStatue")
         ]);
     }
+
     public override void OnSpawn(IEntitySource source)
     {
         NPC.position.X = (int)(NPC.position.X / 16) * 16 + (Main.rand.NextBool(2) ? 1 : -1); //snap to tile grid
         NPC.netUpdate = true; //im not sure if npc update runs after this or not
     }
+
     public override void AI()
     {
         if (_style == -1)
@@ -82,9 +90,7 @@ public class OverindulgentStatueMiddle : ModNPC
                     _style = 2;
             }
             if (_style == -1)
-            {
                 _style = Main.rand.Next(3);
-            }
         }
 
         switch (_style)
@@ -101,7 +107,6 @@ public class OverindulgentStatueMiddle : ModNPC
 
         }
 
-
         NPC.velocity.X *= 0.8f;
         if (NPC.velocity.X > -0.05f && NPC.velocity.X < 0.05f)
             NPC.velocity.X = 0;
@@ -111,9 +116,7 @@ public class OverindulgentStatueMiddle : ModNPC
         Player target = Main.player[NPC.target];
 
         if (target.Center.Distance(NPC.Center) > 950)
-        {
             return;
-        }
 
         NPC.ai[0]++;
         if (NPC.ai[0] > Utility.TimeToTicks(seconds: 8))
@@ -162,6 +165,7 @@ public class OverindulgentStatueMiddle : ModNPC
             }
         }
     }
+
     public override void HitEffect(NPC.HitInfo hit)
     {
         short dustID = DustID.DungeonPink;
@@ -172,14 +176,12 @@ public class OverindulgentStatueMiddle : ModNPC
             dustID = DustID.DungeonGreen;
 
         int num = NPC.life > 0 ? 3 : 12;
-
         num += (int)Math.Clamp(hit.Damage / 10f, 0, 5);
 
         for (int k = 0; k < num; k++)
-        {
             Dust.NewDust(NPC.position, NPC.width, NPC.height, dustID);
-        }
     }
+
     public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
     {
         if (item.pick >= 100) //pickaxe damage boost
@@ -201,6 +203,7 @@ public class OverindulgentStatueMiddle : ModNPC
             return chance;
         return 0f;
     }
+
     public override void FindFrame(int frameHeight)
     {
         NPC.frameCounter++;
@@ -209,10 +212,11 @@ public class OverindulgentStatueMiddle : ModNPC
         NPC.frame.Width = NPC.width;
         NPC.frame.Height = NPC.height;
     }
+
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
-        Rectangle sourceRectangle = new Rectangle(0, 60 * _style, 78, 60);
-        Rectangle headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 78 : 0, 60 * _style, 78, 60);
+        Rectangle sourceRectangle = new(0, 60 * _style, 78, 60);
+        Rectangle headRectangle = new(NPC.frameCounter >= 10 ? 78 : 0, 60 * _style, 78, 60);
         Vector2 origin = sourceRectangle.Size() / 2f;
 
         if (NPC.IsABestiaryIconDummy)
@@ -239,6 +243,7 @@ public class HeartyHeart_Surround_Strong : ModProjectile
     const string TrailTexture = "WgMod/Content/Projectiles/Enemy/EncumberedStatueHeartBigTrail";
 
     static Asset<Texture2D> _trailTexture;
+
     public override void Load()
     {
         _trailTexture = ModContent.Request<Texture2D>(TrailTexture);
@@ -247,6 +252,7 @@ public class HeartyHeart_Surround_Strong : ModProjectile
     int _timer = Utility.TimeToTicks(seconds: 2, ticks: 30);
     bool _charging = false;
     bool _firstTick = true;
+
     public override void SetStaticDefaults()
     {
         ProjectileID.Sets.TrailCacheLength[Type] = 8;
@@ -261,6 +267,7 @@ public class HeartyHeart_Surround_Strong : ModProjectile
         Projectile.tileCollide = false;
         Projectile.hostile = true;
     }
+
     public override void AI() //ai0 = target player, ai1 = spawn angle
     {
         if (!_charging)
@@ -305,36 +312,32 @@ public class HeartyHeart_Surround_Strong : ModProjectile
                 Projectile.Kill();
         }
         if (_firstTick)
-        {
             _firstTick = false;
-        }
     }
+
     public override bool CanHitPlayer(Player target)
     {
         return _charging && _timer <= 30;
     }
+
     public override bool? CanHitNPC(NPC target)
     {
         if (_charging && _timer <= 30)
             return null;
         return false;
     }
+
     public override bool PreDraw(ref Color lightColor)
     {
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
 
         int pos = 0;
-
         if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Surround_Blue_Strong>())
-        {
             pos = 1;
-        }
         else if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Surround_Green_Strong>())
-        {
             pos = 2;
-        }
 
-        Rectangle sourceRectangle = new Rectangle((texture.Width / 3) * pos, 0, texture.Width / 3, texture.Height);
+        Rectangle sourceRectangle = new(texture.Width / 3 * pos, 0, texture.Width / 3, texture.Height);
         Vector2 origin = sourceRectangle.Size() / 2f;
 
         Color drawColor = Projectile.GetAlpha(Color.White);
@@ -351,6 +354,7 @@ public class HeartyHeart_Surround_Strong : ModProjectile
             sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
         return false;
     }
+
     public override void OnHitPlayer(Player target, Player.HurtInfo info)
     {
         target.AddBuff(ModContent.BuffType<Infatuated>(), 600, false);
@@ -364,5 +368,6 @@ public class HeartyHeart_Surround_Strong : ModProjectile
     }
 
 }
+
 public class HeartyHeart_Surround_Blue_Strong : HeartyHeart_Surround_Strong;
 public class HeartyHeart_Surround_Green_Strong : HeartyHeart_Surround_Strong;

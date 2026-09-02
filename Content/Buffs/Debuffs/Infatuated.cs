@@ -1,8 +1,5 @@
 using System;
 using Terraria;
-using Terraria.Audio;
-using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
 
@@ -18,13 +15,14 @@ public class Infatuated : ModBuff
         Main.pvpBuff[Type] = true;
         Main.buffNoSave[Type] = true;
     }
+
     public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
     {
         Player player = Main.LocalPlayer;
         int time = player.buffTime[player.FindBuffIndex(ModContent.BuffType<Infatuated>())];
-
         tip = string.Format(tip, (Math.Clamp(2 * (time / 60f), 5, 200) / 100f).Percent());
     }
+
     public override bool ReApply(Player player, int time, int buffIndex)
     {
         player.buffTime[buffIndex] = Math.Min(player.buffTime[buffIndex] + time, Utility.TimeToTicks(minutes: 2));

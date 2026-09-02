@@ -13,6 +13,7 @@ using Terraria.ModLoader.Utilities;
 using WgMod.Content.Dusts;
 
 namespace WgMod.Content.NPCs.Dungeon;
+
 public class OverindulgentStatueTop : ModNPC
 {
     public override string Texture => "WgMod/Content/NPCs/Dungeon/OverindulgentStatueSheet";
@@ -20,17 +21,21 @@ public class OverindulgentStatueTop : ModNPC
     const string HeadPath = "WgMod/Content/NPCs/Dungeon/OverindulgentStatueHeadSheet";
 
     static Asset<Texture2D> _headTexture;
+
     public override void Load()
     {
         _headTexture = ModContent.Request<Texture2D>(HeadPath);
     }
+
     int _style = -1;
+
     public override void SetStaticDefaults()
     {
         NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
         NPCID.Sets.CantTakeLunchMoney[NPC.type] = true;
         NPCID.Sets.ImmuneToRegularBuffs[NPC.type] = true;
     }
+
     public override void SetDefaults()
     {
         NPC.width = 32;
@@ -42,6 +47,7 @@ public class OverindulgentStatueTop : ModNPC
         NPC.DeathSound = SoundID.Item127;
         NPC.value = 4525;
     }
+
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
     {
         bestiaryEntry.Info.AddRange([
@@ -49,11 +55,13 @@ public class OverindulgentStatueTop : ModNPC
             new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.OverindulgentStatue")
         ]);
     }
+
     public override void OnSpawn(IEntitySource source)
     {
         NPC.position.X = (int)(NPC.position.X / 16) * 16 + (Main.rand.NextBool(2) ? 1 : -1); //snap to tile grid
         NPC.netUpdate = true; //im not sure if npc update runs after this or not
     }
+
     public override void AI()
     {
         if (_style == -1)
@@ -80,9 +88,7 @@ public class OverindulgentStatueTop : ModNPC
                     _style = 2;
             }
             if (_style == -1)
-            {
                 _style = Main.rand.Next(3);
-            }
         }
 
         switch (_style)
@@ -99,7 +105,6 @@ public class OverindulgentStatueTop : ModNPC
 
         }
 
-
         NPC.velocity.X *= 0.8f;
         if (NPC.velocity.X > -0.05f && NPC.velocity.X < 0.05f)
             NPC.velocity.X = 0;
@@ -109,9 +114,7 @@ public class OverindulgentStatueTop : ModNPC
         Player target = Main.player[NPC.target];
 
         if (target.Center.Distance(NPC.Center) > 950)
-        {
             return;
-        }
 
         NPC.ai[0]++;
         if (NPC.ai[0] > Utility.TimeToTicks(seconds: 8))
@@ -127,6 +130,7 @@ public class OverindulgentStatueTop : ModNPC
             }
         }
     }
+
     public override void HitEffect(NPC.HitInfo hit)
     {
         short dustID = DustID.DungeonPink;
@@ -141,10 +145,9 @@ public class OverindulgentStatueTop : ModNPC
         num += (int)Math.Clamp(hit.Damage / 10f, 0, 5);
 
         for (int k = 0; k < num; k++)
-        {
             Dust.NewDust(NPC.position, NPC.width, NPC.height, dustID);
-        }
     }
+
     public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
     {
         if (item.pick >= 100) //pickaxe damage boost
@@ -166,6 +169,7 @@ public class OverindulgentStatueTop : ModNPC
             return chance;
         return 0f;
     }
+
     public override void FindFrame(int frameHeight)
     {
         NPC.frameCounter++;
@@ -174,10 +178,11 @@ public class OverindulgentStatueTop : ModNPC
         NPC.frame.Width = NPC.width;
         NPC.frame.Height = NPC.height;
     }
+
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
-        Rectangle sourceRectangle = new Rectangle(78, 60 * _style, 78, 60);
-        Rectangle headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 78 : 0, 60 * _style, 78, 60);
+        Rectangle sourceRectangle = new(78, 60 * _style, 78, 60);
+        Rectangle headRectangle = new(NPC.frameCounter >= 10 ? 78 : 0, 60 * _style, 78, 60);
         Vector2 origin = sourceRectangle.Size() / 2f;
 
         if (NPC.IsABestiaryIconDummy)
@@ -196,6 +201,7 @@ public class OverindulgentStatueTop : ModNPC
         return false;
     }
 }
+
 public class HeartyHeart_Direct_Spawner_Strong : ModProjectile
 {
     Color GetDustColor()
@@ -207,6 +213,7 @@ public class HeartyHeart_Direct_Spawner_Strong : ModProjectile
             color = new(51, 255, 92);
         return color;
     }
+
     void SmallDust(Vector2 Position, Vector2 Velocity, float Scale)
     {
         Dust.NewDustPerfect(Position, ModContent.DustType<OutlinedDustSmall>(), Velocity, 0, GetDustColor(), Scale);
@@ -216,6 +223,7 @@ public class HeartyHeart_Direct_Spawner_Strong : ModProjectile
     {
         Dust.NewDustPerfect(Position, ModContent.DustType<OutlinedDustBig>(), Velocity, 0, GetDustColor(), Scale);
     }
+
     int _timer = Utility.TimeToTicks(seconds: 2, ticks: 30);
     public override string Texture => "WgMod/Assets/Textures/Invisible";
 
@@ -227,6 +235,7 @@ public class HeartyHeart_Direct_Spawner_Strong : ModProjectile
         Projectile.tileCollide = false;
         Projectile.hostile = true;
     }
+
     public override void AI() //ai0 = target player, ai1 = color index
     {
         _timer--;
@@ -239,7 +248,8 @@ public class HeartyHeart_Direct_Spawner_Strong : ModProjectile
 
         if (_timer > 0)
         {
-            SmallDust(Projectile.Center, new Vector2(Main.rand.Next(7, 13) / 8f, 0).RotatedByRandom(MathHelper.Pi), 1.85f);
+            SmallDust(Projectile.Center, new Vector2(Main.rand.Next(7, 13) / 8f, 0)
+                .RotatedByRandom(MathHelper.Pi), 1.85f);
             SmallDust(Projectile.Center, new Vector2(Main.rand.Next(18, 24) / 8f, 0)
                 .RotatedBy(Projectile.Center.AngleTo(target.Center))
                 .RotatedByRandom(MathHelper.ToRadians(Main.rand.Next(-15, 16))), 2f);

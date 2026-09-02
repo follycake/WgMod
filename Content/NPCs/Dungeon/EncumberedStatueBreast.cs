@@ -15,6 +15,7 @@ using WgMod.Content.Buffs.Debuffs;
 using WgMod.Content.Dusts;
 
 namespace WgMod.Content.NPCs.Dungeon;
+
 public class EncumberedStatueTop : ModNPC
 {
     public override string Texture => "WgMod/Content/NPCs/Dungeon/EncumberedStatueSheet";
@@ -22,17 +23,21 @@ public class EncumberedStatueTop : ModNPC
     const string HeadPath = "WgMod/Content/NPCs/Dungeon/EncumberedStatueHeadSheet";
 
     static Asset<Texture2D> _headTexture;
+
     public override void Load()
     {
         _headTexture = ModContent.Request<Texture2D>(HeadPath);
     }
+
     int _style = -1;
+
     public override void SetStaticDefaults()
     {
         NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
         NPCID.Sets.CantTakeLunchMoney[NPC.type] = true;
         NPCID.Sets.ImmuneToRegularBuffs[NPC.type] = true;
     }
+
     public override void SetDefaults()
     {
         NPC.width = 32;
@@ -51,11 +56,13 @@ public class EncumberedStatueTop : ModNPC
             new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.EncumberedStatue")
         ]);
     }
+
     public override void OnSpawn(IEntitySource source)
     {
         NPC.position.X = (int)(NPC.position.X / 16) * 16 + (Main.rand.NextBool(2) ? 1 : -1); //snap to tile grid
         NPC.netUpdate = true; //im not sure if npc update runs after this or not
     }
+
     public override void AI()
     {
         if (_style == -1)
@@ -82,9 +89,7 @@ public class EncumberedStatueTop : ModNPC
                     _style = 2;
             }
             if (_style == -1)
-            {
                 _style = Main.rand.Next(3);
-            }
         }
 
         switch (_style)
@@ -101,7 +106,6 @@ public class EncumberedStatueTop : ModNPC
 
         }
 
-
         NPC.velocity.X *= 0.8f;
         if (NPC.velocity.X > -0.05f && NPC.velocity.X < 0.05f)
             NPC.velocity.X = 0;
@@ -111,9 +115,7 @@ public class EncumberedStatueTop : ModNPC
         Player target = Main.player[NPC.target];
 
         if (target.Center.Distance(NPC.Center) > 950)
-        {
             return;
-        }
 
         NPC.ai[0]++;
         if (NPC.ai[0] > Utility.TimeToTicks(seconds: 8))
@@ -123,12 +125,13 @@ public class EncumberedStatueTop : ModNPC
             {
                 float thisAngle = MathHelper.ToRadians(Main.rand.Next(0, 360));
                 int projectileID = ModContent.ProjectileType<HeartyHeart_Direct_Spawner>();
-                Vector2 spawnHere = target.Center + new Vector2(Main.rand.Next(150,226), 0).RotatedBy(thisAngle);
+                Vector2 spawnHere = target.Center + new Vector2(Main.rand.Next(150, 226), 0).RotatedBy(thisAngle);
 
                 Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnHere, Vector2.Zero, projectileID, 0, 0f, ai0: target.whoAmI, ai1: _style);
             }
         }
     }
+
     public override void HitEffect(NPC.HitInfo hit)
     {
         short dustID = DustID.DungeonPink;
@@ -139,14 +142,12 @@ public class EncumberedStatueTop : ModNPC
             dustID = DustID.DungeonGreen;
 
         int num = NPC.life > 0 ? 3 : 12;
-
         num += (int)Math.Clamp(hit.Damage / 10f, 0, 5);
 
         for (int k = 0; k < num; k++)
-        {
             Dust.NewDust(NPC.position, NPC.width, NPC.height, dustID);
-        }
     }
+
     public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
     {
         if (item.pick >= 100) //pickaxe damage boost
@@ -168,6 +169,7 @@ public class EncumberedStatueTop : ModNPC
             return chance;
         return 0f;
     }
+
     public override void FindFrame(int frameHeight)
     {
         NPC.frameCounter++;
@@ -176,10 +178,11 @@ public class EncumberedStatueTop : ModNPC
         NPC.frame.Width = NPC.width;
         NPC.frame.Height = NPC.height;
     }
+
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
-        Rectangle sourceRectangle = new Rectangle(58, 58 * _style, 58, 58);
-        Rectangle headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 58 : 0, 58 * _style, 58, 58);
+        Rectangle sourceRectangle = new(58, 58 * _style, 58, 58);
+        Rectangle headRectangle = new(NPC.frameCounter >= 10 ? 58 : 0, 58 * _style, 58, 58);
         Vector2 origin = sourceRectangle.Size() / 2f;
 
         if (NPC.IsABestiaryIconDummy)
@@ -206,10 +209,12 @@ public class HeartyHeart_Direct : ModProjectile
     const string TrailTexture = "WgMod/Content/Projectiles/Enemy/EncumberedStatueHeartBigTrail";
 
     static Asset<Texture2D> _trailTexture;
+
     public override void Load()
     {
         _trailTexture = ModContent.Request<Texture2D>(TrailTexture);
     }
+
     public override void SetStaticDefaults()
     {
         ProjectileID.Sets.TrailCacheLength[Type] = 8;
@@ -224,11 +229,13 @@ public class HeartyHeart_Direct : ModProjectile
         Projectile.tileCollide = false;
         Projectile.hostile = true;
     }
+
     public override void AI()
     {
         Projectile.velocity *= 1.015f;
         Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
     }
+
     public override bool PreDraw(ref Color lightColor)
     {
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
@@ -236,15 +243,11 @@ public class HeartyHeart_Direct : ModProjectile
         int pos = 0;
 
         if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Direct_Blue>())
-        {
             pos = 1;
-        }
         else if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Direct_Green>())
-        {
             pos = 2;
-        }
 
-        Rectangle sourceRectangle = new Rectangle((texture.Width / 3) * pos, 0, texture.Width / 3, texture.Height);
+        Rectangle sourceRectangle = new(texture.Width / 3 * pos, 0, texture.Width / 3, texture.Height);
         Vector2 origin = sourceRectangle.Size() / 2f;
 
         Color drawColor = Projectile.GetAlpha(Color.White);
@@ -261,6 +264,7 @@ public class HeartyHeart_Direct : ModProjectile
             sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
         return false;
     }
+
     public override void OnHitPlayer(Player target, Player.HurtInfo info)
     {
         target.AddBuff(ModContent.BuffType<Infatuated>(), 600, false);
@@ -274,6 +278,7 @@ public class HeartyHeart_Direct : ModProjectile
     }
 
 }
+
 public class HeartyHeart_Direct_Blue : HeartyHeart_Direct;
 public class HeartyHeart_Direct_Green : HeartyHeart_Direct;
 
@@ -288,6 +293,7 @@ public class HeartyHeart_Direct_Spawner : ModProjectile
             color = new(51, 255, 92);
         return color;
     }
+
     void SmallDust(Vector2 Position, Vector2 Velocity, float Scale)
     {
         Dust.NewDustPerfect(Position, ModContent.DustType<OutlinedDustSmall>(), Velocity, 0, GetDustColor(), Scale);
@@ -297,7 +303,9 @@ public class HeartyHeart_Direct_Spawner : ModProjectile
     {
         Dust.NewDustPerfect(Position, ModContent.DustType<OutlinedDustBig>(), Velocity, 0, GetDustColor(), Scale);
     }
+
     int _timer = Utility.TimeToTicks(seconds: 1, ticks: 30);
+
     public override string Texture => "WgMod/Assets/Textures/Invisible";
 
     public override void SetDefaults()
@@ -308,6 +316,7 @@ public class HeartyHeart_Direct_Spawner : ModProjectile
         Projectile.tileCollide = false;
         Projectile.hostile = true;
     }
+
     public override void AI() //ai0 = target player, ai1 = color index
     {
         _timer--;
@@ -323,7 +332,7 @@ public class HeartyHeart_Direct_Spawner : ModProjectile
             SmallDust(Projectile.Center, new Vector2(Main.rand.Next(5, 11) / 8f, 0).RotatedByRandom(MathHelper.Pi), 1.65f);
             SmallDust(Projectile.Center, new Vector2(Main.rand.Next(15, 21) / 8f, 0)
                 .RotatedBy(Projectile.Center.AngleTo(target.Center))
-                .RotatedByRandom(MathHelper.ToRadians(Main.rand.Next(-15,16))), 1.75f);
+                .RotatedByRandom(MathHelper.ToRadians(Main.rand.Next(-15, 16))), 1.75f);
 
         }
         else if (_timer == 0)

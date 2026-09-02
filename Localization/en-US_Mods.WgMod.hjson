@@ -910,7 +910,7 @@ Items: {
 			Stats scale with your obesity
 			'''
 	}
-	
+
 	EncumberedStatueBanner: {
 		DisplayName: Encumbered Statue Banner
 		Tooltip: Nearby players gain a bonus against: Encumbered Statue

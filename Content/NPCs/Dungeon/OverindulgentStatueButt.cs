@@ -11,6 +11,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 
 namespace WgMod.Content.NPCs.Dungeon;
+
 public class OverindulgentStatueBottom : ModNPC
 {
     public override string Texture => "WgMod/Content/NPCs/Dungeon/OverindulgentStatueSheet";
@@ -18,17 +19,21 @@ public class OverindulgentStatueBottom : ModNPC
     const string HeadPath = "WgMod/Content/NPCs/Dungeon/OverindulgentStatueHeadSheet";
 
     static Asset<Texture2D> _headTexture;
+
     public override void Load()
     {
         _headTexture = ModContent.Request<Texture2D>(HeadPath);
     }
+
     int _style = -1;
+
     public override void SetStaticDefaults()
     {
         NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
         NPCID.Sets.CantTakeLunchMoney[NPC.type] = true;
         NPCID.Sets.ImmuneToRegularBuffs[NPC.type] = true;
     }
+
     public override void SetDefaults()
     {
         NPC.width = 32;
@@ -40,6 +45,7 @@ public class OverindulgentStatueBottom : ModNPC
         NPC.DeathSound = SoundID.Item127;
         NPC.value = 4525;
     }
+
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
     {
         bestiaryEntry.Info.AddRange([
@@ -47,11 +53,13 @@ public class OverindulgentStatueBottom : ModNPC
             new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.OverindulgentStatue")
         ]);
     }
+
     public override void OnSpawn(IEntitySource source)
     {
         NPC.position.X = (int)(NPC.position.X / 16) * 16 + (Main.rand.NextBool(2) ? 1 : -1); //snap to tile grid
         NPC.netUpdate = true; //im not sure if npc update runs after this or not
     }
+
     public override void AI()
     {
         if (_style == -1)
@@ -78,9 +86,7 @@ public class OverindulgentStatueBottom : ModNPC
                     _style = 2;
             }
             if (_style == -1)
-            {
                 _style = Main.rand.Next(3);
-            }
         }
 
         switch (_style)
@@ -97,7 +103,6 @@ public class OverindulgentStatueBottom : ModNPC
 
         }
 
-
         NPC.velocity.X *= 0.8f;
         if (NPC.velocity.X > -0.05f && NPC.velocity.X < 0.05f)
             NPC.velocity.X = 0;
@@ -107,9 +112,7 @@ public class OverindulgentStatueBottom : ModNPC
         Player target = Main.player[NPC.target];
 
         if (target.Center.Distance(NPC.Center) > 950)
-        {
             return;
-        }
 
         NPC.ai[0]++;
         if (NPC.ai[0] > Utility.TimeToTicks(seconds: 8))
@@ -129,11 +132,12 @@ public class OverindulgentStatueBottom : ModNPC
                 {
                     projectileCount--;
                     float speedMult = Main.rand.Next(5, 18) / 10f;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), target.Center + new Vector2(Main.rand.Next(-500,501), speedMult * 500), new Vector2(0, -speedMult * 2.5f), projectileID, 30, 0f, ai0: Main.rand.Next(3, 10) * 16);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), target.Center + new Vector2(Main.rand.Next(-500, 501), speedMult * 500), new Vector2(0, -speedMult * 2.5f), projectileID, 30, 0f, ai0: Main.rand.Next(3, 10) * 16);
                 }
             }
         }
     }
+
     public override void HitEffect(NPC.HitInfo hit)
     {
         short dustID = DustID.DungeonPink;
@@ -144,14 +148,12 @@ public class OverindulgentStatueBottom : ModNPC
             dustID = DustID.DungeonGreen;
 
         int num = NPC.life > 0 ? 3 : 12;
-
         num += (int)Math.Clamp(hit.Damage / 10f, 0, 5);
 
         for (int k = 0; k < num; k++)
-        {
             Dust.NewDust(NPC.position, NPC.width, NPC.height, dustID);
-        }
     }
+
     public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
     {
         if (item.pick >= 100) //pickaxe damage boost
@@ -173,6 +175,7 @@ public class OverindulgentStatueBottom : ModNPC
             return chance;
         return 0f;
     }
+
     public override void FindFrame(int frameHeight)
     {
         NPC.frameCounter++;
@@ -181,10 +184,11 @@ public class OverindulgentStatueBottom : ModNPC
         NPC.frame.Width = NPC.width;
         NPC.frame.Height = NPC.height;
     }
+
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
-        Rectangle sourceRectangle = new Rectangle(156, 60 * _style, 78, 60);
-        Rectangle headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 78 : 0, 60 * _style, 78, 60);
+        Rectangle sourceRectangle = new(156, 60 * _style, 78, 60);
+        Rectangle headRectangle = new(NPC.frameCounter >= 10 ? 78 : 0, 60 * _style, 78, 60);
         Vector2 origin = sourceRectangle.Size() / 2f;
 
         if (NPC.IsABestiaryIconDummy)

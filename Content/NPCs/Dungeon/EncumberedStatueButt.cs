@@ -14,6 +14,7 @@ using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Content.NPCs.Dungeon;
+
 public class EncumberedStatueBottom : ModNPC
 {
     public override string Texture => "WgMod/Content/NPCs/Dungeon/EncumberedStatueSheet";
@@ -21,17 +22,21 @@ public class EncumberedStatueBottom : ModNPC
     const string HeadPath = "WgMod/Content/NPCs/Dungeon/EncumberedStatueHeadSheet";
 
     static Asset<Texture2D> _headTexture;
+
     public override void Load()
     {
         _headTexture = ModContent.Request<Texture2D>(HeadPath);
     }
+
     int _style = -1;
+
     public override void SetStaticDefaults()
     {
         NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
         NPCID.Sets.CantTakeLunchMoney[NPC.type] = true;
         NPCID.Sets.ImmuneToRegularBuffs[NPC.type] = true;
     }
+
     public override void SetDefaults()
     {
         NPC.width = 32;
@@ -43,6 +48,7 @@ public class EncumberedStatueBottom : ModNPC
         NPC.DeathSound = SoundID.Item127;
         NPC.value = 280;
     }
+
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
     {
         bestiaryEntry.Info.AddRange([
@@ -50,11 +56,13 @@ public class EncumberedStatueBottom : ModNPC
             new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.EncumberedStatue")
         ]);
     }
+
     public override void OnSpawn(IEntitySource source)
     {
         NPC.position.X = (int)(NPC.position.X / 16) * 16 + (Main.rand.NextBool(2) ? 1 : -1); //snap to tile grid
         NPC.netUpdate = true; //im not sure if npc update runs after this or not
     }
+
     public override void AI()
     {
         if (_style == -1)
@@ -81,9 +89,7 @@ public class EncumberedStatueBottom : ModNPC
                     _style = 2;
             }
             if (_style == -1)
-            {
                 _style = Main.rand.Next(3);
-            }
         }
 
         switch (_style)
@@ -100,7 +106,6 @@ public class EncumberedStatueBottom : ModNPC
 
         }
 
-
         NPC.velocity.X *= 0.8f;
         if (NPC.velocity.X > -0.05f && NPC.velocity.X < 0.05f)
             NPC.velocity.X = 0;
@@ -110,9 +115,7 @@ public class EncumberedStatueBottom : ModNPC
         Player target = Main.player[NPC.target];
 
         if (target.Center.Distance(NPC.Center) > 950)
-        {
             return;
-        }
 
         NPC.ai[0]++;
         if (NPC.ai[0] > Utility.TimeToTicks(seconds: 8))
@@ -132,11 +135,12 @@ public class EncumberedStatueBottom : ModNPC
                 {
                     projectileCount--;
                     float speedMult = Main.rand.Next(4, 16) / 10f;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), target.Center + new Vector2(Main.rand.Next(-450,451), speedMult * 500), new Vector2(0, -speedMult * 2.5f), projectileID, 10, 0f, ai0: Main.rand.Next(2, 6) * 16);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), target.Center + new Vector2(Main.rand.Next(-450, 451), speedMult * 500), new Vector2(0, -speedMult * 2.5f), projectileID, 10, 0f, ai0: Main.rand.Next(2, 6) * 16);
                 }
             }
         }
     }
+
     public override void HitEffect(NPC.HitInfo hit)
     {
         short dustID = DustID.DungeonPink;
@@ -147,14 +151,12 @@ public class EncumberedStatueBottom : ModNPC
             dustID = DustID.DungeonGreen;
 
         int num = NPC.life > 0 ? 3 : 12;
-
         num += (int)Math.Clamp(hit.Damage / 10f, 0, 5);
 
         for (int k = 0; k < num; k++)
-        {
             Dust.NewDust(NPC.position, NPC.width, NPC.height, dustID);
-        }
     }
+
     public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
     {
         if (item.pick >= 100) //pickaxe damage boost
@@ -176,6 +178,7 @@ public class EncumberedStatueBottom : ModNPC
             return chance;
         return 0f;
     }
+
     public override void FindFrame(int frameHeight)
     {
         NPC.frameCounter++;
@@ -184,10 +187,11 @@ public class EncumberedStatueBottom : ModNPC
         NPC.frame.Width = NPC.width;
         NPC.frame.Height = NPC.height;
     }
+
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
-        Rectangle sourceRectangle = new Rectangle(116, 58 * _style, 58, 58);
-        Rectangle headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 58 : 0, 58 * _style, 58, 58);
+        Rectangle sourceRectangle = new(116, 58 * _style, 58, 58);
+        Rectangle headRectangle = new(NPC.frameCounter >= 10 ? 58 : 0, 58 * _style, 58, 58);
         Vector2 origin = sourceRectangle.Size() / 2f;
 
         if (NPC.IsABestiaryIconDummy)
@@ -215,14 +219,17 @@ public class HeartyHeart_Wave : ModProjectile
     const string TrailTexture = "WgMod/Content/Projectiles/Enemy/EncumberedStatueHeartBigTrail";
 
     static Asset<Texture2D> _trailTexture;
+
     public override void Load()
     {
         _trailTexture = ModContent.Request<Texture2D>(TrailTexture);
     }
+
     int _timer = Utility.TimeToTicks(seconds: 7);
     float _defaultX = 0f;
     int _wavyTimer = 0;
     bool _firstTick = true;
+
     public override void SetStaticDefaults()
     {
         ProjectileID.Sets.TrailCacheLength[Type] = 8;
@@ -237,7 +244,8 @@ public class HeartyHeart_Wave : ModProjectile
         Projectile.tileCollide = false;
         Projectile.hostile = true;
     }
-    float Easing(float x)
+
+    static float Easing(float x)
     {
         if (x > 1f)
             x = 2f - x;
@@ -273,22 +281,18 @@ public class HeartyHeart_Wave : ModProjectile
         if (_firstTick)
             _firstTick = false;
     }
+
     public override bool PreDraw(ref Color lightColor)
     {
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
 
         int pos = 0;
-
         if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Wave_Blue>())
-        {
             pos = 1;
-        }
         else if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Wave_Green>())
-        {
             pos = 2;
-        }
 
-        Rectangle sourceRectangle = new Rectangle((texture.Width / 3) * pos, 0, texture.Width / 3, texture.Height);
+        Rectangle sourceRectangle = new(texture.Width / 3 * pos, 0, texture.Width / 3, texture.Height);
         Vector2 origin = sourceRectangle.Size() / 2f;
 
         Color drawColor = Projectile.GetAlpha(Color.White);
@@ -305,6 +309,7 @@ public class HeartyHeart_Wave : ModProjectile
             sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
         return false;
     }
+
     public override void OnHitPlayer(Player target, Player.HurtInfo info)
     {
         target.AddBuff(ModContent.BuffType<Infatuated>(), 600, false);
@@ -316,10 +321,12 @@ public class HeartyHeart_Wave : ModProjectile
         if (weightGain > 0f)
             wg.CombatWeightText(weightGain, true);
     }
+
     public override bool CanHitPlayer(Player target)
     {
         return _timer < 60 * 6 && _timer > 60;
     }
+
     public override bool? CanHitNPC(NPC target)
     {
         if (_timer < 60 * 6 && _timer > 60)
@@ -328,5 +335,6 @@ public class HeartyHeart_Wave : ModProjectile
     }
 
 }
+
 public class HeartyHeart_Wave_Blue : HeartyHeart_Wave;
 public class HeartyHeart_Wave_Green : HeartyHeart_Wave;
