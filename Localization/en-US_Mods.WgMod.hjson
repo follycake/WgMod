@@ -920,6 +920,51 @@ Items: {
 		DisplayName: Overindulgent Statue Banner
 		Tooltip: Nearby players gain a bonus against: Overindulgent Statue
 	}
+
+	BlueBellyEncumberedStatueItem: {
+		DisplayName: Blue Belly Statue
+		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
+
+	BlueBreastEncumberedStatueItem: {
+		DisplayName: Blue Breast Statue
+		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
+
+	BlueButtEncumberedStatueItem: {
+		DisplayName: Blue Butt Statue
+		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
+
+	GreenBellyEncumberedStatueItem: {
+		DisplayName: Green Belly Statue
+		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
+
+	GreenBreastEncumberedStatueItem: {
+		DisplayName: Green Breast Statue
+		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
+
+	GreenButtEncumberedStatueItem: {
+		DisplayName: Green Butt Statue
+		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
+
+	PinkBellyEncumberedStatueItem: {
+		DisplayName: Pink Belly Statue
+		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
+
+	PinkBreastEncumberedStatueItem: {
+		DisplayName: Pink Breast Statue
+		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
+
+	PinkButtEncumberedStatueItem: {
+		DisplayName: Pink Butt Statue
+		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
 }
 
 Buffs: {
@@ -1466,8 +1511,8 @@ Bestiary: {
 	SweetSpirit: These spirits that dwell in the caverns will try their best to fatten you up.
 	SugarSpecter: Specters made of condensed sugar and cotton candy. Kill them before they bloat you up in size...
 	Skeleborer: Sometimes large amounts of ectoplasm coalesce, and come to life! She's haunted by the screaming of thousands of souls, but she doesn't really care.
-	EncumberedStatue: to do: write this
-	OverindulgedStatue: to do: also write this
+	EncumberedStatue: A statue that appears to be home to a ghost. Despite being unable to move, it seems content.
+	OverindulgentStatue: A haunted statue with exaggerated proportions. Not much else to say about it, really.
 }
 
 Conditions.BlackRiderDev: Be super awesome cool

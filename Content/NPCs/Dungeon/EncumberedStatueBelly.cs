@@ -13,6 +13,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
+using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -48,6 +49,9 @@ public class EncumberedStatueMiddle : ModNPC
         NPC.HitSound = SoundID.Tink;
         NPC.DeathSound = SoundID.Item127;
         NPC.value = 280;
+
+        Banner = Type;
+        BannerItem = ModContent.ItemType<EncumberedStatueBanner>();
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

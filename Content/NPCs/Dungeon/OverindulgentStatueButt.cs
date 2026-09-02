@@ -9,6 +9,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
+using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -43,7 +44,9 @@ public class OverindulgentStatueBottom : ModNPC
         NPC.knockBackResist = 0f;
         NPC.HitSound = SoundID.Tink;
         NPC.DeathSound = SoundID.Item127;
-        NPC.value = 4525;
+        NPC.value = 3225;
+
+        Banner = ModContent.NPCType<OverindulgentStatueMiddle>();
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -195,13 +198,13 @@ public class OverindulgentStatueBottom : ModNPC
             sourceRectangle = new Rectangle(156, 60 * 2, 78, 60);
             headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 78 : 0, 60 * 2, 78, 60);
 
-            spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 5), headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 5), sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 7), sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 7), headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
             return false;
         }
-        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 2) - Main.screenPosition, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
 
-        spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 2) - Main.screenPosition, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
         return false;
     }
 }

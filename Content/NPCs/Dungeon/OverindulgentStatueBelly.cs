@@ -13,6 +13,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
+using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -47,7 +48,10 @@ public class OverindulgentStatueMiddle : ModNPC
         NPC.knockBackResist = 0f;
         NPC.HitSound = SoundID.Tink;
         NPC.DeathSound = SoundID.Item127;
-        NPC.value = 4525;
+        NPC.value = 3225;
+
+        Banner = Type;
+        BannerItem = ModContent.ItemType<OverindulgentStatueBanner>();
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -223,14 +227,14 @@ public class OverindulgentStatueMiddle : ModNPC
             sourceRectangle = new Rectangle(0, 60 * 2, 78, 60);
             headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 78 : 0, 60 * 2, 78, 60);
 
-            spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 5), headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 5), sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 7), headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 7), sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
             return false;
         }
 
-        spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 2) - Main.screenPosition, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
 
-        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 2) - Main.screenPosition, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
         return false;
     }
 }
@@ -295,7 +299,6 @@ public class HeartyHeart_Surround_Strong : ModProjectile
             {
                 _charging = true;
                 SoundEngine.PlaySound(SoundID.Item28, Projectile.Center);
-                Main.NewText(Projectile.damage);
             }
             if (_firstTick)
                 SoundEngine.PlaySound(SoundID.Item15.WithPitchOffset(0.8f), Projectile.Center);

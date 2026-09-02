@@ -12,6 +12,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
+using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -47,6 +48,8 @@ public class EncumberedStatueBottom : ModNPC
         NPC.HitSound = SoundID.Tink;
         NPC.DeathSound = SoundID.Item127;
         NPC.value = 280;
+
+        Banner = ModContent.NPCType<EncumberedStatueMiddle>();
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -198,8 +201,8 @@ public class EncumberedStatueBottom : ModNPC
             sourceRectangle = new Rectangle(116, 58 * 2, 58, 58);
             headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 58 : 0, 58 * 2, 58, 58);
 
-            spriteBatch.Draw(_headTexture.Value, NPC.Center, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
             spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_headTexture.Value, NPC.Center, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
             return false;
         }
 

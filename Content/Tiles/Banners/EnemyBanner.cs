@@ -7,5 +7,7 @@ public class EnemyBanner : ModBannerTile
     public enum StyleID
     {
         Skeleborer,
+        EncumberedStatue,
+        OverindulgentStatue,
     }
 }
