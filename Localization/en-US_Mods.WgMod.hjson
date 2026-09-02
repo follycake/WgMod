@@ -927,7 +927,7 @@ Items: {
 	}
 
 	BlueBreastEncumberedStatueItem: {
-		DisplayName: Blue Breast Statue
+		DisplayName: Blue Bust Statue
 		Tooltip: "'Unfortunately, it isn't soft.'"
 	}
 
@@ -942,7 +942,7 @@ Items: {
 	}
 
 	GreenBreastEncumberedStatueItem: {
-		DisplayName: Green Breast Statue
+		DisplayName: Green Bust Statue
 		Tooltip: "'Unfortunately, it isn't soft.'"
 	}
 
@@ -957,13 +957,58 @@ Items: {
 	}
 
 	PinkBreastEncumberedStatueItem: {
-		DisplayName: Pink Breast Statue
+		DisplayName: Pink Bust Statue
 		Tooltip: "'Unfortunately, it isn't soft.'"
 	}
 
 	PinkButtEncumberedStatueItem: {
 		DisplayName: Pink Butt Statue
 		Tooltip: "'Unfortunately, it isn't soft.'"
+	}
+	
+	BlueBellyOverindulgentStatueItem: {
+		DisplayName: Blue Hefty Belly Statue
+		Tooltip: "'Unfortunately, it still isn't soft.'"
+	}
+
+	BlueBreastOverindulgentStatueItem: {
+		DisplayName: Blue Hefty Bust Statue
+		Tooltip: "'Unfortunately, it still isn't soft.'"
+	}
+
+	BlueButtOverindulgentStatueItem: {
+		DisplayName: Blue Hefty Butt Statue
+		Tooltip: "'Unfortunately, it still isn't soft.'"
+	}
+
+	GreenBellyOverindulgentStatueItem: {
+		DisplayName: Green Hefty Belly Statue
+		Tooltip: "'Unfortunately, it still isn't soft.'"
+	}
+
+	GreenBreastOverindulgentStatueItem: {
+		DisplayName: Green Hefty Bust Statue
+		Tooltip: "'Unfortunately, it still isn't soft.'"
+	}
+
+	GreenButtOverindulgentStatueItem: {
+		DisplayName: Green Hefty Belly Statue
+		Tooltip: "'Unfortunately, it still isn't soft.'"
+	}
+
+	PinkBellyOverindulgentStatueItem: {
+		DisplayName: Pink Hefty Belly Statue
+		Tooltip: "'Unfortunately, it still isn't soft.'"
+	}
+
+	PinkBreastOverindulgentStatueItem: {
+		DisplayName: Pink Hefty Bust Statue
+		Tooltip: "'Unfortunately, it still isn't soft.'"
+	}
+
+	PinkButtOverindulgentStatueItem: {
+		DisplayName: Pink Hefty Butt Statue
+		Tooltip: "'Unfortunately, it still isn't soft.'"
 	}
 }
 
