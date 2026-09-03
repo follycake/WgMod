@@ -210,7 +210,7 @@ public static class Utility
         float difference = (to - from) % MathF.Tau;
         return 2f * difference % MathF.Tau - difference;
     }
-      
+
     public static void RegisterKill<T>() where T : ModNPC
     {
         T instance = ModContent.GetInstance<T>();

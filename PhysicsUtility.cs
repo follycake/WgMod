@@ -141,7 +141,7 @@ public static class PhysicsUtility
         normal = -dir;
         return false;
     }
-      
+
     /// <summary> Returns true when the player is grounded. </summary>
     public static bool CheckForSolidGround(this Entity entity)
     {
