@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.ModLoader;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs;
 
@@ -32,6 +33,9 @@ public partial class WgMod
         On_Main.GetPlayerArmPosition += Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras += Main_DrawProj_DrawExtras;
         On_Cloud.Update += Cloud_Update;
+        On_PlayerDrawLayers.DrawStarboardRainbowTrail += OnPlayerDrawLayers_DrawStarboardRainbowTrail;
+        On_PlayerDrawLayers.DrawPlayer_03_PortableStool += OnPlayerDrawLayers_DrawPlayer_03_PortableStool;
+        On_PlayerDrawLayers.DrawPlayer_09_Wings += OnPlayerDrawLayers_DrawPlayer_09_Wings;
     }
 
     // Always remember to unregister your hooks
@@ -45,6 +49,9 @@ public partial class WgMod
         On_Main.GetPlayerArmPosition -= Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras -= Main_DrawProj_DrawExtras;
         On_Cloud.Update -= Cloud_Update;
+        On_PlayerDrawLayers.DrawStarboardRainbowTrail -= OnPlayerDrawLayers_DrawStarboardRainbowTrail;
+        On_PlayerDrawLayers.DrawPlayer_03_PortableStool -= OnPlayerDrawLayers_DrawPlayer_03_PortableStool;
+        On_PlayerDrawLayers.DrawPlayer_09_Wings -= OnPlayerDrawLayers_DrawPlayer_09_Wings;
     }
 
     static void Player_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
@@ -233,5 +240,118 @@ public partial class WgMod
         }
         else
             orig(self);
+    }
+    public static void OnPlayerDrawLayers_DrawStarboardRainbowTrail(On_PlayerDrawLayers.orig_DrawStarboardRainbowTrail orig, ref PlayerDrawSet drawinfo, Vector2 commonWingPosPreFloor, Vector2 dirsVec)
+    {
+        if (drawinfo.shadow != 0f)
+        {
+            return;
+        }
+        int num = Math.Min(drawinfo.drawPlayer.availableAdvancedShadowsCount - 1, 30);
+        float num2 = 0f;
+        for (int num3 = num; num3 > 0; num3--)
+        {
+            EntityShadowInfo advancedShadow = drawinfo.drawPlayer.GetAdvancedShadow(num3);
+            float num10 = num2;
+            Vector2 position = drawinfo.drawPlayer.GetAdvancedShadow(num3 - 1).Position;
+            num2 = num10 + Vector2.Distance(advancedShadow.Position, position);
+        }
+        float num4 = MathHelper.Clamp(num2 / 160f, 0f, 1f);
+        Main.instance.LoadProjectile(250);
+        Texture2D value = TextureAssets.Projectile[250].Value;
+        float x = 1.7f;
+        Vector2 origin = new Vector2((float)(value.Width / 2), (float)(value.Height / 2));
+        Color white = Color.White;
+        white.A = 64;
+        Vector2 vector2 = new Vector2(drawinfo.drawPlayer.width, drawinfo.drawPlayer.height) * new Vector2(0.5f, 1f) + new Vector2(0f, -4f);
+        if (dirsVec.Y < 0f)
+        {
+            vector2 = new Vector2(drawinfo.drawPlayer.width, drawinfo.drawPlayer.height) * new Vector2(0.5f, 0f) + new Vector2(0f, 4f);
+        }
+        for (int num5 = num; num5 > 0; num5--)
+        {
+            EntityShadowInfo advancedShadow2 = drawinfo.drawPlayer.GetAdvancedShadow(num5);
+            EntityShadowInfo advancedShadow3 = drawinfo.drawPlayer.GetAdvancedShadow(num5 - 1);
+            Vector2 pos = advancedShadow2.Position + vector2 + advancedShadow2.HeadgearOffset;
+            Vector2 pos2 = advancedShadow3.Position + vector2 + advancedShadow3.HeadgearOffset;
+            pos = drawinfo.drawPlayer.RotatedRelativePoint(pos, true, false);
+            pos2 = drawinfo.drawPlayer.RotatedRelativePoint(pos2, true, false);
+            float num6 = (pos2 - pos).ToRotation() - 1.5707964f;
+            num6 = 1.5707964f * (float)drawinfo.drawPlayer.direction;
+            float num7 = Math.Abs(pos2.X - pos.X);
+            Vector2 scale = new Vector2(x, num7 / (float)value.Height);
+            float num8 = 1f - (float)num5 / (float)num;
+            num8 *= num8;
+            num8 *= Terraria.Utils.GetLerpValue(0f, 4f, num7, true);
+            num8 *= 0.5f;
+            num8 *= num8;
+            Color color = white * num8 * num4;
+            if (!(color == Color.Transparent))
+            {
+                DrawData item = new DrawData(value, pos - Main.screenPosition, null, color, num6, origin, scale, drawinfo.playerEffect, 0f);
+                item.shader = drawinfo.cWings;
+                drawinfo.DrawDataCache.Add(item);
+                for (float num9 = 0.25f; num9 < 1f; num9 += 0.25f)
+                {
+                    item = new DrawData(value, Vector2.Lerp(pos, pos2, num9) - Main.screenPosition, null, color, num6, origin, scale, drawinfo.playerEffect, 0f);
+                    item.shader = drawinfo.cWings;
+                    drawinfo.DrawDataCache.Add(item);
+                }
+            }
+        }
+    }
+    public static void OnPlayerDrawLayers_DrawPlayer_03_PortableStool(On_PlayerDrawLayers.orig_DrawPlayer_03_PortableStool orig, ref PlayerDrawSet drawinfo)
+    {
+        if (drawinfo.drawPlayer.portableStoolInfo.IsInUse)
+        {
+            Texture2D value = TextureAssets.Extra[ExtrasID.PortableStool].Value;
+            Vector2 position = new Vector2((float)((int)(drawinfo.Position.X - Main.screenPosition.X + (float)(drawinfo.drawPlayer.width / 2))), (float)((int)(drawinfo.Position.Y - Main.screenPosition.Y + (float)drawinfo.drawPlayer.height + 28f - drawinfo.drawPlayer.gfxOffY)));
+            Rectangle rectangle = value.Frame(1, 1, 0, 0, 0, 0);
+            Vector2 origin = rectangle.Size() * new Vector2(0.5f, 1f);
+            DrawData item = new DrawData(value, position, new Rectangle?(rectangle), drawinfo.colorArmorLegs, drawinfo.drawPlayer.bodyRotation, origin, 1f, drawinfo.playerEffect, 0f);
+            item.shader = drawinfo.cPortableStool;
+            drawinfo.DrawDataCache.Add(item);
+        }
+    }
+    public static void OnPlayerDrawLayers_DrawPlayer_09_Wings(On_PlayerDrawLayers.orig_DrawPlayer_09_Wings orig, ref PlayerDrawSet drawinfo)
+    {
+        if (drawinfo.drawPlayer.dead || drawinfo.hideEntirePlayer || drawinfo.drawPlayer.wings <= 0)
+        {
+            return;
+        }
+        if (drawinfo.drawPlayer.wings != 45)
+        {
+            orig(ref drawinfo);
+            return;
+        }
+        Vector2 directions = drawinfo.drawPlayer.Directions;
+        Vector2 vector = drawinfo.Position - Main.screenPosition + drawinfo.drawPlayer.Size / 2f;
+        Vector2 vector2 = new(0f, 7f);
+        vector = drawinfo.Position - Main.screenPosition + new Vector2((float)(drawinfo.drawPlayer.width / 2), (float)(drawinfo.drawPlayer.height - drawinfo.drawPlayer.bodyFrame.Height / 2) - drawinfo.drawPlayer.gfxOffY) + vector2;
+        Main.instance.LoadWings(drawinfo.drawPlayer.wings);
+        if (!drawinfo.drawPlayer.ShouldDrawWingsThatAreAlwaysAnimated())
+        {
+            return;
+        }
+        PlayerDrawLayers.DrawStarboardRainbowTrail(ref drawinfo, vector, directions);
+        Color color10 = new Color(255, 255, 255, 255);
+        int num3 = 22;
+        int num4 = 0;
+        Vector2 vec2 = vector + new Vector2((float)num4, (float)num3) * directions;
+        Color color2 = color10 * (1f - drawinfo.shadow);
+        DrawData item = new DrawData(TextureAssets.Wings[drawinfo.drawPlayer.wings].Value, vec2.Floor(), new Rectangle?(new Rectangle(0, TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 6 * drawinfo.drawPlayer.wingFrame, TextureAssets.Wings[drawinfo.drawPlayer.wings].Width(), TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 6)), color2, drawinfo.drawPlayer.bodyRotation, new Vector2((float)(TextureAssets.Wings[drawinfo.drawPlayer.wings].Width() / 2), (float)(TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 12)), 1f, drawinfo.playerEffect, 0f);
+        item.shader = drawinfo.cWings;
+        drawinfo.DrawDataCache.Add(item);
+        if (drawinfo.shadow == 0f)
+        {
+            float num5 = ((float)drawinfo.drawPlayer.miscCounter / 75f * 6.2831855f).ToRotationVector2().X * 4f;
+            Color color3 = new Color(70, 70, 70, 0) * (num5 / 8f + 0.5f) * 0.4f;
+            for (float num6 = 0f; num6 < 6.2831855f; num6 += 1.5707964f)
+            {
+                item = new DrawData(TextureAssets.Wings[drawinfo.drawPlayer.wings].Value, vec2.Floor() + num6.ToRotationVector2() * num5, new Rectangle?(new Rectangle(0, TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 6 * drawinfo.drawPlayer.wingFrame, TextureAssets.Wings[drawinfo.drawPlayer.wings].Width(), TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 6)), color3, drawinfo.drawPlayer.bodyRotation, new Vector2((float)(TextureAssets.Wings[drawinfo.drawPlayer.wings].Width() / 2), (float)(TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 12)), 1f, drawinfo.playerEffect, 0f);
+                item.shader = drawinfo.cWings;
+                drawinfo.DrawDataCache.Add(item);
+            }
+        }
     }
 }

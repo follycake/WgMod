@@ -1010,6 +1010,26 @@ Items: {
 		DisplayName: Pink Hefty Butt Statue
 		Tooltip: "'Unfortunately, it still isn't soft.'"
 	}
+
+	StarlightBoots: {
+		DisplayName: Starlight Boots
+		Tooltip:
+			'''
+			{0}% increased movement speed
+			{1}% increased acceleration
+			Running causes mild weight gain
+			'''
+	}
+
+	StarlightLens: {
+		DisplayName: Starlight Lens
+		Tooltip:
+			'''
+			{0}% increased critical strike chance
+			{1}% increased critical strike damage
+			Critical strikes cause mild weight gain
+			'''
+	}
 }
 
 Buffs: {

@@ -13,10 +13,14 @@ namespace WgMod;
 
 public static class Utility
 {
-    public static WgPlayer Wg(this Player player)
-    {
-        return player.GetModPlayer<WgPlayer>();
-    }
+    /// <summary>
+    /// Gets WgPlayer.
+    /// </summary>
+    public static WgPlayer Wg(this Player player) => player.GetModPlayer<WgPlayer>();
+    /// <summary>
+    /// Gets StatPlayer.
+    /// </summary>
+    public static StatPlayer ExtraStats(this Player player) => player.GetModPlayer<StatPlayer>();
 
     public static bool ReplaceDefense(this List<TooltipLine> tooltips, string defense)
     {
@@ -217,4 +221,5 @@ public static class Utility
         instance.NPC.netID = instance.Type;
         Main.BestiaryTracker.Kills.RegisterKill(instance.NPC);
     }
+    public static bool Grounded(this Player player) => player.grappling[0] == -1 && !player.tongued && !player.shimmering && player.velocity.Y == 0f;
 }

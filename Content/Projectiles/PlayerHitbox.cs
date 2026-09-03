@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Content.Items.Accessories.Fat;
 
@@ -97,7 +98,6 @@ public class Girthquake : ModProjectile
 public class Girth : ModProjectile
 {
     public override string Texture => "WgMod/Assets/Textures/Invisible";
-
     public override void SetDefaults()
     {
         Projectile.width = 1;
@@ -115,6 +115,10 @@ public class Girth : ModProjectile
     }
 
     public override bool CanHitPlayer(Player target)
+    {
+        return false;
+    }
+    public override bool? CanCutTiles()
     {
         return false;
     }
