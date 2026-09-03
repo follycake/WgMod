@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -59,7 +58,15 @@ public class MeteorCrushPlayer : ModPlayer
     {
         if (!_crushEffect)
             return;
-        CheckForSolidGround();
+        if (Player.CheckForSolidGround())
+        {
+            if (_landState == 0)
+                _landState = 1;
+            else
+                _landState = 2;
+        }
+        else
+            _landState = 0;
         Projectile hitbox = null;
         foreach (var proj in Main.ActiveProjectiles)
         {
@@ -94,33 +101,6 @@ public class MeteorCrushPlayer : ModPlayer
     float GetCrushPower()
     {
         return _yVelocityOfLastTick * Player.Wg().Weight.Mass / 120f - 10;
-    }
-
-    bool CheckForSolidGround()
-    {
-        List<Point> tiles = Collision.GetTilesIn(Player.Hitbox.BottomLeft() - new Vector2(-2, -2), Player.Hitbox.BottomRight() + new Vector2(2, 6));
-        bool hasSolidTile = false;
-        foreach (var point in tiles)
-        {
-            Tile tile = Framing.GetTileSafely(point);
-            if (tile.HasTile)
-            {
-                if (Main.tileSolid[tile.TileType])
-                    hasSolidTile = true;
-                if (Main.tileSolidTop[tile.TileType])
-                    hasSolidTile = true;
-            }
-        }
-        if (hasSolidTile)
-        {
-            if (_landState == 0)
-                _landState = 1;
-            else
-                _landState = 2;
-        }
-        else
-            _landState = 0;
-        return hasSolidTile;
     }
 
     public override void DrawPlayer(Camera camera)

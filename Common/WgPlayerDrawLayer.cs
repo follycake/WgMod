@@ -42,6 +42,8 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
 
     public static Color GetSkinColor(in PlayerDrawSet drawInfo)
     {
+        if (drawInfo.headOnlyRender)
+            return drawInfo.drawPlayer.skinColor;
         Color skinColor = drawInfo.colorBodySkin;
         if (drawInfo.drawPlayer.isDisplayDollOrInanimate)
             skinColor = new Color(154, 115, 85).MultiplyRGB(skinColor);

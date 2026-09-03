@@ -18,7 +18,7 @@ public class VacuumSkirt : ModItem
 
     WgStat _attackSpeed = new(1.02f, 1.12f);
     WgStat _health = new(20, 100);
-    WgStat _defense = new(0, 16 * 2);
+    WgStat _defense = new(16, 48);
     WgStat _resist = new(0f, 0.02f);
     WgStat _movePenalty = new(1.2f, 1.05f);
 
@@ -34,7 +34,7 @@ public class VacuumSkirt : ModItem
         Item.height = 18;
         Item.value = Item.sellPrice(gold: 2);
         Item.rare = ItemRarityID.Red;
-        Item.defense = 32 / 2;
+        Item.defense = 16;
     }
 
     public override void UpdateEquip(Player player)
@@ -53,7 +53,7 @@ public class VacuumSkirt : ModItem
 
         player.GetAttackSpeed(DamageClass.Generic) *= _attackSpeed;
         player.statLifeMax2 += _health;
-        player.statDefense += _defense;
+        Item.defense = _defense;
         player.endurance += _resist;
         wg.MovementPenalty *= _movePenalty;
 
@@ -84,7 +84,8 @@ public class VacuumSkirt : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines((_attackSpeed - 1f).Percent(), _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+        tooltips.ReplaceDefense(_defense.ToString());
+        tooltips.FormatLines((_attackSpeed - 1f).Percent(), _health, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
     }
 
     public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)

@@ -18,6 +18,15 @@ public static class Utility
         return player.GetModPlayer<WgPlayer>();
     }
 
+    public static bool ReplaceDefense(this List<TooltipLine> tooltips, string defense)
+    {
+        TooltipLine line = tooltips.Find(t => t.Name == "Defense");
+        if (line == null)
+            return false;
+        line.Text = defense + Lang.tip[25].Value;
+        return true;
+    }
+
     public static bool FormatLines(this List<TooltipLine> tooltips, params object[] args)
     {
         int start = tooltips.FindIndex(t => t.Name == "Tooltip0");
@@ -200,5 +209,12 @@ public static class Utility
     {
         float difference = (to - from) % MathF.Tau;
         return 2f * difference % MathF.Tau - difference;
+    }
+      
+    public static void RegisterKill<T>() where T : ModNPC
+    {
+        T instance = ModContent.GetInstance<T>();
+        instance.NPC.netID = instance.Type;
+        Main.BestiaryTracker.Kills.RegisterKill(instance.NPC);
     }
 }

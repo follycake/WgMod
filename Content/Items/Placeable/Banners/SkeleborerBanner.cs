@@ -10,7 +10,7 @@ public class SkeleborerBanner : ModItem
 {
     public override void SetDefaults()
     {
-        Item.DefaultToPlaceableTile(ModContent.TileType<EnemyBanner>());
+        Item.DefaultToPlaceableTile(ModContent.TileType<EnemyBanner>(), (int)EnemyBanner.StyleID.Skeleborer);
         Item.width = 10;
         Item.height = 24;
         Item.SetShopValues(ItemRarityColor.Blue1, Item.buyPrice(silver: 10));

@@ -13,16 +13,17 @@ namespace WgMod.Content.Items.Accessories.Melee;
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 public class DogTail : GlobalItem
 {
-
     WgStat _damageModifier = new(1f, 1.7f);
 
     public override bool InstancePerEntity => true;
 
+    public override bool AppliesToEntity(Item entity, bool lateInstantiation)
+    {
+        return entity.type == ItemID.DogTail;
+    }
+
     public override void SetDefaults(Item item)
     {
-        if (item.type != ItemID.DogTail)
-            return;
-
         item.defense = 7;
         item.vanity = false;
         item.rare = ItemRarityID.Cyan;
@@ -30,10 +31,10 @@ public class DogTail : GlobalItem
 
     public override void UpdateAccessory(Item item, Player player, bool hideVisual)
     {
-        if (item.type != ItemID.DogTail || !player.TryGetModPlayer(out DogTailPlayer dt) || !player.TryGetModPlayer(out WgPlayer wg))
+        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !player.TryGetModPlayer(out WgPlayer wg))
             return;
-        float immobility = wg.Weight.ClampedImmobility;
 
+        float immobility = wg.Weight.ClampedImmobility;
         dt.active = true;
 
         _damageModifier.Lerp(immobility);
@@ -50,9 +51,6 @@ public class DogTail : GlobalItem
 
     public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
     {
-        if (item.type != ItemID.DogTail)
-            return;
-
         tooltips.LineBeforeTooltip(out TooltipLine line);
         tooltips.Insert(tooltips.IndexOf(line) + 1, new TooltipLine(Mod, "NewTooltip", Language.GetTextValue("Mods.WgMod.Items.DogTail.Tooltip")));
     }
@@ -73,8 +71,7 @@ public class DogTailPlayer : ModPlayer
 
 public class DogTailItem : GlobalItem
 {
-    public override bool InstancePerEntity => true;
-    readonly HashSet<DamageClass> _meleeWeapons = [DamageClass.Melee, DamageClass.MeleeNoSpeed];
+    static readonly HashSet<DamageClass> _meleeWeapons = [DamageClass.Melee, DamageClass.MeleeNoSpeed];
 
     public override void UseAnimation(Item item, Player player)
     {
@@ -93,25 +90,23 @@ public class DogTailItem : GlobalItem
         float angle = Utils.AngleTo(player.Center, mousePosition);
         Vector2 velocity = new(MathF.Cos(angle), MathF.Sin(angle));
 
+        switch (item.useStyle)
         {
-            switch (item.useStyle)
-            {
-                case ItemUseStyleID.Swing:
-                case ItemUseStyleID.Thrust:
-                case ItemUseStyleID.Shoot:
-                case ItemUseStyleID.Guitar:
-                case ItemUseStyleID.Rapier:
-                case ItemUseStyleID.RaiseLamp:
-                    Projectile.NewProjectile(
-                        player.GetSource_FromThis(),
-                        player.Center,
-                        velocity * 6f,
-                        ModContent.ProjectileType<BouncyBall>(),
-                        (int)(dt._damage * dt._damageModifier),
-                        5
-                    );
-                    break;
-            }
+            case ItemUseStyleID.Swing:
+            case ItemUseStyleID.Thrust:
+            case ItemUseStyleID.Shoot:
+            case ItemUseStyleID.Guitar:
+            case ItemUseStyleID.Rapier:
+            case ItemUseStyleID.RaiseLamp:
+                Projectile.NewProjectile(
+                    player.GetSource_FromThis(),
+                    player.Center,
+                    velocity * 6f,
+                    ModContent.ProjectileType<BouncyBall>(),
+                    (int)(dt._damage * dt._damageModifier),
+                    5
+                );
+                break;
         }
     }
 }
