@@ -164,14 +164,15 @@ public static class WgPhysics
                 Active = true;
             }
 
+            const float shapeMatchingForce = 1f;
             float immobility = wg.Weight.ClampedImmobility;
             float springForce = float.Lerp(0.8f, 0.4f, immobility);
-            const float shapeMatchingForce = 1f;
             float guidanceForce = float.Lerp(0.5f, 0.3f, immobility);
 
             Span<Point> pointSpan = Points;
             int direction = wg.Player.direction;
             int gravDir = (int)wg.Player.gravDir;
+            SpriteSet.LayerType layerType = Set.PhysicsLayers[PhysicsIndex].Type;
 
             Vector2 drawPosition = CalculateDrawPosition(wg);
             Vector2 rotationCenter = drawPosition + wg.Player.fullRotationOrigin;
@@ -265,8 +266,13 @@ public static class WgPhysics
             {
                 float t = Utils.GetLerpValue(OffsetMin.X, OffsetMax.X, point.Offset.X);
                 Vector2 offset = point.Offset;
-                offset.Y *= float.Lerp(1f, 1.8f, t * t * wg._softSquishRight);
-                offset.Y *= float.Lerp(1f, 1.8f, (1f - t) * (1f - t) * wg._softSquishLeft * wg._softSquishLeft);
+                float maxCurve = layerType switch
+                {
+                    SpriteSet.LayerType.Breasts => 1.2f,
+                    _ => 1.8f
+                };
+                offset.Y *= float.Lerp(1f, maxCurve, t * t * wg._softSquishRight);
+                offset.Y *= float.Lerp(1f, maxCurve, (1f - t) * (1f - t) * wg._softSquishLeft * wg._softSquishLeft);
                 Vector2 target = CalculateFromOffset(wg, drawPosition, basePosition, offset);
                 if (point.Pinned)
                 {
@@ -287,7 +293,7 @@ public static class WgPhysics
             }
 
             // Collision
-            bool tileSolidTop = Set.PhysicsLayers[PhysicsIndex].Type == SpriteSet.LayerType.Legs;
+            bool tileSolidTop = layerType == SpriteSet.LayerType.Legs;
             Vector2 center = drawPosition - new Vector2(0f, wg.Player.gfxOffY);
             if (tileSolidTop)
             {
