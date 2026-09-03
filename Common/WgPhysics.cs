@@ -596,11 +596,21 @@ public static class WgPhysics
                 springs.Add(new Spring(a, b, Vector2.Distance(points[a].Position, points[b].Position), strength));
             }
 
-            bool ScanForQuads(int x, int y, int radius)
+            bool ScanForQuadsH(int x, int y, int radius)
             {
                 for (int delta = -radius; delta <= radius; delta++)
                 {
                     if (quadMap.ContainsKey((x + delta, y)))
+                        return true;
+                }
+                return false;
+            }
+
+            bool ScanForQuadsV(int x, int y, int radius)
+            {
+                for (int delta = -radius; delta <= radius; delta++)
+                {
+                    if (quadMap.ContainsKey((x, y + delta)))
                         return true;
                 }
                 return false;
@@ -611,7 +621,13 @@ public static class WgPhysics
             {
                 var (x, y) = pair.Key;
                 Quad quad = quads[pair.Value];
-                if (!ScanForQuads(x, y - 1, 2))
+                bool pinned = spriteLayer.Type switch
+                {
+                    SpriteSet.LayerType.Belly => !ScanForQuadsH(x, y - 1, 2) || !ScanForQuadsV(x - 1, y, 2),
+                    SpriteSet.LayerType.Legs => quadMap.ContainsKey((x - 1, y)) && !ScanForQuadsH(x, y - 1, 2),
+                    _ => !ScanForQuadsH(x, y - 1, 2)
+                };
+                if (pinned)
                 {
                     pointsArray[quad.TopLeft].Pinned = true;
                     pointsArray[quad.TopRight].Pinned = true;
