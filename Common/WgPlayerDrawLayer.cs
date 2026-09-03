@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -90,27 +89,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         {
             if (!layer.ShouldRender(player))
                 continue;
-            Vector2 pos;
-            Vector2 scale;
-            switch (layer.Type)
-            {
-                case SpriteSet.LayerType.Belly:
-                    pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, player.gravDir);
-                    scale = new Vector2(1f / bellySquish, 1f * bellySquish);
-                    break;
-                case SpriteSet.LayerType.Legs:
-                    pos = PrepPos(position, MathF.Round(wg._legOffsetX / 2f) * 2f, MathF.Round(wg._legOffsetY / 2f) * 2f, player.gravDir);
-                    scale = new Vector2(1f * baseSquish, 1f / baseSquish);
-                    break;
-                case SpriteSet.LayerType.Breasts:
-                    pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, player.gravDir);
-                    scale = new Vector2(1f * baseSquish, 1f / baseSquish);
-                    break;
-                default:
-                    pos = PrepPos(position, 0f, 0f, player.gravDir);
-                    scale = Vector2.One;
-                    break;
-            }
+            layer.Animate(wg, position, bellySquish, baseSquish, out Vector2 pos, out Vector2 scale);
             Rectangle layerFrame = layer.Frame(set, stageData);
             DrawData drawData = new(
                 layer.Texture.Value, // The texture to render.
@@ -122,17 +101,20 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
                 scale, // Scale.
                 drawInfo.playerEffect
             );
+            if (layer.Physics && WgPhysics.IsEnabled(wg))
+            {
+                WgPhysics.Layer phys = wg._physicsLayers[layer.PhysicsIndex];
+                if (phys.Active)
+                {
+                    wg._physicsDrawOverride.Add(drawInfo.DrawDataCache.Count, phys);
+                    if (drawArmor && layer.UVArmor)
+                        wg._physicsDrawOverride.Add(drawInfo.DrawDataCache.Count + 1, phys);
+                }
+            }
             drawInfo.DrawDataCache.Add(drawData);
             if (drawArmor && layer.UVArmor)
                 WgArmor.Draw(wg, ref drawInfo, drawData, layer);
         }
-    }
-
-    static Vector2 PrepPos(Vector2 pos, float xOffset, float yOffset, float gravDir)
-    {
-        pos.X += xOffset;
-        pos.Y += yOffset * gravDir;
-        return pos.Floor();
     }
 
     static void DrawPlayerStoned(On_LegacyPlayerRenderer.orig_DrawPlayerStoned orig, LegacyPlayerRenderer self, Camera camera, Player drawPlayer, Vector2 position)

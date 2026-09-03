@@ -37,6 +37,7 @@ public class SpriteSet
     [JsonIgnore] public int FrameCount { get; private set; }
     [JsonIgnore] public Layer[] ArmLayers { get; private set; }
     [JsonIgnore] public Layer[] ArmorLayers { get; private set; }
+    [JsonIgnore] public Layer[] PhysicsLayers { get; private set; }
 
     [JsonIgnore] public bool UVArmor => ArmorLayers.Length > 0;
     [JsonIgnore] public int ArmorAltasWidth { get; private set; }
@@ -57,6 +58,7 @@ public class SpriteSet
         HeadLayers = null;
         ArmLayers = null;
         ArmorLayers = null;
+        PhysicsLayers = null;
         Stages = null;
     }
 
@@ -118,6 +120,7 @@ public class SpriteSet
                 {
                     if (!player.active || !player.TryGetModPlayer(out WgPlayer wg))
                         continue;
+                    wg.OnSwitchSpriteSet();
                     wg.PreUpdateVisuals();
                     wg.PostUpdateVisuals();
                 }
@@ -151,9 +154,16 @@ public class SpriteSet
         set.Name = name;
 
         List<Layer> armorLayers = [];
+        List<Layer> physicsLayers = [];
         set.ArmorAltasWidth = 0;
         void LoadTextures(Layer layer, int lookup = 0)
         {
+            if (layer.Physics)
+            {
+                layer.PhysicsIndex = physicsLayers.Count;
+                physicsLayers.Add(layer);
+            }
+
             layer.Texture = mod.Assets.Request<Texture2D>(Path.Combine(path, layer.Name));
             layer.ArmorAtlasX = set.ArmorAltasWidth;
 
@@ -208,6 +218,7 @@ public class SpriteSet
         set.FrameCount = frame;
 
         set.ArmorLayers = [.. armorLayers];
+        set.PhysicsLayers = [.. physicsLayers];
         return set;
     }
 
@@ -243,11 +254,13 @@ public class SpriteSet
         public LayerType Type;
         public RenderType Render;
         public bool LegArmor;
+        public bool Physics;
 
         [JsonIgnore] public Asset<Texture2D> Texture;
         [JsonIgnore] public Texture2D ArmorTexture;
         [JsonIgnore] public bool OwnsArmorTexture;
         [JsonIgnore] public int ArmorAtlasX;
+        [JsonIgnore] public int PhysicsIndex;
 
         [JsonIgnore] public bool UVArmor => ArmorTexture != null;
 
@@ -275,6 +288,50 @@ public class SpriteSet
             RenderType.WhenStanding => !player.Wg().IsSittingVisual(),
             _ => true,
         };
+
+        public Vector2 Squish(float squish)
+        {
+            switch (Type)
+            {
+                case LayerType.Belly:
+                    return new Vector2(1f / squish, 1f * squish);
+                case LayerType.Legs:
+                case LayerType.Breasts:
+                    return new Vector2(1f * squish, 1f / squish);
+                default:
+                    return Vector2.One;
+            }
+        }
+
+        public void Animate(WgPlayer wg, Vector2 position, float bellySquish, float baseSquish, out Vector2 pos, out Vector2 scale)
+        {
+            switch (Type)
+            {
+                case LayerType.Belly:
+                    pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, wg.Player.gravDir);
+                    scale = Squish(bellySquish);
+                    break;
+                case LayerType.Legs:
+                    pos = PrepPos(position, MathF.Round(wg._legOffsetX / 2f) * 2f, MathF.Round(wg._legOffsetY / 2f) * 2f, wg.Player.gravDir);
+                    scale = Squish(baseSquish);
+                    break;
+                case LayerType.Breasts:
+                    pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, wg.Player.gravDir);
+                    scale = Squish(baseSquish);
+                    break;
+                default:
+                    pos = PrepPos(position, 0f, 0f, wg.Player.gravDir);
+                    scale = Vector2.One;
+                    break;
+            }
+        }
+
+        static Vector2 PrepPos(Vector2 pos, float xOffset, float yOffset, float gravDir)
+        {
+            pos.X += xOffset;
+            pos.Y += yOffset * gravDir;
+            return pos.Floor();
+        }
     }
 
     public class Stage

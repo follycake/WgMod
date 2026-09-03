@@ -1271,6 +1271,11 @@ Configs: {
 			Label: Miscellaneous
 			Tooltip: Volume of the remaining sounds
 		}
+
+		DisableAdvancedJiggle: {
+			Label: Disable Advanced Jiggle
+			Tooltip: Disables advanced jiggle effects
+		}
 	}
 
 	WorkshopIconsConfig: {

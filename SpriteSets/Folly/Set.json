@@ -5,11 +5,13 @@
     "Layers": [
         {
             "Name": "Base",
-            "Type": "Legs"
+            "Type": "Legs",
+            "Physics": true
         },
         {
             "Name": "Belly",
-            "Type": "Belly"
+            "Type": "Belly",
+            "Physics": true
         }
     ],
     "Stages": {
