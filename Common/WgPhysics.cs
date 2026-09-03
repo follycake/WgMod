@@ -158,15 +158,16 @@ public static class WgPhysics
 
         public void Update(WgPlayer wg)
         {
-            const float springForce = 0.4f;
-            const float shapeMatchingForce = 1f;
-            const float guidanceForce = 0.3f;
-
             if (!Active)
             {
                 Reset(wg);
                 Active = true;
             }
+
+            float immobility = wg.Weight.ClampedImmobility;
+            float springForce = float.Lerp(0.8f, 0.4f, immobility);
+            const float shapeMatchingForce = 1f;
+            float guidanceForce = float.Lerp(0.5f, 0.3f, immobility);
 
             Span<Point> pointSpan = Points;
             int direction = wg.Player.direction;

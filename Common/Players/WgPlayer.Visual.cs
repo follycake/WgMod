@@ -100,7 +100,7 @@ public partial class WgPlayer
 
     internal void OnSwitchSpriteSet()
     {
-        WgPhysics.Setup(this);
+        _requestPhysicsSetup = true;
     }
 
     internal void UpdateAnimation()

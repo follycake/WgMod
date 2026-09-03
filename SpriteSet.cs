@@ -120,9 +120,9 @@ public class SpriteSet
                 {
                     if (!player.active || !player.TryGetModPlayer(out WgPlayer wg))
                         continue;
+                    wg.OnSwitchSpriteSet();
                     wg.PreUpdateVisuals();
                     wg.PostUpdateVisuals();
-                    wg.OnSwitchSpriteSet();
                 }
                 WgMannequinSystem.Instance.PostUpdateEverything();
             }

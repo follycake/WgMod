@@ -5,7 +5,8 @@
     "Layers": [
         {
             "Name": "Base",
-            "Type": "Legs"
+            "Type": "Legs",
+            "Physics": true
         },
         {
             "Name": "Belly",
