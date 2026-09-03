@@ -262,7 +262,7 @@ public static class WgPhysics
             _basePositionRotated = basePosition.RotatedBy(wg.Player.fullRotation, drawPosition + wg.Player.fullRotationOrigin);
             foreach (ref Point point in pointSpan)
             {
-                float t = Utility.InverseLerp(OffsetMin.X, OffsetMax.X, point.Offset.X);
+                float t = Utils.GetLerpValue(OffsetMin.X, OffsetMax.X, point.Offset.X);
                 Vector2 offset = point.Offset;
                 offset.Y *= float.Lerp(1f, 1.8f, t * t * wg._softSquishRight);
                 offset.Y *= float.Lerp(1f, 1.8f, (1f - t) * (1f - t) * wg._softSquishLeft * wg._softSquishLeft);

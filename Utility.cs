@@ -201,9 +201,4 @@ public static class Utility
         float difference = (to - from) % MathF.Tau;
         return 2f * difference % MathF.Tau - difference;
     }
-
-    public static float InverseLerp(float from, float to, float value)
-    {
-        return (value - from) / (to - from);
-    }
 }
