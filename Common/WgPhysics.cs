@@ -266,13 +266,11 @@ public static class WgPhysics
             {
                 float t = Utils.GetLerpValue(OffsetMin.X, OffsetMax.X, point.Offset.X);
                 Vector2 offset = point.Offset;
-                float maxCurve = layerType switch
-                {
-                    SpriteSet.LayerType.Breasts => 1.2f,
-                    _ => 1.8f
-                };
-                offset.Y *= float.Lerp(1f, maxCurve, t * t * wg._softSquishRight);
-                offset.Y *= float.Lerp(1f, maxCurve, (1f - t) * (1f - t) * wg._softSquishLeft * wg._softSquishLeft);
+                float maxCurve = layerType == SpriteSet.LayerType.Breasts ? 1.2f : 1.8f;
+                if (layerType == SpriteSet.LayerType.Legs)
+                    offset.Y *= float.Lerp(1f, maxCurve, (1f - t) * (1f - t) * wg._softSquishLeft * wg._softSquishLeft);
+                else
+                    offset.Y *= float.Lerp(1f, maxCurve, t * t * wg._softSquishRight);
                 Vector2 target = CalculateFromOffset(wg, drawPosition, basePosition, offset);
                 if (point.Pinned)
                 {
