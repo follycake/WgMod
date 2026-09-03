@@ -13,13 +13,10 @@ namespace WgMod;
 
 public static class Utility
 {
-    /// <summary>
-    /// Gets WgPlayer.
-    /// </summary>
+    /// <summary> Gets WgPlayer. </summary>
     public static WgPlayer Wg(this Player player) => player.GetModPlayer<WgPlayer>();
-    /// <summary>
-    /// Gets StatPlayer.
-    /// </summary>
+
+    /// <summary> Gets StatPlayer. </summary>
     public static StatPlayer ExtraStats(this Player player) => player.GetModPlayer<StatPlayer>();
 
     public static bool ReplaceDefense(this List<TooltipLine> tooltips, string defense)

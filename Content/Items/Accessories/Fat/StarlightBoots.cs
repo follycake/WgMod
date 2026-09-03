@@ -9,6 +9,7 @@ namespace WgMod.Content.Items.Accessories.Fat;
 public class StarlightBoots : ModItem
 {
     public override string Texture => "WgMod/Assets/Placeholder/ExampleItem";
+
     public override void SetDefaults()
     {
         Item.width = 16;
@@ -23,7 +24,6 @@ public class StarlightBoots : ModItem
     {
         if (!player.TryGetModPlayer(out StarlightBootsPlayer sl))
             return;
-
         sl._enabled = true;
     }
 
@@ -31,24 +31,28 @@ public class StarlightBoots : ModItem
     {
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
+
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
         Player me = Main.LocalPlayer;
         if (!me.TryGetModPlayer(out StarlightBootsPlayer sl))
             return;
-        //this is stupid
+        // this is stupid
         tooltips.FormatLines(sl._speed.Percent(), sl._acceleration.Percent());
     }
 }
+
 public class StarlightBootsPlayer : ModPlayer
 {
     internal bool _enabled;
     internal WgStat _acceleration = new(0.25f, 0.75f);
     internal WgStat _speed = new(0.1f, 1f);
+
     public override void ResetEffects()
     {
         _enabled = false;
     }
+
     public override void PostUpdateRunSpeeds()
     {
         if (!_enabled)
@@ -68,6 +72,7 @@ public class StarlightBootsPlayer : ModPlayer
         Player.maxRunSpeed *= 1f + _speed;
         Player.accRunSpeed *= 1f + _speed;
     }
+
     public override void PostUpdateMiscEffects()
     {
         if (!_enabled)
@@ -86,7 +91,7 @@ public class StarlightBootsPlayer : ModPlayer
         if (running)
         {
             Mass weightGain = 0.003f * runningSpeed;
-            weightGain = Player.Wg().AddWeight(weightGain);
+            Player.Wg().AddWeight(weightGain);
         }
     }
 }

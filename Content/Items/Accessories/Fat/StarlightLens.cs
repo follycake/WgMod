@@ -9,9 +9,11 @@ namespace WgMod.Content.Items.Accessories.Fat;
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 public class StarlightLens : ModItem
 {
+    public override string Texture => "WgMod/Assets/Placeholder/ExampleItem";
+
     WgStat _critChance = new(2f, 10f);
     WgStat _critDamage = new(0.1f, 0.75f);
-    public override string Texture => "WgMod/Assets/Placeholder/ExampleItem";
+
     public override void SetDefaults()
     {
         Item.width = 16;
@@ -35,33 +37,37 @@ public class StarlightLens : ModItem
         _critDamage.Lerp(lerping);
 
         player.GetCritChance(DamageClass.Generic) += (int)_critChance;
-        player.ExtraStats()._critDamage += _critDamage;
+        player.ExtraStats().CritDamage += _critDamage;
     }
 
     public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
     {
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
+
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
         tooltips.FormatLines(_critChance, _critDamage.Percent());
     }
 }
+
 public class StarlightLensPlayer : ModPlayer
 {
     internal bool _enabled;
     internal int _multiplier;
+
     public override void ResetEffects()
     {
         _enabled = false;
         _multiplier = Math.Min(_multiplier + 1, 60);
     }
+
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
         if (hit.Crit && _enabled)
         {
             Mass weightGain = 1f * (_multiplier / 60f);
-            weightGain = Player.Wg().AddWeight(weightGain);
+            Player.Wg().AddWeight(weightGain);
             _multiplier = 10;
         }
     }
