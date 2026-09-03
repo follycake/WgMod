@@ -12,7 +12,6 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
-using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -81,6 +80,7 @@ public class EncumberedStatueBottom : ModNPC
                 else if (onTileLeft.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
             }
+
             Tile onTileRight = Framing.GetTileSafely(bottomPosition + new Vector2(4, 0));
             if (onTileRight.HasTile)
             {
@@ -91,6 +91,7 @@ public class EncumberedStatueBottom : ModNPC
                 else if (onTileRight.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
             }
+
             if (_style == -1)
                 _style = Main.rand.Next(3);
         }
@@ -106,7 +107,6 @@ public class EncumberedStatueBottom : ModNPC
             case 2:
                 Lighting.AddLight(NPC.Center - new Vector2(0, 4), new Vector3(51, 255, 92) / 255 * 0.9f);
                 break;
-
         }
 
         NPC.velocity.X *= 0.8f;
@@ -138,7 +138,9 @@ public class EncumberedStatueBottom : ModNPC
                 {
                     projectileCount--;
                     float speedMult = Main.rand.Next(4, 16) / 10f;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), target.Center + new Vector2(Main.rand.Next(-450, 451), speedMult * 500), new Vector2(0, -speedMult * 2.5f), projectileID, 10, 0f, ai0: Main.rand.Next(2, 6) * 16);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(),
+                        target.Center + new Vector2(Main.rand.Next(-450, 451), speedMult * 500),
+                        new Vector2(0, -speedMult * 2.5f), projectileID, 10, 0f, ai0: Main.rand.Next(2, 6) * 16);
                 }
             }
         }
@@ -177,7 +179,8 @@ public class EncumberedStatueBottom : ModNPC
         if (NPC.downedPlantBoss)
             chance /= 3f;
         int onTile = spawnInfo.SpawnTileType;
-        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick || onTile == TileID.GreenDungeonBrick)
+        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick ||
+            onTile == TileID.GreenDungeonBrick)
             return chance;
         return 0f;
     }
@@ -201,15 +204,19 @@ public class EncumberedStatueBottom : ModNPC
             sourceRectangle = new Rectangle(116, 58 * 2, 58, 58);
             headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 58 : 0, 58 * 2, 58, 58);
 
-            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(_headTexture.Value, NPC.Center, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center, sourceRectangle, drawColor, 0f, origin, 1f,
+                SpriteEffects.None, 0f);
+            spriteBatch.Draw(_headTexture.Value, NPC.Center, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f,
+                SpriteEffects.None, 0f);
             return false;
         }
 
-        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition,
+            sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
 
         //drawing the head on top since theres nothing in the way
-        spriteBatch.Draw(_headTexture.Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(_headTexture.Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition, headRectangle,
+            NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
         return false;
     }
 }
@@ -261,6 +268,7 @@ public class HeartyHeart_Wave : ModProjectile
             _defaultX = Projectile.position.X;
             Projectile.velocity.X = 0;
         }
+
         int wavyStrength = (int)Projectile.ai[0] * 2;
         int wavyTime = (int)Projectile.ai[0] + 100;
 
@@ -303,7 +311,8 @@ public class HeartyHeart_Wave : ModProjectile
         {
             Vector2 drawPos = Projectile.oldPos[k] + (Projectile.Size / 2) - Main.screenPosition;
             Color color = drawColor * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-            Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin,
+                Projectile.scale, SpriteEffects.None, 0);
         }
 
         Main.EntitySpriteDraw(texture,
@@ -335,8 +344,8 @@ public class HeartyHeart_Wave : ModProjectile
             return null;
         return false;
     }
-
 }
 
 public class HeartyHeart_Wave_Blue : HeartyHeart_Wave;
+
 public class HeartyHeart_Wave_Green : HeartyHeart_Wave;

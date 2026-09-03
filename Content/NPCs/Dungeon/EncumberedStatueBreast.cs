@@ -13,7 +13,6 @@ using Terraria.ModLoader.Utilities;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
 using WgMod.Content.Dusts;
-using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -52,6 +51,7 @@ public class EncumberedStatueTop : ModNPC
 
         Banner = ModContent.NPCType<EncumberedStatueMiddle>();
     }
+
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
     {
         bestiaryEntry.Info.AddRange([
@@ -81,6 +81,7 @@ public class EncumberedStatueTop : ModNPC
                 else if (onTileLeft.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
             }
+
             Tile onTileRight = Framing.GetTileSafely(bottomPosition + new Vector2(4, 0));
             if (onTileRight.HasTile)
             {
@@ -91,6 +92,7 @@ public class EncumberedStatueTop : ModNPC
                 else if (onTileRight.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
             }
+
             if (_style == -1)
                 _style = Main.rand.Next(3);
         }
@@ -106,7 +108,6 @@ public class EncumberedStatueTop : ModNPC
             case 2:
                 Lighting.AddLight(NPC.Center - new Vector2(0, 4), new Vector3(51, 255, 92) / 255 * 0.9f);
                 break;
-
         }
 
         NPC.velocity.X *= 0.8f;
@@ -130,7 +131,8 @@ public class EncumberedStatueTop : ModNPC
                 int projectileID = ModContent.ProjectileType<HeartyHeart_Direct_Spawner>();
                 Vector2 spawnHere = target.Center + new Vector2(Main.rand.Next(150, 226), 0).RotatedBy(thisAngle);
 
-                Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnHere, Vector2.Zero, projectileID, 0, 0f, ai0: target.whoAmI, ai1: _style);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnHere, Vector2.Zero, projectileID, 0, 0f,
+                    ai0: target.whoAmI, ai1: _style);
             }
         }
     }
@@ -168,7 +170,8 @@ public class EncumberedStatueTop : ModNPC
         if (NPC.downedPlantBoss)
             chance /= 3f;
         int onTile = spawnInfo.SpawnTileType;
-        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick || onTile == TileID.GreenDungeonBrick)
+        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick ||
+            onTile == TileID.GreenDungeonBrick)
             return chance;
         return 0f;
     }
@@ -192,14 +195,18 @@ public class EncumberedStatueTop : ModNPC
             sourceRectangle = new Rectangle(58, 58 * 2, 58, 58);
             headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 58 : 0, 58 * 2, 58, 58);
 
-            spriteBatch.Draw(_headTexture.Value, NPC.Center, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_headTexture.Value, NPC.Center, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f,
+                SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center, sourceRectangle, drawColor, 0f, origin, 1f,
+                SpriteEffects.None, 0f);
             return false;
         }
 
-        spriteBatch.Draw(_headTexture.Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(_headTexture.Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition, headRectangle,
+            NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
 
-        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition,
+            sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
         return false;
     }
 }
@@ -258,7 +265,8 @@ public class HeartyHeart_Direct : ModProjectile
         {
             Vector2 drawPos = Projectile.oldPos[k] + (Projectile.Size / 2) - Main.screenPosition;
             Color color = drawColor * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-            Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin,
+                Projectile.scale, SpriteEffects.None, 0);
         }
 
         Main.EntitySpriteDraw(texture,
@@ -278,10 +286,10 @@ public class HeartyHeart_Direct : ModProjectile
         if (weightGain > 0f)
             wg.CombatWeightText(weightGain, true);
     }
-
 }
 
 public class HeartyHeart_Direct_Blue : HeartyHeart_Direct;
+
 public class HeartyHeart_Direct_Green : HeartyHeart_Direct;
 
 public class HeartyHeart_Direct_Spawner : ModProjectile
@@ -331,11 +339,11 @@ public class HeartyHeart_Direct_Spawner : ModProjectile
 
         if (_timer > 0)
         {
-            SmallDust(Projectile.Center, new Vector2(Main.rand.Next(5, 11) / 8f, 0).RotatedByRandom(MathHelper.Pi), 1.65f);
+            SmallDust(Projectile.Center, new Vector2(Main.rand.Next(5, 11) / 8f, 0).RotatedByRandom(MathHelper.Pi),
+                1.65f);
             SmallDust(Projectile.Center, new Vector2(Main.rand.Next(15, 21) / 8f, 0)
                 .RotatedBy(Projectile.Center.AngleTo(target.Center))
                 .RotatedByRandom(MathHelper.ToRadians(Main.rand.Next(-15, 16))), 1.75f);
-
         }
         else if (_timer == 0)
         {
@@ -348,6 +356,7 @@ public class HeartyHeart_Direct_Spawner : ModProjectile
                 BigDust(Projectile.Center, dustVelocity * power, scale);
                 degrees += 22.51f;
             }
+
             SoundEngine.PlaySound(SoundID.Item28, Projectile.Center);
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -366,7 +375,8 @@ public class HeartyHeart_Direct_Spawner : ModProjectile
 
                 for (int projectiles = 0; projectiles < projectileCount; projectiles++)
                 {
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, velocity.RotatedBy(currentAngle), projectileID, 10, 0f);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center,
+                        velocity.RotatedBy(currentAngle), projectileID, 10, 0f);
                     currentAngle += baseAngle;
                 }
             }

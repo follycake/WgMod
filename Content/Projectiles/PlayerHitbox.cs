@@ -38,9 +38,10 @@ public class Girthquake : ModProjectile
             Projectile.Kill();
             return;
         }
+
         Projectile.velocity = Vector2.Zero;
         Projectile.position = Projectile.Center;
-        Projectile.Size = new Vector2(16f, 8f) * MathHelper.Lerp(5f, num, Utils.GetLerpValue(0f, 9f, Projectile.ai[0], false));
+        Projectile.Size = new Vector2(16f, 8f) * MathHelper.Lerp(5f, num, Utils.GetLerpValue(0f, 9f, Projectile.ai[0]));
         Projectile.Center = Projectile.position;
         Point point = Projectile.TopLeft.ToTileCoordinates();
         Point point2 = Projectile.BottomRight.ToTileCoordinates();
@@ -52,13 +53,15 @@ public class Girthquake : ModProjectile
             {
                 for (int j = point.Y; j <= point2.Y; j++)
                 {
-                    if (Vector2.Distance(Projectile.Center, new Vector2(i * 16, j * 16)) <= (float)num3)
+                    if (Vector2.Distance(Projectile.Center, new Vector2(i * 16, j * 16)) <= num3)
                     {
                         Tile tileSafely = Framing.GetTileSafely(i, j);
-                        if (tileSafely.HasTile && Main.tileSolid[tileSafely.TileType] && !Main.tileSolidTop[tileSafely.TileType] && !Main.tileFrameImportant[tileSafely.TileType])
+                        if (tileSafely.HasTile && Main.tileSolid[tileSafely.TileType] &&
+                            !Main.tileSolidTop[tileSafely.TileType] && !Main.tileFrameImportant[tileSafely.TileType])
                         {
                             Tile tileSafely2 = Framing.GetTileSafely(i, j - 1);
-                            if (!tileSafely2.HasTile || !Main.tileSolid[tileSafely2.TileType] || Main.tileSolidTop[tileSafely2.TileType])
+                            if (!tileSafely2.HasTile || !Main.tileSolid[tileSafely2.TileType] ||
+                                Main.tileSolidTop[tileSafely2.TileType])
                             {
                                 int num5 = WorldGen.KillTile_GetTileDustAmount(true, tileSafely, i, j);
                                 for (int k = 0; k < num5; k++)
@@ -69,6 +72,7 @@ public class Girthquake : ModProjectile
                                     dust.velocity.Y *= 0.75f;
                                     dust.scale += num4 * 0.03f;
                                 }
+
                                 if (num4 >= 2)
                                 {
                                     for (int m = 0; m < num5 - 1; m++)
@@ -85,6 +89,7 @@ public class Girthquake : ModProjectile
                 }
             }
         }
+
         Projectile.damage = (int)Math.Ceiling(Projectile.damage * 0.75f);
     }
 }

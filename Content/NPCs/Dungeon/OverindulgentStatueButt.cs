@@ -9,7 +9,6 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
-using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -78,6 +77,7 @@ public class OverindulgentStatueBottom : ModNPC
                 else if (onTileLeft.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
             }
+
             Tile onTileRight = Framing.GetTileSafely(bottomPosition + new Vector2(4, 0));
             if (onTileRight.HasTile)
             {
@@ -88,6 +88,7 @@ public class OverindulgentStatueBottom : ModNPC
                 else if (onTileRight.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
             }
+
             if (_style == -1)
                 _style = Main.rand.Next(3);
         }
@@ -103,7 +104,6 @@ public class OverindulgentStatueBottom : ModNPC
             case 2:
                 Lighting.AddLight(NPC.Center - new Vector2(0, 4), new Vector3(51, 255, 92) / 255 * 0.9f);
                 break;
-
         }
 
         NPC.velocity.X *= 0.8f;
@@ -135,7 +135,9 @@ public class OverindulgentStatueBottom : ModNPC
                 {
                     projectileCount--;
                     float speedMult = Main.rand.Next(5, 18) / 10f;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), target.Center + new Vector2(Main.rand.Next(-500, 501), speedMult * 500), new Vector2(0, -speedMult * 2.5f), projectileID, 30, 0f, ai0: Main.rand.Next(3, 10) * 16);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(),
+                        target.Center + new Vector2(Main.rand.Next(-500, 501), speedMult * 500),
+                        new Vector2(0, -speedMult * 2.5f), projectileID, 30, 0f, ai0: Main.rand.Next(3, 10) * 16);
                 }
             }
         }
@@ -174,7 +176,8 @@ public class OverindulgentStatueBottom : ModNPC
             return 0f;
         float chance = SpawnCondition.DungeonNormal.Chance * 0.03f;
         int onTile = spawnInfo.SpawnTileType;
-        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick || onTile == TileID.GreenDungeonBrick)
+        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick ||
+            onTile == TileID.GreenDungeonBrick)
             return chance;
         return 0f;
     }
@@ -198,13 +201,18 @@ public class OverindulgentStatueBottom : ModNPC
             sourceRectangle = new Rectangle(156, 60 * 2, 78, 60);
             headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 78 : 0, 60 * 2, 78, 60);
 
-            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 7), sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 7), headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 7), sourceRectangle,
+                drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 7), headRectangle,
+                NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
             return false;
         }
-        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
 
-        spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition,
+            sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+
+        spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, headRectangle,
+            NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
         return false;
     }
 }
