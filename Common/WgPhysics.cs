@@ -391,6 +391,15 @@ public static class WgPhysics
             Vector2 offset = -Main.screenPosition;
             foreach (Spring spring in Springs)
                 device.DrawLine(Points[spring.A].Position + offset, Points[spring.B].Position + offset, Color.Red);
+            Vector2 a = Points[0].Position;
+            Vector2 b = Main.MouseWorld;
+            if (PhysicsUtility.RayIntersectSolid(a, a.DirectionTo(b), a.Distance(b), out Vector2 point, out Vector2 normal, true))
+            {
+                device.DrawLine(a + offset, point + offset, Color.Lime);
+                device.DrawLine(point + offset, point + normal * 16f + offset, Color.Yellow);
+            }
+            else
+                device.DrawLine(a + offset, b + offset, Color.White);
         }
 
         public static Vector2 CalculateDrawPosition(WgPlayer wg)

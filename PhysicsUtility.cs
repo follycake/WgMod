@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 
 namespace WgMod;
 
@@ -9,11 +10,9 @@ public static class PhysicsUtility
 {
     public static bool IsTileSolid(Tile tile, bool tileSolidTop = false)
     {
-        if (tile == null)
-            return false;
         if (tileSolidTop)
-            return tile.HasUnactuatedTile && !tile.IsHalfBlock && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]);
-        return tile.HasUnactuatedTile && !tile.IsHalfBlock && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType];
+            return tile.HasUnactuatedTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]);
+        return tile.HasUnactuatedTile && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType];
     }
 
     public static bool IsTileSolid(int x, int y, bool tileSolidTop = false)
@@ -131,15 +130,88 @@ public static class PhysicsUtility
             }
             if (distance > maxDistance)
                 break;
-            if (IsTileSolid(map.X, map.Y, tileSolidTop && normal.Y < 0f))
+            if (!WorldGen.InWorld(map.X, map.Y))
             {
                 point = origin + dir * distance;
+                return true;
+            }
+            if (IsTileSolid(Main.tile[map], tileSolidTop && normal.Y < 0f))
+            {
+                point = origin + dir * distance;
+                if (!RayCheckTile(map, origin, origin + dir * maxDistance, ref point, ref normal))
+                    continue;
                 return true;
             }
         }
         point = origin + dir * maxDistance;
         normal = -dir;
         return false;
+    }
+
+    public static bool LineIntersection(Vector2 startA, Vector2 endA, Vector2 startB, Vector2 endB, out Vector2 point)
+    {
+        Vector2[] result = Collision.CheckLinevLine(startA, endA, startB, endB);
+        if (result.Length > 0)
+        {
+            point = result[0];
+            return true;
+        }
+        point = Vector2.Zero;
+        return false;
+    }
+
+    static bool RayCheckTile(Point map, Vector2 start, Vector2 end, ref Vector2 point, ref Vector2 normal)
+    {
+        Tile tile = Main.tile[map];
+        if (tile.IsHalfBlock && point.Y < map.Y * 16f + 8f)
+        {
+            if (LineIntersection(start, end, map.ToWorldCoordinates(0f, 8f), map.ToWorldCoordinates(16f, 8f), out point))
+            {
+                normal = -Vector2.UnitY;
+                return true;
+            }
+            return false;
+        }
+        switch (tile.Slope)
+        {
+            case SlopeType.SlopeDownLeft:
+                if (normal == new Vector2(0f, 1f) || normal == new Vector2(-1f, 0f))
+                    break;
+                if (LineIntersection(start, end, map.ToWorldCoordinates(0f, 0f), map.ToWorldCoordinates(16f, 16f), out point))
+                {
+                    normal = Vector2.Normalize(new Vector2(1f, -1f));
+                    return true;
+                }
+                return false;
+            case SlopeType.SlopeDownRight:
+                if (normal == new Vector2(0f, 1f) || normal == new Vector2(1f, 0f))
+                    break;
+                if (LineIntersection(start, end, map.ToWorldCoordinates(0f, 16f), map.ToWorldCoordinates(16f, 0f), out point))
+                {
+                    normal = Vector2.Normalize(new Vector2(-1f, -1f));
+                    return true;
+                }
+                return false;
+            case SlopeType.SlopeUpLeft:
+                if (normal == new Vector2(0f, -1f) || normal == new Vector2(-1f, 0f))
+                    break;
+                if (LineIntersection(start, end, map.ToWorldCoordinates(0f, 16f), map.ToWorldCoordinates(16f, 0f), out point))
+                {
+                    normal = Vector2.Normalize(new Vector2(1f, 1f));
+                    return true;
+                }
+                return false;
+            case SlopeType.SlopeUpRight:
+                if (normal == new Vector2(0f, -1f) || normal == new Vector2(1f, 0f))
+                    break;
+                if (LineIntersection(start, end, map.ToWorldCoordinates(0f, 0f), map.ToWorldCoordinates(16f, 16f), out point))
+                {
+                    normal = Vector2.Normalize(new Vector2(-1f, 1f));
+                    return true;
+                }
+                return false;
+        }
+        return true;
     }
 
     /// <summary> Returns true when the player is grounded. </summary>
