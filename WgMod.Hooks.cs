@@ -33,9 +33,9 @@ public partial class WgMod
         On_Main.GetPlayerArmPosition += Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras += Main_DrawProj_DrawExtras;
         On_Cloud.Update += Cloud_Update;
-        On_PlayerDrawLayers.DrawStarboardRainbowTrail += OnPlayerDrawLayers_DrawStarboardRainbowTrail;
-        On_PlayerDrawLayers.DrawPlayer_03_PortableStool += OnPlayerDrawLayers_DrawPlayer_03_PortableStool;
-        On_PlayerDrawLayers.DrawPlayer_09_Wings += OnPlayerDrawLayers_DrawPlayer_09_Wings;
+        On_PlayerDrawLayers.DrawStarboardRainbowTrail += PlayerDrawLayers_DrawStarboardRainbowTrail;
+        On_PlayerDrawLayers.DrawPlayer_03_PortableStool += PlayerDrawLayers_DrawPlayer_03_PortableStool;
+        On_PlayerDrawLayers.DrawPlayer_09_Wings += PlayerDrawLayers_DrawPlayer_09_Wings;
     }
 
     // Always remember to unregister your hooks
@@ -49,9 +49,9 @@ public partial class WgMod
         On_Main.GetPlayerArmPosition -= Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras -= Main_DrawProj_DrawExtras;
         On_Cloud.Update -= Cloud_Update;
-        On_PlayerDrawLayers.DrawStarboardRainbowTrail -= OnPlayerDrawLayers_DrawStarboardRainbowTrail;
-        On_PlayerDrawLayers.DrawPlayer_03_PortableStool -= OnPlayerDrawLayers_DrawPlayer_03_PortableStool;
-        On_PlayerDrawLayers.DrawPlayer_09_Wings -= OnPlayerDrawLayers_DrawPlayer_09_Wings;
+        On_PlayerDrawLayers.DrawStarboardRainbowTrail -= PlayerDrawLayers_DrawStarboardRainbowTrail;
+        On_PlayerDrawLayers.DrawPlayer_03_PortableStool -= PlayerDrawLayers_DrawPlayer_03_PortableStool;
+        On_PlayerDrawLayers.DrawPlayer_09_Wings -= PlayerDrawLayers_DrawPlayer_09_Wings;
     }
 
     static void Player_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
@@ -242,7 +242,7 @@ public partial class WgMod
             orig(self);
     }
 
-    public static void OnPlayerDrawLayers_DrawStarboardRainbowTrail(On_PlayerDrawLayers.orig_DrawStarboardRainbowTrail orig, ref PlayerDrawSet drawinfo, Vector2 commonWingPosPreFloor, Vector2 dirsVec)
+    public static void PlayerDrawLayers_DrawStarboardRainbowTrail(On_PlayerDrawLayers.orig_DrawStarboardRainbowTrail orig, ref PlayerDrawSet drawinfo, Vector2 commonWingPosPreFloor, Vector2 dirsVec)
     {
         if (drawinfo.shadow != 0f)
             return;
@@ -301,23 +301,15 @@ public partial class WgMod
         }
     }
 
-    public static void OnPlayerDrawLayers_DrawPlayer_03_PortableStool(On_PlayerDrawLayers.orig_DrawPlayer_03_PortableStool orig, ref PlayerDrawSet drawinfo)
+    public static void PlayerDrawLayers_DrawPlayer_03_PortableStool(On_PlayerDrawLayers.orig_DrawPlayer_03_PortableStool orig, ref PlayerDrawSet drawinfo)
     {
-        if (drawinfo.drawPlayer.portableStoolInfo.IsInUse)
-        {
-            Texture2D value = TextureAssets.Extra[ExtrasID.PortableStool].Value;
-            Vector2 position = new((int)(drawinfo.Position.X - Main.screenPosition.X + drawinfo.drawPlayer.width / 2), (int)(drawinfo.Position.Y - Main.screenPosition.Y + drawinfo.drawPlayer.height + 28f - drawinfo.drawPlayer.gfxOffY));
-            Rectangle rectangle = value.Frame(1, 1, 0, 0, 0, 0);
-            Vector2 origin = rectangle.Size() * new Vector2(0.5f, 1f);
-            DrawData item = new(value, position, rectangle, drawinfo.colorArmorLegs, drawinfo.drawPlayer.bodyRotation, origin, 1f, drawinfo.playerEffect, 0f)
-            {
-                shader = drawinfo.cPortableStool
-            };
-            drawinfo.DrawDataCache.Add(item);
-        }
+        Vector2 oldPos = drawinfo.Position;
+        drawinfo.Position.Y -= drawinfo.drawPlayer.gfxOffY;
+        orig(ref drawinfo);
+        drawinfo.Position = oldPos;
     }
 
-    public static void OnPlayerDrawLayers_DrawPlayer_09_Wings(On_PlayerDrawLayers.orig_DrawPlayer_09_Wings orig, ref PlayerDrawSet drawinfo)
+    public static void PlayerDrawLayers_DrawPlayer_09_Wings(On_PlayerDrawLayers.orig_DrawPlayer_09_Wings orig, ref PlayerDrawSet drawinfo)
     {
         if (drawinfo.drawPlayer.dead || drawinfo.hideEntirePlayer || drawinfo.drawPlayer.wings <= 0)
             return;
