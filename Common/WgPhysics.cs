@@ -293,10 +293,11 @@ public static class WgPhysics
             // Collision
             bool tileSolidTop = layerType == SpriteSet.LayerType.Legs;
             Vector2 center = drawPosition - new Vector2(0f, wg.Player.gfxOffY);
+            float mountPlatformY = center.Y + wg._mountOffY + wg.Player.height;
             if (tileSolidTop)
             {
                 center.X += wg.Player.width * 0.5f;
-                center.Y += wg.Player.height - 16;
+                center.Y += wg.Player.height - 16f;
             }
             else
                 center += wg.Player.Size * 0.5f;
@@ -306,7 +307,12 @@ public static class WgPhysics
                 Vector2 dir = Vector2.Normalize(diff);
                 float dist = diff.Length();
                 if (PhysicsUtility.RayIntersectSolid(center, dir, dist, out Vector2 intersection, out Vector2 normal, tileSolidTop))
-                    point.Position = point.Position - normal * Vector2.Dot(normal, point.Position) + normal * Vector2.Dot(normal, intersection);
+                {
+                    if (!tileSolidTop || (tileSolidTop && wg.Player.Bottom.Y - 0.01f < intersection.Y))
+                        point.Position = point.Position - normal * Vector2.Dot(normal, point.Position) + normal * Vector2.Dot(normal, intersection);
+                }
+                if (tileSolidTop && wg.Player.mount.Active)
+                    point.Position.Y = MathF.Min(point.Position.Y, mountPlatformY);
                 foreach (Player player in _overlappingPlayers)
                 {
                     float collision = 0f;
@@ -636,10 +642,8 @@ public static class WgPhysics
                 };
                 if (pinned)
                 {
-                    pointsArray[quad.TopLeft].Pinned = true;
-                    pointsArray[quad.TopRight].Pinned = true;
-                    pointsArray[quad.BottomLeft].Pinned = true;
-                    pointsArray[quad.BottomRight].Pinned = true;
+                    for (int i = 0; i < 4; i++)
+                        pointsArray[quad.GetPoint(i)].Pinned = true;
                 }
                 if (!quadMap.ContainsKey((x, y - 1)))
                     Join(quad.TopLeft, quad.TopRight, -1f);
