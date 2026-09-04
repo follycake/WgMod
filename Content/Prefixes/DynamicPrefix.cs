@@ -43,4 +43,3 @@ public class DynamicPrefixItem : GlobalItem
             prefix.Update(item, player);
     }
 }
-

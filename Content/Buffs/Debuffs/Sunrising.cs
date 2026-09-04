@@ -26,7 +26,7 @@ public class SunrisingNPC : GlobalNPC
         if (!npc.HasBuff<Sunrising>())
             return;
         int sunriseCount = 0;
-        foreach (var p in Main.ActiveProjectiles)
+        foreach (Projectile p in Main.ActiveProjectiles)
         {
             if (p.type == ModContent.ProjectileType<SunriseProjectile>() && p.ai[0] == 1f && p.ai[1] == npc.whoAmI)
                 sunriseCount++;

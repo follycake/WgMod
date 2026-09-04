@@ -8,7 +8,6 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Armor.YogaClothes;
 
 [AutoloadEquip(EquipType.Head)]
-
 [Credit(ProjectRole.Programmer, Contributor.alphas0)]
 [Credit(ProjectRole.Artist, Contributor.alphas0)]
 public class YogaHeadband : ModItem

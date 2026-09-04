@@ -38,9 +38,7 @@ public class HoneyGlob : ModProjectile
         Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
         if (Projectile.velocity.Y > 16f)
-        {
             Projectile.velocity.Y = 16f;
-        }
 
         if (++Projectile.frameCounter >= 4)
         {

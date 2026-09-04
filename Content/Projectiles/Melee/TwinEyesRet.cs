@@ -120,7 +120,7 @@ public class TwinEyesRet : ModProjectile
         bool doFastThrowDust = false;
         bool shouldOwnerHitCheck = false;
 
-        int launchTimeLimit = 15;  // How much time the projectile can go before retracting (speed and shootTimer will set the flail's range)
+        int launchTimeLimit = 15; // How much time the projectile can go before retracting (speed and shootTimer will set the flail's range)
 
         float launchSpeed = 24f; // How fast the projectile can move
         float maxLaunchLength = 1400f; // How far the projectile's chain can stretch before being forced to retract when in launched state
@@ -161,9 +161,7 @@ public class TwinEyesRet : ModProjectile
             SoundEngine.PlaySound(SoundID.MaxMana, Projectile.position);
 
             for (int i = 0; i < 5; i++)
-            {
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dust, 0f, 0f, 150, default, 2.3f);
-            }
         }
 
         switch (CurrentAIState)
@@ -203,9 +201,7 @@ public class TwinEyesRet : ModProjectile
 
                     offsetFromPlayer.Y *= 0.8f;
                     if (offsetFromPlayer.Y * player.gravDir > 0f)
-                    {
                         offsetFromPlayer.Y *= 0.5f;
-                    }
                     Projectile.Center = mountedCenter + offsetFromPlayer * 30f + new Vector2(0, player.gfxOffY);
                     Projectile.velocity = Vector2.Zero;
                     Projectile.localNPCHitCooldown = spinHitCooldown; // set the hit speed to the spinning hit speed
@@ -300,9 +296,7 @@ public class TwinEyesRet : ModProjectile
                             Projectile.velocity.Y += 0.2f;
                         }
                         if (player.velocity.X == 0f)
-                        {
                             Projectile.velocity.X *= 0.96f;
-                        }
                     }
                     player.ChangeDir((player.Center.X < Projectile.Center.X).ToDirectionInt());
                     break;
@@ -374,19 +368,19 @@ public class TwinEyesRet : ModProjectile
         // This rotation code is unique to this flail, since the sprite isn't rotationally symmetric and has tip.
 
         /*
-		bool freeRotation = CurrentAIState == AIState.Ricochet || CurrentAIState == AIState.Dropping;
-		if (freeRotation)
-		{
-			if (Projectile.velocity.Length() > 1f)
-				Projectile.rotation = Projectile.velocity.ToRotation() + Projectile.velocity.X * 0.1f; // skid
-			else
-				Projectile.rotation += Projectile.velocity.X * 0.1f; // roll
-		}
-		else
-		{
-			Vector2 vectorTowardsPlayer = Projectile.DirectionTo(mountedCenter).SafeNormalize(Vector2.Zero);
-			Projectile.rotation = vectorTowardsPlayer.ToRotation() + MathHelper.PiOver2;
-		}
+        bool freeRotation = CurrentAIState == AIState.Ricochet || CurrentAIState == AIState.Dropping;
+        if (freeRotation)
+        {
+            if (Projectile.velocity.Length() > 1f)
+                Projectile.rotation = Projectile.velocity.ToRotation() + Projectile.velocity.X * 0.1f; // skid
+            else
+                Projectile.rotation += Projectile.velocity.X * 0.1f; // roll
+        }
+        else
+        {
+            Vector2 vectorTowardsPlayer = Projectile.DirectionTo(mountedCenter).SafeNormalize(Vector2.Zero);
+            Projectile.rotation = vectorTowardsPlayer.ToRotation() + MathHelper.PiOver2;
+        }
         */
         switch (CurrentAIState)
         {
@@ -409,20 +403,18 @@ public class TwinEyesRet : ModProjectile
 
         // If you have a ball shaped flail, you can use this simplified rotation code instead
         /*
-		if (Projectile.velocity.Length() > 1f)
-			Projectile.rotation = Projectile.velocity.ToRotation() + Projectile.velocity.X * 0.1f; // skid
-		else
-			Projectile.rotation += Projectile.velocity.X * 0.1f; // roll
-		*/
+        if (Projectile.velocity.Length() > 1f)
+            Projectile.rotation = Projectile.velocity.ToRotation() + Projectile.velocity.X * 0.1f; // skid
+        else
+            Projectile.rotation += Projectile.velocity.X * 0.1f; // roll
+        */
 
         Projectile.timeLeft = 2; // Makes sure the flail doesn't die (good when the flail is resting on the ground)
         player.heldProj = Projectile.whoAmI;
         player.SetDummyItemTime(2); // Add a delay so the player can't button mash the flail
         player.itemRotation = Projectile.DirectionFrom(mountedCenter).ToRotation();
         if (Projectile.Center.X < mountedCenter.X)
-        {
             player.itemRotation += (float)Math.PI;
-        }
         player.itemRotation = MathHelper.WrapAngle(player.itemRotation);
 
         // Spawning dust. We spawn dust more often when in the LaunchingForward state
@@ -572,7 +564,7 @@ public class TwinEyesRet : ModProjectile
         // Drippler Crippler customizes sourceRectangle to cycle through sprite frames: sourceRectangle = asset.Frame(1, 6);
         float chainHeightAdjustment = 0f; // Use this to adjust the chain overlap.
 
-        Vector2 chainOrigin = chainSourceRectangle.HasValue ? (chainSourceRectangle.Value.Size() / 2f) : (_chainTexture.Size() / 2f);
+        Vector2 chainOrigin = chainSourceRectangle.HasValue ? chainSourceRectangle.Value.Size() / 2f : _chainTexture.Size() / 2f;
         Vector2 chainDrawPosition = Projectile.Center;
         Vector2 vectorFromProjectileToPlayerArms = playerArmPosition.MoveTowards(chainDrawPosition, 4f) - chainDrawPosition;
         Vector2 unitVectorFromProjectileToPlayerArms = vectorFromProjectileToPlayerArms.SafeNormalize(Vector2.Zero);
@@ -595,10 +587,11 @@ public class TwinEyesRet : ModProjectile
             // Cycling through frames: sourceRectangle = asset.Frame(1, 6, 0, chainCount % 6);
             // This example shows how Flaming Mace works. It checks chainCount and changes chainTexture and draw color at different values
 
-            var chainTextureToDraw = _chainTexture;
+            Asset<Texture2D> chainTextureToDraw = _chainTexture;
 
             if (chainCount >= 4)
-            { }
+            {
+            }
             else if (chainCount >= 2)
             {
                 byte minValue = 140;

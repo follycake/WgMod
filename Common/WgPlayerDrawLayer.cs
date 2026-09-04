@@ -25,7 +25,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         On_LegacyPlayerRenderer.DrawPlayerStoned -= DrawPlayerStoned;
     }
 
-    public override Position GetDefaultPosition() => new Multiple()
+    public override Position GetDefaultPosition() => new Multiple
     {
         { new Between(PlayerDrawLayers.Torso, PlayerDrawLayers.OffhandAcc), drawInfo => !CheckTop(drawInfo) },
         { new Between(PlayerDrawLayers.Head, PlayerDrawLayers.MountFront), CheckTop }

@@ -221,7 +221,7 @@ public partial class WgPlayer
                     return false;
             }
         }
-        return (Player.sitting.isSitting && !Player.GetModPlayer<TreadmillPlayer>()._onTreadmill) || _finalMovementFactor < 0.01f;
+        return Player.sitting.isSitting && !Player.GetModPlayer<TreadmillPlayer>()._onTreadmill || _finalMovementFactor < 0.01f;
     }
 
     public override void HideDrawLayers(PlayerDrawSet drawInfo)

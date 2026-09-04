@@ -28,9 +28,10 @@ public class QueenlyGluttony : ModItem
         Item.value = Item.buyPrice(gold: 4);
     }
 
-    public static readonly DamageClass[] Melee = [
+    public static readonly DamageClass[] Melee =
+    [
         DamageClass.Melee,
-        DamageClass.MeleeNoSpeed,
+        DamageClass.MeleeNoSpeed
     ];
 
     public override void UpdateAccessory(Player player, bool hideVisual)
@@ -47,7 +48,7 @@ public class QueenlyGluttony : ModItem
             _critChance.Lerp(immobility);
             _armorPenetration.Lerp(immobility);
 
-            foreach (var item in Melee)
+            foreach (DamageClass item in Melee)
             {
                 player.GetDamage(item) += _damage;
                 player.GetAttackSpeed(item) -= _attackSpeed;
@@ -81,9 +82,10 @@ public class QueenlyGluttonyPlayer : ModPlayer
         active = false;
     }
 
-    public static readonly DamageClass[] Melee = [
+    public static readonly DamageClass[] Melee =
+    [
         DamageClass.Melee,
-        DamageClass.MeleeNoSpeed,
+        DamageClass.MeleeNoSpeed
     ];
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

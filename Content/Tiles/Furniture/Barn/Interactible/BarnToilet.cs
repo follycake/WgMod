@@ -66,17 +66,13 @@ public class BarnToilet : ModTile
         info.TargetDirection = -1;
 
         if (tile.TileFrameX != 0)
-        {
             info.TargetDirection = 1;
-        }
 
         info.AnchorTilePosition.X = i;
         info.AnchorTilePosition.Y = j;
 
         if (tile.TileFrameY % NextStyleHeight == 0)
-        {
             info.AnchorTilePosition.Y++;
-        }
 
         info.ExtraInfo.IsAToilet = true;
     }
@@ -99,18 +95,14 @@ public class BarnToilet : ModTile
         Player player = Main.LocalPlayer;
 
         if (!player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance))
-        {
             return;
-        }
 
         player.noThrow = 2;
         player.cursorItemIconEnabled = true;
         player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.Barn.Interactible.BarnToilet>();
 
         if (Main.tile[i, j].TileFrameX / 18 < 1)
-        {
             player.cursorItemIconReversed = true;
-        }
     }
 
     public override void HitWire(int i, int j)
@@ -124,8 +116,6 @@ public class BarnToilet : ModTile
         Wiring.SkipWire(spawnX, spawnY + 1);
 
         if (Wiring.CheckMech(spawnX, spawnY, 60))
-        {
             Projectile.NewProjectile(Wiring.GetProjectileSource(spawnX, spawnY), spawnX * 16 + 8, spawnY * 16 + 12, 0f, 0f, ProjectileID.ToiletEffect, 0, 0f, Main.myPlayer);
-        }
     }
 }

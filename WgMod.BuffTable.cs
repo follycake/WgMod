@@ -59,7 +59,7 @@ partial class WgMod
             (BuffID.Slimed, GainOverTime(1f, 1f)),
             (BuffID.HeartyMeal, GainOverTime(1f, 1f)),
             (BuffID.Honey, GainOverTime(2f, 1f)),
-            (BuffID.SoulDrain, GainOverTime(2f, 1f)),
+            (BuffID.SoulDrain, GainOverTime(2f, 1f))
         ]);
 
         // WgMod
@@ -72,7 +72,7 @@ partial class WgMod
                 ("SpikedSkin", 6f),
                 ("FullOfSpider", 6f),
                 ("Caramel", 12f),
-                ("CrispyDebuff", 4f),
+                ("CrispyDebuff", 4f)
             ]
         );
 
@@ -116,7 +116,7 @@ partial class WgMod
                 ("Zerg", 6f),
                 ("AbsorberRegen", 2f),
                 ("GreenJellyRegen", GainOverTime(3f, 1f)),
-                ("PinkJellyRegen", GainOverTime(3f, 1f)),
+                ("PinkJellyRegen", GainOverTime(3f, 1f))
             ]
         );
 
@@ -136,7 +136,7 @@ partial class WgMod
                 ("PiercingBuff", 3f),
                 ("PredatorBuff", 1f),
                 ("SteelfallBuff", 8f),
-                ("WarBuff", 3f),
+                ("WarBuff", 3f)
             ]
         );
     }

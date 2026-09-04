@@ -46,6 +46,7 @@ public class OutlinedDustSmall : ModDust
 public class OutlinedDustBig : ModDust
 {
     public override string Texture => "WgMod/Content/Dusts/OutlinedDust";
+
     static void DrawOutlinedDust(On_Main.orig_DrawDust orig, Main self)
     {
         Texture2D sprite = ModContent.Request<Texture2D>("WgMod/Content/Dusts/OutlinedDust").Value;
@@ -58,13 +59,9 @@ public class OutlinedDustBig : ModDust
             if (!dust.active)
                 continue;
             if (dust.type == ModContent.DustType<OutlinedDustSmall>())
-            {
                 Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(6, 0, 6, 6), dust.color, dust.rotation, new Vector2(3, 3), dust.scale, SpriteEffects.None, 0f);
-            }
             else if (dust.type == ModContent.DustType<OutlinedDustBig>())
-            {
                 Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(7, 7, 7, 7), dust.color, dust.rotation, new Vector2(3.5f, 3.5f), dust.scale, SpriteEffects.None, 0f);
-            }
         }
 
         for (int i = 0; i < Main.maxDustToDraw; i++)
@@ -73,13 +70,9 @@ public class OutlinedDustBig : ModDust
             if (!dust.active)
                 continue;
             if (dust.type == ModContent.DustType<OutlinedDustSmall>())
-            {
                 Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(0, 0, 6, 6), Color.White, dust.rotation, new Vector2(3, 3), dust.scale, SpriteEffects.None, 0f);
-            }
             else if (dust.type == ModContent.DustType<OutlinedDustBig>())
-            {
                 Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(0, 7, 7, 7), Color.White, dust.rotation, new Vector2(3.5f, 3.5f), dust.scale, SpriteEffects.None, 0f);
-            }
         }
 
         Main.spriteBatch.End();
@@ -91,6 +84,7 @@ public class OutlinedDustBig : ModDust
     {
         On_Main.DrawDust += DrawOutlinedDust;
     }
+
     public override void Unload()
     {
         On_Main.DrawDust -= DrawOutlinedDust;

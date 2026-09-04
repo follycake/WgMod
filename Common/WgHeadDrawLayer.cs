@@ -29,7 +29,7 @@ public class WgHeadDrawLayer : PlayerDrawLayer
             return;
         Vector2 position = GetPosition(drawInfo);
         int animFrame = player.bodyFrame.Y / player.bodyFrame.Height;
-        if ((animFrame >= 7 && animFrame <= 9) || (animFrame >= 14 && animFrame <= 16))
+        if (animFrame >= 7 && animFrame <= 9 || animFrame >= 14 && animFrame <= 16)
             position.Y -= 2f;
         SpriteSet.Stage stageData = SpriteSet.GetStage(wg.Weight.GetStage(), out SpriteSet set);
         Color skinColor = WgPlayerDrawLayer.GetSkinColor(drawInfo);

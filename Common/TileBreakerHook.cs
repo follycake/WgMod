@@ -44,15 +44,13 @@ public class TileBreakerHook : ILoadable
             Point point = (self.Bottom + Vector2.UnitY).ToTileCoordinates();
             Point point2 = (self.BottomLeft + Vector2.UnitY).ToTileCoordinates();
             Point point3 = (self.BottomRight + Vector2.UnitY).ToTileCoordinates();
-            if ((WorldGen.SolidTileAllowBottomSlope(point.X, point.Y) &&
-                 !TileID.Sets.CrackedBricks[Main.tile[point.X, point.Y].TileType])
-                || (WorldGen.SolidTileAllowBottomSlope(point2.X, point2.Y) &&
-                    !TileID.Sets.CrackedBricks[Main.tile[point2.X, point2.Y].TileType])
-                || (WorldGen.SolidTileAllowBottomSlope(point3.X, point3.Y) &&
-                    !TileID.Sets.CrackedBricks[Main.tile[point3.X, point3.Y].TileType]))
-            {
+            if (WorldGen.SolidTileAllowBottomSlope(point.X, point.Y) &&
+                !TileID.Sets.CrackedBricks[Main.tile[point.X, point.Y].TileType]
+                || WorldGen.SolidTileAllowBottomSlope(point2.X, point2.Y) &&
+                !TileID.Sets.CrackedBricks[Main.tile[point2.X, point2.Y].TileType]
+                || WorldGen.SolidTileAllowBottomSlope(point3.X, point3.Y) &&
+                !TileID.Sets.CrackedBricks[Main.tile[point3.X, point3.Y].TileType])
                 flag = false;
-            }
         }
 
         if (!flag)

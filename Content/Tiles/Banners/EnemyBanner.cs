@@ -8,6 +8,6 @@ public class EnemyBanner : ModBannerTile
     {
         Skeleborer,
         EncumberedStatue,
-        OverindulgentStatue,
+        OverindulgentStatue
     }
 }

@@ -34,9 +34,7 @@ public class CaramelArrowProjectile : ModProjectile
         Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
         if (Projectile.velocity.Y > 16f)
-        {
             Projectile.velocity.Y = 16f;
-        }
     }
 
     public override void OnKill(int timeLeft)

@@ -156,6 +156,7 @@ public class SpriteSet
         List<Layer> armorLayers = [];
         List<Layer> physicsLayers = [];
         set.ArmorAltasWidth = 0;
+
         void LoadTextures(Layer layer, int lookup = 0)
         {
             if (layer.Physics)
@@ -256,11 +257,16 @@ public class SpriteSet
         public bool LegArmor;
         public bool Physics;
 
-        [JsonIgnore] public Asset<Texture2D> Texture;
-        [JsonIgnore] public Texture2D ArmorTexture;
-        [JsonIgnore] public bool OwnsArmorTexture;
-        [JsonIgnore] public int ArmorAtlasX;
-        [JsonIgnore] public int PhysicsIndex;
+        [JsonIgnore]
+        public Asset<Texture2D> Texture;
+        [JsonIgnore]
+        public Texture2D ArmorTexture;
+        [JsonIgnore]
+        public bool OwnsArmorTexture;
+        [JsonIgnore]
+        public int ArmorAtlasX;
+        [JsonIgnore]
+        public int PhysicsIndex;
 
         [JsonIgnore] public bool UVArmor => ArmorTexture != null;
 
@@ -286,7 +292,7 @@ public class SpriteSet
             RenderType.MaleOnly => player.Male,
             RenderType.WhenSitting => player.Wg().IsSittingVisual(),
             RenderType.WhenStanding => !player.Wg().IsSittingVisual(),
-            _ => true,
+            _ => true
         };
 
         public Vector2 Squish(float squish)
@@ -344,6 +350,7 @@ public class SpriteSet
         public float OffsetY;
         public bool ArmBelowWhenWalking;
 
-        [JsonIgnore] public int Frame;
+        [JsonIgnore]
+        public int Frame;
     }
 }

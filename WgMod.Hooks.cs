@@ -17,6 +17,7 @@ public interface IUpdateCloud
 {
     /// <summary> Return true to do vanilla cloud updating </summary>
     bool PreUpdate(Cloud cloud);
+
     void PostUpdate(Cloud cloud);
 }
 
@@ -126,7 +127,7 @@ public partial class WgMod
     static void PlayerDrawSet_HeadOnlySetup(On_PlayerDrawSet.orig_HeadOnlySetup orig, ref PlayerDrawSet self, Player drawPlayer2, List<DrawData> drawData, List<int> dust, List<int> gore, float X, float Y, float Alpha, float Scale)
     {
         orig(ref self, drawPlayer2, drawData, dust, gore, X, Y, Alpha, Scale);
-        self.Position.X -= Math.Max((self.drawPlayer.width / 2) - 10, 0);
+        self.Position.X -= Math.Max(self.drawPlayer.width / 2 - 10, 0);
     }
 
     static Vector2 Main_GetPlayerArmPosition(On_Main.orig_GetPlayerArmPosition orig, Projectile proj)

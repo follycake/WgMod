@@ -16,7 +16,7 @@ public class WeightlessPotion : ModItem
         [
             new Color(183, 116, 255),
             new Color(205, 159, 255),
-            new Color(145, 44, 255),
+            new Color(145, 44, 255)
         ];
     }
 

@@ -44,7 +44,7 @@ public class Padded : ModPrefix
     {
         yield return new TooltipLine(Mod, "Padded", MaxLifeTooltip.Format(_health))
         {
-            OverrideColor = Terraria.ID.Colors.RarityPink,
+            OverrideColor = Terraria.ID.Colors.RarityPink
         };
     }
 

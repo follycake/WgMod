@@ -42,13 +42,13 @@ public partial class BuffHitPlayer : ModPlayer
     public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
     {
         if (_slimes.Contains(npc.type))
-            AddBuff(_slimesBuff, 60 * 6 + (20 * hurtInfo.Damage), hurtInfo.Damage / 12, 4);
+            AddBuff(_slimesBuff, 60 * 6 + 20 * hurtInfo.Damage, hurtInfo.Damage / 12, 4);
 
         if (_bees.Contains(npc.type))
-            AddBuff(_beesBuff, 60 * 10 + (20 * hurtInfo.Damage), hurtInfo.Damage / 10, 8);
+            AddBuff(_beesBuff, 60 * 10 + 20 * hurtInfo.Damage, hurtInfo.Damage / 10, 8);
 
         if (_feeders.Contains(npc.type))
-            AddBuff(_feedersBuff, 60 * 3 + (10 * hurtInfo.Damage), hurtInfo.Damage / 8, 6);
+            AddBuff(_feedersBuff, 60 * 3 + 10 * hurtInfo.Damage, hurtInfo.Damage / 8, 6);
 
         if (npc.type == NPCID.HallowBoss && hurtInfo.Damage < 1250)
             AddBuff(_empressBuff, 4 * hurtInfo.Damage, hurtInfo.Damage / 6, 1);
@@ -57,13 +57,13 @@ public partial class BuffHitPlayer : ModPlayer
     public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
     {
         if (_slimeProjectiles.Contains(proj.type))
-            AddBuff(_slimesBuff, 60 * 6 + (10 * hurtInfo.Damage), hurtInfo.Damage / 12, 4);
+            AddBuff(_slimesBuff, 60 * 6 + 10 * hurtInfo.Damage, hurtInfo.Damage / 12, 4);
 
         if (_bloaters.Contains(proj.type))
-            AddBuff(_beesBuff, 60 * 10 + (10 * hurtInfo.Damage), hurtInfo.Damage / 10, 8);
+            AddBuff(_beesBuff, 60 * 10 + 10 * hurtInfo.Damage, hurtInfo.Damage / 10, 8);
 
         if (_feederProjectiles.Contains(proj.type))
-            AddBuff(_feedersBuff, 60 * 3 + (5 * hurtInfo.Damage), hurtInfo.Damage / 8, 6);
+            AddBuff(_feedersBuff, 60 * 3 + 5 * hurtInfo.Damage, hurtInfo.Damage / 8, 6);
 
         if (_empressOfLight.Contains(proj.type) && hurtInfo.Damage < 1250)
             AddBuff(_empressBuff, 3 * hurtInfo.Damage, hurtInfo.Damage / 7, 1);

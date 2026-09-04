@@ -33,7 +33,7 @@ public class Oven : ModTile
             TileID.Boulder,
             TileID.BouncyBoulder,
             TileID.LifeCrystalBoulder,
-            TileID.RollingCactus,
+            TileID.RollingCactus
         ];
 
         AddMapEntry(new Color(200, 200, 200), Mod.GetLocalization("Tiles.Oven.MapEntry"));

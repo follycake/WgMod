@@ -46,21 +46,15 @@ public class BouncyBall : ModProjectile
         }
 
         if (Projectile.velocity.Y > 16f)
-        {
             Projectile.velocity.Y = 16f;
-        }
 
         float maxDetectRadius = 400f;
 
         if (HomingTarget == null)
-        {
             HomingTarget = FindClosestNPC(maxDetectRadius);
-        }
 
         if (HomingTarget != null && !IsValidTarget(HomingTarget))
-        {
             HomingTarget = null;
-        }
     }
 
     public NPC FindClosestNPC(float maxDetectDistance)
@@ -69,7 +63,7 @@ public class BouncyBall : ModProjectile
 
         float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
 
-        foreach (var target in Main.ActiveNPCs)
+        foreach (NPC target in Main.ActiveNPCs)
         {
             if (IsValidTarget(target))
             {
@@ -106,9 +100,7 @@ public class BouncyBall : ModProjectile
     {
         Projectile.penetrate--;
         if (Projectile.penetrate <= 0)
-        {
             Projectile.Kill();
-        }
         else if (HomingTarget != null)
         {
             float length = Projectile.velocity.Length();
@@ -126,14 +118,10 @@ public class BouncyBall : ModProjectile
             SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
 
             if (Math.Abs(Projectile.velocity.X - oldVelocity.X) > float.Epsilon)
-            {
                 Projectile.velocity.X = -oldVelocity.X;
-            }
 
             if (Math.Abs(Projectile.velocity.Y - oldVelocity.Y) > float.Epsilon)
-            {
                 Projectile.velocity.Y = -oldVelocity.Y * 0.9f;
-            }
             for (int i = 0; i < 5; i++)
             {
                 Dust cute = Dust.NewDustDirect(

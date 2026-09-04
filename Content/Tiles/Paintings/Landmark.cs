@@ -29,7 +29,7 @@ public class Landmark : ModTile
         TileObjectData.newTile.CoordinateWidth = 16;
         TileObjectData.newTile.CoordinatePadding = 2;
         TileObjectData.newTile.StyleHorizontal = true;
-        TileObjectData.newTile.CoordinateHeights = [16, 16,];
+        TileObjectData.newTile.CoordinateHeights = [16, 16];
         TileObjectData.newTile.AnchorWall = true;
         TileObjectData.addTile(Type);
 

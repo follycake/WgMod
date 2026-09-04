@@ -48,7 +48,7 @@ public class Rotund : ModPrefix
     {
         yield return new TooltipLine(Mod, "Rotund", DamageAttackSpeedTooltip.Format(_damage.Percent(), _attackSpeed.Percent(), _critChance.Percent()))
         {
-            OverrideColor = Terraria.ID.Colors.RarityPink,
+            OverrideColor = Terraria.ID.Colors.RarityPink
         };
     }
 

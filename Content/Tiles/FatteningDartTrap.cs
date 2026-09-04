@@ -41,6 +41,7 @@ public class FatteningDartTrap : ModTile
     }
 
     static readonly int[] _frameXCycle = [2, 3, 4, 5, 1, 0];
+
     public override bool Slope(int i, int j)
     {
         Tile tile = Main.tile[i, j];
@@ -55,8 +56,8 @@ public class FatteningDartTrap : ModTile
     {
         Tile tile = Main.tile[i, j];
         Vector2 spawnPosition;
-        int horizontalDirection = (tile.TileFrameX == 0) ? -1 : ((tile.TileFrameX == 18) ? 1 : 0);
-        int verticalDirection = (tile.TileFrameX < 36) ? 0 : ((tile.TileFrameX < 72) ? -1 : 1);
+        int horizontalDirection = tile.TileFrameX == 0 ? -1 : tile.TileFrameX == 18 ? 1 : 0;
+        int verticalDirection = tile.TileFrameX < 36 ? 0 : tile.TileFrameX < 72 ? -1 : 1;
         if (Wiring.CheckMech(i, j, 200))
         {
             spawnPosition = new Vector2(i * 16 + 8 + 0 * horizontalDirection, j * 16 + 9 + 0 * verticalDirection);

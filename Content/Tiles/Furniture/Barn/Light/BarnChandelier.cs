@@ -62,11 +62,13 @@ public class BarnChandelier : ModTile
         short frameAdjustment = (short)(tile.TileFrameY >= 54 ? -54 : 54);
 
         for (int x = topX; x < topX + 3; x++)
+        {
             for (int y = topY; y < topY + 3; y++)
             {
                 Main.tile[x, y].TileFrameY += frameAdjustment;
                 Wiring.SkipWire(x, y);
             }
+        }
 
         if (Main.netMode != NetmodeID.SinglePlayer)
             NetMessage.SendTileSquare(-1, topX, topY, 3, 3);
@@ -75,7 +77,6 @@ public class BarnChandelier : ModTile
     public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
     {
         offsetY += 2;
-        return;
     }
 
     public override void HitWire(int i, int j)

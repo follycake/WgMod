@@ -18,7 +18,7 @@ public class SpiderDonut : ModItem
         [
             new Color(89, 51, 40),
             new Color(176, 157, 202),
-            new Color(236, 176, 88),
+            new Color(236, 176, 88)
         ];
 
         ItemID.Sets.IsFood[Type] = true;

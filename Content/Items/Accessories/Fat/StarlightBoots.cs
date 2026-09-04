@@ -82,7 +82,7 @@ public class StarlightBootsPlayer : ModPlayer
         float runningSpeed = 0f;
         if (Player.Grounded() && !Player.mount.Active)
         {
-            if ((Player.controlRight && Player.velocity.X > 0) || (Player.controlLeft && Player.velocity.X < 0))
+            if (Player.controlRight && Player.velocity.X > 0 || Player.controlLeft && Player.velocity.X < 0)
             {
                 running = true;
                 runningSpeed = Player.velocity.X > 0 ? Player.velocity.X : Player.velocity.X * -1;
@@ -95,4 +95,3 @@ public class StarlightBootsPlayer : ModPlayer
         }
     }
 }
-

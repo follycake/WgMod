@@ -16,7 +16,6 @@ using WgMod.Content.Projectiles;
 namespace WgMod.Content.NPCs.TownNPCs.GroundedHarpy;
 
 [AutoloadHead]
-
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
 public class GroundedHarpyNPC : ModNPC
@@ -101,7 +100,7 @@ public class GroundedHarpyNPC : ModNPC
     {
         bestiaryEntry.Info.AddRange([
             BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
-            new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.GroundedHarpy"),
+            new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.GroundedHarpy")
         ]);
     }
 
@@ -125,7 +124,7 @@ public class GroundedHarpyNPC : ModNPC
             "Kingfisher", "Hoopoe", "Griffin", "Cockatrice", "Ra", "Thoth",
             "Horus", "Axex", "Zu", "Huma", "Odin", "Cher Ami",
             "Thunderbird", "Ibis", "Raven", "Athena", "Daffy", "Illo",
-            "Ceen", "Issot", "Quassice", "Zhonu", "Qhueen", "Obeth",
+            "Ceen", "Issot", "Quassice", "Zhonu", "Qhueen", "Obeth"
         ];
     }
 
@@ -227,7 +226,7 @@ public class GroundedHarpyNPC : ModNPC
 
     public override void AddShops()
     {
-        var harpyShop = new NPCShop(Type, HarpyShop)
+        NPCShop harpyShop = new NPCShop(Type, HarpyShop)
             .Add(ModContent.ItemType<HarpyStormbow>(), Condition.DownedSkeletron)
             .Add(ModContent.ItemType<HornOfMore>(), Condition.DownedEowOrBoc)
             .Add(new Item(ItemID.CreativeWings) { shopCustomPrice = Item.buyPrice(gold: 30) })

@@ -21,6 +21,7 @@ public class EncumberedStatueBanner : ModItem
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
     }
 }
+
 public class OverindulgentStatueBanner : ModItem
 {
     public override void SetDefaults()
@@ -36,4 +37,3 @@ public class OverindulgentStatueBanner : ModItem
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
     }
 }
-

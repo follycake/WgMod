@@ -16,12 +16,13 @@ public class ItemDisabling : GlobalItem
     public static string BandName;
 
     /// <summary> Every accessory in the Band of Sweetening line </summary>
-    static readonly HashSet<int> _bandLine = [
+    static readonly HashSet<int> _bandLine =
+    [
         ItemID.BandofRegeneration,
         ItemID.PhilosophersStone,
         ItemID.CharmofMyths,
         ModContent.ItemType<BandOfSweetening>(),
-        ModContent.ItemType<CharmOfSweets>(),
+        ModContent.ItemType<CharmOfSweets>()
     ];
 
     /// <summary> Whether or not an accessory in the Queenly Gluttony is currently equipped. </summary>
@@ -30,9 +31,10 @@ public class ItemDisabling : GlobalItem
     public static string GauntletName;
 
     /// <summary> Every accessory in the Queenly gluttony line </summary>
-    static readonly HashSet<int> _gauntletLine = [
+    static readonly HashSet<int> _gauntletLine =
+    [
         ModContent.ItemType<QueenlyGluttony>(),
-        ModContent.ItemType<SolDrive>(),
+        ModContent.ItemType<SolDrive>()
     ];
 
     public override void UpdateAccessory(Item item, Player player, bool hideVisual)

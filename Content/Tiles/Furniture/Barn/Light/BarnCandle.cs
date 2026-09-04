@@ -115,7 +115,7 @@ public class BarnCandle : ModTile
 
         if (frameY / 18 % 3 == 0)
         {
-            var dust = Dust.NewDustDirect(new Vector2(i * 16 + 4, j * 16 + 2), 4, 4, DustID.Torch, 0f, 0f, 100, default, 1f);
+            Dust dust = Dust.NewDustDirect(new Vector2(i * 16 + 4, j * 16 + 2), 4, 4, DustID.Torch, 0f, 0f, 100, default, 1f);
 
             if (!Main.rand.NextBool(3))
                 dust.noGravity = true;

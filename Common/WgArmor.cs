@@ -109,7 +109,7 @@ public static class WgArmor
         spriteBatch.End();
 
         // Soften pass
-        _multiplyBlend ??= new BlendState()
+        _multiplyBlend ??= new BlendState
         {
             AlphaBlendFunction = BlendFunction.Add,
             AlphaSourceBlend = Blend.Zero,
@@ -149,7 +149,7 @@ public static class WgArmor
         {
             texture = wg._armorTarget,
             sourceRect = rect,
-            shader = layer.LegArmor ? (drawInfo.drawPlayer.legs > 0 ? drawInfo.cLegs : 0) : (drawInfo.drawPlayer.body > 0 ? drawInfo.cBody : 0),
+            shader = layer.LegArmor ? drawInfo.drawPlayer.legs > 0 ? drawInfo.cLegs : 0 : drawInfo.drawPlayer.body > 0 ? drawInfo.cBody : 0,
             // Vanilla uses GetImmuneAlpha for body texture, using GetImmuneAlphaPure puts body and armor out of sync
             color = drawInfo.drawPlayer.GetImmuneAlpha(Color.White, drawInfo.shadow)
         });
@@ -194,7 +194,7 @@ public static class WgArmor
 
     static int GetLegsGlowMask(Player drawPlayer)
     {
-        var legsGlowMask = drawPlayer.legs switch
+        int legsGlowMask = drawPlayer.legs switch
         {
             ArmorIDs.Legs.NebulaLeggings => GlowMaskID.NebulaArmorLegs,
             ArmorIDs.Legs.ArkhalisPants_Male => GlowMaskID.ArkhalisPants_Male,

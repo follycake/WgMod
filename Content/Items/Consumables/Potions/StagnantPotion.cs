@@ -16,7 +16,7 @@ public class StagnantPotion : ModItem
         [
             new Color(69, 69, 69),
             new Color(69, 69, 69),
-            new Color(69, 69, 69),
+            new Color(69, 69, 69)
         ];
     }
 

@@ -21,7 +21,7 @@ public class BottledCaramel : ModItem
         [
             new Color(240, 240, 240),
             new Color(200, 200, 200),
-            new Color(140, 140, 140),
+            new Color(140, 140, 140)
         ];
     }
 

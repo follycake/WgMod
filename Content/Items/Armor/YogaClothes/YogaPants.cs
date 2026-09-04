@@ -7,7 +7,6 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Armor.YogaClothes;
 
 [AutoloadEquip(EquipType.Legs)]
-
 [Credit(ProjectRole.Programmer, Contributor.alphas0)]
 [Credit(ProjectRole.Artist, Contributor.alphas0)]
 public class YogaPants : ModItem

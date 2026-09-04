@@ -277,7 +277,7 @@ public class HeartyHeart_Wave : ModProjectile
         if (_timer > 60 * 6)
             Projectile.alpha = (int)Math.Clamp((_timer - 60 * 6) / 60f * 255f, 0, 255);
         else if (_timer < 60)
-            Projectile.alpha = (int)Math.Clamp(255f - (_timer / 60f * 255f), 0, 255);
+            Projectile.alpha = (int)Math.Clamp(255f - _timer / 60f * 255f, 0, 255);
         else
             Projectile.alpha = 0;
 
@@ -309,7 +309,7 @@ public class HeartyHeart_Wave : ModProjectile
 
         for (int k = 1; k < Projectile.oldPos.Length; k++)
         {
-            Vector2 drawPos = Projectile.oldPos[k] + (Projectile.Size / 2) - Main.screenPosition;
+            Vector2 drawPos = Projectile.oldPos[k] + Projectile.Size / 2 - Main.screenPosition;
             Color color = drawColor * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
             Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin,
                 Projectile.scale, SpriteEffects.None, 0);
@@ -347,5 +347,4 @@ public class HeartyHeart_Wave : ModProjectile
 }
 
 public class HeartyHeart_Wave_Blue : HeartyHeart_Wave;
-
 public class HeartyHeart_Wave_Green : HeartyHeart_Wave;

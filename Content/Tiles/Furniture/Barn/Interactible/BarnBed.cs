@@ -14,6 +14,7 @@ namespace WgMod.Content.Tiles.Furniture.Barn.Interactible;
 public class BarnBed : ModTile
 {
     public const int NextStyleHeight = 38;
+
     public override void SetStaticDefaults()
     {
         Main.tileFrameImportant[Type] = true;
@@ -62,13 +63,11 @@ public class BarnBed : ModTile
     {
         Player player = Main.LocalPlayer;
         Tile tile = Main.tile[i, j];
-        int spawnX = i - (tile.TileFrameX / 18) + (tile.TileFrameX >= 72 ? 5 : 2);
+        int spawnX = i - tile.TileFrameX / 18 + (tile.TileFrameX >= 72 ? 5 : 2);
         int spawnY = j + 2;
 
         if (tile.TileFrameY % NextStyleHeight != 0)
-        {
             spawnY--;
-        }
 
         if (!Player.IsHoveringOverABottomSideOfABed(i, j))
         {

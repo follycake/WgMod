@@ -37,13 +37,14 @@ public class BarnDresser : ModTile
         TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
         TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
         TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
-        TileObjectData.newTile.AnchorInvalidTiles = [
-                TileID.MagicalIceBlock,
-                TileID.Boulder,
-                TileID.BouncyBoulder,
-                TileID.LifeCrystalBoulder,
-                TileID.RollingCactus
-            ];
+        TileObjectData.newTile.AnchorInvalidTiles =
+        [
+            TileID.MagicalIceBlock,
+            TileID.Boulder,
+            TileID.BouncyBoulder,
+            TileID.LifeCrystalBoulder,
+            TileID.RollingCactus
+        ];
         TileObjectData.newTile.LavaDeath = false;
         TileObjectData.addTile(Type);
     }
@@ -155,27 +156,19 @@ public class BarnDresser : ModTile
         int top = j;
         left -= tile.TileFrameX % 54 / 18;
         if (tile.TileFrameY % 36 != 0)
-        {
             top--;
-        }
         int chestIndex = Chest.FindChest(left, top);
         player.cursorItemIconID = -1;
         if (chestIndex < 0)
-        {
             player.cursorItemIconText = Language.GetTextValue("LegacyDresserType.0");
-        }
         else
         {
             string defaultName = TileLoader.DefaultContainerName(tile.TileType, tile.TileFrameX, tile.TileFrameY);
 
             if (Main.chest[chestIndex].name != "")
-            {
                 player.cursorItemIconText = Main.chest[chestIndex].name;
-            }
             else
-            {
                 player.cursorItemIconText = defaultName;
-            }
             if (player.cursorItemIconText == defaultName)
             {
                 player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.Barn.Interactible.BarnDresser>();
@@ -224,25 +217,17 @@ public class BarnDresser : ModTile
         int top = j;
         Tile tile = Main.tile[i, j];
         if (tile.TileFrameX % 36 != 0)
-        {
             left--;
-        }
 
         if (tile.TileFrameY != 0)
-        {
             top--;
-        }
 
         int chest = Chest.FindChest(left, top);
         if (chest < 0)
-        {
             return Language.GetTextValue("LegacyDresserType.0");
-        }
 
         if (Main.chest[chest].name == "")
-        {
             return name;
-        }
 
         return name + ": " + Main.chest[chest].name;
     }

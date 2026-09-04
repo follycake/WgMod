@@ -17,7 +17,6 @@ using WgMod.Content.Items.Placeable.Furniture.Barn;
 namespace WgMod.Content.NPCs.TownNPCs.Milkmaid;
 
 [AutoloadHead]
-
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor._d_u_m_m_y_)]
 public class MilkmaidNPC : ModNPC
@@ -86,7 +85,7 @@ public class MilkmaidNPC : ModNPC
     {
         bestiaryEntry.Info.AddRange([
             BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
-            new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.Milkmaid"),
+            new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.Milkmaid")
         ]);
     }
 
@@ -110,7 +109,7 @@ public class MilkmaidNPC : ModNPC
             "Meadow", "Star", "Buttercup", "Clarabelle", "Maple", "Gertrude",
             "Bella", "Babe", "Gladys", "Otis", "Pauline", "Penny",
             "Ferdinand", "Minos", "Chillingham", "Bagbury", "Helios", "Taurus",
-            "Dionysus", "Hera", "Mars", "Neptune", "Vulcan", "Selene",
+            "Dionysus", "Hera", "Mars", "Neptune", "Vulcan", "Selene"
         ];
     }
 
@@ -131,10 +130,12 @@ public class MilkmaidNPC : ModNPC
             chat.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Milkmaid.BloodMoonDialogue3")); // "Not enough milk for ya? Too bad."
         }
         else if (NPC.loveStruck)
+        {
             if (!player.Male)
                 chat.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Milkmaid.LoveStruckDialogue1")); // "Mroo~ Why don't ya come meet me behind my barn, hun~?"
             else
                 chat.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Milkmaid.LoveStruckDialogue2")); // "Mmph... I think I'm in heat all of a sudden... Can ya give me some alone time?"
+        }
         else if (NPC.homeless)
         {
             chat.Add(Language.GetTextValue("Mods.WgMod.Dialogue.Milkmaid.HomelessDialogue1")); // "Have ya got a spare barn I can crash in?"
@@ -205,9 +206,7 @@ public class MilkmaidNPC : ModNPC
         string bloodMoon = "";
 
         if (firstButton)
-        {
             shop = MilkmaidShop;
-        }
         else
         {
             if (Main.bloodMoon)
@@ -256,7 +255,7 @@ public class MilkmaidNPC : ModNPC
 
     public override void AddShops()
     {
-        var milkyShop = new NPCShop(Type, MilkmaidShop)
+        NPCShop milkyShop = new NPCShop(Type, MilkmaidShop)
             .Add(ModContent.ItemType<BarnWorktable>())
             .Add(ItemID.MilkCarton)
             .Add(ModContent.ItemType<LesserWeightGainPotion>())

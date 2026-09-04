@@ -11,7 +11,6 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Armor.WhaleArmor;
 
 [AutoloadEquip(EquipType.Head)]
-
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class WhaleHead : ModItem
@@ -110,7 +109,7 @@ public class WhaleHead : ModItem
 
         if (_timer > 30 && _timer < TimerMax && _timer % 5 == 0)
         {
-            Vector2 blowhole = new(player.position.X + (player.width / 2f), player.position.Y);
+            Vector2 blowhole = new(player.position.X + player.width / 2f, player.position.Y);
 
             SoundEngine.PlaySound(SoundID.Item13, blowhole);
 

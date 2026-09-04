@@ -186,7 +186,7 @@ public static class Utility
                         num88 -= 210;
                     }
                     if (num87 > 0)
-                        player.Hurt(PlayerDeathReason.ByOther(2), num87, 0, pvp: false, quiet: false, 4);
+                        player.Hurt(PlayerDeathReason.ByOther(2), num87, 0, false, false, 4);
                     if (num88 > 0)
                         player.AddBuff(BuffID.OnFire, num88);
                 }
@@ -218,5 +218,6 @@ public static class Utility
         instance.NPC.netID = instance.Type;
         Main.BestiaryTracker.Kills.RegisterKill(instance.NPC);
     }
+
     public static bool Grounded(this Player player) => player.grappling[0] == -1 && !player.tongued && !player.shimmering && player.velocity.Y == 0f;
 }

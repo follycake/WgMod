@@ -8,7 +8,6 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Armor.GluttonyArmor;
 
 [AutoloadEquip(EquipType.Body)]
-
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class GluttonyCrop : ModItem

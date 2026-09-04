@@ -42,7 +42,7 @@ public class SpriteSetElement : ConfigElement<string>
         });
         Append(_optionChoice);
 
-        _chooserPanel = new UIPanel()
+        _chooserPanel = new UIPanel
         {
             Top = new(30, 0),
             Width = new(-8, 1),
@@ -51,7 +51,7 @@ public class SpriteSetElement : ConfigElement<string>
             // Each is 30 tall, and 5 list padding. 12 panel padding top and bottom minus the final row list padding
             Height = new(19 + (int)Math.Ceiling(Sets.Length / 4f) * 35, 0)
         };
-        _chooserList = new UIGrid()
+        _chooserList = new UIGrid
         {
             Height = new(30, 1),
             Width = new(0, 1),
