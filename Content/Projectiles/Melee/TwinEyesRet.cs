@@ -58,6 +58,7 @@ public class TwinEyesRet : ModProjectile
         // These lines facilitate the trail drawing
         ProjectileID.Sets.TrailCacheLength[Type] = 6;
         ProjectileID.Sets.TrailingMode[Type] = 2;
+        ProjectileID.Sets.HeldProjDoesNotUsePlayerGfxOffY[Type] = true;
     }
 
     public override void SetDefaults()
@@ -559,7 +560,7 @@ public class TwinEyesRet : ModProjectile
     // PreDraw is used to draw a chain and trail before the projectile is drawn normally.
     public override bool PreDraw(ref Color lightColor)
     {
-        Vector2 playerArmPosition = Main.GetPlayerArmPosition(Projectile);
+        Vector2 playerArmPosition = Main.GetPlayerArmPosition(Projectile) - new Vector2(0f, Main.player[Projectile.owner].gfxOffY);
         Rectangle? chainSourceRectangle = null;
         // Drippler Crippler customizes sourceRectangle to cycle through sprite frames: sourceRectangle = asset.Frame(1, 6);
         float chainHeightAdjustment = 0f; // Use this to adjust the chain overlap.
