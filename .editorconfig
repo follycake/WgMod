@@ -1,3 +1,15 @@
+root = true
+
+[*.json]
+# Indentation and spacing
+indent_size = 4
+indent_style = space
+tab_width = 4
+
+# New line preferences
+end_of_line = lf
+insert_final_newline = true
+
 [*.cs]
 
 # Indentation and spacing
@@ -9,10 +21,28 @@ tab_width = 4
 end_of_line = lf
 insert_final_newline = true
 
+# Resharper
+resharper_braces_for_ifelse = required_for_multiline
+resharper_braces_for_for = required_for_multiline
+resharper_braces_for_foreach = required_for_multiline
+resharper_braces_for_while = required_for_multiline
+resharper_braces_for_dowhile = required_for_multiline
+resharper_braces_for_using = required_for_multiline
+resharper_braces_for_lock = required_for_multiline
+resharper_braces_for_fixed = required_for_multiline
+resharper_braces_redundant = true
+
+resharper_align_multiline_calls_chain = false
+resharper_continuous_indent_multiplier = 1
+resharper_wrap_arguments_style = wrap_if_long
+resharper_place_field_attribute_on_same_line = false
+resharper_blank_lines_around_single_line_type = 0
+
 # Rules
 csharp_prefer_braces = false
 csharp_style_namespace_declarations = file_scoped:warning
 dotnet_style_require_accessibility_modifiers = omit_if_default:warning
+csharp_preferred_modifier_order = public, private, protected, internal, file, static, extern, new, virtual, abstract, sealed, override, readonly, unsafe, required, volatile, async:suggestion
 
 # Formatting
 dotnet_sort_system_directives_first = true
