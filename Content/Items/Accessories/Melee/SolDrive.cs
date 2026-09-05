@@ -5,7 +5,6 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
-using WgMod.Common.GlobalItems;
 using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Accessories.Melee;
@@ -30,43 +29,30 @@ public class SolDrive : ModItem
         Item.value = Item.buyPrice(gold: 14);
     }
 
-    public static readonly DamageClass[] Melee =
-    [
-        DamageClass.Melee,
-        DamageClass.MeleeNoSpeed
-    ];
-
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
         if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out SolDrivePlayer sd))
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
-        if (!ItemDisabling.GauntletLine)
-        {
-            _damage.Lerp(immobility);
-            _attackSpeed.Lerp(immobility);
-            _critChance.Lerp(immobility);
-            _armorPenetration.Lerp(immobility);
-            _meleeSize.Lerp(immobility);
+        _damage.Lerp(immobility);
+        _attackSpeed.Lerp(immobility);
+        _critChance.Lerp(immobility);
+        _armorPenetration.Lerp(immobility);
+        _meleeSize.Lerp(immobility);
 
+        player.GetDamage(DamageClass.Melee) += _damage;
+        player.GetAttackSpeed(DamageClass.Melee) -= _attackSpeed;
+        player.GetCritChance(DamageClass.Melee) += _critChance;
+        player.GetArmorPenetration(DamageClass.Melee) += _armorPenetration;
 
-            foreach (DamageClass item in Melee)
-            {
-                player.GetDamage(item) += _damage;
-                player.GetAttackSpeed(item) -= _attackSpeed;
-                player.GetCritChance(item) += _critChance;
-                player.GetArmorPenetration(item) += _armorPenetration;
-            }
+        player.meleeScaleGlove = true;
+        player.autoReuseGlove = true;
+        player.kbGlove = true;
+        player.magmaStone = true;
 
-            player.meleeScaleGlove = true;
-            player.autoReuseGlove = true;
-            player.kbGlove = true;
-            player.magmaStone = true;
-
-            sd.active = true;
-            sd._meleeSize = _meleeSize;
-        }
+        sd.active = true;
+        sd._meleeSize = _meleeSize;
     }
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -103,12 +89,6 @@ public class SolDrivePlayer : ModPlayer
         active = false;
     }
 
-    public static readonly DamageClass[] Melee =
-    [
-        DamageClass.Melee,
-        DamageClass.MeleeNoSpeed
-    ];
-
     static readonly WeightedRandom<int> _buffs = new();
 
     public override void SetStaticDefaults()
@@ -127,7 +107,7 @@ public class SolDrivePlayer : ModPlayer
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        if (!Player.TryGetModPlayer(out WgPlayer wg) || !active || !Melee.Contains(hit.DamageType))
+        if (!Player.TryGetModPlayer(out WgPlayer wg) || !active || hit.DamageType != DamageClass.Melee)
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
@@ -138,7 +118,7 @@ public class SolDrivePlayer : ModPlayer
 
     public override void ModifyItemScale(Item item, ref float scale)
     {
-        if (!active || !Melee.Contains(item.DamageType) || Player.TryGetModPlayer(out ChampionsBeltPlayer cb) || cb.active)
+        if (!active || item.DamageType != DamageClass.Melee || Player.TryGetModPlayer(out ChampionsBeltPlayer cb) || cb.active)
             return;
 
         scale += _meleeSize;
@@ -146,7 +126,7 @@ public class SolDrivePlayer : ModPlayer
 
     public override void MeleeEffects(Item item, Rectangle hitbox)
     {
-        if (!active || !Melee.Contains(item.DamageType))
+        if (!active || item.DamageType != DamageClass.Melee)
             return;
 
         if (Main.rand.NextBool(3))
@@ -158,7 +138,7 @@ public class SolDrivePlayer : ModPlayer
 
     public override void EmitEnchantmentVisualsAt(Projectile projectile, Vector2 boxPosition, int boxWidth, int boxHeight)
     {
-        if (!active || !Melee.Contains(projectile.DamageType))
+        if (!active || projectile.DamageType != DamageClass.Melee)
             return;
 
         if (Main.rand.NextBool(3))
@@ -294,4 +274,24 @@ public class SolDrivePlayer : ModPlayer
                                                                                                                     #+################+++
                                                                                                                       ################+#
                                                                                                                          ############
+    __  ___            __   _           __   __                         __  __          __     __  __                                               __          __                                              _      __
+   /  |/  /___ _____  / /__(_)___  ____/ /  / /______  ___ _      __   / /_/ /_  ____ _/ /_   / /_/ /_  ___  __  __   _________ _____  ____  ____  / /_   _____/ /_  ____ _____  ____ ____     _________  _____(_)__  / /___  __
+  / /|_/ / __ `/ __ \/ //_/ / __ \/ __  /  / //_/ __ \/ _ \ | /| / /  / __/ __ \/ __ `/ __/  / __/ __ \/ _ \/ / / /  / ___/ __ `/ __ \/ __ \/ __ \/ __/  / ___/ __ \/ __ `/ __ \/ __ `/ _ \   / ___/ __ \/ ___/ / _ \/ __/ / / /
+ / /  / / /_/ / / / / ,< / / / / / /_/ /  / ,< / / / /  __/ |/ |/ /  / /_/ / / / /_/ / /_   / /_/ / / /  __/ /_/ /  / /__/ /_/ / / / / / / / /_/ / /_   / /__/ / / / /_/ / / / / /_/ /  __/  (__  ) /_/ / /__/ /  __/ /_/ /_/ /
+/_/  /_/\__,_/_/ /_/_/|_/_/_/ /_/\__,_/  /_/|_/_/ /_/\___/|__/|__/   \__/_/ /_/\__,_/\__/   \__/_/ /_/\___/\__, /   \___/\__,_/_/ /_/_/ /_/\____/\__/   \___/_/ /_/\__,_/_/ /_/\__, /\___/  /____/\____/\___/_/\___/\__/\__, /
+   _____          _            __                 __         ____             ______          __  _       /____/                  __  __                             __       /____/        __  __                  __ /____/                        __   __  __            __                    __
+  / ___/____     (_)___  _____/ /____  ____ _____/ /  ____  / __/  ________  / __/ /__  _____/ /_(_)___  ____ _   ____  ____     / /_/ /_  ___  ____ ___  ________  / /   _____  _____     / /_/ /_  ___  __  __   / /_  / /___ _____ ___  ___  ____/ /  / /_/ /_  ___     / /_  ___  ____ ______/ /______
+  \__ \/ __ \   / / __ \/ ___/ __/ _ \/ __ `/ __  /  / __ \/ /_   / ___/ _ \/ /_/ / _ \/ ___/ __/ / __ \/ __ `/  / __ \/ __ \   / __/ __ \/ _ \/ __ `__ \/ ___/ _ \/ / | / / _ \/ ___/    / __/ __ \/ _ \/ / / /  / __ \/ / __ `/ __ `__ \/ _ \/ __  /  / __/ __ \/ _ \   / __ \/ _ \/ __ `/ ___/ __/ ___/
+ ___/ / /_/ /  / / / / (__  ) /_/  __/ /_/ / /_/ /  / /_/ / __/  / /  /  __/ __/ /  __/ /__/ /_/ / / / / /_/ /  / /_/ / / / /  / /_/ / / /  __/ / / / / (__  )  __/ /| |/ /  __(__  )    / /_/ / / /  __/ /_/ /  / /_/ / / /_/ / / / / / /  __/ /_/ /  / /_/ / / /  __/  / /_/ /  __/ /_/ (__  ) /_(__  ) 
+/____/\____/  /_/_/ /_/____/\__/\___/\__,_/\__,_/   \____/_/    /_/   \___/_/ /_/\___/\___/\__/_/_/ /_/\__, /   \____/_/ /_/   \__/_/ /_/\___/_/ /_/ /_/____/\___/_/ |___/\___/____( )   \__/_/ /_/\___/\__, /  /_.___/_/\__,_/_/ /_/ /_/\___/\__,_/   \__/_/ /_/\___/  /_.___/\___/\__,_/____/\__/____/  
+    ____        __     __  __                  ____                      __   __                     _/____/      _          __  __            ___                          ____   |/                  /____/
+   / __ )__  __/ /_   / /_/ /_  ___  __  __   / __/___  __  ______  ____/ /  / /_  ___  ____ ___  __/ /___  __   (_)___     / /_/ /_  ___     / (_)   _____  _____   ____  / __/  / /_  ___  ____ ______/ /______
+  / __  / / / / __/  / __/ __ \/ _ \/ / / /  / /_/ __ \/ / / / __ \/ __  /  / __ \/ _ \/ __ `/ / / / __/ / / /  / / __ \   / __/ __ \/ _ \   / / / | / / _ \/ ___/  / __ \/ /_   / __ \/ _ \/ __ `/ ___/ __/ ___/
+ / /_/ / /_/ / /_   / /_/ / / /  __/ /_/ /  / __/ /_/ / /_/ / / / / /_/ /  / /_/ /  __/ /_/ / /_/ / /_/ /_/ /  / / / / /  / /_/ / / /  __/  / / /| |/ /  __(__  )  / /_/ / __/  / /_/ /  __/ /_/ (__  ) /_(__  )
+/_____/\__,_/\__/   \__/_/ /_/\___/\__, /  /_/  \____/\__,_/_/ /_/\__,_/  /_.___/\___/\__,_/\__,_/\__/\__, /  /_/_/ /_/   \__/_/ /_/\___/  /_/_/ |___/\___/____/   \____/_/    /_.___/\___/\__,_/____/\__/____/
+    ___              __           /____/   __    __     _  __     ___         __           __  __    /____/                   __                         __                __     _ __
+   /   |  ____  ____/ /  _________  __  __/ /___/ /___ ( )/ /_   / (_)__     / /_____     / /_/ /_  ___  ____ ___  ________  / /   _____  _____   ____ _/ /_  ____  __  __/ /_   (_) /_
+  / /| | / __ \/ __  /  / ___/ __ \/ / / / / __  / __ \|// __/  / / / _ \   / __/ __ \   / __/ __ \/ _ \/ __ `__ \/ ___/ _ \/ / | / / _ \/ ___/  / __ `/ __ \/ __ \/ / / / __/  / / __/
+ / ___ |/ / / / /_/ /  / /__/ /_/ / /_/ / / /_/ / / / / / /_   / / /  __/  / /_/ /_/ /  / /_/ / / /  __/ / / / / (__  )  __/ /| |/ /  __(__  )  / /_/ / /_/ / /_/ / /_/ / /_   / / /_
+/_/  |_/_/ /_/\__,_/   \___/\____/\__,_/_/\__,_/_/ /_/  \__/  /_/_/\___/   \__/\____/   \__/_/ /_/\___/_/ /_/ /_/____/\___/_/ |___/\___/____/   \__,_/_.___/\____/\__,_/\__/  /_/\__/
 */

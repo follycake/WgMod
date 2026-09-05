@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WgMod.Common.GlobalItems;
 using WgMod.Common.Players;
 using WgMod.Content.Items.Ammo;
 
@@ -33,14 +32,11 @@ public class CharmOfSweets : ModItem
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
-        if (!ItemDisabling.BandLine)
-        {
-            _regen.Lerp(immobility);
-            _potionDelay.Lerp(immobility);
+        _regen.Lerp(immobility);
+        _potionDelay.Lerp(immobility);
 
-            player.lifeRegen += _regen;
-            player.PotionDelayModifier *= _potionDelay;
-        }
+        player.lifeRegen += _regen;
+        player.PotionDelayModifier *= _potionDelay;
     }
 
     public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
