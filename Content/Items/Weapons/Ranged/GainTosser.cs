@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 using WgMod.Common.Players;
 using WgMod.Content.Items.Consumables.Potions.WeightGainPotions;
 
-namespace WgMod.Content.Items.Weapons.Melee;
+namespace WgMod.Content.Items.Weapons.Ranged;
 
 [Credit(ProjectRole.Programmer, Contributor.alphas0)]
 [Credit(ProjectRole.Artist, Contributor.alphas0)]
