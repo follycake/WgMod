@@ -1,15 +1,19 @@
-﻿using Terraria;
+﻿using System.Collections.Generic;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
 
-namespace WgMod.Content.Items.Accessories.Movement;
+namespace WgMod.Content.Items.Accessories.Movement.Boots;
 
 [AutoloadEquip(EquipType.Shoes)]
+
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.trilophyte)]
 public class ExoskeletonLegs : ModItem
 {
+    WgStat _movePenalty = new(1f, 0.8f);
+
     public override void SetDefaults()
     {
         Item.width = 34;
@@ -22,16 +26,26 @@ public class ExoskeletonLegs : ModItem
 
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
+        if (!player.TryGetModPlayer(out WgPlayer wg))
+            return;
+        float immobility = wg.Weight.ClampedImmobility;
+
         int prevRocketBoots = player.rocketBoots;
         player.accRunSpeed = 6.75f;
         player.rocketBoots = 2;
         player.vanityRocketBoots = 2;
 
-        if (prevRocketBoots > 0 || !player.TryGetModPlayer(out WgPlayer wg))
+        if (prevRocketBoots > 0)
             return;
 
-        float immobility = wg.Weight.ClampedImmobility;
-        wg.MovementPenalty *= float.Lerp(1f, 0.8f, immobility);
+        _movePenalty.Lerp(immobility);
+
+        wg.MovementPenalty *= _movePenalty;
+    }
+
+    public override void ModifyTooltips(List<TooltipLine> tooltips)
+    {
+        tooltips.FormatLines((1 - _movePenalty).Percent());
     }
 
     public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
@@ -46,7 +60,7 @@ public class ExoskeletonLegs : ModItem
             CreateRecipe()
                 .AddIngredient(ItemID.SpectreBoots)
                 .AddIngredient(calamityFables.Find<ModItem>("WulfrumMetalScrap").Type, 12)
-                .AddTile(TileID.Anvils)
+                .AddTile(TileID.TinkerersWorkbench)
                 .Register();
         }
         else if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
@@ -54,7 +68,7 @@ public class ExoskeletonLegs : ModItem
             CreateRecipe()
                 .AddIngredient(ItemID.SpectreBoots)
                 .AddIngredient(calamity.Find<ModItem>("WulfrumMetalScrap").Type, 12)
-                .AddTile(TileID.Anvils)
+                .AddTile(TileID.TinkerersWorkbench)
                 .Register();
         }
         else
@@ -63,14 +77,14 @@ public class ExoskeletonLegs : ModItem
                 .AddIngredient(ItemID.SpectreBoots)
                 .AddIngredient(ItemID.GoldBar, 12)
                 .AddIngredient(ItemID.Wire, 6)
-                .AddTile(TileID.Anvils)
+                .AddTile(TileID.TinkerersWorkbench)
                 .Register();
 
             CreateRecipe()
                 .AddIngredient(ItemID.SpectreBoots)
                 .AddIngredient(ItemID.PlatinumBar, 12)
                 .AddIngredient(ItemID.Wire, 6)
-                .AddTile(TileID.Anvils)
+                .AddTile(TileID.TinkerersWorkbench)
                 .Register();
         }
     }

@@ -5,6 +5,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using WgMod.Content.Items.Accessories.Fat;
 using WgMod.Content.Items.Accessories.Melee;
+using WgMod.Content.Items.Accessories.Movement.Boots;
 
 namespace WgMod.Common.GlobalItems;
 
@@ -73,6 +74,14 @@ public class ItemDisabling : GlobalItem
     public static readonly Line GauntletLine = Line.Create([
         ModContent.ItemType<QueenlyGluttony>(),
         ModContent.ItemType<SolDrive>(),
+    ]);
+
+    /// <summary> Every accessory in the Exoskeleton Legs line </summary>
+    public static readonly Line BootsLine = Line.Create([
+        ModContent.ItemType<ExoskeletonLegs>(),
+        ModContent.ItemType<TerraskeletonLegs>(),
+        ModContent.ItemType<MechaskeletonLegs>(),
+        ModContent.ItemType<TwilightTracers>(),
     ]);
 
     public override void UpdateInventory(Item item, Player player)
