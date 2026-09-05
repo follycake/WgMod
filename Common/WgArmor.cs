@@ -158,7 +158,11 @@ public static class WgArmor
     // Hurt effect is already applied in drawInfo, so bake lighting only
     static Color Light(Player player, Vector2 position, Color color)
     {
-        return Lighting.GetColorClamped((int)(position.X + player.width * 0.5) / 16, (int)((position.Y + player.height * 0.5) / 16.0), color);
+        color = Lighting.GetColorClamped((int)(position.X + player.width * 0.5) / 16, (int)((position.Y + player.height * 0.5) / 16.0), color);
+        // TODO: If only we could render armor directly after the drawInfo is created, we shouldn't have to resort to janky methods like these
+        if (player.TryGetModPlayer(out WgPlayer wg))
+            color = Main.buffColor(color, wg._playerTint.X, wg._playerTint.Y, wg._playerTint.Z, wg._playerTint.W);
+        return color;
     }
 
     public static Vector2 GetDrawPosition(Player player)
