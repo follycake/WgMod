@@ -210,7 +210,7 @@ public static class WgPhysics
                 if (MathF.Abs(error) > 0.01f)
                 {
                     Vector2 dir = a.Position.DirectionTo(b.Position);
-                    float force = spring.Rigid ? 1f : (springForce * spring.Strength);
+                    float force = spring.Rigid ? 1f : springForce * spring.Strength;
                     a.Position += dir * (error * 0.5f * force);
                     b.Position -= dir * (error * 0.5f * force);
                 }
@@ -308,7 +308,7 @@ public static class WgPhysics
                 float dist = diff.Length();
                 if (PhysicsUtility.RayIntersectSolid(center, dir, dist, out Vector2 intersection, out Vector2 normal, tileSolidTop))
                 {
-                    if (!tileSolidTop || (tileSolidTop && wg.Player.Bottom.Y - 0.01f < intersection.Y))
+                    if (!tileSolidTop || tileSolidTop && wg.Player.Bottom.Y - 0.01f < intersection.Y)
                         point.Position = point.Position - normal * Vector2.Dot(normal, point.Position) + normal * Vector2.Dot(normal, intersection);
                 }
                 if (tileSolidTop && wg.Player.mount.Active)
@@ -540,6 +540,7 @@ public static class WgPhysics
             List<Point> points = [];
             layer.OffsetMin = new(float.PositiveInfinity, float.PositiveInfinity);
             layer.OffsetMax = new(float.NegativeInfinity, float.NegativeInfinity);
+
             int CreatePoint(int x, int y)
             {
                 Vector2 offset = new(x - w * 0.5f, y - h * 0.5f);
@@ -600,6 +601,7 @@ public static class WgPhysics
 
             List<Spring> springs = [];
             HashSet<(int, int)> usedPairs = [];
+
             void Join(int a, int b, float strength = 1f)
             {
                 if (a == b || usedPairs.Contains((a, b)))
@@ -632,7 +634,7 @@ public static class WgPhysics
             Point[] pointsArray = [.. points];
             foreach (KeyValuePair<(int, int), int> pair in quadMap)
             {
-                var (x, y) = pair.Key;
+                (int x, int y) = pair.Key;
                 Quad quad = quads[pair.Value];
                 bool pinned = spriteLayer.Type switch
                 {

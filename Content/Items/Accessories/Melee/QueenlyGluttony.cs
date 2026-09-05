@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WgMod.Common.GlobalItems;
 using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Accessories.Melee;
@@ -28,35 +27,23 @@ public class QueenlyGluttony : ModItem
         Item.value = Item.buyPrice(gold: 4);
     }
 
-    public static readonly DamageClass[] Melee = [
-        DamageClass.Melee,
-        DamageClass.MeleeNoSpeed,
-    ];
-
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
-        if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out QueenlyGluttonyPlayer qg) || !player.TryGetModPlayer(out SolDrivePlayer sd))
+        if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out QueenlyGluttonyPlayer qg))
             return;
-
         float immobility = wg.Weight.ClampedImmobility;
 
-        if (!ItemDisabling.GauntletLine)
-        {
-            _damage.Lerp(immobility);
-            _attackSpeed.Lerp(immobility);
-            _critChance.Lerp(immobility);
-            _armorPenetration.Lerp(immobility);
+        _damage.Lerp(immobility);
+        _attackSpeed.Lerp(immobility);
+        _critChance.Lerp(immobility);
+        _armorPenetration.Lerp(immobility);
 
-            foreach (var item in Melee)
-            {
-                player.GetDamage(item) += _damage;
-                player.GetAttackSpeed(item) -= _attackSpeed;
-                player.GetCritChance(item) += _critChance;
-                player.GetArmorPenetration(item) += _armorPenetration;
-            }
+        player.GetDamage(DamageClass.Melee) += _damage;
+        player.GetAttackSpeed(DamageClass.Melee) -= _attackSpeed;
+        player.GetCritChance(DamageClass.Melee) += _critChance;
+        player.GetArmorPenetration(DamageClass.Melee) += _armorPenetration;
 
-            qg.active = true;
-        }
+        qg.active = true;
     }
 
     public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
@@ -81,9 +68,10 @@ public class QueenlyGluttonyPlayer : ModPlayer
         active = false;
     }
 
-    public static readonly DamageClass[] Melee = [
+    public static readonly DamageClass[] Melee =
+    [
         DamageClass.Melee,
-        DamageClass.MeleeNoSpeed,
+        DamageClass.MeleeNoSpeed
     ];
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

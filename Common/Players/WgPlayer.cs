@@ -307,7 +307,7 @@ public partial class WgPlayer : ModPlayer
 
     void SoftHitbox(int stage)
     {
-        if (Player.mount.Active || !WeightValues.EnableSoftHitbox(stage))
+        if (WgServerConfig.Instance.DisableFatHitbox || !WeightValues.EnableSoftHitbox(stage) || Player.mount.Active)
         {
             _softSquishLeft = 0f;
             _softSquishRight = 0f;

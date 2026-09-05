@@ -21,4 +21,3 @@ public class SkeleborerBanner : ModItem
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
     }
 }
-

@@ -22,13 +22,13 @@ public enum WormSegmentType
 public abstract class Worm : ModNPC
 {
     /*  ai[] usage:
-	 *
-	 *  ai[0] = "follower" segment, the segment that's following this segment
-	 *  ai[1] = "following" segment, the segment that this segment is following
-	 *
-	 *  localAI[0] = used when syncing changes to collision detection
-	 *  localAI[1] = checking if Init() was called
-	 */
+     *
+     *  ai[0] = "follower" segment, the segment that's following this segment
+     *  ai[1] = "following" segment, the segment that this segment is following
+     *
+     *  localAI[0] = used when syncing changes to collision detection
+     *  localAI[1] = checking if Init() was called
+     */
 
     /// <summary> Which type of segment this NPC is considered to be </summary>
     public abstract WormSegmentType SegmentType { get; }
@@ -89,9 +89,7 @@ public abstract class Worm : ModNPC
             }
         }
         else
-        {
             BodyTailAI();
-        }
 
         return true;
     }
@@ -234,7 +232,7 @@ public abstract class WormHead : Worm
 
                 // Ensure that all of the segments could spawn.  If they could not, despawn the worm entirely
                 int count = 0;
-                foreach (var n in Main.ActiveNPCs)
+                foreach (NPC n in Main.ActiveNPCs)
                 {
                     if ((n.type == Type || n.type == BodyType || n.type == TailType) && n.realLife == NPC.whoAmI)
                         count++;
@@ -243,7 +241,7 @@ public abstract class WormHead : Worm
                 if (count != randomWormLength)
                 {
                     // Unable to spawn all of the segments... kill the worm
-                    foreach (var n in Main.ActiveNPCs)
+                    foreach (NPC n in Main.ActiveNPCs)
                     {
                         if ((n.type == Type || n.type == BodyType || n.type == TailType) && n.realLife == NPC.whoAmI)
                         {
@@ -296,7 +294,7 @@ public abstract class WormHead : Worm
                         collision = true;
 
                         if (Main.rand.NextBool(100))
-                            WorldGen.KillTile(i, j, fail: true, effectOnly: true, noItem: false);
+                            WorldGen.KillTile(i, j, true, true, false);
                     }
                 }
             }
@@ -316,7 +314,7 @@ public abstract class WormHead : Worm
 
             bool tooFar = true;
 
-            foreach (var player in Main.ActivePlayers)
+            foreach (Player player in Main.ActivePlayers)
             {
                 Rectangle areaCheck;
 
@@ -325,7 +323,7 @@ public abstract class WormHead : Worm
                 else if (!player.dead && !player.ghost)
                     areaCheck = new Rectangle((int)player.position.X - maxDistance, (int)player.position.Y - maxDistance, maxDistance * 2, maxDistance * 2);
                 else
-                    continue;  // Not a valid player
+                    continue; // Not a valid player
 
                 if (hitbox.Intersects(areaCheck))
                 {
@@ -446,7 +444,7 @@ public abstract class WormHead : Worm
         dirX *= newSpeed;
         dirY *= newSpeed;
 
-        if ((NPC.velocity.X > 0 && dirX > 0) || (NPC.velocity.X < 0 && dirX < 0) || (NPC.velocity.Y > 0 && dirY > 0) || (NPC.velocity.Y < 0 && dirY < 0))
+        if (NPC.velocity.X > 0 && dirX > 0 || NPC.velocity.X < 0 && dirX < 0 || NPC.velocity.Y > 0 && dirY > 0 || NPC.velocity.Y < 0 && dirY < 0)
         {
             // The NPC is moving towards the target location
             if (NPC.velocity.X < dirX)
@@ -460,7 +458,7 @@ public abstract class WormHead : Worm
                 NPC.velocity.Y -= acceleration;
 
             // The intended Y-velocity is small AND the NPC is moving to the left and the target is to the right of the NPC or vice versa
-            if (Math.Abs(dirY) < speed * 0.2 && ((NPC.velocity.X > 0 && dirX < 0) || (NPC.velocity.X < 0 && dirX > 0)))
+            if (Math.Abs(dirY) < speed * 0.2 && (NPC.velocity.X > 0 && dirX < 0 || NPC.velocity.X < 0 && dirX > 0))
             {
                 if (NPC.velocity.Y > 0)
                     NPC.velocity.Y += acceleration * 2f;
@@ -469,7 +467,7 @@ public abstract class WormHead : Worm
             }
 
             // The intended X-velocity is small AND the NPC is moving up/down and the target is below/above the NPC
-            if (Math.Abs(dirX) < speed * 0.2 && ((NPC.velocity.Y > 0 && dirY < 0) || (NPC.velocity.Y < 0 && dirY > 0)))
+            if (Math.Abs(dirX) < speed * 0.2 && (NPC.velocity.Y > 0 && dirY < 0 || NPC.velocity.Y < 0 && dirY > 0))
             {
                 if (NPC.velocity.X > 0)
                     NPC.velocity.X = NPC.velocity.X + acceleration * 2f;
@@ -534,7 +532,7 @@ public abstract class WormHead : Worm
         }
 
         // Force a netupdate if the NPC's velocity changed sign and it was not "just hit" by a player
-        if (((NPC.velocity.X > 0 && NPC.oldVelocity.X < 0) || (NPC.velocity.X < 0 && NPC.oldVelocity.X > 0) || (NPC.velocity.Y > 0 && NPC.oldVelocity.Y < 0) || (NPC.velocity.Y < 0 && NPC.oldVelocity.Y > 0)) && !NPC.justHit)
+        if ((NPC.velocity.X > 0 && NPC.oldVelocity.X < 0 || NPC.velocity.X < 0 && NPC.oldVelocity.X > 0 || NPC.velocity.Y > 0 && NPC.oldVelocity.Y < 0 || NPC.velocity.Y < 0 && NPC.oldVelocity.Y > 0) && !NPC.justHit)
             NPC.netUpdate = true;
     }
 }

@@ -46,13 +46,14 @@ public class BarnChest : ModTile
         TileObjectData.newTile.CoordinateHeights = [16, 18];
         TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
         TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
-        TileObjectData.newTile.AnchorInvalidTiles = [
-                TileID.MagicalIceBlock,
-                TileID.Boulder,
-                TileID.BouncyBoulder,
-                TileID.LifeCrystalBoulder,
-                TileID.RollingCactus
-            ];
+        TileObjectData.newTile.AnchorInvalidTiles =
+        [
+            TileID.MagicalIceBlock,
+            TileID.Boulder,
+            TileID.BouncyBoulder,
+            TileID.LifeCrystalBoulder,
+            TileID.RollingCactus
+        ];
         TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.LavaDeath = false;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
@@ -81,25 +82,17 @@ public class BarnChest : ModTile
         int top = j;
         Tile tile = Main.tile[i, j];
         if (tile.TileFrameX % 36 != 0)
-        {
             left--;
-        }
 
         if (tile.TileFrameY != 0)
-        {
             top--;
-        }
 
         int chest = Chest.FindChest(left, top);
         if (chest < 0)
-        {
             return Language.GetTextValue("LegacyChestType.0");
-        }
 
         if (Main.chest[chest].name == "")
-        {
             return name;
-        }
 
         return name + ": " + Main.chest[chest].name;
     }
@@ -122,14 +115,10 @@ public class BarnChest : ModTile
         int left = i;
         int top = j;
         if (tile.TileFrameX % 36 != 0)
-        {
             left--;
-        }
 
         if (tile.TileFrameY != 0)
-        {
             top--;
-        }
 
         player.CloseSign();
         player.SetTalkNPC(-1);
@@ -166,7 +155,8 @@ public class BarnChest : ModTile
         else
         {
             if (isLocked)
-            { }
+            {
+            }
             else
             {
                 int chest = Chest.FindChest(left, top);
@@ -199,21 +189,15 @@ public class BarnChest : ModTile
         int left = i;
         int top = j;
         if (tile.TileFrameX % 36 != 0)
-        {
             left--;
-        }
 
         if (tile.TileFrameY != 0)
-        {
             top--;
-        }
 
         int chest = Chest.FindChest(left, top);
         player.cursorItemIconID = -1;
         if (chest < 0)
-        {
             player.cursorItemIconText = Language.GetTextValue("LegacyChestType.0");
-        }
         else
         {
             string defaultName = TileLoader.DefaultContainerName(tile.TileType, tile.TileFrameX, tile.TileFrameY);

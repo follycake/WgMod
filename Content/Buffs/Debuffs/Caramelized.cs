@@ -25,6 +25,7 @@ public class Caramelized : ModBuff
     {
         int dustRate = 15;
         if (Main.rand.NextBool(dustRate))
+        {
             Dust.NewDust(
                 npc.position,
                 npc.width,
@@ -36,6 +37,7 @@ public class Caramelized : ModBuff
                 new Color(151, 93, 15),
                 1.3f
             );
+        }
     }
 
     public override void Update(Player player, ref int buffIndex)
@@ -44,6 +46,7 @@ public class Caramelized : ModBuff
 
         int dustRate = 15;
         if (Main.rand.NextBool(dustRate))
+        {
             Dust.NewDust(
                 player.position,
                 player.width,
@@ -55,6 +58,7 @@ public class Caramelized : ModBuff
                 new Color(151, 93, 15),
                 1.3f
             );
+        }
     }
 }
 
@@ -64,7 +68,7 @@ public class CaramelizedNPC : GlobalNPC
     {
         if (projectile.npcProj || projectile.trap || !projectile.IsMinionOrSentryRelated)
             return;
-        var projTagMultiplier = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
+        float projTagMultiplier = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
         if (npc.HasBuff<Caramelized>())
             modifiers.FlatBonusDamage += Caramelized.TagDamage * projTagMultiplier;
     }

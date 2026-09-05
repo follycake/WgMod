@@ -61,9 +61,7 @@ public static class FattyPhysicsLogic
             }
         }
         else if (sizeComparison > 1.15) // push away
-        {
             ActuallyPush(fatty, target, sizeComparison);
-        }
         else if (sizeComparison > 0.95)
         {
             ActuallyPush(fatty, target, 1);

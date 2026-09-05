@@ -54,7 +54,7 @@ public enum Contributor
     purple_circle,
     bombuspyrobombus,
     /// <summary> This sprite isn't finished and needs to be replaced at some point. </summary>
-    PLACEHOLDER,
+    PLACEHOLDER
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
@@ -112,7 +112,7 @@ public static class Credits
         }
 
         StringBuilder builder = new();
-        foreach (var list in roles.Values)
+        foreach (List<string> list in roles.Values)
         {
             if (list.Count <= 1)
                 continue;

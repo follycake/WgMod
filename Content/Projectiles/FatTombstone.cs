@@ -59,7 +59,7 @@ public class FatTombstone : ModProjectile
         }
         int type = Main.rand.Next(6);
         if (coinsOwned <= 100000)
-            type = (type != 0) ? (200 + type) : 43;
+            type = type != 0 ? 200 + type : 43;
         else
         {
             type = Main.rand.Next(5);

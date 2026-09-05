@@ -42,7 +42,7 @@ public class Lightweight : ModPrefix
     {
         yield return new TooltipLine(Mod, "Lightweight", MovePenaltyTooltip.Format((_movePenalty.Value - 1f).Percent()))
         {
-            OverrideColor = Terraria.ID.Colors.RarityPink,
+            OverrideColor = Terraria.ID.Colors.RarityPink
         };
     }
 

@@ -129,24 +129,24 @@ public class OverindulgentStatueMiddle : ModNPC
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 List<double> validAngles =
-                    [
-                        0,
-                        22.5,
-                        45,
-                        67.5,
-                        90,
-                        112.5,
-                        135,
-                        157.5,
-                        180,
-                        202.5,
-                        225,
-                        247.5,
-                        270,
-                        292.5,
-                        315,
-                        337.5
-                    ];
+                [
+                    0,
+                    22.5,
+                    45,
+                    67.5,
+                    90,
+                    112.5,
+                    135,
+                    157.5,
+                    180,
+                    202.5,
+                    225,
+                    247.5,
+                    270,
+                    292.5,
+                    315,
+                    337.5
+                ];
                 int projectileCount = 4;
                 int projectileID = ModContent.ProjectileType<HeartyHeart_Surround_Strong>(); //yes i probably shouldve made them one projectile but i dont feel like it
 
@@ -346,7 +346,7 @@ public class HeartyHeart_Surround_Strong : ModProjectile
 
         for (int k = 1; k < Projectile.oldPos.Length; k++)
         {
-            Vector2 drawPos = Projectile.oldPos[k] + (Projectile.Size / 2) - Main.screenPosition;
+            Vector2 drawPos = Projectile.oldPos[k] + Projectile.Size / 2 - Main.screenPosition;
             Color color = drawColor * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
             Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
         }
@@ -368,7 +368,6 @@ public class HeartyHeart_Surround_Strong : ModProjectile
         if (weightGain > 0f)
             wg.CombatWeightText(weightGain, true);
     }
-
 }
 
 public class HeartyHeart_Surround_Blue_Strong : HeartyHeart_Surround_Strong;

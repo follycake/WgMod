@@ -18,7 +18,6 @@ using WgMod.Content.Projectiles;
 namespace WgMod.Content.NPCs.TownNPCs.OverflowingMimic;
 
 [AutoloadHead]
-
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.follycake)]
 public class OverflowingMimicNPC : ModNPC
@@ -159,7 +158,7 @@ public class OverflowingMimicNPC : ModNPC
     {
         bestiaryEntry.Info.AddRange([
             BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Caverns,
-            new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.OverflowingMimic"),
+            new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.OverflowingMimic")
         ]);
     }
 
@@ -188,7 +187,7 @@ public class OverflowingMimicNPC : ModNPC
             "Trunk", "Wolfert", "Decebalus", "Alaric", "Forrest", "Kidd",
             "Jewel", "Pearl", "Loot", "Gold", "Booty", "Glory",
             "Prize", "Stash", "Cache", "Reserve", "Stock", "Osiris",
-            "Ark", "Koshchei", "Gygax", "Greenwood", "Detwiler", "Rowland",
+            "Ark", "Koshchei", "Gygax", "Greenwood", "Detwiler", "Rowland"
         ];
     }
 
@@ -229,13 +228,9 @@ public class OverflowingMimicNPC : ModNPC
                 chat.Add(Language.GetTextValue("Mods.WgMod.Dialogue.OverflowingMimic.StormDialogue2", overflowingMimic), 10); // "AH! RUN AWAY!"
             }
             else if (Main.dayTime)
-            {
                 chat.Add(Language.GetTextValue("Mods.WgMod.Dialogue.OverflowingMimic.DayDialogue1", overflowingMimic)); // "Pretty day! Full of play!"
-            }
             else
-            {
                 chat.Add(Language.GetTextValue("Mods.WgMod.Dialogue.OverflowingMimic.NightDialogue1", overflowingMimic)); // "{0} love nighttime, so many friends out to play!"
-            }
 
             if (Main.IsItAHappyWindyDay)
             {
@@ -280,6 +275,7 @@ public class OverflowingMimicNPC : ModNPC
         if (firstButton)
             shop = MimicShop;
     }
+
     static Item ItemMult(int type, int times = 2)
     {
         Item item = new(type);
@@ -289,53 +285,53 @@ public class OverflowingMimicNPC : ModNPC
 
     public override void AddShops()
     {
-        var mimicShop = new NPCShop(Type, MimicShop)
-            // Remix World
-            .Add(ItemMult(ItemID.FlareGun), Condition.PreHardmode, Condition.RemixWorld)
-            .Add(ItemMult(ItemID.Extractinator), Condition.PreHardmode, Condition.RemixWorld)
-            .Add(ItemMult(ItemID.BandofRegeneration), Condition.PreHardmode, Condition.RemixWorld)
-            .Add(ItemMult(ItemID.MagicMirror), Condition.PreHardmode, Condition.RemixWorld)
-            .Add(ItemMult(ItemID.CloudinaBalloon), Condition.PreHardmode, Condition.RemixWorld)
-            .Add(ItemMult(ItemID.HermesBoots), Condition.PreHardmode, Condition.RemixWorld)
-            .Add(ItemMult(ItemID.Mace), Condition.PreHardmode, Condition.RemixWorld)
-            .Add(ItemMult(ItemID.ShoeSpikes), Condition.PreHardmode, Condition.RemixWorld)
-            // Remix World after either evil boss
-            .Add(ItemMult(ItemID.ToySled), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
-            .Add(ItemMult(ItemID.IceBoomerang), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
-            .Add(ItemMult(ItemID.IceBlade), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
-            .Add(ItemMult(ItemID.IceSkates), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
-            .Add(ItemMult(ItemID.BlizzardinaBottle), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
-            .Add(ItemMult(ItemID.FlurryBoots), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
-            .Add(ItemMult(ItemID.SnowballCannon), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
-            // Regular world hardmode
-            .Add(ItemMult(ItemID.DualHook), Condition.Hardmode)
-            .Add(ItemMult(ItemID.MagicDagger), Condition.Hardmode)
-            .Add(ItemMult(ItemID.PhilosophersStone), Condition.Hardmode)
-            .Add(ItemMult(ItemID.TitanGlove), Condition.Hardmode)
-            .Add(ItemMult(ItemID.StarCloak), Condition.Hardmode)
-            .Add(ItemMult(ItemID.CrossNecklace), Condition.Hardmode)
-            // After any mech boss
-            .Add(ItemMult(ItemID.ToySled), Condition.DownedMechBossAny)
-            .Add(ItemMult(ItemID.Frostbrand), Condition.DownedMechBossAny)
-            .Add(ItemMult(ItemID.FlowerofFrost), Condition.DownedMechBossAny)
-            .Add(ItemMult(ItemID.IceBow), Condition.DownedMechBossAny)
-            // On a corrupt world after every mech boss
-            .Add(ItemMult(ItemID.ClingerStaff), Condition.CorruptWorld, Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.DartRifle), Condition.CorruptWorld, Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.ChainGuillotines), Condition.CorruptWorld, Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.PutridScent), Condition.CorruptWorld, Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.WormHook), Condition.CorruptWorld, Condition.DownedMechBossAll)
-            // On a Crimson world after every mech boss
-            .Add(ItemMult(ItemID.SoulDrain), Condition.CrimsonWorld, Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.DartPistol), Condition.CrimsonWorld, Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.FetidBaghnakhs), Condition.CrimsonWorld, Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.FleshKnuckles), Condition.CrimsonWorld, Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.TendonHook), Condition.CrimsonWorld, Condition.DownedMechBossAll)
-            // After every mech boss
-            .Add(ItemMult(ItemID.DaedalusStormbow), Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.FlyingKnife), Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.CrystalVileShard), Condition.DownedMechBossAll)
-            .Add(ItemMult(ItemID.IlluminantHook), Condition.DownedMechBossAll)
+        NPCShop mimicShop = new NPCShop(Type, MimicShop)
+                // Remix World
+                .Add(ItemMult(ItemID.FlareGun), Condition.PreHardmode, Condition.RemixWorld)
+                .Add(ItemMult(ItemID.Extractinator), Condition.PreHardmode, Condition.RemixWorld)
+                .Add(ItemMult(ItemID.BandofRegeneration), Condition.PreHardmode, Condition.RemixWorld)
+                .Add(ItemMult(ItemID.MagicMirror), Condition.PreHardmode, Condition.RemixWorld)
+                .Add(ItemMult(ItemID.CloudinaBalloon), Condition.PreHardmode, Condition.RemixWorld)
+                .Add(ItemMult(ItemID.HermesBoots), Condition.PreHardmode, Condition.RemixWorld)
+                .Add(ItemMult(ItemID.Mace), Condition.PreHardmode, Condition.RemixWorld)
+                .Add(ItemMult(ItemID.ShoeSpikes), Condition.PreHardmode, Condition.RemixWorld)
+                // Remix World after either evil boss
+                .Add(ItemMult(ItemID.ToySled), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
+                .Add(ItemMult(ItemID.IceBoomerang), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
+                .Add(ItemMult(ItemID.IceBlade), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
+                .Add(ItemMult(ItemID.IceSkates), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
+                .Add(ItemMult(ItemID.BlizzardinaBottle), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
+                .Add(ItemMult(ItemID.FlurryBoots), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
+                .Add(ItemMult(ItemID.SnowballCannon), Condition.PreHardmode, Condition.RemixWorld, Condition.DownedEowOrBoc)
+                // Regular world hardmode
+                .Add(ItemMult(ItemID.DualHook), Condition.Hardmode)
+                .Add(ItemMult(ItemID.MagicDagger), Condition.Hardmode)
+                .Add(ItemMult(ItemID.PhilosophersStone), Condition.Hardmode)
+                .Add(ItemMult(ItemID.TitanGlove), Condition.Hardmode)
+                .Add(ItemMult(ItemID.StarCloak), Condition.Hardmode)
+                .Add(ItemMult(ItemID.CrossNecklace), Condition.Hardmode)
+                // After any mech boss
+                .Add(ItemMult(ItemID.ToySled), Condition.DownedMechBossAny)
+                .Add(ItemMult(ItemID.Frostbrand), Condition.DownedMechBossAny)
+                .Add(ItemMult(ItemID.FlowerofFrost), Condition.DownedMechBossAny)
+                .Add(ItemMult(ItemID.IceBow), Condition.DownedMechBossAny)
+                // On a corrupt world after every mech boss
+                .Add(ItemMult(ItemID.ClingerStaff), Condition.CorruptWorld, Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.DartRifle), Condition.CorruptWorld, Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.ChainGuillotines), Condition.CorruptWorld, Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.PutridScent), Condition.CorruptWorld, Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.WormHook), Condition.CorruptWorld, Condition.DownedMechBossAll)
+                // On a Crimson world after every mech boss
+                .Add(ItemMult(ItemID.SoulDrain), Condition.CrimsonWorld, Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.DartPistol), Condition.CrimsonWorld, Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.FetidBaghnakhs), Condition.CrimsonWorld, Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.FleshKnuckles), Condition.CrimsonWorld, Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.TendonHook), Condition.CrimsonWorld, Condition.DownedMechBossAll)
+                // After every mech boss
+                .Add(ItemMult(ItemID.DaedalusStormbow), Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.FlyingKnife), Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.CrystalVileShard), Condition.DownedMechBossAll)
+                .Add(ItemMult(ItemID.IlluminantHook), Condition.DownedMechBossAll)
             /* It looks wrong having the semicolon on its own line so I'm adding this to make it less lonely */;
 
         mimicShop.Register();
@@ -371,7 +367,7 @@ public class OverflowingMimicNPC : ModNPC
         }
 
         if (NPC.velocity.Y == 0 && NPC.velocity.X != 0)
-            NPC.velocity.X = 0.1f * NPC.direction;  //*/
+            NPC.velocity.X = 0.1f * NPC.direction; //*/
     }
 
     public override void HitEffect(NPC.HitInfo hit)

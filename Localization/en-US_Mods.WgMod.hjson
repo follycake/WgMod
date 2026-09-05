@@ -21,7 +21,8 @@ Items: {
 			'''
 			Allows flight
 			The wearer can run super fast
-			Reduces the movement penalty from high weights!
+			Reduces the fat movement penalty by {0}%
+			'You look great, by the way. Very healthy.'
 			'''
 	}
 
@@ -30,11 +31,10 @@ Items: {
 		Tooltip:
 			'''
 			Allows flight, super fast running, and extra mobility on ice
-			Increases movement speed by 8%
+			Increases movement speed by {0}% and reduces fat movement penalty by {2}%
 			Provides the ability to walk on water, honey & lava
-			Grants immunity to fire blocks and 7 seconds of immunity to lava
+			Grants immunity to fire blocks and {1} seconds of immunity to lava
 			Reduces damage from touching lava
-			Greatly reduces the movement penalty from high weights!
 			'''
 	}
 
@@ -1028,6 +1028,30 @@ Items: {
 			{0}% increased critical strike chance
 			{1}% increased critical strike damage
 			Critical strikes cause mild weight gain
+			'''
+	}
+
+	MechaskeletonLegs: {
+		DisplayName: Mechaskeleton Legs
+		Tooltip:
+			'''
+			Allows flight, super fast running, and extra mobility on ice
+			Increases movement speed by {0}% and reduces fat movement penalty by {2}%
+			Provides the ability to walk on water, honey & lava
+			Grants immunity to fire blocks and {1} seconds of immunity to lava
+			Reduces damage from touching lava
+			'''
+	}
+
+	TwilightTracers: {
+		DisplayName: Twilight Tracers
+		Tooltip:
+			'''
+			Allows super fast running, and extra mobility on ice, extends flight by {3} seconds
+			Increases movement speed by {0}% and reduces fat movement penalty by {2}%
+			Provides the ability to walk on water, honey & lava
+			Grants immunity to fire blocks and {1} seconds of immunity to lava
+			Reduces damage from touching lava
 			'''
 	}
 }

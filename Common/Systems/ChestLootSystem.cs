@@ -66,7 +66,7 @@ public class ChestLootSystem : ModSystem
                 case 16 * 36:
                     FillChest(chest, [
                         new(ModContent.ItemType<WeightlessPotion>(), BuffPotionChance, 1, 2),
-                        new(OneFromOptions(WeightPotions), TieredPotionChance, 3, 5),
+                        new(OneFromOptions(WeightPotions), TieredPotionChance, 3, 5)
                     ]);
                     break;
 
@@ -81,7 +81,7 @@ public class ChestLootSystem : ModSystem
             {
                 FillChest(chest, [
                     new(ModContent.ItemType<WeightlessPotion>(), BuffPotionChance, 1, 2),
-                    new(OneFromOptions(LesserWeightPotions), TieredPotionChance, 3, 5),
+                    new(OneFromOptions(LesserWeightPotions), TieredPotionChance, 3, 5)
                 ]);
             }
         }

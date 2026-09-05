@@ -263,7 +263,7 @@ public class HeartyHeart_Direct : ModProjectile
 
         for (int k = 1; k < Projectile.oldPos.Length; k++)
         {
-            Vector2 drawPos = Projectile.oldPos[k] + (Projectile.Size / 2) - Main.screenPosition;
+            Vector2 drawPos = Projectile.oldPos[k] + Projectile.Size / 2 - Main.screenPosition;
             Color color = drawColor * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
             Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin,
                 Projectile.scale, SpriteEffects.None, 0);
@@ -289,7 +289,6 @@ public class HeartyHeart_Direct : ModProjectile
 }
 
 public class HeartyHeart_Direct_Blue : HeartyHeart_Direct;
-
 public class HeartyHeart_Direct_Green : HeartyHeart_Direct;
 
 public class HeartyHeart_Direct_Spawner : ModProjectile
@@ -370,7 +369,7 @@ public class HeartyHeart_Direct_Spawner : ModProjectile
 
                 int projectileCount = 3;
                 float baseAngle = MathHelper.ToRadians(20);
-                float currentAngle = -baseAngle * (projectileCount / 2f) + (baseAngle / 2f);
+                float currentAngle = -baseAngle * (projectileCount / 2f) + baseAngle / 2f;
                 Vector2 velocity = new Vector2(1.75f, 0).RotatedBy(Projectile.Center.AngleTo(target.Center));
 
                 for (int projectiles = 0; projectiles < projectileCount; projectiles++)
@@ -382,8 +381,6 @@ public class HeartyHeart_Direct_Spawner : ModProjectile
             }
         }
         else
-        {
             Projectile.Kill();
-        }
     }
 }

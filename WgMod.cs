@@ -22,7 +22,7 @@ public partial class WgMod : Mod
     // Vanilla
     static void AddBuffs((int id, GainOptions gain)[] table)
     {
-        foreach (var (id, gain) in table)
+        foreach ((int id, GainOptions gain) in table)
             _buffTable[id] = gain;
     }
 
@@ -31,7 +31,7 @@ public partial class WgMod : Mod
     {
         if (!ModLoader.TryGetMod(mod, out Mod foundMod))
             return;
-        foreach (var (name, gain) in table)
+        foreach ((string name, GainOptions gain) in table)
         {
             if (!foundMod.TryFind(name, out ModBuff foundBuff))
             {

@@ -29,7 +29,7 @@ public class SkeleborerHead : WormHead
 
     public override void SetStaticDefaults()
     {
-        var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers()
+        NPCID.Sets.NPCBestiaryDrawModifiers drawModifier = new()
         {
             CustomTexturePath = "WgMod/Content/NPCs/Dungeon/Skeleborer_Bestiary",
             Position = new Vector2(40f, 24f),
@@ -65,7 +65,7 @@ public class SkeleborerHead : WormHead
     {
         bestiaryEntry.Info.AddRange([
             BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheDungeon,
-                new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.Skeleborer")
+            new FlavorTextBestiaryInfoElement("Mods.WgMod.Bestiary.Skeleborer")
         ]);
     }
 

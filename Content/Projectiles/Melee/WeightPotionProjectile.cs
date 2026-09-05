@@ -95,7 +95,7 @@ public abstract class WeightPotionProjectile : ModProjectile
         float goreMultiplayer = PotionExplosionRadius / 2;
         for (int g = 0; g < 2; g++)
         {
-            var goreSpawnPosition = new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f);
+            Vector2 goreSpawnPosition = new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f);
             Gore gore = Gore.NewGoreDirect(Projectile.GetSource_FromThis(), goreSpawnPosition, default, Main.rand.Next(61, 64), 1f);
             gore.scale = goreMultiplayer;
             gore.velocity.X += goreMultiplayer;
@@ -227,4 +227,3 @@ public abstract class WeightPotionProjectile : ModProjectile
         public override int SpriteHeight => 32;
     }
 }
-

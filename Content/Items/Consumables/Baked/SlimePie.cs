@@ -18,7 +18,7 @@ public class SlimePie : ModItem
         [
             new Color(0, 161, 213),
             new Color(127, 138, 255),
-            new Color(194, 201, 129),
+            new Color(194, 201, 129)
         ];
 
         ItemID.Sets.IsFood[Type] = true;

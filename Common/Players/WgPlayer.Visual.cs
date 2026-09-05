@@ -28,6 +28,7 @@ public partial class WgPlayer
 
     internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[4];
     internal RenderTarget2D _armorTarget;
+    internal Vector4 _playerTint = Vector4.One;
 
     internal List<WgPhysics.Layer> _physicsLayers;
     internal Dictionary<int, WgPhysics.Layer> _physicsDrawOverride;
@@ -221,7 +222,7 @@ public partial class WgPlayer
                     return false;
             }
         }
-        return (Player.sitting.isSitting && !Player.GetModPlayer<TreadmillPlayer>()._onTreadmill) || _finalMovementFactor < 0.01f;
+        return Player.sitting.isSitting && !Player.GetModPlayer<TreadmillPlayer>()._onTreadmill || _finalMovementFactor < 0.01f;
     }
 
     public override void HideDrawLayers(PlayerDrawSet drawInfo)
@@ -239,6 +240,12 @@ public partial class WgPlayer
 
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
+        if (drawInfo.shadow == 0f)
+        {
+            bool fullBright = false;
+            _playerTint = Vector4.One;
+            PlayerLoader.DrawEffects(drawInfo, ref _playerTint.X, ref _playerTint.Y, ref _playerTint.Z, ref _playerTint.W, ref fullBright);
+        }
         if (WgPhysics.IsEnabled(this))
             _physicsDrawOverride.Clear();
         if (Player.isDisplayDollOrInanimate)

@@ -8,7 +8,6 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Armor.AmazonGarb;
 
 [AutoloadEquip(EquipType.Legs)]
-
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class AmazonSandals : ModItem

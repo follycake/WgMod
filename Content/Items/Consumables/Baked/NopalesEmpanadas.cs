@@ -18,7 +18,7 @@ public class NopalesEmpanadas : ModItem
         [
             new Color(69, 69, 69),
             new Color(69, 69, 69),
-            new Color(69, 69, 69),
+            new Color(69, 69, 69)
         ];
 
         ItemID.Sets.IsFood[Type] = true;

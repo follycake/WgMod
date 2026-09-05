@@ -30,6 +30,7 @@ public abstract class ModSkyEntity : ModTexturedType
     // Instance
     public Player Player { get; private set; }
     public FastRandom Random { get; private set; } = _sharedFastRandom;
+
     public int Direction
     {
         get => (Effects & SpriteEffects.FlipHorizontally) != 0 ? -1 : 1;
@@ -214,9 +215,9 @@ public abstract class ModSkyEntity : ModTexturedType
     {
         int time = frameCount - TimeEntitySpawnedIn;
         if (time >= LifeTime * OpacityNormalizedTimeToFadeOut)
-            Opacity = Utils.GetLerpValue(LifeTime, LifeTime * OpacityNormalizedTimeToFadeOut, time, clamped: true);
+            Opacity = Utils.GetLerpValue(LifeTime, LifeTime * OpacityNormalizedTimeToFadeOut, time, true);
         else
-            Opacity = Utils.GetLerpValue(0f, LifeTime * OpacityNormalizedTimeToFadeIn, time, clamped: true);
+            Opacity = Utils.GetLerpValue(0f, LifeTime * OpacityNormalizedTimeToFadeIn, time, true);
     }
 
     bool IsMovementDone(int frameCount)
@@ -242,7 +243,7 @@ public abstract class ModSkyEntity : ModTexturedType
         int num = SourceRectangle.Height / 2;
         float t = val.Y + num;
         float yScreenPosition = AmbientSkyDrawCache.Instance.OceanLineInfo.YScreenPosition;
-        float lerpValue = Utils.GetLerpValue(yScreenPosition - 10f, yScreenPosition - 2f, t, clamped: true);
+        float lerpValue = Utils.GetLerpValue(yScreenPosition - 10f, yScreenPosition - 2f, t, true);
         lerpValue *= AmbientSkyDrawCache.Instance.OceanLineInfo.OceanOpacity;
         return 1f - lerpValue;
     }

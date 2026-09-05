@@ -70,5 +70,4 @@ public class GainTosser : ModItem
             .AddTile(TileID.Anvils)
             .Register();
     }
-
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,6 +18,7 @@ public interface IUpdateCloud
 {
     /// <summary> Return true to do vanilla cloud updating </summary>
     bool PreUpdate(Cloud cloud);
+
     void PostUpdate(Cloud cloud);
 }
 
@@ -28,6 +30,7 @@ public partial class WgMod
         On_Player.AddBuff += Player_AddBuff;
         On_Player.DelBuff += Player_DelBuff;
         On_Player.UpdateSocialShadow += Player_UpdateSocialShadow;
+        On_Player.GetGrapplingForces += Player_GetGrapplingForces;
         On_PlayerDrawSet.HeadOnlySetup += PlayerDrawSet_HeadOnlySetup;
         On_Mount.Draw += Mount_Draw;
         On_Main.GetPlayerArmPosition += Main_GetPlayerArmPosition;
@@ -44,6 +47,7 @@ public partial class WgMod
         On_Player.AddBuff -= Player_AddBuff;
         On_Player.DelBuff -= Player_DelBuff;
         On_Player.UpdateSocialShadow -= Player_UpdateSocialShadow;
+        On_Player.GetGrapplingForces -= Player_GetGrapplingForces;
         On_PlayerDrawSet.HeadOnlySetup -= PlayerDrawSet_HeadOnlySetup;
         On_Mount.Draw -= Mount_Draw;
         On_Main.GetPlayerArmPosition -= Main_GetPlayerArmPosition;
@@ -123,10 +127,17 @@ public partial class WgMod
         self.gfxOffY = lastOffY;
     }
 
+    static void Player_GetGrapplingForces(On_Player.orig_GetGrapplingForces orig, Player self, Vector2 fromPosition, out int? preferredPlayerDirectionToSet, out float preferedPlayerVelocityX, out float preferedPlayerVelocityY)
+    {
+        orig(self, fromPosition, out preferredPlayerDirectionToSet, out preferedPlayerVelocityX, out preferedPlayerVelocityY);
+        if (self.TryGetModPlayer(out WgPlayer wg) && wg._softSquishRight > 0.01f)
+            preferedPlayerVelocityY = MathF.Round(preferedPlayerVelocityY);
+    }
+
     static void PlayerDrawSet_HeadOnlySetup(On_PlayerDrawSet.orig_HeadOnlySetup orig, ref PlayerDrawSet self, Player drawPlayer2, List<DrawData> drawData, List<int> dust, List<int> gore, float X, float Y, float Alpha, float Scale)
     {
         orig(ref self, drawPlayer2, drawData, dust, gore, X, Y, Alpha, Scale);
-        self.Position.X -= Math.Max((self.drawPlayer.width / 2) - 10, 0);
+        self.Position.X -= Math.Max(self.drawPlayer.width / 2 - 10, 0);
     }
 
     static Vector2 Main_GetPlayerArmPosition(On_Main.orig_GetPlayerArmPosition orig, Projectile proj)

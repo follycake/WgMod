@@ -7,7 +7,6 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Armor.CrimatriarchArmor;
 
 [AutoloadEquip(EquipType.Body)]
-
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.trilophyte)]
 public class CrimatriarchGown : ModItem

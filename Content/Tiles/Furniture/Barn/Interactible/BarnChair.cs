@@ -65,17 +65,13 @@ public class BarnChair : ModTile
 
         info.TargetDirection = -1;
         if (tile.TileFrameX != 0)
-        {
             info.TargetDirection = 1;
-        }
 
         info.AnchorTilePosition.X = i;
         info.AnchorTilePosition.Y = j;
 
         if (tile.TileFrameY % NextStyleHeight == 0)
-        {
             info.AnchorTilePosition.Y++;
-        }
     }
 
     public override bool RightClick(int i, int j)
@@ -96,17 +92,13 @@ public class BarnChair : ModTile
         Player player = Main.LocalPlayer;
 
         if (!player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance))
-        {
             return;
-        }
 
         player.noThrow = 2;
         player.cursorItemIconEnabled = true;
         player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.Barn.Interactible.BarnChair>();
 
         if (Main.tile[i, j].TileFrameX / 18 < 1)
-        {
             player.cursorItemIconReversed = true;
-        }
     }
 }

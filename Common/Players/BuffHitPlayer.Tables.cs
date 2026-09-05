@@ -50,7 +50,7 @@ public partial class BuffHitPlayer
         NPCID.QueenSlimeMinionPink,
         NPCID.QueenSlimeMinionPurple,
         NPCID.HoppinJack,
-        NPCID.SlimedZombie,
+        NPCID.SlimedZombie
     ];
 
     readonly HashSet<int> _slimeProjectiles =
@@ -59,7 +59,7 @@ public partial class BuffHitPlayer
         ProjectileID.QueenSlimeGelAttack,
         ProjectileID.QueenSlimeMinionBlueSpike,
         ProjectileID.QueenSlimeMinionPinkBall,
-        ProjectileID.VolatileGelatinBall,
+        ProjectileID.VolatileGelatinBall
     ];
 
     readonly int _beesBuff = ModContent.BuffType<Bloated>();
@@ -90,7 +90,7 @@ public partial class BuffHitPlayer
         NPCID.LittleHornetSpikey,
         NPCID.LittleHornetStingy,
         NPCID.VortexHornet,
-        NPCID.VortexHornetQueen,
+        NPCID.VortexHornetQueen
     ];
 
     readonly HashSet<int> _bloaters =
@@ -117,7 +117,7 @@ public partial class BuffHitPlayer
         ProjectileID.SeedPlantera,
         ProjectileID.PoisonSeedPlantera,
         ProjectileID.ThornBall,
-        ProjectileID.DandelionSeed,
+        ProjectileID.DandelionSeed
     ];
 
     readonly int _feedersBuff = ModContent.BuffType<ForceFed>();
@@ -168,13 +168,13 @@ public partial class BuffHitPlayer
         NPCID.AncientLight,
         NPCID.AncientDoom,
         NPCID.BurningSphere,
-        NPCID.PresentMimic,
+        NPCID.PresentMimic
     ];
 
     readonly HashSet<int> _feederProjectiles =
     [
         ProjectileID.DemonSickle,
-        ProjectileID.DemonScythe,
+        ProjectileID.DemonScythe
     ];
 
     readonly int _empressBuff = ModContent.BuffType<PrismaticStuffing>();

@@ -77,6 +77,7 @@ public class AmbrosiaPlayer : ModPlayer
         SoundEngine.PlaySound(WgSounds.Gulp, Player.Center);
 
         for (int i = 0; i < 50; i++)
+        {
             Dust.NewDust(
                 Player.position,
                 Player.width,
@@ -88,5 +89,6 @@ public class AmbrosiaPlayer : ModPlayer
                 default,
                 1.3f
             );
+        }
     }
 }

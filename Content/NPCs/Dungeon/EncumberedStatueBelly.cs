@@ -129,16 +129,16 @@ public class EncumberedStatueMiddle : ModNPC
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 List<double> validAngles =
-                    [
-                        0,
-                        45,
-                        90,
-                        135,
-                        180,
-                        225,
-                        270,
-                        315
-                    ];
+                [
+                    0,
+                    45,
+                    90,
+                    135,
+                    180,
+                    225,
+                    270,
+                    315
+                ];
                 int projectileCount = 2;
                 int projectileID = ModContent.ProjectileType<HeartyHeart_Surround>(); //yes i probably shouldve made them one projectile but i dont feel like it
 
@@ -331,7 +331,7 @@ public class HeartyHeart_Surround : ModProjectile
 
         for (int k = 1; k < Projectile.oldPos.Length; k++)
         {
-            Vector2 drawPos = Projectile.oldPos[k] + (Projectile.Size / 2) - Main.screenPosition;
+            Vector2 drawPos = Projectile.oldPos[k] + Projectile.Size / 2 - Main.screenPosition;
             Color color = drawColor * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
             Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
         }

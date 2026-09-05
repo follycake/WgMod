@@ -79,7 +79,7 @@ public class CrispyDisciplineProjectile : ModProjectile
 
         float swingProgress = Timer / swingTime;
 
-        if (Utils.GetLerpValue(0.1f, 0.7f, swingProgress, clamped: true) * Utils.GetLerpValue(0.9f, 0.7f, swingProgress, clamped: true) > 0.5f && !Main.rand.NextBool(3))
+        if (Utils.GetLerpValue(0.1f, 0.7f, swingProgress, true) * Utils.GetLerpValue(0.9f, 0.7f, swingProgress, true) > 0.5f && !Main.rand.NextBool(3))
         {
             List<Vector2> points = Projectile.WhipPointsForCollision;
             points.Clear();
@@ -250,7 +250,7 @@ public class CrispyDisciplineProjectile : ModProjectile
                     0.5f,
                     1.5f,
                     Utils.GetLerpValue(0.1f, 0.7f, t, true)
-                        * Utils.GetLerpValue(0.9f, 0.7f, t, true)
+                    * Utils.GetLerpValue(0.9f, 0.7f, t, true)
                 );
             }
             else if (i == list.Count - 3)

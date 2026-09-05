@@ -287,7 +287,7 @@ public class HeartyHeart_Direct_Spawner_Strong : ModProjectile
 
                 int projectileCount = 6;
                 float baseAngle = MathHelper.ToRadians(18);
-                float currentAngle = -baseAngle * (projectileCount / 2f) + (baseAngle / 2f);
+                float currentAngle = -baseAngle * (projectileCount / 2f) + baseAngle / 2f;
                 Vector2 velocity = new Vector2(2.25f, 0).RotatedBy(Projectile.Center.AngleTo(target.Center));
 
                 for (int projectiles = 0; projectiles < projectileCount; projectiles++)
@@ -299,8 +299,6 @@ public class HeartyHeart_Direct_Spawner_Strong : ModProjectile
             }
         }
         else
-        {
             Projectile.Kill();
-        }
     }
 }

@@ -25,7 +25,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         On_LegacyPlayerRenderer.DrawPlayerStoned -= DrawPlayerStoned;
     }
 
-    public override Position GetDefaultPosition() => new Multiple()
+    public override Position GetDefaultPosition() => new Multiple
     {
         { new Between(PlayerDrawLayers.Torso, PlayerDrawLayers.OffhandAcc), drawInfo => !CheckTop(drawInfo) },
         { new Between(PlayerDrawLayers.Head, PlayerDrawLayers.MountFront), CheckTop }
@@ -46,7 +46,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             return drawInfo.drawPlayer.skinColor;
         Color skinColor = drawInfo.colorBodySkin;
         if (drawInfo.drawPlayer.isDisplayDollOrInanimate)
-            skinColor = new Color(154, 115, 85).MultiplyRGB(skinColor);
+            skinColor = drawInfo.colorDisplayDollSkin;
         return skinColor;
     }
 

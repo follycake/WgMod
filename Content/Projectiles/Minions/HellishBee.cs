@@ -99,9 +99,7 @@ public class HellishBee : ModProjectile
         int dustRate = 5;
 
         if (Main.rand.NextBool(dustRate) && _weightStage == MaxStage)
-        {
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.t_Honey, 0f, 0.5f, 100, new Color(151, 93, 15), 0.7f);
-        }
 
         Player owner = Main.player[Projectile.owner];
 
@@ -145,14 +143,14 @@ public class HellishBee : ModProjectile
         }
 
         float overlapVelocity = 0.04f;
-        foreach (var other in Main.ActiveProjectiles)
+        foreach (Projectile other in Main.ActiveProjectiles)
         {
             if (
                 other.whoAmI != Projectile.whoAmI
                 && other.owner == Projectile.owner
                 && Math.Abs(Projectile.position.X - other.position.X)
-                    + Math.Abs(Projectile.position.Y - other.position.Y)
-                    < Projectile.width
+                + Math.Abs(Projectile.position.Y - other.position.Y)
+                < Projectile.width
             )
             {
                 if (Projectile.position.X < other.position.X)
@@ -189,7 +187,7 @@ public class HellishBee : ModProjectile
 
         if (!foundTarget)
         {
-            foreach (var npc in Main.ActiveNPCs)
+            foreach (NPC npc in Main.ActiveNPCs)
             {
                 if (npc.CanBeChasedBy())
                 {
@@ -206,7 +204,7 @@ public class HellishBee : ModProjectile
                     );
                     bool closeThroughWall = between < 100f;
 
-                    if (((closest && inRange) || !foundTarget) && (lineOfSight || closeThroughWall))
+                    if ((closest && inRange || !foundTarget) && (lineOfSight || closeThroughWall))
                     {
                         distanceFromTarget = between;
                         targetCenter = npc.Center;

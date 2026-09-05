@@ -98,6 +98,7 @@ public class Girthquake : ModProjectile
 public class Girth : ModProjectile
 {
     public override string Texture => "WgMod/Assets/Textures/Invisible";
+
     public override void SetDefaults()
     {
         Projectile.width = 1;
@@ -118,6 +119,7 @@ public class Girth : ModProjectile
     {
         return false;
     }
+
     public override bool? CanCutTiles()
     {
         return false;

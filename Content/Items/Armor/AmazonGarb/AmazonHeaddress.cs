@@ -14,7 +14,6 @@ using WgMod.Content.Dusts;
 namespace WgMod.Content.Items.Armor.AmazonGarb;
 
 [AutoloadEquip(EquipType.Head)]
-
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class AmazonHeaddress : ModItem
