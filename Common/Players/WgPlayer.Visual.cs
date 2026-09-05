@@ -28,7 +28,6 @@ public partial class WgPlayer
 
     internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[4];
     internal RenderTarget2D _armorTarget;
-    internal Vector4 _playerTint = Vector4.One;
 
     internal List<WgPhysics.Layer> _physicsLayers;
     internal Dictionary<int, WgPhysics.Layer> _physicsDrawOverride;
@@ -60,13 +59,7 @@ public partial class WgPlayer
         if (Main.dedServ)
             return;
         if (WgArmor.Enabled)
-        {
-            Main.RunOnMainThread(() =>
-            {
-                WgArmor.SetupArmorLayers(Player, _armorLayers);
-                WgArmor.Render(Weight.GetStage(), ref _armorTarget, _armorLayers, Player.Male);
-            });
-        }
+            Main.RunOnMainThread(() => WgArmor.Render(this));
     }
 
     internal void PreUpdateVisuals()
@@ -87,10 +80,7 @@ public partial class WgPlayer
         if (Main.dedServ)
             return;
         if (WgArmor.Enabled)
-        {
-            WgArmor.SetupArmorLayers(Player, _armorLayers);
-            WgArmor.Render(Weight.GetStage(), ref _armorTarget, _armorLayers, Player.Male);
-        }
+            WgArmor.Render(this);
         if (_requestPhysicsSetup)
         {
             WgPhysics.Setup(this);
@@ -240,12 +230,6 @@ public partial class WgPlayer
 
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
-        if (drawInfo.shadow == 0f)
-        {
-            bool fullBright = false;
-            _playerTint = Vector4.One;
-            PlayerLoader.DrawEffects(drawInfo, ref _playerTint.X, ref _playerTint.Y, ref _playerTint.Z, ref _playerTint.W, ref fullBright);
-        }
         if (WgPhysics.IsEnabled(this))
             _physicsDrawOverride.Clear();
         if (Player.isDisplayDollOrInanimate)

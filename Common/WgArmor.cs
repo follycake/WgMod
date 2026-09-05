@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -37,14 +38,23 @@ public static class WgArmor
     };
 
     public static bool Enabled => !WgClientConfig.Instance.DisableUVClothes && SpriteSet.Current.UVArmor;
+
+    static List<DrawData> _drawData;
+    static List<int> _dust;
+    static List<int> _gore;
     static BlendState _multiplyBlend;
 
-    public static void Render(int stage, ref RenderTarget2D target, ReadOnlySpan<Layer> layers, bool male)
+    public static void Render(WgPlayer wg)
     {
         if (!Shaders.FatArmor.IsLoaded || !Shaders.FatArmorLegs.IsLoaded)
             return;
 
-        SpriteSet set = SpriteSet.GetSet(stage);
+        ref RenderTarget2D target = ref wg._armorTarget;
+        PlayerDrawSet drawInfo = CreateDrawInfo(wg.Player);
+        Span<Layer> layers = wg._armorLayers;
+        SetupArmorLayers(drawInfo, layers);
+
+        SpriteSet set = SpriteSet.GetSet(wg.Weight.GetStage());
         GraphicsDevice device = Main.graphics.GraphicsDevice;
         SpriteBatch spriteBatch = Main.spriteBatch;
         if (target == null || target.Width != set.ArmorAltasWidth || target.Height != set.ArmorAltasHeight)
@@ -65,7 +75,7 @@ public static class WgArmor
             RasterizerState.CullCounterClockwise,
             Shaders.FatArmor.Value
         );
-        Vector2 baseOffset = male ? new Vector2(0f, -0.5f) : Vector2.Zero;
+        Vector2 baseOffset = wg.Player.Male ? new Vector2(0f, -0.5f) : Vector2.Zero;
         foreach (Layer layer in layers)
         {
             if (layer.BodyTexture == null)
@@ -76,7 +86,16 @@ public static class WgArmor
             {
                 if (spriteLayer.LegArmor)
                     continue;
-                Shaders.FatArmor.Value.Parameters["uOffset"].SetValue(spriteLayer.Type == SpriteSet.LayerType.Arms ? Vector2.Zero : baseOffset);
+                if (spriteLayer.Type == SpriteSet.LayerType.Arms)
+                {
+                    Shaders.FatArmor.Value.Parameters["uOffset"].SetValue(Vector2.Zero);
+                    Shaders.FatArmor.Value.Parameters["uGlowColor"].SetValue(drawInfo.armGlowColor.ToVector4());
+                }
+                else
+                {
+                    Shaders.FatArmor.Value.Parameters["uOffset"].SetValue(baseOffset);
+                    Shaders.FatArmor.Value.Parameters["uGlowColor"].SetValue(drawInfo.bodyGlowColor.ToVector4());
+                }
                 spriteBatch.Draw(spriteLayer.ArmorTexture, new Vector2(spriteLayer.ArmorAtlasX, 0f), layer.BodyColor);
             }
         }
@@ -91,6 +110,7 @@ public static class WgArmor
             RasterizerState.CullCounterClockwise,
             Shaders.FatArmorLegs.Value
         );
+        Shaders.FatArmorLegs.Value.Parameters["uGlowColor"].SetValue(drawInfo.legsGlowColor.ToVector4());
         foreach (Layer layer in layers)
         {
             if (layer.LegsTexture == null)
@@ -150,19 +170,8 @@ public static class WgArmor
             texture = wg._armorTarget,
             sourceRect = rect,
             shader = layer.LegArmor ? drawInfo.drawPlayer.legs > 0 ? drawInfo.cLegs : 0 : drawInfo.drawPlayer.body > 0 ? drawInfo.cBody : 0,
-            // Vanilla uses GetImmuneAlpha for body texture, using GetImmuneAlphaPure puts body and armor out of sync
-            color = drawInfo.drawPlayer.GetImmuneAlpha(Color.White, drawInfo.shadow)
+            color = Color.Multiply(Color.White, 1f - drawInfo.shadow)
         });
-    }
-
-    // Hurt effect is already applied in drawInfo, so bake lighting only
-    static Color Light(Player player, Vector2 position, Color color)
-    {
-        color = Lighting.GetColorClamped((int)(position.X + player.width * 0.5) / 16, (int)((position.Y + player.height * 0.5) / 16.0), color);
-        // TODO: If only we could render armor directly after the drawInfo is created, we shouldn't have to resort to janky methods like these
-        if (player.TryGetModPlayer(out WgPlayer wg))
-            color = Main.buffColor(color, wg._playerTint.X, wg._playerTint.Y, wg._playerTint.Z, wg._playerTint.W);
-        return color;
     }
 
     public static Vector2 GetDrawPosition(Player player)
@@ -180,7 +189,7 @@ public static class WgArmor
         if (player.mount.Active && player.mount.Type == MountID.SpookyWood)
             isSitting = true;
 
-        Vector2 position = player.position;
+        Vector2 position = player.VisualPosition;
         position.X += player.MountXOffset * player.direction;
         if (isSitting)
         {
@@ -196,66 +205,57 @@ public static class WgArmor
         return position;
     }
 
-    static int GetLegsGlowMask(Player drawPlayer)
+    public static PlayerDrawSet CreateDrawInfo(Player player)
     {
-        int legsGlowMask = drawPlayer.legs switch
-        {
-            ArmorIDs.Legs.NebulaLeggings => GlowMaskID.NebulaArmorLegs,
-            ArmorIDs.Legs.ArkhalisPants_Male => GlowMaskID.ArkhalisPants_Male,
-            ArmorIDs.Legs.ArkhalisPants_Female => GlowMaskID.ArkhalisPants_Female,
-            ArmorIDs.Legs.GroxTheGreatGreaves => GlowMaskID.GroxTheGreatGreaves,
-            ArmorIDs.Legs.TimelessTravelerBottom => GlowMaskID.TimelessTravelerBottom,
-            ArmorIDs.Legs.CapricornLegs => GlowMaskID.CapricornLegs,
-            ArmorIDs.Legs.CapricornTail => GlowMaskID.CapricornTail,
-            ArmorIDs.Legs.VortexLeggings => GlowMaskID.VortexArmorLegs,
-            ArmorIDs.Legs.LokisGreaves => GlowMaskID.LokisLegs,
-            ArmorIDs.Legs.StardustLeggings => GlowMaskID.ArmorStardustLegs,
-            _ => -1
-        };
-        Color colorArmorLegs = Color.White;
-        Color legsGlowColor = Color.Transparent;
-        ItemLoader.DrawArmorColor(EquipType.Legs, drawPlayer.legs, drawPlayer, 0f, ref colorArmorLegs, ref legsGlowMask, ref legsGlowColor);
-        return legsGlowMask;
+        _drawData ??= [];
+        _drawData.Clear();
+        _dust ??= [];
+        _dust.Clear();
+        _gore ??= [];
+        _gore.Clear();
+        PlayerDrawSet drawInfo = new();
+        drawInfo.BoringSetup(player, _drawData, _dust, _gore, player.VisualPosition, 0f, player.fullRotation, player.fullRotationOrigin);
+        foreach (int dust in drawInfo.DustCache)
+            Main.dust[dust].active = false;
+        drawInfo.DustCache.Clear();
+        foreach (int gore in drawInfo.GoreCache)
+            Main.gore[gore].active = false;
+        drawInfo.GoreCache.Clear();
+        return drawInfo;
     }
 
-    public static void SetupArmorLayers(Player player, Layer[] layers)
+    public static void SetupArmorLayers(in PlayerDrawSet drawInfo, Span<Layer> layers)
     {
-        Vector2 position = GetDrawPosition(player);
-        Array.Clear(layers);
+        Player player = drawInfo.drawPlayer;
+        layers.Clear();
 
-        Color lit = Light(player, position, Color.White);
         if (player.isDisplayDollOrInanimate)
-            layers[0].SetBody(TextureAssets.Players[player.skinVariant, 3], lit);
+            layers[0].SetBody(TextureAssets.Players[drawInfo.skinVar, 3], drawInfo.colorBodySkin);
 
         // Torso
         if (player.body > 0)
-            layers[1].SetBody(TextureAssets.ArmorBodyComposite[player.body], lit);
+            layers[1].SetBody(TextureAssets.ArmorBodyComposite[player.body], drawInfo.colorArmorBody);
         else if (!player.isDisplayDollOrInanimate)
         {
-            Color underShirt = Light(player, position, player.underShirtColor);
-            Color shirt = Light(player, position, player.shirtColor);
-            layers[0].SetBody(TextureAssets.Players[player.skinVariant, 4], underShirt);
-            layers[1].SetBody(TextureAssets.Players[player.skinVariant, 8], underShirt);
-            layers[2].SetBody(TextureAssets.Players[player.skinVariant, 13], shirt);
-            layers[3].SetBody(TextureAssets.Players[player.skinVariant, 6], shirt);
+            layers[0].SetBody(TextureAssets.Players[drawInfo.skinVar, 4], drawInfo.colorUnderShirt);
+            layers[1].SetBody(TextureAssets.Players[drawInfo.skinVar, 8], drawInfo.colorUnderShirt);
+            layers[2].SetBody(TextureAssets.Players[drawInfo.skinVar, 13], drawInfo.colorShirt);
+            layers[3].SetBody(TextureAssets.Players[drawInfo.skinVar, 6], drawInfo.colorShirt);
         }
 
         // Legs
         if (player.legs > 0)
         {
-            int glowMask = GetLegsGlowMask(player);
-            if (glowMask >= 0)
-                layers[1].LegsGlowTexture = TextureAssets.GlowMask[glowMask];
-            layers[1].SetLegs(TextureAssets.ArmorLeg[player.legs], lit);
+            if (drawInfo.legsGlowMask >= 0)
+                layers[1].LegsGlowTexture = TextureAssets.GlowMask[drawInfo.legsGlowMask];
+            layers[1].SetLegs(TextureAssets.ArmorLeg[player.legs], drawInfo.colorArmorLegs);
         }
         else if (!player.isDisplayDollOrInanimate)
         {
-            Color pants = Light(player, position, player.pantsColor);
-            Color shoes = Light(player, position, player.shoeColor);
-            layers[1].SetLegs(TextureAssets.Players[player.skinVariant, 11], pants);
-            layers[2].SetLegs(TextureAssets.Players[player.skinVariant, 12], shoes);
+            layers[1].SetLegs(TextureAssets.Players[drawInfo.skinVar, 11], drawInfo.colorPants);
+            layers[2].SetLegs(TextureAssets.Players[drawInfo.skinVar, 12], drawInfo.colorShoes);
         }
         if (player.shoe > 0 && !(player.legs > 0 && ArmorIDs.Legs.Sets.OverridesLegs[player.legs]))
-            layers[3].SetLegs(TextureAssets.AccShoes[player.shoe], lit);
+            layers[3].SetLegs(TextureAssets.AccShoes[player.shoe], drawInfo.colorShoes);
     }
 }

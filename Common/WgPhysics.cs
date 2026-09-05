@@ -410,7 +410,7 @@ public static class WgPhysics
 
         public static Vector2 CalculateDrawPosition(WgPlayer wg)
         {
-            return WgArmor.GetDrawPosition(wg.Player) + new Vector2(0f, wg.Player.gfxOffY);
+            return WgArmor.GetDrawPosition(wg.Player);
         }
 
         public Vector2 CalculateBasePosition(WgPlayer wg, Vector2 drawPosition)

@@ -7,6 +7,7 @@ sampler uImage2 : register(s2); // Glow texture
 
 float2 uImageSize1;
 bool uGlow;
+float4 uGlowColor;
 
 float4 PixelShaderFunction(float2 coords : TEXCOORD0, float4 color : COLOR0) : COLOR0
 {
@@ -21,7 +22,7 @@ float4 PixelShaderFunction(float2 coords : TEXCOORD0, float4 color : COLOR0) : C
 
 	if (uGlow)
 	{
-		float4 bright = tex2D(uImage2, coord / uImageSize1);
+		float4 bright = tex2D(uImage2, coord / uImageSize1) * uGlowColor;
 		col = lerp(col, bright, bright.a);
 	}
 	return col;
