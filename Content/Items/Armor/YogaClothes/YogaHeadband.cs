@@ -28,7 +28,7 @@ public class YogaHeadband : ModItem
         Item.width = 26;
         Item.height = 16;
         Item.value = Item.sellPrice(silver: 10);
-        Item.rare = ItemRarityID.Orange;
+        Item.rare = ItemRarityID.Blue;
         Item.defense = 0;
     }
 

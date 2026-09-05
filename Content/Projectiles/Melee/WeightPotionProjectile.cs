@@ -8,7 +8,7 @@ using WgMod.Common.Players;
 using WgMod.Content.Items.Consumables.Potions.WeightGainPotions;
 using WgMod.Content.Items.Consumables.Potions.WeightLossPotions;
 
-namespace WgMod.Content.Projectiles.Melee;
+namespace WgMod.Content.Projectiles.Ranged;
 
 [Credit(ProjectRole.Programmer, Contributor.alphas0)]
 public abstract class WeightPotionProjectile : ModProjectile
@@ -142,6 +142,7 @@ public abstract class WeightPotionProjectile : ModProjectile
 
                 int damageDealt = (int)((float)Projectile.damage * Math.Abs(PotionDamageModifier));
                 activeMob.StrikeNPC(activeMob.CalculateHitInfo(damageDealt, dir, crit, Projectile.knockBack, DamageClass.Melee, true, 0));
+                Main.player[Projectile.owner].addDPS(damageDealt);
             }
         }
     }
