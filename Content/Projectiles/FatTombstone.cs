@@ -123,7 +123,7 @@ public class FatTombstone : ModProjectile
             if (sign >= 0)
             {
                 Sign.TextSign(sign, self.miscText);
-                NetMessage.SendData(MessageID.ReadSign, -1, -1, null, sign, 0f, (byte)new BitsByte(b1: true));
+                NetMessage.SendData(MessageID.ReadSign, -1, -1, null, sign, 0f, (byte)new BitsByte(true));
             }
             self.Kill();
         }

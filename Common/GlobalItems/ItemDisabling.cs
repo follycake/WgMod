@@ -67,13 +67,13 @@ public class ItemDisabling : GlobalItem
         ItemID.PhilosophersStone,
         ItemID.CharmofMyths,
         ModContent.ItemType<BandOfSweetening>(),
-        ModContent.ItemType<CharmOfSweets>(),
+        ModContent.ItemType<CharmOfSweets>()
     ]);
 
     /// <summary> Every accessory in the Queenly gluttony line </summary>
     public static readonly Line GauntletLine = Line.Create([
         ModContent.ItemType<QueenlyGluttony>(),
-        ModContent.ItemType<SolDrive>(),
+        ModContent.ItemType<SolDrive>()
     ]);
 
     /// <summary> Every accessory in the Exoskeleton Legs line </summary>
@@ -81,7 +81,7 @@ public class ItemDisabling : GlobalItem
         ModContent.ItemType<ExoskeletonLegs>(),
         ModContent.ItemType<TerraskeletonLegs>(),
         ModContent.ItemType<MechaskeletonLegs>(),
-        ModContent.ItemType<TwilightTracers>(),
+        ModContent.ItemType<TwilightTracers>()
     ]);
 
     public override void UpdateInventory(Item item, Player player)
@@ -113,8 +113,10 @@ public class ItemDisabling : GlobalItem
     public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player)
     {
         foreach (Line line in Lines)
+        {
             if (line.IsInLine(equippedItem) && line.IsInLine(incomingItem))
                 return false;
+        }
 
         return true;
     }

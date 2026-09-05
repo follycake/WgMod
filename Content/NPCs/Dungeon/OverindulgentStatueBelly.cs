@@ -108,7 +108,6 @@ public class OverindulgentStatueMiddle : ModNPC
             case 2:
                 Lighting.AddLight(NPC.Center - new Vector2(0, 4), new Vector3(51, 255, 92) / 255 * 0.9f);
                 break;
-
         }
 
         NPC.velocity.X *= 0.8f;
