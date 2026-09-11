@@ -26,7 +26,7 @@ public partial class WgPlayer
     internal int _fakeWalkFrameX;
     internal float _fakeWalkJiggle;
 
-    internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[4];
+    internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[5];
     internal RenderTarget2D _armorTarget;
 
     internal List<WgPhysics.Layer> _physicsLayers;

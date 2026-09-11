@@ -7,7 +7,6 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
-using Terraria.ModLoader;
 using WgMod.Common.Configs;
 using WgMod.Common.Players;
 
@@ -242,6 +241,8 @@ public static class WgArmor
             layers[2].SetBody(TextureAssets.Players[drawInfo.skinVar, 13], drawInfo.colorShirt);
             layers[3].SetBody(TextureAssets.Players[drawInfo.skinVar, 6], drawInfo.colorShirt);
         }
+        if (player.handon > 0)
+            layers[4].SetBody(TextureAssets.AccHandsOnComposite[player.handon], drawInfo.colorArmorBody);
 
         // Legs
         if (player.legs > 0)
@@ -256,6 +257,6 @@ public static class WgArmor
             layers[2].SetLegs(TextureAssets.Players[drawInfo.skinVar, 12], drawInfo.colorShoes);
         }
         if (player.shoe > 0 && !(player.legs > 0 && ArmorIDs.Legs.Sets.OverridesLegs[player.legs]))
-            layers[3].SetLegs(TextureAssets.AccShoes[player.shoe], drawInfo.colorShoes);
+            layers[3].SetLegs(TextureAssets.AccShoes[player.shoe], drawInfo.colorArmorLegs); // TODO: Use cShoe
     }
 }
