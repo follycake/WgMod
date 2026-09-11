@@ -6,6 +6,8 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Accessories.Summon;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.the_trueterrafox)]
 public class CryoGauntlet : ModItem
 {
     WgStat _damage = new(0.08f, 0.14f);

@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Accessories.Fat;
 
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class StarlightBoots : ModItem
 {
     public override string Texture => "WgMod/Assets/Placeholder/ExampleItem";

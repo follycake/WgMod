@@ -6,6 +6,8 @@ using Terraria.ModLoader;
 
 namespace WgMod.Content.Items.Accessories.Summon;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.the_trueterrafox)]
 public class DamnedDessert : ModItem
 {
     public override void SetDefaults()
@@ -50,17 +52,20 @@ public class HellsDessertPlayer : ModPlayer
         Active = false;
     }
 
-    readonly HashSet<DamageClass> _damageTypes = [
+    readonly HashSet<DamageClass> _damageTypes =
+    [
         DamageClass.Melee,
         DamageClass.SummonMeleeSpeed
     ];
 
-    readonly HashSet<int> _debuffs = [
+    readonly HashSet<int> _debuffs =
+    [
         BuffID.Frostburn2,
         BuffID.OnFire3,
     ];
 
-    readonly HashSet<int> _dusts = [
+    readonly HashSet<int> _dusts =
+    [
         DustID.Torch,
         DustID.IceTorch
     ];

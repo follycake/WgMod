@@ -9,6 +9,8 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Accessories.Magic;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
 public class ShimmeringVail : ModItem
 {
     WgStat _projectileCount = new(6f, 12f);
@@ -39,6 +41,11 @@ public class ShimmeringVail : ModItem
         sv.Damage = _damage;
         sv.Invincibility = _invincibility;
         sv.Active = true;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)

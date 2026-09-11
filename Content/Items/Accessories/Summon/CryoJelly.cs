@@ -5,6 +5,8 @@ using Terraria.ModLoader;
 
 namespace WgMod.Content.Items.Accessories.Summon;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.the_trueterrafox)]
 public class CryoJelly : ModItem
 {
     public override void SetDefaults()
