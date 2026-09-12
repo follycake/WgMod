@@ -1625,6 +1625,45 @@ Dialogue: {
 		LoveStruckDialogue1: "{1}... {0} kinda wants to... bite {1} face..."
 		PostMechDialogue1: "{0} ate the flesh of big robots... {0} feels so powerful..."
 	}
+
+	Nurse: {
+		PlayerStage1: If you need some diet advice I have a selection of books on the subject.
+		PlayerStage2: If you need some diet advice I have a selection of books on the subject.
+		PlayerStage3: You've gotten fatter since your last checkup.
+		PlayerStage4: You are medically obese. This is serious, you need to lose weight.
+		PlayerStage5: You are now morbidly obese. I'm prescribing you a diet and exercise routine, follow it before you end up a cautionary tale.
+		PlayerStage6:
+			'''
+			If you break my door I'm adding it to your bill.
+			Stop ignoring my advice, you can still turn this around.
+			'''
+		PlayerStage7: Can you even move?
+		PlayerStage8:
+			'''
+			There are some exercises you can do to help manage your weight, even at this size.
+			At least your access to food has been restricted.
+			'''
+		PlayerStage9:
+			'''
+			I'm both impressed and disgusted.
+			There aren't any official terms for your weight range.
+			I don't have any more weight loss advice for you, not that you ever listened.
+			'''
+		PlayerFatPlus: I understand that potions are helpful, but they're also loaded with calories. Use them in moderation.
+		PlayerObesePlusPartyGirl: Bad influences can only make your weight problem worse, don't listen to them.
+		PlayerObesePlusGoblinMechanic: Despite their convenience, mobility aids only make the problem worse as they deprive you of physical activity, please don't use them.
+		PlayerBarelyMobilePlusPartyGirl: Stay away from {0}'s, it might be the last time you walk.
+		PlayerBarelyMobilePlusBlood: Just stop eating!
+		PlayerEncumberedPlusParty: No you cant have a cheat day!
+		ZoologistFat: Someone needs to tell {0} to keep an eye on her body.
+		ZoologistFatPlayerFat: Someone needs to tell {0} to keep an eye on her body, and don't you dare tell her about your diet!
+		DryadFat: The "strength of nature" is not an excuse for {0} to let herself go.
+		DryadFatPlayerFat: Stop giving the plants soda, it's making {0} fat.
+		MonstersFat: Please don't fatten the monsters.
+		MonstersFatPlayerFat: Please don't share your diet with the monsters.
+		Milkmaid: Being a cow isn't an excuse for {0} to be fat, she needs to lose weight.
+		MilkmaidPlayerFat: Stop accepting the dairy products from {0}, they’re making you fat.
+	}
 }
 
 Bestiary: {

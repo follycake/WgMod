@@ -19,7 +19,8 @@ public enum ProjectRole
     Artist,
     VFX,
     SFX,
-    Idea
+    Idea,
+    Dialog
 }
 
 /// <summary> A contributor's Discord handle </summary>
@@ -53,7 +54,9 @@ public enum Contributor
     [Category("Other")]
     purple_circle,
     bombuspyrobombus,
-    /// <summary> This sprite isn't finished and needs to be replaced at some point. </summary>
+    /// <summary> The person who made it didn't want to be credited. </summary>
+    ANONYMOUS,
+    /// <summary> This asset isn't finished and needs to be replaced at some point. </summary>
     PLACEHOLDER
 }
 
@@ -82,7 +85,7 @@ public static class Credits
 
     public static string GetTag(Contributor contributor)
     {
-        if (contributor == Contributor.PLACEHOLDER)
+        if (contributor == Contributor.ANONYMOUS || contributor == Contributor.PLACEHOLDER)
             return contributor.ToString();
         return "@" + contributor;
     }
