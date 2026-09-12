@@ -49,6 +49,9 @@ public partial class WgPlayer : ModPlayer
     /// <summary> Whether the player has jumped this tick. </summary>
     public bool JustJumped { get; private set; }
 
+    /// <summary> Whether the player can still move. Read-only. </summary>
+    public bool IsMobile => _finalMovementFactor > 0.01f;
+
     public readonly int[] BuffDuration = new int[Player.MaxBuffs];
     internal int _ignoreWgBuffTimer = 2;
 

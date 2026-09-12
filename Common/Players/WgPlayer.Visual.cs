@@ -96,7 +96,7 @@ public partial class WgPlayer
 
     internal void UpdateAnimation()
     {
-        _fakeWalk = _finalMovementFactor < 0.01f && (Player.controlLeft || Player.controlRight);
+        _fakeWalk = !IsMobile && (Player.controlLeft || Player.controlRight);
         if (_fakeWalk)
         {
             _fakeWalkTime += 0.2f;
@@ -150,7 +150,7 @@ public partial class WgPlayer
         _legOffsetY = 0f;
         _bellyOffset = 0f;
         _fakeWalkJiggle = 0f;
-        if (_finalMovementFactor > 0.01f)
+        if (IsMobile)
         {
             if (frame == 5)
                 _bellyOffset = Math.Clamp(Player.velocity.Y * Player.gravDir / 4f, -1f, 1f) * -2f;
@@ -212,7 +212,7 @@ public partial class WgPlayer
                     return false;
             }
         }
-        return Player.sitting.isSitting && !Player.GetModPlayer<TreadmillPlayer>()._onTreadmill || _finalMovementFactor < 0.01f;
+        return Player.sitting.isSitting && !Player.GetModPlayer<TreadmillPlayer>()._onTreadmill || !IsMobile;
     }
 
     public override void HideDrawLayers(PlayerDrawSet drawInfo)
