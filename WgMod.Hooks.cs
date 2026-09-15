@@ -39,6 +39,7 @@ public partial class WgMod
         On_PlayerDrawLayers.DrawStarboardRainbowTrail += PlayerDrawLayers_DrawStarboardRainbowTrail;
         On_PlayerDrawLayers.DrawPlayer_03_PortableStool += PlayerDrawLayers_DrawPlayer_03_PortableStool;
         On_PlayerDrawLayers.DrawPlayer_09_Wings += PlayerDrawLayers_DrawPlayer_09_Wings;
+        On_PlayerDrawLayers.DrawPlayer_25_Shield += PlayerDrawLayers_DrawPlayer_25_Shield;
     }
 
     // Always remember to unregister your hooks
@@ -56,6 +57,7 @@ public partial class WgMod
         On_PlayerDrawLayers.DrawStarboardRainbowTrail -= PlayerDrawLayers_DrawStarboardRainbowTrail;
         On_PlayerDrawLayers.DrawPlayer_03_PortableStool -= PlayerDrawLayers_DrawPlayer_03_PortableStool;
         On_PlayerDrawLayers.DrawPlayer_09_Wings -= PlayerDrawLayers_DrawPlayer_09_Wings;
+        On_PlayerDrawLayers.DrawPlayer_25_Shield -= PlayerDrawLayers_DrawPlayer_25_Shield;
     }
 
     static void Player_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
@@ -253,7 +255,7 @@ public partial class WgMod
             orig(self);
     }
 
-    public static void PlayerDrawLayers_DrawStarboardRainbowTrail(On_PlayerDrawLayers.orig_DrawStarboardRainbowTrail orig, ref PlayerDrawSet drawinfo, Vector2 commonWingPosPreFloor, Vector2 dirsVec)
+    static void PlayerDrawLayers_DrawStarboardRainbowTrail(On_PlayerDrawLayers.orig_DrawStarboardRainbowTrail orig, ref PlayerDrawSet drawinfo, Vector2 commonWingPosPreFloor, Vector2 dirsVec)
     {
         if (drawinfo.shadow != 0f)
             return;
@@ -312,7 +314,7 @@ public partial class WgMod
         }
     }
 
-    public static void PlayerDrawLayers_DrawPlayer_03_PortableStool(On_PlayerDrawLayers.orig_DrawPlayer_03_PortableStool orig, ref PlayerDrawSet drawinfo)
+    static void PlayerDrawLayers_DrawPlayer_03_PortableStool(On_PlayerDrawLayers.orig_DrawPlayer_03_PortableStool orig, ref PlayerDrawSet drawinfo)
     {
         Vector2 oldPos = drawinfo.Position;
         drawinfo.Position.Y -= drawinfo.drawPlayer.gfxOffY;
@@ -320,7 +322,7 @@ public partial class WgMod
         drawinfo.Position = oldPos;
     }
 
-    public static void PlayerDrawLayers_DrawPlayer_09_Wings(On_PlayerDrawLayers.orig_DrawPlayer_09_Wings orig, ref PlayerDrawSet drawinfo)
+    static void PlayerDrawLayers_DrawPlayer_09_Wings(On_PlayerDrawLayers.orig_DrawPlayer_09_Wings orig, ref PlayerDrawSet drawinfo)
     {
         if (drawinfo.drawPlayer.dead || drawinfo.hideEntirePlayer || drawinfo.drawPlayer.wings <= 0)
             return;
@@ -359,5 +361,13 @@ public partial class WgMod
                 drawinfo.DrawDataCache.Add(item);
             }
         }
+    }
+
+    static void PlayerDrawLayers_DrawPlayer_25_Shield(On_PlayerDrawLayers.orig_DrawPlayer_25_Shield orig, ref PlayerDrawSet drawinfo)
+    {
+        Vector2 oldPos = drawinfo.Position;
+        drawinfo.Position += new Vector2(drawinfo.drawPlayer.direction * (drawinfo.drawPlayer.width - Player.defaultWidth) * 0.4f, 0f);
+        orig(ref drawinfo);
+        drawinfo.Position = oldPos;
     }
 }
