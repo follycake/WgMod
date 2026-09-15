@@ -39,6 +39,11 @@ public class WgGlobalNPC : GlobalNPC
     Asset<Texture2D>[] _stageTextures;
     double _fatTimer;
 
+    public static int GetStage(int npc)
+    {
+        return GetStage(Main.npc[npc]);
+    }
+
     public static int GetStage(NPC npc)
     {
         if (_fatNameLookup.ContainsKey(npc.type) && npc.TryGetGlobalNPC(out WgGlobalNPC wg))

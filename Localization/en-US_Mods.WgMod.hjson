@@ -1664,6 +1664,38 @@ Dialogue: {
 		Milkmaid: Being a cow isn't an excuse for {0} to be fat, she needs to lose weight.
 		MilkmaidPlayerFat: Stop accepting the dairy products from {0}, they’re making you fat.
 	}
+
+	Dryad: {
+		PlayerStage1: You've been enjoying nature's gifts.
+		PlayerStage2: You've been enjoying nature's gifts.
+		PlayerStage3: Stay thin; Terraria needs someone fit!
+		PlayerStage4: Heroes are supposed to be thin.
+		PlayerStage5: A gut like that does not fit someone supposed to cleanse the land.
+		PlayerStage6: There are gluttony demons thinner than you.
+		PlayerStage7: Heroes are supposed to be mobile.
+		PlayerStage8: You're not a tree, you shouldn't be stuck in one place like this.
+		PlayerStage9: Can you even see past your {0}?
+		PlayerObesePlus: Corruption takes many forms, falling to one's own hunger is one of them.
+		PlayerMorbidlyObesePlus: The bounty of nature is for all, please leave some for the others.
+		PlayerEncumberedPlus: I wonder how many animals your diet could support.
+		Fat: It's just the strength of nature making me fat.
+		FatRaining: The rain makes it impossible for a dryad to lose weight.
+		FatRainingHomeless: I need a roof before I become wider than I am tall!
+		FatNurse: Could you tell {0} to get off my case?
+		FatJungle:
+			'''
+			The abundance of nature here makes it difficult for a dryad to regulate their weight.
+			I have accepted that the humidity will keep me fat.
+			'''
+		FatDesert: It's just water weight, I need it here.
+		FatPlayerFat: You understand how hard it is to keep the weight off.
+		FatPlayerFatNurse: Dont tell {0}, but im already doing as much as i can to stay thin.
+		FatPlayerNotMobile: As much as I hate being fat, immobility feels right.
+		OverflowingMimic: You are supposed to banish evil, not feed it.
+		FattenedWildlife: Your need to fatten the wildlife is insulting.
+		Milkmaid: I can accept {0} being fat since she is a cow, it is only natural.
+		ZoologistFat: It is a shame to see one such as {0} fall for gluttony.
+	}
 }
 
 Bestiary: {

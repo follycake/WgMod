@@ -9,7 +9,7 @@ using WgMod.Content.NPCs.TownNPCs.GroundedHarpy;
 using WgMod.Content.NPCs.TownNPCs.Milkmaid;
 using WgMod.Content.NPCs.TownNPCs.OverflowingMimic;
 
-namespace WgMod.Common.GlobalNPCs;
+namespace WgMod.Common.GlobalNPCs.Dialog;
 
 [Credit(ProjectRole.Programmer, Contributor.follycake)]
 [Credit(ProjectRole.Dialog, Contributor.ANONYMOUS)]
@@ -25,9 +25,15 @@ public class NurseDialogNPC : GlobalNPC
         return Language.GetTextValue("Mods.WgMod.Dialogue.Nurse." + suffix, args);
     }
 
+    public static string GetName(int npc)
+    {
+        return Main.npc[npc].GivenName;
+    }
+
     public override void GetChat(NPC npc, ref string finalChat)
     {
-        if (!Main.LocalPlayer.TryGetModPlayer(out WgPlayer wg))
+        Player player = Main.LocalPlayer;
+        if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
 
         int stage = wg.Weight.GetStage();
@@ -52,7 +58,7 @@ public class NurseDialogNPC : GlobalNPC
         if (stage >= WeightStage.BarelyMobile)
         {
             if (partyGirl >= 0)
-                chat.Add(GetText("PlayerBarelyMobilePlusPartyGirl", Main.npc[partyGirl].GivenName));
+                chat.Add(GetText("PlayerBarelyMobilePlusPartyGirl", GetName(partyGirl)));
             if (Main.bloodMoon)
                 chat.Add(GetText("PlayerBarelyMobilePlusBlood"));
         }
@@ -65,14 +71,14 @@ public class NurseDialogNPC : GlobalNPC
         int overflowingMimic = NPC.FindFirstNPC(ModContent.NPCType<OverflowingMimicNPC>());
         int milkmaid = NPC.FindFirstNPC(ModContent.NPCType<MilkmaidNPC>());
 
-        if (zoologist >= 0 && WgGlobalNPC.GetStage(Main.npc[zoologist]) > 0)
-            chat.Add(GetText(stage >= WeightStage.Fat ? "ZoologistFatPlayerFat" : "ZoologistFat", Main.npc[zoologist].GivenName));
-        if (dryad >= 0 && WgGlobalNPC.GetStage(Main.npc[dryad]) > 0)
-            chat.Add(GetText(stage >= WeightStage.Fat ? "DryadFatPlayerFat" : "DryadFat", Main.npc[dryad].GivenName));
+        if (zoologist >= 0 && WgGlobalNPC.GetStage(zoologist) > 0)
+            chat.Add(GetText(stage >= WeightStage.Fat ? "ZoologistFatPlayerFat" : "ZoologistFat", GetName(zoologist)));
+        if (dryad >= 0 && WgGlobalNPC.GetStage(dryad) > 0)
+            chat.Add(GetText(stage >= WeightStage.Fat ? "DryadFatPlayerFat" : "DryadFat", GetName(dryad)));
         if (groundedHarpy >= 0 || overflowingMimic >= 0)
             chat.Add(GetText(stage >= WeightStage.Fat ? "MonstersFatPlayerFat" : "MonstersFat"));
         if (milkmaid >= 0)
-            chat.Add(GetText(stage >= WeightStage.Fat ? "MilkmaidPlayerFat" : "Milkmaid", Main.npc[milkmaid].GivenName));
+            chat.Add(GetText(stage >= WeightStage.Fat ? "MilkmaidPlayerFat" : "Milkmaid", GetName(milkmaid)));
 
         finalChat = chat;
     }
