@@ -1084,6 +1084,51 @@ Items: {
 			Effects scale with your obesity
 			'''
 	}
+
+	DrinkingStraw: {
+		DisplayName: Drinking Straw
+		Tooltip:
+			'''
+			Can be used to slurp up liquid or slimes
+			Does not work on other enemies
+			'You aren't actually going to try chugging the ocean, right?'
+			'''
+	}
+
+	Stuckage: {
+		DisplayName: Stuckage
+		Tooltip: ""
+	}
+
+	WeakChains: {
+		DisplayName: Weak Chains
+		Tooltip: ""
+	}
+
+	Absorbant: {
+		DisplayName: Absorbant
+		Tooltip: ""
+	}
+
+	RockBottom: {
+		DisplayName: Rock Bottom
+		Tooltip: ""
+	}
+
+	SlimeEater: {
+		DisplayName: Slime Eater
+		Tooltip: ""
+	}
+
+	ThirteenDollarStaminaSystem: {
+		DisplayName: Thirteen Dollar Stamina System
+		Tooltip: ""
+	}
+
+	WeakPulley: {
+		DisplayName: Weak Pulley
+		Tooltip: ""
+	}
 }
 
 Buffs: {
@@ -1431,6 +1476,7 @@ Projectiles: {
 	HeartyHeart_Surround_Green_Strong.DisplayName: Hearty Heart
 	HeartyHeart_Surround_Strong.DisplayName: Hearty Heart
 	HeartyHeart_Direct_Spawner_Strong.DisplayName: Hearty Heart Hearter
+	StrawProjectile.DisplayName: Straw Projectile
 }
 
 NPCs: {

@@ -9,7 +9,7 @@ public partial class BuffHitPlayer
 {
     readonly int _slimesBuff = BuffID.Slimed;
 
-    readonly HashSet<int> _slimes =
+    public readonly HashSet<int> _slimes =
     [
         NPCID.BlueSlime,
         NPCID.GreenSlime,
