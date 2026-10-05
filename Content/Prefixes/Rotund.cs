@@ -9,7 +9,7 @@ namespace WgMod.Content.Prefixes;
 public class Rotund : ModPrefix
 {
     WgStat _damage = new(0.01f, 0.04f);
-    WgStat _critChance = new(0.01f, 0.04f);
+    WgStat _critChance = new(1f, 4f);
     WgStat _attackSpeed = new(0.01f, 0.04f);
 
     public override PrefixCategory Category => PrefixCategory.Accessory;
