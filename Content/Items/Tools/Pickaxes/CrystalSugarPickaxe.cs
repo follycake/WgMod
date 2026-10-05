@@ -14,7 +14,7 @@ public class CrystalSugarPickaxe : ModItem
 {
 	WgStat _damage = new(1f, 1.05f);
 	WgStat _pick = new(150f, 165f);
-	WgStat _speed = new(12f, 8f);
+	WgStat _speed = new(1f, 1.5f);
 
 	public override void SetDefaults()
 	{
@@ -47,7 +47,11 @@ public class CrystalSugarPickaxe : ModItem
 		_pick.Value = MathF.Floor(_pick.Value / 5f) * 5f;
 
 		Item.pick = _pick;
-		Item.useTime = _speed;
+	}
+
+	public override float UseSpeedMultiplier(Player player)
+	{
+		return _speed;
 	}
 
 	public override void ModifyWeaponDamage(Player player, ref StatModifier damage)

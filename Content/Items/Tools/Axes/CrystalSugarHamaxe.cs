@@ -14,7 +14,7 @@ public class CrystalSugarHamaxe : ModItem
 	WgStat _damage = new(1f, 1.05f);
 	WgStat _axe = new(17f, 20f);
 	WgStat _hammer = new(85f, 100f);
-	WgStat _speed = new(12f, 8f);
+	WgStat _speed = new(1f, 1.5f);
 
 	public override void SetDefaults()
 	{
@@ -50,7 +50,11 @@ public class CrystalSugarHamaxe : ModItem
 
 		Item.axe = _axe;
 		Item.hammer = _hammer;
-		Item.useTime = _speed;
+	}
+
+	public override float UseSpeedMultiplier(Player player)
+	{
+		return _speed;
 	}
 
 	public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
