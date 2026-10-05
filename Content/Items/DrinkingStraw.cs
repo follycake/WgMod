@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.WorldBuilding;
 using WgMod.Common.Players;
-using WgMod.Content.Items.Accessories.Fat;
 using WgMod.Content.TileEntities;
-using static WgMod.Content.TileEntities.TEFeedingTube;
 
 namespace WgMod.Content.Items;
 public class DrinkingStraw : ModItem

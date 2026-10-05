@@ -1095,41 +1095,6 @@ Items: {
 			'''
 	}
 
-	Stuckage: {
-		DisplayName: Stuckage
-		Tooltip: ""
-	}
-
-	WeakChains: {
-		DisplayName: Weak Chains
-		Tooltip: ""
-	}
-
-	Absorbant: {
-		DisplayName: Absorbant
-		Tooltip: ""
-	}
-
-	RockBottom: {
-		DisplayName: Rock Bottom
-		Tooltip: ""
-	}
-
-	SlimeEater: {
-		DisplayName: Slime Eater
-		Tooltip: ""
-	}
-
-	ThirteenDollarStaminaSystem: {
-		DisplayName: Thirteen Dollar Stamina System
-		Tooltip: ""
-	}
-
-	WeakPulley: {
-		DisplayName: Weak Pulley
-		Tooltip: ""
-	}
-
 	CrystalSugarPickaxe: {
 		DisplayName: Crystal Sugar Pickaxe
 		Tooltip: Stats scale with your obesity
