@@ -67,7 +67,6 @@ public class GroundedHarpyNPC : ModNPC
 
         AnimationType = NPCID.Guide;
 
-
         if (Main.masterMode)
         {
             NPC.damage = 75;
