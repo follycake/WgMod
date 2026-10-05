@@ -1129,6 +1129,16 @@ Items: {
 		DisplayName: Weak Pulley
 		Tooltip: ""
 	}
+
+	CrystalSugarPickaxe: {
+		DisplayName: Crystal Sugar Pickaxe
+		Tooltip: Stats scale with your obesity
+	}
+
+	CrystalSugarHamaxe: {
+		DisplayName: Crystal Sugar Hamaxe
+		Tooltip: Stats scale with your obesity
+	}
 }
 
 Buffs: {
@@ -1307,6 +1317,11 @@ Buffs: {
 	Infatuated: {
 		DisplayName: In'fat'uated
 		Description: Weight gain rate increased by {0}%
+	}
+
+	CrystalSugarFrenzy: {
+		DisplayName: Crystal Sugar Frenzy
+		Description: ""
 	}
 }
 

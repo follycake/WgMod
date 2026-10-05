@@ -30,17 +30,8 @@ public class PowderedSugar : ModItem
 
         for (int i = 0; i < 100; i++)
         {
-            Dust sugar = Dust.NewDustDirect(
-                player.position,
-                player.width,
-                player.height,
-                DustID.RainbowTorch,
-                velocity.X * 6f,
-                velocity.Y * 6f,
-                Main.rand.Next(25, 75),
-                default,
-                Main.rand.NextFloat(0, 1)
-            );
+            Dust sugar = Dust.NewDustDirect(player.position, player.width, player.height, DustID.RainbowTorch, velocity.X * 6f, velocity.Y * 6f, Main.rand.Next(25, 75), default, Main.rand.NextFloat(0, 1));
+
             sugar.noGravity = true;
         }
     }
