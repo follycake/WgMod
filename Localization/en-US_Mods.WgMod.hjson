@@ -1321,7 +1321,7 @@ Buffs: {
 
 	CrystalSugarFrenzy: {
 		DisplayName: Crystal Sugar Frenzy
-		Description: ""
+		Description: Increases mining speed by {0}%
 	}
 }
 
@@ -1778,6 +1778,11 @@ DeathReason.Milkmaid: Next time listen, honey.
 GlobalItem: {
 	Disabled: "[c/963232:Disabled by {0}]"
 	Ineffective: "[c/963232:Less effective when paired with {0}]"
+	Growth:
+		'''
+		[c/FF99FF:There are crystalline sugar growths on the tool]
+		Right click to consume
+		'''
 }
 
 Emotes: {

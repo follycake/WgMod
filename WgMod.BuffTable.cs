@@ -75,7 +75,8 @@ partial class WgMod
             (Buff<SpikedSkin>(), 6f),
             (Buff<FullOfSpider>(), 6f),
             (Buff<Caramel>(), 12f),
-            (Buff<Caramelized>(), 4f)
+            (Buff<Caramelized>(), 4f),
+            (Buff<CrystalSugarFrenzy>(), 12f)
         ]);
 
         // Calamity Mod

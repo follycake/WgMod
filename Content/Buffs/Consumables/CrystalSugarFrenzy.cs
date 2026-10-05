@@ -23,6 +23,6 @@ public class CrystalSugarFrenzy : ModBuff
 
     public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
     {
-        tip = base.Description.Format(_speed);
+        tip = base.Description.Format(_speed.Percent());
     }
 }
