@@ -1104,6 +1104,21 @@ Items: {
 		DisplayName: Crystal Sugar Hamaxe
 		Tooltip: Stats scale with your obesity
 	}
+
+	HoneyPick: {
+		Tooltip: ""
+		DisplayName: Honey Pick
+	}
+
+	HoneyChop: {
+		Tooltip: ""
+		DisplayName: Honey Chop
+	}
+
+	HoneyHammer: {
+		DisplayName: Honey Hammer
+		Tooltip: ""
+	}
 }
 
 Buffs: {
