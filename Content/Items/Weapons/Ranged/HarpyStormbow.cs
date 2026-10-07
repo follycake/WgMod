@@ -79,17 +79,7 @@ public class HarpyStormbow : ModItem
         velocity = new Vector2(offsetVelocity + float.Lerp(-1f, 1f, Main.rand.NextFloat()), 10f);
 
         for (int i = 0; i < _arrows; i++)
-        {
-            Projectile.NewProjectile
-            (
-                player.GetSource_FromThis(),
-                position + new Vector2(0f, float.Lerp(-100, -200, Main.rand.NextFloat())),
-                new Vector2(offsetVelocity + float.Lerp(-2f, 2f, Main.rand.NextFloat()), 10f),
-                type,
-                damage,
-                knockback
-            );
-        }
+            Projectile.NewProjectile(player.GetSource_FromThis(), position + new Vector2(0f, float.Lerp(-100, -200, Main.rand.NextFloat())), new Vector2(offsetVelocity + float.Lerp(-2f, 2f, Main.rand.NextFloat()), 10f), type, damage, knockback);
     }
 
     public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)

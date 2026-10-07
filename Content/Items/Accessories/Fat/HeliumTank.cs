@@ -36,12 +36,3 @@ public class HeliumTank : ModItem
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 }
-
-public class SellHeliumTank : GlobalNPC
-{
-    public override void ModifyShop(NPCShop shop)
-    {
-        if (shop.NpcType == NPCID.PartyGirl)
-            shop.Add<HeliumTank>();
-    }
-}
