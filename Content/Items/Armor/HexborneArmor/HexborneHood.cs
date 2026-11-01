@@ -7,9 +7,9 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Armor.HexborneArmor;
 
+[AutoloadEquip(EquipType.Head)]
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor._d_u_m_m_y_)]
-[AutoloadEquip(EquipType.Head)]
 public class HexborneHood : ModItem
 {
     WgStat _damage = new(0.01f, 0.06f);
@@ -17,6 +17,13 @@ public class HexborneHood : ModItem
 
     WgStat _setBonusDamage = new(0.05f, 0.15f);
     WgStat _setBonusDefense = new(3f, 5f);
+
+    public static LocalizedText SetBonusText { get; private set; }
+
+    public override void SetStaticDefaults()
+    {
+        SetBonusText = this.GetLocalization("SetBonus");
+    }
 
     public override void SetDefaults()
     {
@@ -26,13 +33,6 @@ public class HexborneHood : ModItem
         Item.rare = ItemRarityID.Orange;
         Item.defense = 5;
     }
-
-    public override void SetStaticDefaults()
-    {
-        SetBonusText = this.GetLocalization("SetBonus");
-    }
-
-    public static LocalizedText SetBonusText { get; private set; }
 
     public override void UpdateEquip(Player player)
     {
@@ -65,6 +65,11 @@ public class HexborneHood : ModItem
         player.GetDamage(DamageClass.Magic) += _setBonusDamage;
         player.statDefense += _setBonusDefense;
         player.setBonus = SetBonusText.Format(_setBonusDamage.Percent(), _setBonusDefense);
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
     }
 
     public override void AddRecipes()

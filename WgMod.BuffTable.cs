@@ -1,10 +1,15 @@
 using Terraria.ID;
+using Terraria.ModLoader;
+using WgMod.Content.Buffs;
+using WgMod.Content.Buffs.Consumables;
+using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod;
 
 partial class WgMod
 {
-    static GainOptions GainOverTime(float totalGain, float totalTime) => new(totalGain, totalTime);
+    static int Buff<T>() where T : ModBuff => ModContent.BuffType<T>();
+    static GainOptions GainOverTime(Mass totalGain, float totalTime) => new(totalGain, totalTime);
 
     void RegisterBuffs()
     {
@@ -59,21 +64,20 @@ partial class WgMod
             (BuffID.Slimed, GainOverTime(1f, 1f)),
             (BuffID.HeartyMeal, GainOverTime(1f, 1f)),
             (BuffID.Honey, GainOverTime(2f, 1f)),
-            (BuffID.SoulDrain, GainOverTime(2f, 1f)),
+            (BuffID.SoulDrain, GainOverTime(2f, 1f))
         ]);
 
         // WgMod
-        AddBuffs(
-            "WgMod",
-            [
-                ("AmbrosiaGorged", 6f),
-                ("WobWobWobWob", 6f),
-                ("GnomeLuck", 6f),
-                ("SpikedSkin", 6f),
-                ("Caramel", 12f),
-                ("CrispyDebuff", 4f),
-            ]
-        );
+        AddBuffs([
+            (Buff<AmbrosiaGorged>(), 6f),
+            (Buff<WobWobWobWob>(), 6f),
+            (Buff<GnomeLuck>(), 6f),
+            (Buff<SpikedSkin>(), 6f),
+            (Buff<FullOfSpider>(), 6f),
+            (Buff<Caramel>(), 12f),
+            (Buff<Caramelized>(), 4f),
+            (Buff<CrystalSugarFrenzy>(), 12f)
+        ]);
 
         // Calamity Mod
         AddBuffs(
@@ -115,7 +119,7 @@ partial class WgMod
                 ("Zerg", 6f),
                 ("AbsorberRegen", 2f),
                 ("GreenJellyRegen", GainOverTime(3f, 1f)),
-                ("PinkJellyRegen", GainOverTime(3f, 1f)),
+                ("PinkJellyRegen", GainOverTime(3f, 1f))
             ]
         );
 
@@ -135,7 +139,7 @@ partial class WgMod
                 ("PiercingBuff", 3f),
                 ("PredatorBuff", 1f),
                 ("SteelfallBuff", 8f),
-                ("WarBuff", 3f),
+                ("WarBuff", 3f)
             ]
         );
     }

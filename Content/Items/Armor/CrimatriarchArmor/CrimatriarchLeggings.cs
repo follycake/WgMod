@@ -6,9 +6,9 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Armor.CrimatriarchArmor;
 
+[AutoloadEquip(EquipType.Legs)]
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.trilophyte)]
-[AutoloadEquip(EquipType.Legs)]
 public class CrimatriarchLeggings : ModItem
 {
     WgStat _damage = new(0.03f, 0.09f);
@@ -34,6 +34,11 @@ public class CrimatriarchLeggings : ModItem
 
         player.GetDamage(DamageClass.Summon) += _damage;
         player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _attackSpeed;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Pants;
     }
 
     public override void AddRecipes()

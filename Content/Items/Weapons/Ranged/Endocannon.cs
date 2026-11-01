@@ -10,12 +10,13 @@ namespace WgMod.Content.Items.Weapons.Ranged;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor._d_u_m_m_y_)]
-public class Endocannon : ModItem
+public class Endocannon : RecoilItem
 {
-    public int _cooldown;
-
     WgStat _damage = new(1f, 1.25f);
     WgStat _crit = new(1f, 1.25f);
+
+    int _cooldown;
+    bool _shotPlate;
 
     public override void SetDefaults()
     {
@@ -41,6 +42,11 @@ public class Endocannon : ModItem
         Item.useAmmo = AmmoID.Bullet;
     }
 
+    public override Vector2? HoldoutOffset()
+    {
+        return new Vector2(2f, -2f);
+    }
+
     public override void UpdateInventory(Player player)
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
@@ -60,6 +66,47 @@ public class Endocannon : ModItem
         crit *= _crit;
     }
 
+    public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+    {
+        if (!player.TryGetModPlayer(out WgPlayer wg))
+            return;
+
+        float immobility = wg.Weight.ClampedImmobility;
+        if (_cooldown > (int)float.Lerp(4, 9, immobility))
+        {
+            type = ModContent.ProjectileType<Plate>();
+
+            velocity *= 0.75f;
+            damage *= 3;
+
+            _shotPlate = true;
+            SoundEngine.PlaySound(SoundID.Item10, position);
+            _cooldown = 0;
+        }
+        else
+        {
+            _shotPlate = false;
+            _cooldown++;
+        }
+
+        Vector2 muzzleOffset = Vector2.Normalize(velocity) * 18f;
+        if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
+            position += muzzleOffset;
+    }
+
+    public override void ModifyRecoilStats(ref float recoilStrength, ref float airTimeFactor, ref bool flipRecoil)
+    {
+        if (_shotPlate)
+            recoilStrength = 2f;
+        else
+            recoilStrength = 0.5f;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.RangedWeapon;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()
@@ -75,38 +122,5 @@ public class Endocannon : ModItem
             .AddIngredient(ItemID.PlatinumBar, 12)
             .AddTile(TileID.Furnaces)
             .Register();
-    }
-
-    public override Vector2? HoldoutOffset()
-    {
-        return new Vector2(2f, -2f);
-    }
-
-    public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-    {
-        if (!player.TryGetModPlayer(out WgPlayer wg))
-            return;
-        float immobility = wg.Weight.ClampedImmobility;
-
-        if (_cooldown > (int)float.Lerp(4, 9, immobility))
-        {
-            type = ModContent.ProjectileType<Plate>();
-
-            velocity *= 0.75f;
-            damage *= 3;
-
-            SoundEngine.PlaySound(SoundID.Item10, position);
-
-            _cooldown = 0;
-        }
-        else
-            _cooldown++;
-
-        Vector2 muzzleOffset = Vector2.Normalize(velocity) * 18f;
-
-        if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
-        {
-            position += muzzleOffset;
-        }
     }
 }

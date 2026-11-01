@@ -12,22 +12,26 @@ using WgMod.Common.Configs;
 
 namespace WgMod;
 
+/// <summary> The role a contributor played </summary>
 public enum ProjectRole
 {
     Programmer,
     Artist,
     VFX,
     SFX,
-    Idea
+    Idea,
+    Dialog
 }
 
+/// <summary> A contributor's Discord handle </summary>
 public enum Contributor
 {
+    /// <summary> Meooow </summary>
     [Category("Team")]
     follycake,
+    /// <summary> Haiiii :3 </summary>
     maimaichubs,
     jumpsu2,
-    bb_waffle_batter,
     _d_u_m_m_y_,
     igobee_,
 
@@ -39,9 +43,22 @@ public enum Contributor
     haydumbb,
     divine_lumine,
     the_trueterrafox,
+    tea_kettles,
+    altaber,
+    thegungis,
+    radiantluminant,
+    robinn9283,
+    magicalmoondust_,
+    alphas0,
+    evanescentsummer,
 
     [Category("Other")]
-    purple_circle
+    purple_circle,
+    bombuspyrobombus,
+    /// <summary> The person who made it didn't want to be credited. </summary>
+    ANONYMOUS,
+    /// <summary> This asset isn't finished and needs to be replaced at some point. </summary>
+    PLACEHOLDER
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
@@ -51,6 +68,7 @@ public class CreditAttribute(ProjectRole role, Contributor contributor) : Attrib
     public Contributor Contributor { get; } = contributor;
 }
 
+/// <summary> A class to quickly and efficiently add credits to an item's tooltip using the role the contributor played and their Discord handle </summary>
 public static class Credits
 {
     public static TextSnippet AutoCredits { get; private set; }
@@ -62,14 +80,22 @@ public static class Credits
         ProjectRole.Artist => ItemID.PaintRoller,
         ProjectRole.VFX => ItemID.HallowBossDye,
         ProjectRole.SFX => ItemID.Megaphone,
+        ProjectRole.Idea => ItemID.Candle,
         _ => ItemID.None
     };
+
+    public static string GetTag(Contributor contributor)
+    {
+        if (contributor == Contributor.ANONYMOUS || contributor == Contributor.PLACEHOLDER)
+            return contributor.ToString();
+        return "@" + contributor;
+    }
 
     public static void Scan(Mod mod)
     {
         Dictionary<Contributor, List<string>> roles = [];
         foreach (Contributor contributor in Enum.GetValues<Contributor>())
-            roles.Add(contributor, [$"@{contributor}"]);
+            roles.Add(contributor, [GetTag(contributor)]);
 
         Type[] types = AssemblyManager.GetLoadableTypes(mod.Code);
         foreach (Type type in types)
@@ -83,14 +109,14 @@ public static class Credits
                 CreditAttribute credit = (CreditAttribute)credits[i];
                 if (i != 0)
                     text += "\n";
-                text += $"[i:{GetIcon(credit.Role)}] [c/808080:{credit.Role}: @{credit.Contributor}]";
+                text += $"[i:{GetIcon(credit.Role)}] [c/808080:{credit.Role}: {GetTag(credit.Contributor)}]";
                 roles[credit.Contributor].Add($"- {type.Name} ({credit.Role})");
             }
             Tooltips.Add(type, new TooltipLine(mod, "Credits", text));
         }
 
         StringBuilder builder = new();
-        foreach (var list in roles.Values)
+        foreach (List<string> list in roles.Values)
         {
             if (list.Count <= 1)
                 continue;

@@ -1,0 +1,1849 @@
+Items: {
+	Wings.Extra: "{0}% penalidad de movimiento reducida por el peso en el aire"
+
+	WeightManipulator: {
+		DisplayName: Manipulador de Peso
+		Tooltip:
+			'''
+			Click Izquierdo para aumentar el peso.
+			Click Derecho para disminuir el peso.
+			'''
+	}
+
+	Treadmill: {
+		DisplayName: Caminadora
+		Tooltip: Hora de perder todo ese exceso de grasa... Tal vez.
+	}
+
+	ExoskeletonLegs: {
+		DisplayName: Piernas de Exoesqueleto
+		Tooltip:
+			'''
+			Permite vuelo
+			El usuario puede correr super rapido
+			Reduce la velocidad de movimiento gordo por {0}%
+			'Por cierto, te ves genial. Muy saludable.'
+			'''
+	}
+
+	TerraskeletonLegs: {
+		DisplayName: Piernas de Terraesqueleto
+		Tooltip:
+			'''
+			Permite vuelo, correr super rapido, y mobilidad extra sobre hielo
+			Aumenta la velocidad de movimiento por {0}% y reduce la penalidad de movimiento gordo por {2}%
+			Proporciona la habilidad de caminar en agua, miel & lava
+			Otorga inmunidad a los bloques de fuego y {1} segundos de inmunidad a la lava
+			Reduce el daño de tocar lava
+			'''
+	}
+
+	FlaskOfAmbrosia: {
+		DisplayName: Frasco de Ambrosía
+		Tooltip:
+			'''
+			Una bebida poderosa pero profundamente engordadonte
+			¡Aumenta tu velocidad de movimiento, aceleración, regeneración, y defensa al recibir daño!
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	QueenlyGluttony: {
+		DisplayName: Gula Real
+		Tooltip:
+			'''
+			Aumenta el daño melee por {0}%, posibilidad de golpe critico por {2}%, y penetración de armadura por {3}
+			Reduce velocidad de melee por {1}%
+			¡Los ataques melee infligen lindo slime brillante!
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	BottomlessAppetite: {
+		DisplayName: Apetito Sin Fondo
+		Tooltip:
+			'''
+			Crea un agujero negro alrededor de ti, succionando objetos desde lejos
+			Los enemigos dentro del agujero negro sufrirán la ira de los pilares
+			Los efectos escalan [c/FF0000:exponencialmente] con tu obesidad
+			'Tu hambre no conoce limites'
+			'''
+	}
+
+	VacuumSkirt: {
+		DisplayName: Falda de Vacío
+		Tooltip:
+			'''
+			Aumenta la velocidad de ataque {0}%
+			Aumenta la vida máxima por {1}
+			Reduce el daño tomado por {2}%
+			Los efectos de movimiento de la gordura son {3}% más severos
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	VacuumHelmet: {
+		DisplayName: Casco de Vacío
+		Tooltip:
+			'''
+			Aumenta la posibilidad de un golpe criticó por {0}%
+			Aumenta la vida máxima por {1}
+			Reduce el daño tomado por {2}%
+			Los efectos de movimiento de la gordura son {3}% más severos
+			Los efectos escalan con tu obesidad
+			'''
+		SetBonus:
+			'''
+			Aumenta la vida regenerada por +{0} por segundo
+			Aumenta la vida máxima {1}%
+			Perder peso es {2}% más dificil
+			'''
+	}
+
+	VacuumCrop: {
+		DisplayName: Top de Vacío
+		Tooltip:
+			'''
+			Aumenta el daño por {0}%
+			Aumenta la vida máxima por {1}
+			Reduce el daño tomado por {2}%
+			Los efectos de movimiento de la gordura son {3}% más severos
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	HellRaiser: {
+		DisplayName: Hell-Raiser
+		Tooltip:
+			'''
+			Aumenta el numero de súbditos máximo por {0}
+			Aumenta el daño de invocación por {1}%
+			Reduce la velocidad de ataque de latigo por {2}%
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	CrimatriarchLeggings: {
+		DisplayName: Perneras de Crimatriarca
+		Tooltip:
+			'''
+			Aumenta el daño de invocación por {0}%
+			Reduce la velocidad de ataque de latigo por {1}%
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	CrimatriarchHood: {
+		DisplayName: Capernuza de Crimatriarca
+		Tooltip:
+			'''
+			Aumenta el daño de invocación por {0}%
+			Reduce la velocidad de ataque de latigo por {1}%
+			Los efectos escalan con tu obesidad
+			'''
+		SetBonus:
+			'''
+			Aumenta el numero de súbditos máximo por {0}
+			Aumenta el daño de invocación por {1}%
+			Reduce la velocidad de ataque de latigo por {2}%
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	CrimatriarchGown: {
+		DisplayName: Toga de Crimatriarca
+		Tooltip:
+			'''
+			Aumenta el daño de invocación por {0}%
+			Inmune al sangrado
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	ChampionsBelt: {
+		DisplayName: Cinturón del Campeón
+		Tooltip:
+			'''
+			Aumenta el tamaño de las armas melee
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	WeightlessPotion: {
+		DisplayName: Poción Ingrávida
+		Tooltip: ¡Reduce la penalidad de movimiento de los pesos altos!
+	}
+
+	PortableScale: {
+		DisplayName: Báscula Portatíl
+		Tooltip: Muestra tu peso actual
+	}
+
+	GlutGut: {
+		DisplayName: Barriga del Glotón
+		Tooltip:
+			'''
+			Llenar tu gorda barriga te da poder~
+			Aumenta el daño pero disminuye tu velocidad depues de comer
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	HexborneSkirt: {
+		DisplayName: Falda Maldecida
+		Tooltip:
+			'''
+			Aumenta el daño mágico por {0}%
+			Aumenta el costo de maná por {1}%
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	HexborneHood: {
+		DisplayName: Capernuza Maldecida
+		Tooltip:
+			'''
+			Aumenta el daño mágico por {0}%
+			Aumenta el costo de maná por {1}%
+			Los efectos escalan con tu obesidad
+			'''
+		SetBonus:
+			'''
+			Aumenta el daño mágico por {0}%
+			{1} defensa incrementada
+			'''
+	}
+
+	HexborneCrop: {
+		DisplayName: Top Maldecido
+		Tooltip:
+			'''
+			Aumenta el daño mágico por {0}%
+			Aumenta el costo de maná por {1}%
+			Inmune al veneno
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	SlimePie: {
+		DisplayName: Tarta de Slime
+		Tooltip: ¡Un manjar de slime!
+	}
+
+	GuideToLiftingYourFatAss: {
+		DisplayName: Guía Para Levantar Tu Trasero Gordo
+		Tooltip:
+			'''
+			Reduce la penalidad de movimiento por 50% a cambio de maná
+			El maná se drena más rapido cuanto más pesado eres.
+			El uso de maná es reducido de las bonificaciones de daño mágico
+			'''
+	}
+
+	CrispyDiscipline: {
+		DisplayName: Disciplina Crocante
+		Tooltip:
+			'''
+			{$CommonItemTooltip.SummonTagDamage}
+			¡Golpea enemigos para cubrirlos con caramelo caliente y convocar una gorda abeja invernal para sorberlo todo!
+			Los atributos escalan con tu o[c/FFEA00:B][c/696969:E][c/FFEA00:E]sidad
+			'''
+	}
+
+	BottledCaramel: {
+		DisplayName: Caramelo Embotellado
+		Tooltip:
+			'''
+			Mejora la defensa por un tiempo corto
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	LiftingTome: {
+		DisplayName: "'La Llamada De Cthulhu'"
+		Tooltip:
+			'''
+			Permite el vuelo y caída lenta
+			Aumenta el daño mágico por {2}%
+			Reduce el costo de maná por {0}%
+			Aumenta el maná maximo por {1}
+			Convoca manos de sombra para llevarte y atacar a tus enemigos
+			Tus ataques son acompañados por multiples tomos mágicos a la mitad de su poder
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	MeteorCrush: {
+		DisplayName: Aplaste de Meteorito
+		Tooltip:
+			'''
+			Hace que tu peso te permita aplastar enemigos
+			'Si, es una pena terrible...'
+			'''
+	}
+
+	HoneyedHamBat: {
+		DisplayName: Bate de Jamón Enmielado
+		Tooltip:
+			'''
+			Golpear enemigos temporalmente mejora regeneración de vida
+			Bolas de miel vuelan desde el arma para dañar a tus enemigos
+			Los atributos escalan con tu obesidad
+			'No te puedes equivocar al bañar algo en miel.'
+			'''
+	}
+
+	GluttonyHood: {
+		DisplayName: Capernuza de la Gula
+		Tooltip:
+			'''
+			Aumenta la posibilidad de golpe critico por {1}%
+			Aumenta la vida maxima por {2}
+			Reduce el daño recibido por {3}%
+			Reduce la velocidad de ataque por {0}%
+			'''
+		SetBonus:
+			'''
+			Las armas melee son {2}% más grandes, las armas a distancia usan 20% menos de munición
+			Las armas magicas cuestan {1}% menos de maná, aumenta el numero máximo de torretas por {0}
+			Reduce la penalidad de movimiento de pesos altos por {3}%
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	GluttonyCrop: {
+		DisplayName: Top de la Gula
+		Tooltip:
+			'''
+			Aumenta el daño por {0}%
+			Aumenta la vida maxima por {2}
+			Reduce el daño recibido por {3}%
+			Reduce la velocidad de ataque por {1}%
+			'''
+	}
+
+	GluttonySkirt: {
+		DisplayName: Falda de la Gula
+		Tooltip:
+			'''
+			Aumenta la posibilidad de golpe critico por {1}%
+			Aumenta la vida maxima por {2}
+			Reduce el daño tomado por {3}%
+			Reduce la velocidad de ataque por {0}%
+			'''
+	}
+
+	AcornCake: {
+		DisplayName: Pastel de Bellotas
+		Tooltip: ¡Comer esto hace que te sientas suertudo!
+	}
+
+	GraniteOven: {
+		DisplayName: Horno de Granito
+		Tooltip: Usado para hornear
+	}
+
+	MarbleOven: {
+		DisplayName: Horno de Marmol
+		Tooltip: Usado para hornear
+	}
+
+	AmuletOfStarving: {
+		DisplayName: Amuleto de Hambruna
+		Tooltip:
+			'''
+			Aumenta enormemente la velocidad a la que pierdes peso
+			'¡Las llamas oscuras realmente queman las calorias rapido!'
+			'''
+	}
+
+	NopalesEmpanadas: {
+		DisplayName: Empanadas de Nopales
+		Tooltip: ¡Los cactus pueden ser muy deliciosos!
+	}
+
+	DogTail.Tooltip:
+		'''
+		¡Los ataques disparan mortales pelotas saltarinas explosivas!
+		Los efectos escalan con tu obesidad (y licantropía)
+		'Quien es una buena chica? ¡Tu lo eres! ¡Tu lo eres!'
+		'''
+	TurtleHelmet.Tooltip:
+		'''
+		Aumenta el daño por {0}%
+		Aumenta la vida máxima por {1}
+		'''
+	TurtleScaleMail.Tooltip:
+		'''
+		Aumenta el daño y la posibilidad de golpe critico por {0}%
+		Aumenta la vida máxima por {1}
+		'''
+	TurtleLeggings.Tooltip:
+		'''
+		Aumenta la posibilidad de golpe critico por {0}%
+		Aumenta la vida máxima por {1}
+		'''
+
+	CaramelArrow: {
+		DisplayName: Flecha de Caramelo
+		Tooltip: ""
+	}
+
+	PowderedSugar: {
+		DisplayName: Azúcar en polvo
+		Tooltip: Engorda el mal
+	}
+
+	BellyGrave: {
+		DisplayName: Lápida de Barriga
+		Tooltip: ""
+	}
+
+	ButtGrave: {
+		DisplayName: Lápida de Trasero
+		Tooltip: ""
+	}
+
+	CakeGrave: {
+		DisplayName: Lápida de Pastel
+		Tooltip: ""
+	}
+
+	PieGrave: {
+		DisplayName: Lápida de Tarta
+		Tooltip: ""
+	}
+
+	StatueGrave: {
+		DisplayName: Lápida de Estatua
+		Tooltip: ""
+	}
+
+	TurkeyGrave: {
+		DisplayName: Lápida de Pavo
+		Tooltip: ""
+	}
+
+	BandOfSweetening: {
+		DisplayName: Banda de Endulzamiento
+		Tooltip: Aumenta la regeneración de vida por {0} por segundo
+	}
+
+	CharmOfSweets: {
+		DisplayName: Talismán de Dulces
+		Tooltip:
+			'''
+			Aumenta la regeneración de vida por {0} por segundo
+			Reduce el enfriamiento de pociones de curación por {1}%
+			'''
+	}
+
+	HeliumTank: {
+		DisplayName: Tanque de Helio
+		Tooltip:
+			'''
+			Reduce la gravedad en pesos mas altos
+			[c/963232:No esperes que esto actualmente sea util.]
+			'''
+	}
+
+	Sunrise: {
+		DisplayName: Amanecer
+		Tooltip:
+			'''
+			Retroceso medio
+			Los atributos escalan con tu obesidad
+			'''
+	}
+
+	AmazonHeaddress: {
+		DisplayName: Tocado de las Amazonas
+		Tooltip: Aumenta el daño melee por {0}%
+		SetBonus:
+			'''
+			Esquiva ataques cada 15 segundos
+			Las armas a distancia cuentan como melee
+			'''
+	}
+
+	AmazonSandals: {
+		DisplayName: Sandalias de las Amazonas
+		Tooltip: Aumenta la posibilidad de golpes criticos por {0}%
+	}
+
+	AmazonToga: {
+		DisplayName: Toga de las Amazonas
+		Tooltip:
+			'''
+			Aumenta el daño melee por {0}%
+			Aumenta la posibilidad de golpe melee critico por {1}%
+			'Bajo en defensa, pero te hace sentir como un heroe'
+			'''
+	}
+
+	StuffedTruffle: {
+		DisplayName: Trufa Rellena
+		Tooltip:
+			'''
+			Las armas a distancia liberan esporas dañinas de hongo
+			Los atributos escalan con tu obesidad
+			'''
+	}
+
+	HornOfMore: {
+		DisplayName: Cuerno de Más
+		Tooltip: Los efectos escalan con tu obesidad
+	}
+
+	Endocannon: {
+		DisplayName: Endocañon
+		Tooltip:
+			'''
+			Retroceso bajo
+			Cada quinto tiro se convierte en un plato de cena de daño alto pero baja velocidad
+			Los atributos escalan con tu obesidad
+			'''
+	}
+
+	HarpyStormbow: {
+		DisplayName: Arco de Tormentas de Arpía
+		Tooltip:
+			'''
+			Dispara flechas desde el cielo
+			Los atributos y flechas disparadas escalan con tu obesidad
+			Un arco de tormentas de arpía tradicional
+			Tiene un corazón grabado en el
+			'''
+	}
+
+	BlackRiderChest: {
+		DisplayName: Chaleco de Jinete Oscuro
+		Tooltip: ""
+	}
+
+	BlackRiderHair: {
+		DisplayName: Pelo de Jinete Oscuro
+		Tooltip: ""
+	}
+
+	BlackRiderSkirt: {
+		DisplayName: Falda de Jinete Oscuro
+		Tooltip: ""
+	}
+
+	LesserWeightLossPotion: {
+		DisplayName: Poción Menor de Perdida de Peso
+		Tooltip:
+			'''
+			¡Pierde {0} kg!
+			Menos efectiva si se usa repetidamente
+			'''
+	}
+
+	WeightLossPotion: {
+		DisplayName: Poción de Perdida de Peso
+		Tooltip:
+			'''
+			¡Pierde {0} kg!
+			Menos efectiva si se usa repetidamente
+			'''
+	}
+
+	GreaterWeightLossPotion: {
+		DisplayName: Gran Poción de Perdida de Peso
+		Tooltip:
+			'''
+			¡Pierde {0} kg!
+			Menos efectiva si se usa repetidamente
+			'''
+	}
+
+	SuperWeightLossPotion: {
+		DisplayName: Superpoción de Perdida de Peso
+		Tooltip:
+			'''
+			¡Pierde {0} kg!
+			Menos efectiva si se usa repetidamente
+			'''
+	}
+
+	LesserWeightGainPotion: {
+		DisplayName: Poción Menor de Subir de Peso
+		Tooltip:
+			'''
+			¡Sube {0} kg!
+			Menos efectiva si se usa repetidamente
+			'''
+	}
+
+	WeightGainPotion: {
+		DisplayName: Poción de Subir de Peso
+		Tooltip:
+			'''
+			¡Sube {0} kg!
+			Menos efectiva si se usa repetidamente
+			'''
+	}
+
+	GreaterWeightGainPotion: {
+		DisplayName: Gran Poción de Subir de Peso
+		Tooltip:
+			'''
+			¡Sube {0} kg!
+			Menos efectiva si se usa repetidamente
+			'''
+	}
+
+	SuperWeightGainPotion: {
+		DisplayName: Superpoción de Subir de Peso
+		Tooltip:
+			'''
+			¡Sube {0} kg!
+			Menos efectiva si se usa repetidamente
+			'''
+	}
+
+	BarnChair: {
+		DisplayName: Silla de Establo
+		Tooltip: ""
+	}
+
+	BarnWorkbench: {
+		DisplayName: Banco de Trabajo de Establo
+		Tooltip: ""
+	}
+
+	BarnTable: {
+		DisplayName: Mesa de Establo
+		Tooltip: ""
+	}
+
+	BarnBed: {
+		DisplayName: Cama de Establo
+		Tooltip: ""
+	}
+
+	BarnChest: {
+		DisplayName: Cofre de Establo
+		Tooltip: ""
+	}
+
+	BarnClock: {
+		DisplayName: Reloj de Establo
+		Tooltip: ""
+	}
+
+	BarnDoor: {
+		DisplayName: Puerta de Establo
+		Tooltip: ""
+	}
+
+	BarnDresser: {
+		DisplayName: Aparador de Establo
+		Tooltip: ""
+	}
+
+	BarnSink: {
+		DisplayName: Fregadero de Establo
+		Tooltip: ""
+	}
+
+	BarnToilet: {
+		DisplayName: Retrete de Establo
+		Tooltip: ""
+	}
+
+	BarnWorktable: {
+		DisplayName: Mesa de Trabajo de Establo
+		Tooltip: Usado en creación especial
+	}
+
+	FollyPlush: {
+		DisplayName: Folly Plush
+		Tooltip: I'm a very wawa fox :3
+	}
+
+	// ^ Fatty ^ -Maimai
+	
+	CozyAfternoons: {
+		DisplayName: Atardeceres Acogedores
+		Tooltip: "'C. Maimai'"
+	}
+
+	SpiderDonut: {
+		DisplayName: Rosquilla de Araña
+		Tooltip: No te preocupes. La araña no se preocupó.
+	}
+
+	Scale: {
+		DisplayName: Báscula
+		Tooltip:
+			'''
+			¡Click derecho para pesarte!
+			Solo no esperes que funcione con una ballena de tierra...
+			'''
+	}
+
+	BarnBathtub: {
+		DisplayName: Bañera de Establo
+		Tooltip: ""
+	}
+
+	BarnSofa: {
+		DisplayName: Sofá de Establo
+		Tooltip: ""
+	}
+
+	BarnPiano: {
+		DisplayName: Piano de Establo
+		Tooltip: ""
+	}
+
+	BarnCandelabra: {
+		DisplayName: Candelabro de Establo
+		Tooltip: ""
+	}
+
+	BarnCouch.DisplayName: Sofá de Establo
+
+	BarnCandle: {
+		DisplayName: Vela de Establo
+		Tooltip: ""
+	}
+
+	StagnantPotion: {
+		DisplayName: Poción Estancada
+		Tooltip: Completamente pausa el gano y perdida de peso
+	}
+
+	GreedyFlask: {
+		DisplayName: Frasco Avaro
+		Tooltip: Los efectos escalan con tu obesidad
+	}
+
+	WeightGainAdjuster: {
+		DisplayName: Ajustador de Gano de Peso
+		Tooltip:
+			'''
+			Click izquierdo para aumentar la velocidad de gano de peso.
+			Click derecho para disminuir.
+			'''
+	}
+
+	FeedingTube: {
+		DisplayName: Tubo de Alimentaciónm
+		Tooltip:
+			'''
+			Creo que todos sabemos a dónde va esto...
+			Click derecho con un balde para agregar liquido.
+			Click derecho sin un balde para enganchar la manguera a tu boca.
+			Click izquiero para remover el liquido.
+			'''
+	}
+
+	FatteningDartTrap: {
+		DisplayName: Trampa de Dardos Engordadores
+		Tooltip: Se activa cuando es señalizada
+	}
+
+	TwinEyes: {
+		DisplayName: Ojos Gemelos
+		Tooltip:
+			'''
+			Una maza dispara un infierno maldito, la otra dispara un laser mortal
+			Los atributos escalan con tu obesidad
+			'''
+	}
+
+	GainTosser: {
+		DisplayName: Tirador de Peso
+		Tooltip:
+			'''
+			¡Tira pociones de peso a tus amigos y enemigos por igual!
+			Los enemigos recibiran daño, los aliados tendran su peso cambiado
+			El daño, radio y efecto cambian segun la poción
+			El daño y velocidad del proyectil escalan con obesidad
+			Aumenta el daño por {0}%
+			Aumenta velocidad del proyectil por {1}%
+			'''
+	}
+
+	YogaHeadband: {
+		SetBonus: Moverse y saltar quema un poco de peso
+		DisplayName: Cinta de Yoga
+		Tooltip:
+			'''
+			¡Mantente determinad@!
+			Reduce la penalidad de movimiento gordo por {0}%
+			'''
+	}
+
+	YogaPants: {
+		DisplayName: Pantalones de Yoga
+		Tooltip:
+			'''
+			¡Siente el calor!
+			Reduce la penalidad de movimiento gordo por {0}%
+			'''
+	}
+
+	YogaTop: {
+		DisplayName: Top de Yoga
+		Tooltip:
+			'''
+			¡Mueve tu cuerpo!
+			Reduce la penalidad de movimiento gordo por {0}%
+			'''
+	}
+
+	DecorativeSuperWeightGainPotion: {
+		DisplayName: Superpoción de Subir de Peso Decorativa
+		Tooltip: ""
+	}
+
+	DecorativeWeightGainPotion: {
+		DisplayName: Poción de Subir de Peso Decorativa
+		Tooltip: ""
+	}
+
+	DecorativeWeightLossPotion: {
+		DisplayName: Poción de Perdida de Peso Decorativa
+		Tooltip: ""
+	}
+
+	ThatOneThingFromTheWGTerrariaMod: {
+		DisplayName: La Cosa Esa Del Mod De WG De Terraria
+		Tooltip: "'C. Lady'"
+	}
+
+	Landmark: {
+		DisplayName: Punto de referencia
+		Tooltip: "'C. Lady'"
+	}
+
+	Grounded: {
+		DisplayName: Incapaz de Volar
+		Tooltip: "'C. Lady'"
+	}
+
+	Abundance: {
+		DisplayName: Abundancia
+		Tooltip: "'C. Lady'"
+	}
+
+	SolDrive: {
+		DisplayName: Energía Solar
+		Tooltip:
+			'''
+			Aumenta el daño melee por {0}%, posibilidad de golpe critico por {2}%, 
+			penetración de armadura por {3}, y aumenta el tamaño de armas melee por {4}%
+			Duplica el empuje
+			Reduce la velocidad melee por {1}%
+			Los ataques inflijen una variedad de debuffs
+			Los efectos escalan con tu obesidad
+			'Aun así, ¡mi corazón arde!'
+			'''
+	}
+
+	SkeleborerBanner: {
+		DisplayName: Estandarte de Esqueleto Poseido
+		Tooltip: Aumenta el daño y la defensa contra los siguientes enemigos: Esqueleto Poseido
+	}
+
+	SkeleborerIOU: {
+		DisplayName: Papel de deuda
+		Tooltip:
+			'''
+			'Te debo un (1) dropeo de Esqueleto Poseido'
+			- Maimai
+			'''
+	}
+
+	BarnChandelier: {
+		DisplayName: Lámpara Araña de Establo
+		Tooltip: ""
+	}
+
+	MobilityBadge: {
+		DisplayName: Medalla de Mobilidad
+		Tooltip:
+			'''
+			Previene la inmóvilidad, permitiendo grandes caminatas
+			Un objeto muy popular entre la gente Lihzard
+			'''
+	}
+
+	WhaleHead: {
+		DisplayName: Cabeza de Ballena
+		Tooltip:
+			'''
+			Aumenta la posibilidad de golpe critico por {2}%
+			Aumenta la vida máxima por {0}
+			Aumenta el poder de pesca por {1}
+			Los atributos escalan con tu obesidad
+			'''
+		SetBonus:
+			'''
+			Upon leaving water breach with {2} damage water streams (?? Consultar sobre a que se refiere esto)
+			Se aumentara considerablemente la velocidad de movimiento y aceleración submarina
+			Otorga la habilidad de nadar y extiende considerablemente la respiración submarina
+			Reduce la penalidad de movimiento por {0}%
+			Perder peso es {1}% más dificil
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	WhaleBody: {
+		DisplayName: Cuerpo de Ballena
+		Tooltip:
+			'''
+			Aumenta el daño por {2}%
+			Aumenta la vida máxima por {0}
+			Aumenta el poder de pezca por {1}
+			Los atributos escalan con tu obesidad
+			'''
+	}
+
+	WhaleLegs: {
+		DisplayName: Piernas de Ballena
+		Tooltip:
+			'''
+			Aumenta la posibilidad de golpe critico por {2}%
+			Aumenta la vida maxima por {0}
+			Aumenta el poder de pezca por {1}
+			Los atributos escalan con tu obesidad
+			'''
+	}
+
+	EncumberedStatueBanner: {
+		DisplayName: Estandarte de Estatua Sobrecargada
+		Tooltip: Aumenta el daño y la defensa contra los siguientes enemigos: Estatua Sobrecargada
+	}
+
+	OverindulgentStatueBanner: {
+		DisplayName: Estandarte de Estatua Sobreindulgente
+		Tooltip: Aumenta el daño y la defensa contra los siguientes enemigos: Estatua Sobreindulgente
+	}
+
+	BlueBellyEncumberedStatueItem: {
+		DisplayName: Estatua de Barriga Azul
+		Tooltip: "'Desafortunadamente, no es suave.'"
+	}
+
+	BlueBreastEncumberedStatueItem: {
+		DisplayName: Estatua de Busto Azul
+		Tooltip: "'Desafortunadamente, no es suave.'"
+	}
+
+	BlueButtEncumberedStatueItem: {
+		DisplayName: Estatua de Trasero Azul
+		Tooltip: "'Desafortunadamente, no es suave.'"
+	}
+
+	GreenBellyEncumberedStatueItem: {
+		DisplayName: Estatua de Barriga Verde
+		Tooltip: "'Desafortunadamente, no es suave.'"
+	}
+
+	GreenBreastEncumberedStatueItem: {
+		DisplayName: Estatua de Busto Verde
+		Tooltip: "'Desafortunadamente, no es suave.'"
+	}
+
+	GreenButtEncumberedStatueItem: {
+		DisplayName: Estatua de Trasero Verde
+		Tooltip: "'Desafortunadamente, no es suave.'"
+	}
+
+	PinkBellyEncumberedStatueItem: {
+		DisplayName: Estatua de Barriga Rosa
+		Tooltip: "'Desafortunadamente, no es suave.'"
+	}
+
+	PinkBreastEncumberedStatueItem: {
+		DisplayName: Estatua de Busto Rosa
+		Tooltip: "'Desafortunadamente, no es suave.'"
+	}
+
+	PinkButtEncumberedStatueItem: {
+		DisplayName: Estatua de Trasero Rosa
+		Tooltip: "'Desafortunadamente, no es suave.'"
+	}
+
+	BlueBellyOverindulgentStatueItem: {
+		DisplayName: Estatua de Barriga Pesada Azul
+		Tooltip: "'Desafortunadamente, todavía no es suave.'"
+	}
+
+	BlueBreastOverindulgentStatueItem: {
+		DisplayName: Estatua de Busto Pesado Azul
+		Tooltip: "'Desafortunadamente, todavía no es suave.'"
+	}
+
+	BlueButtOverindulgentStatueItem: {
+		DisplayName: Estatua de Trasero Pesado Azul
+		Tooltip: "'Desafortunadamente, todavía no es suave.'"
+	}
+
+	GreenBellyOverindulgentStatueItem: {
+		DisplayName: Estatua de Barriga Pesada Verde
+		Tooltip: "'Desafortunadamente, todavía no es suave.'"
+	}
+
+	GreenBreastOverindulgentStatueItem: {
+		DisplayName: Estatua de Busto Pesado Verde
+		Tooltip: "'Desafortunadamente, todavía no es suave.'"
+	}
+
+	GreenButtOverindulgentStatueItem: {
+		DisplayName: Estatua de Trasero Pesado Verde
+		Tooltip: "'Desafortunadamente, todavía no es suave.'"
+	}
+
+	PinkBellyOverindulgentStatueItem: {
+		DisplayName: Estatua de Barriga Pesada Rosa
+		Tooltip: "'Desafortunadamente, todavía no es suave.'"
+	}
+
+	PinkBreastOverindulgentStatueItem: {
+		DisplayName: Estatua de Busto Pesado Rosa
+		Tooltip: "'Desafortunadamente, todavía no es suave.'"
+	}
+
+	PinkButtOverindulgentStatueItem: {
+		DisplayName: Estatua de Trasero Pesado Rosa
+		Tooltip: "'Desafortunadamente, todavía no es suave.'"
+	}
+
+	StarlightBoots: {
+		DisplayName: Botas de Luz Estelar
+		Tooltip:
+			'''
+			{0}% velocidad de movimiento incrementada
+			{1}% aceleración incrementada
+			Correr causa gano de peso leve
+			'''
+	}
+
+	StarlightLens: {
+		DisplayName: Lentes de Luz Estelar
+		Tooltip:
+			'''
+			{0}% posiblidad de golpe critico incrementada
+			{1}% daño de golpe critico incrementado
+			Los golpes criticos causan gano de peso leve
+			'''
+	}
+
+	MechaskeletonLegs: {
+		DisplayName: Piernas de Mecaesqueleto
+		Tooltip:
+			'''
+			Permite vuelo, correr super rapido, y mobilidad extra sobre hielo
+			Aumenta la velocidad de movimiento por {0}% y reduce la penalidad de movimiento gordo por {2}%
+			Proporciona la habilidad de caminar en agua, miel & lava
+			Otorga inmunidad a los bloques de fuego y {1} segundos de inmunidad a la lava
+			Reduce el daño de tocar lava
+			'''
+	}
+
+	TwilightTracers: {
+		DisplayName: Tracers de Crepúsculo
+		Tooltip:
+			'''
+			Permite correr super rapido, mobilidad extra sobre hielo, y extiende el vuelo por {3} segundos
+			Aumenta la velocidad de movimiento por {0}% y reduce la penalidad de movimiento gordo por {2}%
+			Proporciona la habilidad de caminar en agua, miel & lava
+			Otorga inmunidad a los bloques de fuego y {1} segundos de inmunidad a la lava
+			Reduce el daño de tocar lava
+			'''
+	}
+
+	ShimmeringVail: {
+		DisplayName: Velo Tornasolado
+		Tooltip:
+			'''
+			Dispara {0} rastros de arcoiris dañino al recibir daño, haciendo {1} daño cada uno
+			Aumenta la duracion de la invencibilidad tras tomar daño por {2} segundos
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	CryoJelly: {
+		DisplayName: Cryo Gelatina
+		Tooltip: Los ataques de latigo inflijen quemadura de hielo
+	}
+
+	DamnedDessert: {
+		DisplayName: Postre Maldito
+		Tooltip: Los ataques melee y de latigo inflijen quemadura de hielo y hellfire
+	}
+
+	CryoGauntlet: {
+		DisplayName: Cryo Guantelete
+		Tooltip:
+			'''
+			Aumenta el daño de latigo y velocidad de ataque por {0}% y el empuje del latigo por {1}x
+			Aumenta el rango del latigo por {2}%
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	DrinkingStraw: {
+		DisplayName: Sorbete para Beber
+		Tooltip:
+			'''
+			Puede ser utilizado para beber slimes o liquidos
+			No funciona en otros enemigos
+			'No vas a intentar beber el oceano en serio, cierto?'
+			'''
+	}
+
+	CrystalSugarPickaxe: {
+		DisplayName: Pico de Cristal de Azúcar
+		Tooltip: Los atributos escalan con tu obesidad
+	}
+
+	CrystalSugarHamaxe: {
+		DisplayName: Hacha-martillo de Cristal de Azúcar
+		Tooltip: Los atributos escalan con tu obesidad
+	}
+
+	HoneyPick: {
+		Tooltip: ""
+		DisplayName: Pico de Miel
+	}
+
+	HoneyChop: {
+		Tooltip: ""
+		DisplayName: Hacha de Miel
+	}
+
+	HoneyHammer: {
+		DisplayName: Martillo de Miel
+		Tooltip: ""
+	}
+
+	ImpScepter: {
+		DisplayName: Cetro Demoniaco
+		Tooltip: ""
+	}
+
+	SlamFire: {
+		// Tooltip: ""
+		// DisplayName: Slam Fire
+	}
+}
+
+Buffs: {
+	FatBuff: {
+		DisplayName: Gordura
+		Description:
+			'''
+			Reduce velocidad de movimiento por {0}%
+			Reduce el daño recibido {1}%
+			Aumenta la vida máxima por {2}
+			Agrega {3}% de resistencia al empuje
+			'''
+		DisabledBuffs: Buffs y debuffs de gordura desactivados
+		HitboxIncrease: Hitbox incrementada horizontalmente por {0} bloques
+
+		Stages: {
+			Name0: Regular
+			Name1: Rechonch@
+			Name2: Sobrepes@
+			Name3: Gord@
+			Name4: Obes@
+			Name5: Morbidamente obes@
+			Name6: Apenas móvil
+			Name7: Sobrecargad@
+			Name8: Inmóvil
+			Name9: Blob
+		}
+	}
+
+	StomachBuff: {
+		DisplayName: Estómago
+		Description: Indica cuanta comida todavía tiene que ser digerida
+	}
+
+	GainingBuff: {
+		DisplayName: Ganando
+		Description: Engordando mientras tanto
+	}
+
+	AmbrosiaGorged: {
+		DisplayName: Saciado de Ambrosía
+		Description:
+			'''
+			Tu barriga esta cargada con poder
+			Aumenta la velocidad de movimiento por {0}%
+			Aumenta la defensa por {1}
+			Aumenta la regeneración de vida por {2} por segundo
+			'''
+	}
+
+	Weightless: {
+		DisplayName: Ingrávit@
+		Description:
+			'''
+			Reduce la penalidad de movimiento de los pesos altos por {0}%
+			Duración de 8 minutos
+			'''
+	}
+
+	GluttedGut: {
+		DisplayName: Barriga llena
+		Description:
+			'''
+			Aumenta daño por {1}%
+			Reduce velocidad de movimiento por {0}%
+			Reduce velocidad de ataque por {2}%
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	WobWobWobWob: {
+		DisplayName: Wob Wob Wob Wob~
+		Description:
+			'''
+			Los enemigos rebotan sobre ti
+			Aumenta la altura de salto y velocidad de caída
+			Los efectos aumentan con tu obesidad
+			'¡Te sientes como realdad slime!'
+			'''
+	}
+
+	HellsBeesBuff: {
+		DisplayName: Abeja Infernal
+		Description:
+			'''
+			La Abeja Infernal peleará por ti
+			Ella gana peso atacando enemigos cubiertos en caramelo
+			Los atributos escalan con su o[c/FFEA00:B][c/696969:E][c/FFEA00:E]sidad
+			'¡Quien sabia que el caramelo venia de abejas en el Infierno todo este tiempo!'
+			'''
+	}
+
+	Caramel: {
+		DisplayName: Caramelo
+		Description: Aumenta la defensa por {0}
+	}
+
+	PillarWrath: {
+		DisplayName: Ira de los Pilares
+		Description: "'Eres abrumad@ con dolor...'"
+	}
+
+	ForceFed: {
+		DisplayName: Alimentado a la fuerza
+		Description: ¡Te estan alimentando en contra de tu voluntad!
+	}
+
+	GnomeLuck: {
+		DisplayName: Suerte de gnomo
+		Description:
+			'''
+			{0}
+			Los efectos escalan con tu obesidad
+			'''
+	}
+
+	SpikedSkin: {
+		DisplayName: Piel Puntiaguda
+		Description:
+			'''
+			Los atacantes tambien reciben daño
+			Los efectos escalan con tu obesidad
+			'Si es filoso, por que tan suave?'
+			'''
+	}
+
+	Sunrising: {
+		DisplayName: Amaneciendo
+		Description: "'El sol de la mañana ha dominado a la horrible noche.'"
+	}
+
+	MilkshakeSickness: {
+		DisplayName: Enfermedad de Malteada
+		Description:
+			'''
+			Las pociónes de cambio de peso son significantemente menos efectivas
+			'Ooourrrrpp...'
+			'''
+	}
+
+	Caramelized: {
+		DisplayName: Caramelizad@
+		Description: ¡Estas cubiert@ en caramelo!
+	}
+
+	FullOfSpider: {
+		DisplayName: Llen@ de Araña
+		Description:
+			'''
+			Aumenta el numero máximo de súbditos por {1}
+			Aumenta el daño de convocaciones por {0}%
+			'... ¡Yo creo que el violeta se ve mejor en ti! Ahuhuhu~'
+			'''
+	}
+
+	Tired: {
+		DisplayName: Cansad@
+		Description: Reduce la velocidad de ataque por {0}%
+	}
+
+	Stagnant: {
+		DisplayName: Estancad@
+		Description: Completamente pausa la perdida y gano de peso.
+	}
+
+	PrismaticStuffing: {
+		DisplayName: Llenado Prismático
+		Description: ¡Te estan alimentando en contra de tu voluntad!
+	}
+
+	Bloated: {
+		DisplayName: Hinchad@
+		Description: ¡Tu barriga se ha hinchado fuera de control!
+	}
+
+	Infatuated: {
+		DisplayName: Infatuado
+		Description: Velocidad de ganar peso aumentada por {0}%
+	}
+
+	CrystalSugarFrenzy: {
+		DisplayName: Locura de Cristal de Azúcar
+		Description: Aumenta la velocidad de minar por {0}%
+	}
+
+	IndulgentImpBuff: {
+		DisplayName: Buff de Diablo Indulgente
+		Description: Mods.WgMod.Buffs.IndulgentImpBuff.Description
+	}
+}
+
+Configs: {
+	WgServerConfig: {
+		DisplayName: Configuración de Server WG
+		Headers.General: Opciones Generales
+
+		DisableFatBuffs: {
+			Label: Desactivar Buffs de Gordura
+			Tooltip: Desactiva buffs y debuffs de gordura, buffs de atributos como 'Ganando' todavía se aplicaran
+		}
+
+		DisableFatHitbox: {
+			Label: Desactivar Hitbox gorda
+			Tooltip: Desactiva cambios al tamaño de la hitbox del jugador
+		}
+
+		DisablePlayerPushing: {
+			Label: Desactivar Empujar Jugadores
+			Tooltip: Desactiva jugadores empujando otros jugadores y NPCs con su gordura
+		}
+	}
+
+	WgClientConfig: {
+		DisplayName: Configuracion de Cliente WG
+
+		Headers: {
+			General: Opciones Generales
+			Visual: Opciones Visuales
+			Sprites: Sprites
+			Volume: Volumen
+		}
+
+		DisableJiggle: {
+			Label: Desactivar Temblor
+			Tooltip: Desactiva los efectos de temblor
+		}
+
+		DisableUVClothes: {
+			Label: Desactivar Ropas UV
+			Tooltip: Desactiva la armadura y ropa dinamica
+		}
+
+		ShowCredits: {
+			Label: Mostrar creditos
+			Tooltip: Muestra los creditos en los tooltips
+		}
+
+		DisableWeightGain: {
+			Label: Desactivar Weight Gain
+			Tooltip: Desactiva el gano de peso de cualquier tipo
+		}
+
+		PlayerSpriteSet: {
+			Label: Set de Sprites del Jugador
+			Tooltip: Controla la apariencia de los sprites gordos del jugador
+		}
+
+		UseImperialUnits: {
+			Label: Usar Unidades Imperiales
+			Tooltip: Usa unidades imperiales (lbs) en vez de metricas (kg)
+		}
+
+		StageCap: {
+			Label: Limite de Etapas
+			Tooltip: La etapa máxima de peso que el jugador puede alcanzar
+		}
+
+		BellyVolume: {
+			Label: Barriga
+			Tooltip: Volumen de los sonidos relacionados a la barriga
+		}
+
+		GurgleVolume: {
+			Label: Rujido
+			Tooltip: Volumen de sonidos de rujido
+		}
+
+		MiscVolume: {
+			Label: Misceláneos
+			Tooltip: Volumen del resto de sonidos
+		}
+
+		DisableAdvancedJiggle: {
+			Label: Desactivar Temblor Avanzado
+			Tooltip: Desactiva efectos de temblor avanzados
+		}
+	}
+
+	WorkshopIconsConfig: {
+		DisplayName: Iconós de Workshop Anteriores
+		Headers.WorkshopIcons: Past Workshop Icons
+
+		WorkshopIcons: {
+			Label: Elegir Version
+			Tooltip:
+				'''
+				¡Esta configuración no cambia nada dentro del juego!
+				¡Solo existe para ver los iconos del Workshop anteriores despues de que hayan cambiado!
+
+				¡Elige la version del icono que quieras ver!
+				'''
+		}
+
+		CurrentIcon: {
+			Label: Icono Actual
+			Tooltip: ""
+		}
+	}
+}
+
+Tiles: {
+	Treadmill.Items.Treadmill: Mods.WgMod.Tiles.Treadmill.Items.Treadmill
+
+	BarnChest: {
+		MapEntry0: Cofre de Establo
+		MapEntry: Mods.WgMod.Tiles.BarnChest.MapEntry
+	}
+
+	BarnDresser.MapEntry: Aparador de Establo
+	Oven.MapEntry: Horno
+}
+
+InfoDisplays.PortableScale_InfoDisplay.DisplayName: Peso actual
+
+Projectiles: {
+	CrispyDisciplineProjectile.DisplayName: Disciplina Crocante
+	HellishBee.DisplayName: Abeja Infernal
+	Girth.DisplayName: Corpulencia
+	Girthquake.DisplayName: Terremoto de Corpulencia
+	HoneyStream.DisplayName: Corriente de Miel
+	HoneyGlob.DisplayName: Bola de Miel
+	HarpyFeatherFriendly.DisplayName: Pluma de Arpía Amistosa
+	BouncyBall.DisplayName: Pelota Saltarin
+	CaramelArrowProjectile.DisplayName: Flecha de Caramelo
+	PowderedSugarProjectile.DisplayName: Azúcar en Polvo
+	SunriseProjectile.DisplayName: Amanecer
+	SporeCloud.DisplayName: Nube de Esporas
+	Plate.DisplayName: Plato
+	FatteningDart.DisplayName: Dardo Engordador
+	CursedFlameFriendly.DisplayName: Llama Maldita
+	DeathLaserFriendly.DisplayName: Laser Mortal
+	TwinEyesSpazm.DisplayName: Ojo de Espasmatizmo
+	TwinEyesRet.DisplayName: Ojo de Retinator
+	WeightGainPotionProjectile.DisplayName: Poción de Ganar de Peso
+	GreaterWeightGainPotionProjectile.DisplayName: Gran Poción de Ganar Peso
+	GreaterWeightLossPotionProjectile.DisplayName: Gran Poción de Perdida de Peso
+	LesserWeightGainPotionProjectile.DisplayName: Poción Menor de Ganar Peso
+	LesserWeightLossPotionProjectile.DisplayName: Poción Menor de Perdida de Peso
+	SuperWeightGainPotionProjectile.DisplayName: Superpoción de Ganar Peso
+	SuperWeightLossPotionProjectile.DisplayName: Superpoción de Perdida de Peso
+	WeightLossPotionProjectile.DisplayName: Poción de Perdida de Peso
+	FatTombstone.DisplayName: Lápida Gorda
+	MimicAttack.DisplayName: Ataque Mimico
+	HeartyHeart_Surround.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Blue.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Green.DisplayName: Hearty Heart
+	HeartyHeart_Direct.DisplayName: Hearty Heart
+	HeartyHeart_Direct_Blue.DisplayName: Hearty Heart
+	HeartyHeart_Direct_Green.DisplayName: Hearty Heart
+	HeartyHeart_Direct_Spawner.DisplayName: Hearty Heart Hearter
+	HeartyHeart_Wave.DisplayName: Hearty Heart
+	HeartyHeart_Wave_Blue.DisplayName: Hearty Heart
+	HeartyHeart_Wave_Green.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Blue_Strong.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Green_Strong.DisplayName: Hearty Heart
+	HeartyHeart_Surround_Strong.DisplayName: Hearty Heart
+	HeartyHeart_Direct_Spawner_Strong.DisplayName: Hearty Heart Hearter
+	StrawProjectile.DisplayName: Proyectil de Paja
+	IndulgentImp.DisplayName: Demonio Indulgente
+}
+
+NPCs: {
+	GroundedHarpyNPC: {
+		DisplayName: Arpía Rechoncha
+
+		TownNPCMood: {
+			Content: ¡Preferiria nunca estar en el cielo devuelta!
+			NoHome: Si me vas a mantener aqui abajo contigo, ¡al menos alójame! Scraw!
+			FarFromHome: Vole muy lejos en mis ejercicios!
+			LoveSpace: ¡Menos humanos para molestarme! Caw!
+			DislikeCrowded: ¡Por favor haz que estos humanos paren de arrullar!
+			HateCrowded: Scree! ¡Burbuja personal!
+			HateBiome: ¡No puedo volar en este bioma! ¡Me voy a dar la cabeza contra el techo!
+			LoveNPC: ¡{NPCName} entiende como me siento de una manera que no humano podría!
+			LikeNPC: "{¡NPCName} se ofrecio a armarme alas de engranajes!"
+			DislikeNPC: UwU
+			HateNPC: Scraw! ¡Ese {NPCName} me pinto gorda!
+			LikeNPC_Princess: ¡{NPCName} es mi humana favorita! ¡Tan alegre y divertida!
+			Princess_LovesNPC: ¡No sabia que arpías como {NPCName} podian ser tan amables!
+			LikeBiome: Puedo ver el cielo desde aqui... ¡Algun dia volvere!
+			DislikeBiome: ¡Esta f-f-frio! ¡Necesito volar al sur por el invierno!
+		}
+
+		Census.SpawnCondition: Usar {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] en un arpía
+	}
+
+	HomingFood.DisplayName: Comida Maldita
+
+	MilkmaidNPC: {
+		DisplayName: Milkmaid
+
+		TownNPCMood: {
+			Princess_LovesNPC: ¡{NPCName} es tan grande y suave!
+			LikeNPC_Princess: Esa {NPCName} es una preciosa pequeña mujer.
+			HateNPC: Dile a {NPCName} que si viene por aqui devuelta, voy a esperarlo con la escopeta.
+			LikeNPC: "{NPCName} y yo tenemos una buena relacion de negocios."
+			LoveNPC: "{NPCName} provee un servicio verdadero, no se puede decir eso sobre mucha gente en estos dias."
+			DislikeNPC: Cada vez que veo a {NPCName}, ella critica mi cabello. Me gustaria ver que ella mantenga esa peluca en el rancho.
+			HateBiome: ¡Esta muy caliente en este {BiomeName}! ¡No es bueno para las cosechas o los animales!
+			DislikeBiome: ¿Como esperas que crezcan mis cosechas al lado del {BiomeName}?
+			LikeBiome: Esta fresquito en el {BiomeName}, los bovinos como yo son gordos, ¿sabes?
+			LoveBiome: Ah, el {BiomeName}... no es ideal, pero es el mejor lugar para empezar una granja en esta isla.
+			HateCrowded: Ya tengo un tiempo dificil entrando en estas puertas, ¿como piensas que va a ir con toda esta gente?
+			DislikeCrowded: Todo este amontonamiento de gente no es bueno para las cosechas, echalos.
+			LoveSpace: Grandes praderas, ¡ideal para una vaca grande como yo!
+			FarFromHome: ¿Alguna vez escuchaste esa frase sobre las vacas volviendo a casa? Bueno, no creo que esta vaca lo vaya a hacer esta noche...
+			NoHome: Que es una vaca sin un establo? Nada, eso es.
+			Content: No me quejo.
+		}
+
+		Census.SpawnCondition: Alcanzar un peso de al menos Gord@
+	}
+
+	SweetSpirit.DisplayName: Espiritu Dulce
+
+	OverflowingMimicNPC: {
+		TownNPCMood: {
+			HateNPC: ¡Recaudador tomar monedas doradas! ¡Malvado! ¡Lleno de avaricia!
+			LikeNPC: ¡Gustar hombre bomba! ¡Tirar bombas! ¡Bum!
+			DislikeNPC: Saqueador malvado y rudo, ¡intento alcanzar y encontrar tesoro! ¡Unico que saqueador encontro fue grasa!
+			DislikeBiome: ¡Ser muy lindo aquí arriba! ¡No gustar para nada!
+			LikeBiome: Fria comoda casa, ¡comoda y buena!
+			LoveBiome: ¡Estamos muy comodos en cueva! ¡Yay!
+			HateCrowded: Muchos más alrededor... ¡no bueno!
+			DislikeCrowded: ¡Necesitar espacio personal!
+			LoveSpace: ¡Humano construyó cofre espacioso bueno!
+			FarFromHome: ¡Ayuda! ¡Haberme perdido!
+			NoHome: ¡Necesitar cofre comodo para vivir dentro!
+			Content: ¡Feliz!
+			LikeNPC_Princess: ¡Chica rosa dar botín delicioso!
+			Princess_LovesNPC: ¡Nunca vi un mímico como {NPCName} en persona antes! ¡Ella es tan linda!
+		}
+
+		DisplayName: Mímico Desbordado
+		Census.SpawnCondition: Usar {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] en un mímico
+	}
+
+	SugarSpecter.DisplayName: Espectro del Azúcar
+	SkeleborerHead.DisplayName: Esqueleto Poseido
+	SkeleborerBody.DisplayName: Esqueleto Poseido
+	SkeleborerTail.DisplayName: Esqueleto Poseido
+	EncumberedStatueTop.DisplayName: Estatua Sobrecargada
+	EncumberedStatueMiddle.DisplayName: Estatua Sobrecargada
+	EncumberedStatueBottom.DisplayName: Estatua Sobrecargada
+	OverindulgentStatueTop.DisplayName: Estatua Sobreindulgente
+	OverindulgentStatueMiddle.DisplayName: Estatua Sobreindulgente
+	OverindulgentStatueBottom.DisplayName: Estatua Sobreindulgente
+}
+
+Dialogue: {
+	GroundedHarpy: {
+		StandardDialogue1: Scraw! ¡Todavía estoy enojada contigo por hacerme tan gorda!
+		StandardDialogue2: ¡No es sorpresa que los humanos no puedan volar si toda su comida es tan buena!
+		StandardDialogue3: ¿Que? No, ¡no morimos cuando nos matas! Respawneamos, ¡al igual que ti! Scraw!
+		StandardDialogue4: ¿Acaso tienes mas de ese polvo blanco dulce y rico? ¿"Por que"? ¡Que te importa!
+		StandardDialogue5: Vivir en el suelo es aburrido, ¡quiero tocar las nubes devuelta!
+		StandardDialogue6: Mataste unos cuantos malos grandes, ¿asaste su carne por la hoguera?
+		StandardDialogue7: No, ¡no construimos esas casas en el cielo! Eso es un estereotipo dañino, scraw!
+		StandardDialogue8: ¿Puedes acicalar mi plumaje? Se me ha hecho dificil hacerlo por mi misma desde que... ¡tu sabes!
+		DayDialogue1: ¡Estas interrumpiendo mi rutina de ejercicio! ¡Voy a volar devuelta pronto!
+		PartyDialogue1: ¡Las festividades humanas son tan divertidas! ¡Y deliciosas!
+		PartyDialogue2: ¡Por favor dile a {0} de no jugar a ponerle la cola a la arpía!
+		WindyDayDialogue1: ¡Siento que el viento me va a sacar volando!
+		WindyDayDialogue2: Screech! ¡Vole! ¿Viste? ¿Que? ¿Solo fue el viento?
+		BloodMoonDialogue1: ¡Acercaté más y voy a usar mis garras! Craw!
+		BloodMoonDialogue2: SCRAW! ALEJATÉ!
+		BloodMoonDialogue3: Huff! Huff! ¡Debo perder peso! Scree!
+		HomelessDialogue1: ¡Humano! ¡Alojame inmediatamente!
+		HomelessDialogue2: Tu me hiciste esto, ¡tu toma responsabilidad!
+		HomelessDialogue3: Huff... huff... Necesito un lugar donde descansar...
+		HardModeDialogue1: Nunca me gustaron esos dragones largos... ¡Ellos piensan que las arpías son comida!
+		RainDialogue1: Screech! ¡No puedo ejercitarme en estas condiciones!
+		RainDialogue2: Supongo que solo me voy a quedar en casa y comer hoy...
+		RainDialogue3: ¡Hoy solo es un dia de descanso! ¿Que? ¡No estoy sobre mi limite semanal!
+		StormDialogue1: SCRAW! ¡PANICO! SCRAW!
+		SlimeRainDialogue1: ¿Como piensas que sabra un slime?
+		LoveStruckDialogue1: Humano... Te ves mas delicioso de lo normal...
+		EvilBossDialogue1: Scraw! ¡Me tome la libertad de convertir a ese gran malote en una comida para ti! Scraw!
+		SkeletronDialogue1: Me encantaria hacerte un arco de tormentas de arpía tradicional, ¡pero necesitaria unos huesos muy grandes para hacerlo!
+		SkeletronDialogue2: Caw! ¡Esa malvada calavera que mataste fue perfecto para construir un arco de tormentas de arpía tradicional!
+		QuestFishDialogue1: No, ¡no te voy a llevar hasta los lagos del cielo por tus pescados!
+		CatDialogue1: Oye... ¿puedo cuidar a {0} hoy? ¡Por ningun motivo! Es solo que podria comermelo- ¡A besos digo!
+		DogDialogue1: ¡{0} me ladra todo el tiempo! ¡No soy un pajaro!
+	}
+
+	Milkmaid: {
+		StandardDialogue1: Escuche que habia un heroe que no podia cuidar su peso. Supongo que ese eres tu?
+		StandardDialogue2: Mis pechos producen unas bebidas unicas. Un sorbo y terminaras muy gordo para salir de la cama o flaco como un palo de escoba.
+		StandardDialogue3: ¿Necesitas algo de leche? Soy tu mujer.
+		StandardDialogue4: Eres una cosita muy linda, pero podrias ganar algo de peso.
+		StandardDialogue5: ¿Como me volvi tan grande? Veamos... ahora, ¿fue la maquina de flan o el culto de alimentación?
+		StandardDialogue6: La gente ve mis cuernos y piensan que soy un hombre. Nunca escucharon de una butch.
+		StandardDialogue7: Sabes, entre todas las monstrosidades que ves por aquí, ¿a donde estan todos los animales?
+		StandardDialogue8: Mis malditos overalls, se siguen achicando o algo.
+		BloodMoonDialogue1: Hmph.
+		BloodMoonDialogue2: Tu cara no es tan adorable como lo es normalmente, alejaté.
+		BloodMoonDialogue3: ¿No hay suficiente leche para ti? Terrible.
+		HomelessDialogue1: ¿No tendrias un establo de sobra en el que me pueda quedar?
+		HomelessDialogue2: Eres un heroe, salva a esta pequeña chica de granja y dale algo de propiedad barata.
+		HomelessDialogue3: No estoy segura si esta tierra es buena para plantar, pero con lo gordas que se ponen las mujeres, va a ser excelente para los animales.
+		ArmsDealerDialogue1: Creerias que {0} dejaria de estar tan caliente cuando le dije que soy lesbiana, pero le empezó a hablar a {1} sobre reemplazo de hormonas.
+		DryadDialogue1: Le ofreci a {0} una manzana de uno de mis arboles, ella me miro como si mi gordura fuera contagiosa.
+		MechanicDialogue1: "{0} me dijo que iba a construir una maquina que pudiera cuidar mis cosechas por mi, yo le dije que no serian mis cosechas si no las cuidara yo misma."
+		PartyDialogue1: Oye, ¿el glaceado en el pastel? De nada.
+		StormDialogue1: Uf, espero que mi ganado halla llegado a casa seguro...
+		StormDialogue2: Cualquiera que sea la diosa a cargo del clima, ella no es una persona muy feliz.
+		RainDialogue1: Un poco de lluvia es buena para la cosecha, no significa que me tenga que gustar a mi.
+		RainDialogue2: Cuando era joven, mi vieja siempre me dijo de no tomar el agua de lluvia.
+		WindyDayDialogue1: Ahh, el sonido de la veleta siempre me recuerda de tiempos mejores...
+		WindyDayDialogue2: Algunas veces me gusta acostarme en un campo y sentir el viento soplar... Pero es dificil levantarse despues.
+		DayDialogue1: Huff, huff... phew! ¡El sol me esta matando hoy!
+		DayDialogue2: Hermosura, ¿me puedes buscar algo frio para tomar? Eh, ¿tal vez unas cuantas cosas frias?
+		LoveStruckDialogue1: Mroo~ Porque no vienes a encontrarme detras de mi establo, amor~?
+		LoveStruckDialogue2: Mmph... Siento que estoy en celo de golpe... ¿Puedes darme un poco de espacio?
+		Milked1: Mrooo~
+		Milked2: Hrmph... eres demasiado gentil.
+		Milked3: Uhf, ¿eso es todo? Maldicion...
+		MilkedDeny: Vuelve mañana, hm?
+		BloodMilked1: Hrmph. Saca las manos.
+		BloodMilked2: ¡ALEJATÉ!
+		BloodMilked3: A la proxima voy a pegar patadas.
+		BloodMilkedDeny: Ya tienes tu leche, sal de aqui.
+	}
+
+	OverflowingMimic: {
+		StandardDialogue1: Por que hacer a {0} grande, ¿humano? ¡Humano malo! ¡Malo!
+		StandardDialogue2: Bwah! ¡No mires la barriga de {0}!
+		StandardDialogue3: ¡Slime como {0} puede montar cofre! ¡Verse como botín!
+		StandardDialogue4: ¿Tu nombre {1}? ¡Ese nombre tonto! ¡{0} nombre mejor!
+		StandardDialogue5: Cofre de {0} se esta volviendo muy pesado para saltar... ¡culpa humano!
+		StandardDialogue6: Hambre... ¡{1}! Dar {0} comida! ¡Ahora!
+		StandardDialogue7: Podria {1} uhmm... enseñar {0} como funcionan puertas denuevo?
+		StandardDialogue8: Uuurrp... {0} encontro un pequeño conejo... ¡muy rico!
+		BloodMoonDialogue1: GRAHAHA! LA LUNA HAMBRIENTA ESTA NOCHE!
+		BloodMoonDialogue2: ¡COMER TODO! ¡COMER A TODOS!
+		BloodMoonDialogue3: OOUUURRRPP...
+		HomelessDialogue1: ¡Humano malo! ¡Dar {0} un hogar!
+		HomelessDialogue2: ¿Puede humano hacer un cofre muy muy grande para {0}?
+		HomelessDialogue3: ¡{0} muy gordo para cofre! ¡Oh no!
+		PartyDialogue1: ¡{0} intento tomar siesta y humanos pusieron tazas arriba de {0}! ¡Muy grosero!
+		PartyDialogue2: Woo woo woo! ¡Bailar bailar!
+		StormDialogue1: Humano, ¡ayuda! ¡Hay monstruo gigante ruidoso afuera!
+		StormDialogue2: AH! ¡HUIR!
+		RainDialogue1: Lluvia lluvia, vete ya...
+		RainDialogue2: "{0} taaaaan aburrida... ¡querer jugar afuera!"
+		RainDialogue3: ¿Acaso {1} saber hechizo para parar lluvia?
+		WindyDayDialogue1: Cielo intento robarse a {0}, pero {0} muy pesada!
+		WindyDayDialogue2: "{0} watch the plants dance all day... so pretty..."
+		DayDialogue1: ¡Dia lindo! ¡Lleno de juegos!
+		NightDialogue1: "{0} amar anochecer, ¡tantos amigos afuera con los que jugar!"
+		LoveStruckDialogue1: "{1}... {0} un poco quiere... morder cara de {1}..."
+		PostMechDialogue1: "{0} comio la carne de grandes robots... {0} sentirse tan poderosa..."
+	}
+
+	Nurse: {
+		PlayerStage1: Si necesitas consejos de dieta, tengo una seleccion de libros sobre el tema.
+		PlayerStage2: Si necesitas consejos de dieta, tengo una seleccion de libros sobre el tema.
+		PlayerStage3: Has engordado mas desde tu ultima consulta.
+		PlayerStage4: Eres medicamente obes@. Esto es serio, necesitas perder peso.
+		PlayerStage5: Ahora eres morbidamente obes@. Te voy a prescribir una dieta y rutina de ejercicio, apegate a ella antes de que te conviertas en una historia de advertencia.
+		PlayerStage6:
+			'''
+			Si rompes mi puerta voy a agregarlo a tu factura.
+			Deja de ignorar mis consejos, todavia puedes dar vuelta esto.
+			'''
+		PlayerStage7: ¿Acaso te puedes mover todavia?
+		PlayerStage8:
+			'''
+			Incluso en este tamaño, todavia hay unos ejercicios que te pueden ayudar a manejar este peso.
+			Al menos tu acceso a comida fue restringido.
+			'''
+		PlayerStage9:
+			'''
+			Estoy impresionada y asqueada.
+			No hay terminos medicos oficiales para tu peso.
+			No tengo ningun otro consejo de perdida de peso para ti, no es que alguna vez hayas escuchado.
+			'''
+		PlayerFatPlus: Entiendo que las pociónes sean utiles, pero tambien estan llenas de calorias. Usalas con moderación.
+		PlayerObesePlusPartyGirl: Las malas influencias solo van a empeorar tus problemas de peso, no los escuches.
+		PlayerObesePlusGoblinMechanic: A pesar de su comodidad, las asistencias de mobilidad solo empeoran el problema al deprivarte de actividad fisica, por favor, no las uses.
+		PlayerBarelyMobilePlusPartyGirl: Alejate de {0}, puede ser la ultima vez que camines.
+		PlayerBarelyMobilePlusBlood: ¡Solo para de comer!
+		PlayerEncumberedPlusParty: ¡No, nisiquiera puedes tener un dia de indulgencia!
+		ZoologistFat: Alguien tiene que decirle a {0} de cuidar su cuerpo.
+		ZoologistFatPlayerFat: Alguien tiene que decirle a {0} de cuidar su cuerpo, ¡y tu ni le digas sobre tu dieta!
+		DryadFat: La "fuerza de la naturaleza" no es una excusa para que {0} se deje llevar.
+		DryadFatPlayerFat: Deja de darle soda a las plantas, esta haciendo que {0} engorde.
+		MonstersFat: Por favor, no engordes a los monstruos.
+		MonstersFatPlayerFat: Por favor, no compartas tu dieta con los monstruos.
+		Milkmaid: Ser una vaca no es una excusa para que {0} sea gorda, ella necesita perder peso.
+		MilkmaidPlayerFat: Deja de aceptar los productos de lactosa de {0}, te estan haciendo engordar.
+	}
+
+	Dryad: {
+		PlayerStage1: Estuviste disfrutando de los regalos de la naturaleza.
+		PlayerStage2: Estuviste disfrutando de los regalos de la naturaleza.
+		PlayerStage3: Mantente delgad@; Terraria necesita a alguien en forma!
+		PlayerStage4: Se supone que los heroes deberian estar delgados.
+		PlayerStage5: Una barriga como esa no es apta para alguien que deberia estar limpiando la tierra.
+		PlayerStage6: Hay demonios del gluto mas delgados que ti.
+		PlayerStage7: Se supone que los heroes son móviles.
+		PlayerStage8: No eres un arbol, no deberias estar pegado al suelo en un lugar asi.
+		PlayerStage9: ¿Acaso puedes ver mas alla de tu {0}?
+		PlayerObesePlus: La corrupción puede tomar muchas formas, sucumber al hambre de uno mismo es una de esas formas.
+		PlayerMorbidlyObesePlus: La generosidad de la naturaleza es para todos, por favor guarda un poco para los demas.
+		PlayerEncumberedPlus: Me pregunto cuantos animales podrian vivir con tu dieta.
+		Fat: Solo es la fuerza de la naturaleza haciendome gorda.
+		FatRaining: La lluvia hace imposible que una dríada pierda peso.
+		FatRainingHomeless: ¡Necesito un techo antes de que me vuelva mas ancha de lo que soy alta!
+		FatNurse: Puedes decirle a {0} que deje de molestarme?
+		FatJungle:
+			'''
+			La abundancia de naturaleza aqui hace que sea dificil que una dríada regule su peso.
+			Ya he aceptado que la humedad me va a mantener gorda.
+			'''
+		FatDesert: Solo es peso de agua, lo necesito aqui.
+		FatPlayerFat: Tu entiendes que dificil es perder peso.
+		FatPlayerFatNurse: No le digas a {0}, pero ya estoy haciendo todo lo posible por mantenerme delgada.
+		FatPlayerNotMobile: Por mucho que odie ser gorda, la inmóvilidad solo se siente apropiada.
+		OverflowingMimic: Se supone que ibas a desterrar el mal, no alimentarlo.
+		FattenedWildlife: Tu necesidad de engordar la fauna es insultante.
+		Milkmaid: Puedo aceptar que {0} sea gorda ya que es una vaca, es solo natural.
+		ZoologistFat: Es una pena ver a alguien como {0} caer en la gula.
+	}
+}
+
+Bestiary: {
+	GroundedHarpy: Un arpía que antes era libre y feliz, ¡engordada hasta que ya no pudo volar! Va a proveerte con materiales utiles del cielo, a regañadientes.
+	Milkmaid: Una chica vaca simple y amable, ¡sus tetinas magicas producen malteadas que pueden cambiar instantaneamente el peso de quien lo beba! Regularmente visita bares lesbianos.
+	OverflowingMimic: Los mímicos son una forma de slime que actua de una manera muy similar a los cangrejos hermitaños, moviendose de cofre en cofre mientras crecen. Pero este puede ya ser un poco grande para su cofre...
+	HomingFood: Comida maldecida por un espiritu malevoló para buscar y engordar aventureros hasta que esten indefensos.
+	SweetSpirit: Estos espiritus que habitan las cavernas haran su mejor esfuerzo por engordarte.
+	SugarSpecter: Espectros hechos de azúcar condensada y algodón de azúcar. Matalos antes de que te hagan subir de peso...
+	Skeleborer: Algunas veces, grandes cantidades de ectoplasma se juntan, ¡y vienen a la vida! Ella es atormentada por los gritos de miles de almas, pero realmente no le importa.
+	EncumberedStatue: Una estatua que parece ser el habitada por un fantasma. A pesar de ser incapaz de moverse, parece feliz.
+	OverindulgentStatue: Una estatua con proporciones exageradas. No hay mucho mas que se pueda decir sobre esto, realmente.
+}
+
+Conditions.BlackRiderDev: Be super awesome cool
+Interface.Milk: Leche
+DeathReason.Milkmaid: La proxima vez escucha, cariño.
+
+GlobalItem: {
+	Disabled: "[c/963232:Desactivado por {0}]"
+	Ineffective: "[c/963232:Menos efectivo cuando combinado con {0}]"
+	Growth:
+		'''
+		[c/FF99FF:Hay crecimientos de azúcar cristalina en el banco]
+		Click derecho para consumir
+		'''
+}
+
+Emotes: {
+	GroundedHarpyEmote.Command: arpiarechoncha
+	MilkmaidEmote.Command: milkmaid
+	WeightLossEmote.Command: pociondeperdidadepeso
+	WeightGainEmote.Command: posiondeganarpeso
+	HellishBeeEmote.Command: abejainfernal
+}
+
+Prefixes: {
+	MaxLifeTooltip: +{0} vida máxima
+	MovePenaltyTooltip: "{0}% penalidad de movimiento"
+	DamageAttackSpeedTooltip:
+		'''
+		+{0}% daño
+		+{2}% posibilidad de golpe critico
+		-{1}% velocidad de ataque
+		'''
+
+	Padded: {
+		DisplayName: Rechoncho
+		AdditionalTooltip: uwu
+	}
+
+	Lightweight: {
+		DisplayName: Ligero
+		AdditionalTooltip: uwu
+	}
+
+	Rotund: {
+		DisplayName: Rotundo
+		AdditionalTooltip: uwu
+	}
+}
+
+MapObject.DecorativeWeightPotions: Poción de Peso Decorativa
+
+Achievements: {
+	AvidReader: {
+		FriendlyName: Lector Ávido
+		Description: Combina tres tomos encantados y un craneo de ciervo para obtener un accesorio poderoso.
+	}
+
+	Reshaped: {
+		FriendlyName: Reformado
+		Description: Engorda un enemigo elegible usando {$Items.PowderedSugar.DisplayName}.
+	}
+
+	Playtime: {
+		FriendlyName: ¡Hora de jugar!
+		Description: Deja que el Mímico Sobrebordado 'juegue con' un jefe.
+	}
+
+	ImBigger: {
+		FriendlyName: Soy más grande
+		Description: Derrota al Rey Slime estando en la máxima etapa de peso.
+	}
+
+	LetsGetPhysical: {
+		FriendlyName: ¡Vamos a trabajar esos musculos!
+		Description: Monta una {$Items.Treadmill.DisplayName} mientras estas vistiendo un set completo de Yoga.
+	}
+}

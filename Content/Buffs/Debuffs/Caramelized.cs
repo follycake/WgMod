@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -18,15 +19,13 @@ public class Caramelized : ModBuff
         Main.debuff[Type] = true;
         Main.pvpBuff[Type] = true;
         Main.buffNoSave[Type] = true;
-        BuffID.Sets.LongerExpertDebuff[Type] = true;
     }
 
     public override void Update(NPC npc, ref int buffIndex)
     {
-        npc.GetGlobalNPC<CaramelizedNPC>().CaramelizedEffect = true;
-
         int dustRate = 15;
         if (Main.rand.NextBool(dustRate))
+        {
             Dust.NewDust(
                 npc.position,
                 npc.width,
@@ -38,14 +37,16 @@ public class Caramelized : ModBuff
                 new Color(151, 93, 15),
                 1.3f
             );
+        }
     }
 
     public override void Update(Player player, ref int buffIndex)
     {
-        player.GetModPlayer<CrispyDebuffPlayer>().CaramelizedEffect = true;
+        player.GetModPlayer<CaramelizedPlayer>().CaramelizedEffect = true;
 
         int dustRate = 15;
         if (Main.rand.NextBool(dustRate))
+        {
             Dust.NewDust(
                 player.position,
                 player.width,
@@ -57,54 +58,40 @@ public class Caramelized : ModBuff
                 new Color(151, 93, 15),
                 1.3f
             );
+        }
     }
 }
 
 public class CaramelizedNPC : GlobalNPC
 {
-    public bool CaramelizedEffect;
-
-    public override void ResetEffects(NPC npc)
-    {
-        CaramelizedEffect = false;
-    }
-
     public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
     {
         if (projectile.npcProj || projectile.trap || !projectile.IsMinionOrSentryRelated)
             return;
-
-        var projTagMultiplier = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
+        float projTagMultiplier = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
         if (npc.HasBuff<Caramelized>())
-        {
             modifiers.FlatBonusDamage += Caramelized.TagDamage * projTagMultiplier;
-        }
     }
-
-    public override bool InstancePerEntity => true;
 
     public override void UpdateLifeRegen(NPC npc, ref int damage)
     {
-        if (!CaramelizedEffect)
+        if (!npc.HasBuff<Caramelized>())
             return;
-
         damage = 5;
-
         if (npc.lifeRegen > 0)
             npc.lifeRegen = 0;
-
         npc.lifeRegen -= 20;
     }
 
     public override void DrawEffects(NPC npc, ref Color drawColor)
     {
-        if (!CaramelizedEffect)
+        if (!npc.HasBuff<Caramelized>())
             return;
         drawColor = new Color(151, 93, 15);
     }
 }
 
-public class CrispyDebuffPlayer : ModPlayer
+public class CaramelizedPlayer : ModPlayer
 {
     public bool CaramelizedEffect;
 
@@ -117,11 +104,18 @@ public class CrispyDebuffPlayer : ModPlayer
     {
         if (!CaramelizedEffect)
             return;
-
         if (Player.lifeRegen > 0)
             Player.lifeRegen = 0;
-
         Player.lifeRegenTime = 0;
         Player.lifeRegen -= 20;
+    }
+
+    public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+    {
+        if (!CaramelizedEffect)
+            return;
+        r = 151f / 255f;
+        g = 93f / 255f;
+        b = 15f / 255f;
     }
 }

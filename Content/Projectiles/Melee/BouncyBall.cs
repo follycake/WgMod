@@ -46,21 +46,15 @@ public class BouncyBall : ModProjectile
         }
 
         if (Projectile.velocity.Y > 16f)
-        {
             Projectile.velocity.Y = 16f;
-        }
 
         float maxDetectRadius = 400f;
 
         if (HomingTarget == null)
-        {
             HomingTarget = FindClosestNPC(maxDetectRadius);
-        }
 
         if (HomingTarget != null && !IsValidTarget(HomingTarget))
-        {
             HomingTarget = null;
-        }
     }
 
     public NPC FindClosestNPC(float maxDetectDistance)
@@ -69,7 +63,7 @@ public class BouncyBall : ModProjectile
 
         float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
 
-        foreach (var target in Main.ActiveNPCs)
+        foreach (NPC target in Main.ActiveNPCs)
         {
             if (IsValidTarget(target))
             {
@@ -91,24 +85,14 @@ public class BouncyBall : ModProjectile
 
     public bool IsValidTarget(NPC target)
     {
-        return target.CanBeChasedBy()
-            && Collision.CanHit(
-                Projectile.Center,
-                1,
-                1,
-                target.position,
-                target.width,
-                target.height
-            );
+        return target.CanBeChasedBy() && Collision.CanHit(Projectile.Center, 1, 1, target.position, target.width, target.height);
     }
 
     public override bool OnTileCollide(Vector2 oldVelocity)
     {
         Projectile.penetrate--;
         if (Projectile.penetrate <= 0)
-        {
             Projectile.Kill();
-        }
         else if (HomingTarget != null)
         {
             float length = Projectile.velocity.Length();
@@ -126,14 +110,10 @@ public class BouncyBall : ModProjectile
             SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
 
             if (Math.Abs(Projectile.velocity.X - oldVelocity.X) > float.Epsilon)
-            {
                 Projectile.velocity.X = -oldVelocity.X;
-            }
 
             if (Math.Abs(Projectile.velocity.Y - oldVelocity.Y) > float.Epsilon)
-            {
                 Projectile.velocity.Y = -oldVelocity.Y * 0.9f;
-            }
             for (int i = 0; i < 5; i++)
             {
                 Dust cute = Dust.NewDustDirect(
@@ -156,7 +136,8 @@ public class BouncyBall : ModProjectile
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        SoundEngine.PlaySound(WgSounds.Squeaky, Projectile.Center);
+        if (Main.rand.NextBool(3))
+            SoundEngine.PlaySound(WgSounds.Squeaky, Projectile.Center);
 
         Vector2 direction = target.Center.DirectionTo(Projectile.Center);
         float velocity = Projectile.velocity.Length();
@@ -201,19 +182,11 @@ public class BouncyBall : ModProjectile
     {
         Projectile.PrepareBombToBlow();
         SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
+
         for (int i = 0; i < 50; i++)
         {
-            Dust cute = Dust.NewDustDirect(
-                Projectile.position,
-                77,
-                77,
-                DustID.GemRuby,
-                0,
-                0,
-                100,
-                default,
-                1
-            );
+            Dust cute = Dust.NewDustDirect(Projectile.position, 77, 77, DustID.GemRuby, 0, 0, 100, default, 1);
+
             cute.noGravity = true;
         }
     }
@@ -222,7 +195,7 @@ public class BouncyBall : ModProjectile
     {
         Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-        Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
+        Vector2 drawOrigin = new(texture.Width * 0.5f, Projectile.height * 0.5f);
         for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
         {
             Vector2 drawPos =

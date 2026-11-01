@@ -66,14 +66,11 @@ public class SunriseProjectile : ModProjectile
     public override void AI()
     {
         UpdateAlpha();
+
         if (IsStickingToTarget)
-        {
             StickyAI();
-        }
         else
-        {
             NormalAI();
-        }
     }
 
     public void NormalAI()
@@ -96,6 +93,7 @@ public class SunriseProjectile : ModProjectile
             dust.velocity += Projectile.velocity * 0.3f;
             dust.velocity *= 0.2f;
         }
+
         if (Main.rand.NextBool(4))
         {
             Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.height, Projectile.width, ModContent.DustType<CutieHeart>(),
@@ -106,6 +104,7 @@ public class SunriseProjectile : ModProjectile
     }
 
     public const int StickTime = 60 * 15;
+
     public void StickyAI()
     {
         Projectile.ignoreWater = true;
@@ -114,23 +113,18 @@ public class SunriseProjectile : ModProjectile
 
         bool hitEffect = StickTimer % 30f == 0f;
         int npcTarget = TargetWhoAmI;
+
         if (StickTimer >= StickTime || npcTarget < 0 || npcTarget >= 200)
-        {
             Projectile.Kill();
-        }
         else if (Main.npc[npcTarget].active && !Main.npc[npcTarget].dontTakeDamage)
         {
             Projectile.Center = Main.npc[npcTarget].Center - Projectile.velocity * 2f;
             Projectile.gfxOffY = Main.npc[npcTarget].gfxOffY;
             if (hitEffect)
-            {
                 Main.npc[npcTarget].HitEffect(0, 1.0);
-            }
         }
         else
-        {
             Projectile.Kill();
-        }
     }
 
     public override void OnKill(int timeLeft)
@@ -159,8 +153,7 @@ public class SunriseProjectile : ModProjectile
     {
         IsStickingToTarget = true;
         TargetWhoAmI = target.whoAmI;
-        Projectile.velocity = (target.Center - Projectile.Center) *
-            0.75f;
+        Projectile.velocity = (target.Center - Projectile.Center) * 0.75f;
         Projectile.netUpdate = true;
         Projectile.damage = 0;
 
@@ -177,9 +170,8 @@ public class SunriseProjectile : ModProjectile
     public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
     {
         if (targetHitbox.Width > 8 && targetHitbox.Height > 8)
-        {
             targetHitbox.Inflate(-targetHitbox.Width / 8, -targetHitbox.Height / 8);
-        }
+
         return projHitbox.Intersects(targetHitbox);
     }
 
@@ -191,17 +183,14 @@ public class SunriseProjectile : ModProjectile
             if (npcIndex >= 0 && npcIndex < 200 && Main.npc[npcIndex].active)
             {
                 if (Main.npc[npcIndex].behindTiles)
-                {
                     behindNPCsAndTiles.Add(index);
-                }
                 else
-                {
                     behindNPCsAndTiles.Add(index);
-                }
 
                 return;
             }
         }
+
         behindNPCsAndTiles.Add(index);
     }
 
@@ -210,13 +199,9 @@ public class SunriseProjectile : ModProjectile
     public void UpdateAlpha()
     {
         if (Projectile.alpha > 0)
-        {
             Projectile.alpha -= AlphaFadeInSpeed;
-        }
 
         if (Projectile.alpha < 0)
-        {
             Projectile.alpha = 0;
-        }
     }
 }

@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Consumables.Baked;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.robinn9283)]
 public class AcornCake : ModItem
 {
     public override void SetStaticDefaults()
@@ -17,7 +18,7 @@ public class AcornCake : ModItem
         [
             new Color(69, 69, 69),
             new Color(69, 69, 69),
-            new Color(69, 69, 69),
+            new Color(69, 69, 69)
         ];
 
         ItemID.Sets.IsFood[Type] = true;
@@ -25,13 +26,21 @@ public class AcornCake : ModItem
 
     public override void SetDefaults()
     {
-        Item.DefaultToFood(22, 22, ModContent.BuffType<Buffs.Consumables.GnomeLuck>(), 8 * 60 * 60);
+        Item.DefaultToFood(26, 26, ModContent.BuffType<Buffs.Consumables.GnomeLuck>(), 8 * 60 * 60);
         Item.value = Item.sellPrice(silver: 50);
         Item.rare = ItemRarityID.Blue;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Food;
+    }
+
     public override void AddRecipes()
     {
-        CreateRecipe().AddIngredient(ItemID.Acorn, 6).AddTile<Tiles.Furniture.Oven>().Register();
+        CreateRecipe()
+            .AddIngredient(ItemID.Acorn, 6)
+            .AddTile<Tiles.Furniture.Oven>()
+            .Register();
     }
 }

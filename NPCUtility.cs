@@ -21,7 +21,7 @@ public static class NPCUtility
         NPC.downedBoss1,
         NPC.downedBoss2,
         NPC.downedQueenBee,
-        NPC.downedBoss3,
+        NPC.downedBoss3
     ];
 
     static readonly bool[] _hardmodeBosses =
@@ -33,7 +33,7 @@ public static class NPCUtility
         NPC.downedPlantBoss,
         NPC.downedGolemBoss,
         NPC.downedEmpressOfLight,
-        NPC.downedAncientCultist,
+        NPC.downedAncientCultist
     ];
 
     // Im sure you can come up with a better name
@@ -60,7 +60,7 @@ public static class NPCUtility
             defenseModifier += 8;
         }
 
-        foreach (var item in _preHardmodeBosses)
+        foreach (bool item in _preHardmodeBosses)
         {
             if (item)
                 preHardmodeStats++;
@@ -72,7 +72,7 @@ public static class NPCUtility
             defenseModifier += 3 * preHardmodeStats;
         }
 
-        foreach (var item in _hardmodeBosses)
+        foreach (bool item in _hardmodeBosses)
         {
             if (item)
                 hardmodeStats++;

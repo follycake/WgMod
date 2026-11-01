@@ -7,12 +7,13 @@ using WgMod.Content.Items.Ammo;
 
 namespace WgMod.Content.Items.Accessories.Fat;
 
+[AutoloadEquip(EquipType.HandsOn)]
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.the_trueterrafox)]
 [Credit(ProjectRole.Idea, Contributor.the_trueterrafox)]
 public class BandOfSweetening : ModItem
 {
-    WgStat _regen = new(2f, 8f);
+    WgStat _regen = new(2f, 6f);
 
     public override void SetDefaults()
     {
@@ -33,6 +34,11 @@ public class BandOfSweetening : ModItem
         _regen.Lerp(immobility);
 
         player.lifeRegen += _regen;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 
     public override void AddRecipes()

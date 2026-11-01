@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -10,19 +13,30 @@ using WgMod.Content.Dusts;
 
 namespace WgMod.Content.Items.Armor.AmazonGarb;
 
-[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [AutoloadEquip(EquipType.Head)]
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class AmazonHeaddress : ModItem
 {
     WgStat _damage = new(0.05f, 0.1f);
     WgStat _setBonusDamage = new(0.09f, 0.22f);
     WgStat _setBonusCritChance = new(18f, 36f);
 
+    public static int HeadSlot { get; private set; }
+    public static Asset<Texture2D> LavaTexture { get; set; }
+
     public override void SetStaticDefaults()
     {
         ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
+        ArmorIDs.Head.Sets.DrawHead[Item.headSlot] = false;
 
+        HeadSlot = Item.headSlot;
         SetBonusText = this.GetLocalization("SetBonus");
+    }
+
+    public override void Load()
+    {
+        LavaTexture = ModContent.Request<Texture2D>(Texture + "_Head_Lava");
     }
 
     public static LocalizedText SetBonusText { get; private set; }
@@ -30,7 +44,7 @@ public class AmazonHeaddress : ModItem
     public override void SetDefaults()
     {
         Item.width = 18;
-        Item.height = 18;
+        Item.height = 10;
         Item.value = Item.sellPrice(gold: 1);
         Item.rare = ItemRarityID.Orange;
         Item.defense = 1;
@@ -45,6 +59,11 @@ public class AmazonHeaddress : ModItem
         _damage.Lerp(immobility);
 
         player.GetDamage(DamageClass.Melee) += _damage;
+
+        Vector3 light = new(100f / 255f, 50f / 255f, 0f);
+
+        if (!Main.dedServ)
+            Lighting.AddLight(player.Center, light);
     }
 
     public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -86,6 +105,11 @@ public class AmazonHeaddress : ModItem
         tooltips.FormatLines(_damage.Percent());
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()
@@ -100,7 +124,6 @@ public class AmazonGarbPlayer : ModPlayer
     public const int CooldownMax = 15 * 60;
     public bool _active;
     public int _cooldown = CooldownMax;
-    //public int _visual;
 
     public override void ResetEffects()
     {
@@ -146,14 +169,12 @@ public class AmazonGarbPlayer : ModPlayer
             proj.DamageType = DamageClass.Melee;
     }
 
-    /*public override void PostUpdateEquips()
+    public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
-        _visual = Math.Clamp(_visual + (_active ? 1 : -1), 0, 30);
+        if (Player.head == AmazonHeaddress.HeadSlot)
+        {
+            if (Player.TryGetModPlayer(out WgPlayer wg))
+                wg._headOverride = AmazonHeaddress.LavaTexture;
+        }
     }
-
-    public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
-    {
-        if (_visual > 0)
-            g = Math.Max(0, g - _visual * 0.03f);
-    }*/
 }

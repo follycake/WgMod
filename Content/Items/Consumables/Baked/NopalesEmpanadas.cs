@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Items.Consumables.Baked;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.robinn9283)]
 public class NopalesEmpanadas : ModItem
 {
     public override void SetStaticDefaults()
@@ -17,7 +18,7 @@ public class NopalesEmpanadas : ModItem
         [
             new Color(69, 69, 69),
             new Color(69, 69, 69),
-            new Color(69, 69, 69),
+            new Color(69, 69, 69)
         ];
 
         ItemID.Sets.IsFood[Type] = true;
@@ -26,13 +27,18 @@ public class NopalesEmpanadas : ModItem
     public override void SetDefaults()
     {
         Item.DefaultToFood(
-            22,
-            22,
+            42,
+            26,
             ModContent.BuffType<Buffs.Consumables.SpikedSkin>(),
             8 * 60 * 60
         );
         Item.value = Item.sellPrice(silver: 50);
         Item.rare = ItemRarityID.Blue;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Food;
     }
 
     public override void AddRecipes()

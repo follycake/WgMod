@@ -1,0 +1,49 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run dotnet format",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"format",
+				"WgMod.sln"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "Run dotnet tool restore",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"tool",
+				"restore"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "ReSharper cleanup",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"jb",
+				"cleanupcode",
+				"--profile=WgMod",
+				"--exclude=**.fx",
+				"WgMod.sln"
+			],
+			"problemMatcher": [],
+			"dependsOn": [
+				"Run dotnet tool restore"
+			]
+		},
+		{
+			"label": "Full cleanup",
+			"problemMatcher": [],
+			"dependsOn": [
+				"Run dotnet format",
+				"ReSharper cleanup"
+			]
+		}
+	]
+}

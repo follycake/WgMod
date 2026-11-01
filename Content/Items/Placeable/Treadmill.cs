@@ -1,9 +1,11 @@
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace WgMod.Content.Items.Placeable;
 
 [Credit(ProjectRole.Programmer, Contributor.follycake)]
+[Credit(ProjectRole.Artist, Contributor.follycake)]
 public class Treadmill : ModItem
 {
     public override void SetDefaults()
@@ -11,7 +13,12 @@ public class Treadmill : ModItem
         Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Treadmill>());
         Item.width = 28;
         Item.height = 20;
-        Item.value = 20000;
+        Item.value = Item.buyPrice(gold: 2);
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.PlacableObjects;
     }
 
     public override void AddRecipes()

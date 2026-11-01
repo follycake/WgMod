@@ -11,6 +11,8 @@ namespace WgMod.Content.Items.Consumables;
 [Credit(ProjectRole.Artist, Contributor.maimaichubs)]
 public class BottledCaramel : ModItem
 {
+    public static LocalizedText RestoreLifeText { get; private set; }
+
     public override void SetStaticDefaults()
     {
         Item.ResearchUnlockCount = 20;
@@ -19,11 +21,9 @@ public class BottledCaramel : ModItem
         [
             new Color(240, 240, 240),
             new Color(200, 200, 200),
-            new Color(140, 140, 140),
+            new Color(140, 140, 140)
         ];
     }
-
-    public static LocalizedText RestoreLifeText { get; private set; }
 
     public override void SetDefaults()
     {
@@ -51,8 +51,16 @@ public class BottledCaramel : ModItem
         healValue = Item.healLife;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.ConsumableThatDoesNotDamage;
+    }
+
     public override void AddRecipes()
     {
-        CreateRecipe().AddIngredient(ItemID.BottledHoney, 2).AddTile(TileID.Hellforge).Register();
+        CreateRecipe()
+            .AddIngredient(ItemID.BottledHoney, 2)
+            .AddTile(TileID.Hellforge)
+            .Register();
     }
 }

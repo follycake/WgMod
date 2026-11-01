@@ -1,28 +1,18 @@
 using System;
+using Terraria;
 
 namespace WgMod;
 
-// Mass in kg.
-public readonly record struct Weight(float Mass)
+public readonly record struct Weight(Mass Mass)
 {
-    const float KgToPounds = 2.2046226218f;
+    public static readonly Weight Base = new(60f);
+    public static readonly Weight SoftImmobile = new(600f);
 
-    public static readonly Weight Base = new(70f);
-    public static readonly Weight Immobile = new(400f);
+    public readonly float Immobility => GetFactor(Base, SoftImmobile);
+    public readonly float ClampedImmobility => GetClampedFactor(Base, SoftImmobile);
 
-    public const int StageCount = 8; // The total amount of stages and player sprites
-    public const int MaxStage = StageCount - 1; // The last weight stage
-
-    public const int ImmobileStage = 7; // Stage at which the player would be considered immobile under normal conditions
-    public const int DamageReductionStage = 2; // Stage at which damage reduction starts being applied
-    public const int HeavyStage = 3; // Stage at which thin ice breaks, max life starts being increased
-
-    public readonly float Immobility => GetFactor(Base, Immobile);
-    public readonly float ClampedImmobility => GetClampedFactor(Base, Immobile);
-
-    public override readonly string ToString() => $"{Mass} kg";
-    public readonly float ToPounds() => Mass * KgToPounds;
-    public readonly int GetStage() => (int)MathF.Floor(Immobility * ImmobileStage);
+    public override readonly string ToString() => Mass.Display();
+    public readonly int GetStage() => (int)MathF.Floor(Immobility * WeightStage.SoftImmobile);
 
     public readonly float GetStageFactor()
     {
@@ -32,16 +22,29 @@ public readonly record struct Weight(float Mass)
         return (Mass - a) / (b - a);
     }
 
-    public readonly float GetFactor(Weight start, Weight end) => (Mass - start.Mass) / (end.Mass - start.Mass); // Inverese lerp
+    public readonly float GetFactor(Weight start, Weight end) => Curve(Utils.GetLerpValue(start.Mass, end.Mass, Mass));
     public readonly float GetClampedFactor(Weight start, Weight end) => Math.Clamp(GetFactor(start, end), 0f, 1f);
 
-    public static Weight FromStage(int stage) => FromImmobility(stage / (float)ImmobileStage);
-    public static Weight FromImmobility(float factor) => new(float.Lerp(Base.Mass, Immobile.Mass, factor));
+    public readonly float GetFactor(int startStage, int endStage) => GetFactor(FromStage(startStage), FromStage(endStage));
+    public readonly float GetClampedFactor(int startStage, int endStage) => GetClampedFactor(FromStage(startStage), FromStage(endStage));
 
-    public static Weight FromPounds(float pounds) => new(pounds / KgToPounds);
-    public static Weight Clamp(Weight weight) => Clamp(weight, ImmobileStage);
-    public static Weight Clamp(Weight weight, int maxStage) => new(Math.Clamp(weight.Mass, Base.Mass, FromStage(maxStage).Mass + 10f));
+    public static Weight FromStage(int stage)
+    {
+        if (stage == WeightStage.Regular)
+            return Base;
+        if (stage == WeightStage.SoftImmobile)
+            return SoftImmobile;
+        return FromImmobility(stage / (float)WeightStage.SoftImmobile);
+    }
 
-    public static Weight operator +(Weight w, float mass) => new(w.Mass + mass);
-    public static Weight operator -(Weight w, float mass) => new(w.Mass - mass);
+    public static Weight FromImmobility(float factor) => new(float.Lerp(Base.Mass, SoftImmobile.Mass, InverseCurve(factor)));
+
+    public static Weight Clamp(Weight weight) => Clamp(weight, WeightStage.Max);
+    public static Weight Clamp(Weight weight, int maxStage) => new(Math.Clamp(weight.Mass, Base.Mass, FromStage(maxStage + 1).Mass - 1f));
+
+    public static float Curve(float x) => MathF.Pow(x, 2f / 3f);
+    public static float InverseCurve(float x) => MathF.Pow(x, 3f / 2f);
+
+    public static Weight operator +(Weight w, Mass mass) => new(w.Mass + mass);
+    public static Weight operator -(Weight w, Mass mass) => new(w.Mass - mass);
 }

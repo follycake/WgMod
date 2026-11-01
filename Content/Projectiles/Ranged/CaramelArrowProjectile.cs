@@ -1,6 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -10,6 +8,7 @@ using WgMod.Content.Buffs.Debuffs;
 namespace WgMod.Content.Projectiles.Ranged;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.maimaichubs)]
 public class CaramelArrowProjectile : ModProjectile
 {
     public override void SetDefaults()
@@ -35,9 +34,7 @@ public class CaramelArrowProjectile : ModProjectile
         Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
         if (Projectile.velocity.Y > 16f)
-        {
             Projectile.velocity.Y = 16f;
-        }
     }
 
     public override void OnKill(int timeLeft)

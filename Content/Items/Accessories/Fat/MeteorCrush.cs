@@ -1,7 +1,9 @@
-using System.Collections.Generic;
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Content.Projectiles;
@@ -9,12 +11,13 @@ using WgMod.Content.Projectiles;
 namespace WgMod.Content.Items.Accessories.Fat;
 
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
+[Credit(ProjectRole.Artist, Contributor._d_u_m_m_y_)]
 public class MeteorCrush : ModItem
 {
     public override void SetDefaults()
     {
-        Item.width = 20;
-        Item.height = 20;
+        Item.width = 40;
+        Item.height = 40;
 
         Item.accessory = true;
         Item.rare = ItemRarityID.Orange;
@@ -25,6 +28,11 @@ public class MeteorCrush : ModItem
     {
         if (player.TryGetModPlayer(out MeteorCrushPlayer crush))
             crush._crushEffect = true;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 }
 
@@ -50,11 +58,19 @@ public class MeteorCrushPlayer : ModPlayer
     {
         if (!_crushEffect)
             return;
-        CheckForSolidGround();
-        Projectile hitbox = null;
-        foreach (var proj in Main.ActiveProjectiles)
+        if (Player.CheckForSolidGround())
         {
-            if (proj.active && proj.type == ModContent.ProjectileType<Girth>() && proj.ai[0] == Player.whoAmI)
+            if (_landState == 0)
+                _landState = 1;
+            else
+                _landState = 2;
+        }
+        else
+            _landState = 0;
+        Projectile hitbox = null;
+        foreach (Projectile proj in Main.ActiveProjectiles)
+        {
+            if (proj.active && proj.type == ModContent.ProjectileType<Girth>() && proj.owner == Player.whoAmI)
             {
                 hitbox = proj;
                 break;
@@ -69,7 +85,7 @@ public class MeteorCrushPlayer : ModPlayer
         }
         if (_landState == 1)
         {
-            float crushPower = _yVelocityOfLastTick * Player.Wg().Weight.Mass / 120f - 10;
+            float crushPower = GetCrushPower();
             if (crushPower > 10)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -82,30 +98,27 @@ public class MeteorCrushPlayer : ModPlayer
         _yVelocityOfLastTick = Player.velocity.Y;
     }
 
-    bool CheckForSolidGround()
+    float GetCrushPower()
     {
-        List<Point> tiles = Collision.GetTilesIn(Player.Hitbox.BottomLeft() - new Vector2(-2, -2), Player.Hitbox.BottomRight() + new Vector2(2, 6));
-        bool hasSolidTile = false;
-        foreach (var point in tiles)
+        return _yVelocityOfLastTick * Player.Wg().Weight.Mass / 120f - 10;
+    }
+
+    public override void DrawPlayer(Camera camera)
+    {
+        if (_landState != 0)
+            return;
+        float crushPower = GetCrushPower();
+        if (crushPower < 10f)
+            return;
+        float fade = Utils.Remap(crushPower, 10f, 30f, 0f, 1f);
+        int totalShadows = Math.Min(Player.availableAdvancedShadowsCount, 10);
+        int skip = 2;
+        for (int i = totalShadows - totalShadows % skip; i > 0; i -= skip)
         {
-            Tile tile = Framing.GetTileSafely(point);
-            if (tile.HasTile)
-            {
-                if (Main.tileSolid[tile.TileType])
-                    hasSolidTile = true;
-                if (Main.tileSolidTop[tile.TileType])
-                    hasSolidTile = true;
-            }
+            EntityShadowInfo shadowInfo = Player.GetAdvancedShadow(i);
+            float shadow = Utils.Remap((float)i / totalShadows, 0f, 1f, 0.5f, 1f);
+            shadow = float.Lerp(1f, shadow, fade);
+            Main.PlayerRenderer.DrawPlayer(camera, Player, shadowInfo.Position + new Vector2(0f, Player.gfxOffY), shadowInfo.Rotation, shadowInfo.Origin, shadow);
         }
-        if (hasSolidTile)
-        {
-            if (_landState == 0)
-                _landState = 1;
-            else
-                _landState = 2;
-        }
-        else
-            _landState = 0;
-        return hasSolidTile;
     }
 }

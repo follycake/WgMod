@@ -7,13 +7,14 @@ using WgMod.Content.Items.Ammo;
 
 namespace WgMod.Content.Items.Accessories.Fat;
 
+[AutoloadEquip(EquipType.HandsOn)]
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.the_trueterrafox)]
 [Credit(ProjectRole.Idea, Contributor.the_trueterrafox)]
 public class CharmOfSweets : ModItem
 {
-    WgStat _regen = new(4f, 16f);
-    WgStat _potionDelay = new(0.85f, 0.7f);
+    WgStat _regen = new(4f, 10f);
+    WgStat _potionDelay = new(0.85f, 0.6f);
 
     public override void SetDefaults()
     {
@@ -36,6 +37,11 @@ public class CharmOfSweets : ModItem
 
         player.lifeRegen += _regen;
         player.PotionDelayModifier *= _potionDelay;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 
     public override void AddRecipes()

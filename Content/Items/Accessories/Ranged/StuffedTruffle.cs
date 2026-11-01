@@ -8,7 +8,6 @@ using WgMod.Content.Projectiles.Ranged;
 
 namespace WgMod.Content.Items.Accessories.Ranged;
 
-
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 [Credit(ProjectRole.Idea, Contributor.divine_lumine)]
@@ -29,10 +28,15 @@ class StuffedTruffle : ModItem
         if (!player.TryGetModPlayer(out StuffedTrufflePlayer st))
             return;
 
-        st._active = true;
+        st.Active = true;
 
         if (st._cooldown < StuffedTrufflePlayer.CooldownMax)
             st._cooldown++;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 
     public override void AddRecipes()
@@ -43,19 +47,18 @@ class StuffedTruffle : ModItem
             .AddTile(TileID.TinkerersWorkbench)
             .Register();
     }
-
 }
 
 public class StuffedTrufflePlayer : ModPlayer
 {
     public const int CooldownMax = 200;
-    internal bool _active;
+    public bool Active;
     internal int _cooldown = CooldownMax;
     internal WgStat _damage = new(5f, 15f);
 
     public override void ResetEffects()
     {
-        _active = false;
+        Active = false;
     }
 }
 
@@ -63,7 +66,7 @@ public class StuffedTruffleItem : GlobalItem
 {
     public override void UseAnimation(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out StuffedTrufflePlayer st) || !player.TryGetModPlayer(out WgPlayer wg) || !st._active || st._cooldown < StuffedTrufflePlayer.CooldownMax || item.DamageType != DamageClass.Ranged)
+        if (!player.TryGetModPlayer(out StuffedTrufflePlayer st) || !player.TryGetModPlayer(out WgPlayer wg) || !st.Active || st._cooldown < StuffedTrufflePlayer.CooldownMax || item.DamageType != DamageClass.Ranged || player.whoAmI != Main.myPlayer)
             return;
         float immobility = wg.Weight.ClampedImmobility;
 

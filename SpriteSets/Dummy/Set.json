@@ -1,18 +1,24 @@
 {
     "Author": "dummy",
+    "DrawOffsetY": 8,
     "ArmCount": 4,
     "Layers": [
         {
             "Name": "Base",
-            "Type": "Legs"
+            "Type": "Legs",
+            "Physics": true
         },
         {
             "Name": "Belly",
-            "Type": "Belly"
-        },
+            "Type": "Belly",
+            "Physics": true
+        }
+    ],
+    "TopLayers": [
         {
             "Name": "Boobs",
-            "Type": "Breasts"
+            "Type": "Breasts",
+            "Physics": true
         }
     ],
     "Stages": {

@@ -1,4 +1,3 @@
-using System;
 using Terraria.ID;
 
 namespace WgMod;
@@ -7,7 +6,7 @@ public static class WeightValues
 {
     public static float GetMountScale(int stage)
     {
-        return float.Lerp(1f, 1.5f, Math.Clamp(stage / (float)Weight.ImmobileStage, 0f, 1f));
+        return float.Lerp(1f, 1.5f, stage / (float)WeightStage.SoftImmobile);
     }
 
     public static float GetDeathPenalty(int difficulty) => difficulty switch
@@ -20,14 +19,13 @@ public static class WeightValues
 
     public static int GetHitboxWidthInTiles(int stage) => stage switch
     {
-        4 => 3,
-        5 => 4,
-        6 => 5,
-        7 => 6,
-        _ => 2,
+        5 => 3,
+        6 => 4,
+        7 => 5,
+        8 => 6,
+        9 => 7,
+        _ => 2
     };
 
-    public static int GetArmStage(int stage) => SpriteSet.Current.GetStage(stage).Arm;
-    public static float DrawOffsetX(int stage) => SpriteSet.Current.GetStage(stage).OffsetX;
-    public static float DrawOffsetY(int stage) => SpriteSet.Current.GetStage(stage).OffsetY;
+    public static bool EnableSoftHitbox(int stage) => stage >= 4;
 }

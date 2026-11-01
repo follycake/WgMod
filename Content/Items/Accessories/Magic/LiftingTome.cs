@@ -20,17 +20,16 @@ namespace WgMod.Content.Items.Accessories.Magic;
 [Credit(ProjectRole.VFX, Contributor._d_u_m_m_y_)]
 public class LiftingTome : ModItem
 {
-    public const int _minionCount = 1;
-    WgStat _damage = new(0.04f, 0.08f);
-    WgStat _magicDamage = new(0.02f, 0.04f);
+    WgStat _magicDamage = new(0.06f, 0.12f);
     WgStat _manaCost = new(0.96f, 0.92f);
     WgStat _maxMana = new(20, 60);
-    WgStat _flight = new(1, 2);
+    WgStat _flight = new(1f, 1.5f);
+
     public string _texture;
 
     public override void SetStaticDefaults()
     {
-        ArmorIDs.Wing.Sets.Stats[Item.wingSlot] = new WingStats(60, 5f, 1f);
+        ArmorIDs.Wing.Sets.Stats[Item.wingSlot] = new WingStats(40, 5f, 1f);
     }
 
     public override void SetDefaults()
@@ -44,34 +43,29 @@ public class LiftingTome : ModItem
 
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
-        if (!player.TryGetModPlayer(out LiftingTomePlayer lt))
-            return;
-        if (!player.TryGetModPlayer(out WgPlayer wg))
+        if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out LiftingTomePlayer lt))
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
-        _damage.Lerp(immobility);
         _magicDamage.Lerp(immobility);
         _manaCost.Lerp(immobility);
         _maxMana.Lerp(immobility);
         _maxMana.Value = MathF.Floor(_maxMana.Value / 20f) * 20f;
 
-        player.GetDamage(DamageClass.Generic) += _damage;
         player.GetDamage(DamageClass.Magic) += _magicDamage;
         player.manaCost *= _manaCost;
         player.statManaMax2 += _maxMana;
-        player.maxMinions += _minionCount;
 
-        lt._active = true;
+        lt.Active = true;
 
-        if (lt._cooldownBolt < lt._cooldownBoltMax)
-            lt._cooldownBolt++;
+        if (lt.CooldownBolt < lt.CooldownBoltMax)
+            lt.CooldownBolt++;
 
-        if (lt._cooldownSkull < lt._cooldownSkullMax)
-            lt._cooldownSkull++;
+        if (lt.CooldownSkull < lt.CooldownSkullMax)
+            lt.CooldownSkull++;
 
-        if (lt._cooldownScythe < lt._cooldownScytheMax)
-            lt._cooldownScythe++;
+        if (lt.CooldownScythe < lt.CooldownScytheMax)
+            lt.CooldownScythe++;
 
         lt.SpawnHallucination(Item);
     }
@@ -103,6 +97,11 @@ public class LiftingTome : ModItem
         constantAscend *= _flight;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
+
     public override void AddRecipes()
     {
         if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
@@ -132,32 +131,27 @@ public class LiftingTome : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(
-            _damage.Percent(),
-            (1 - _manaCost).Percent(),
-            _maxMana,
-            _minionCount,
-            _magicDamage.Percent()
-        );
+        tooltips.FormatLines((1 - _manaCost).Percent(), _maxMana, _magicDamage.Percent());
     }
 }
 
 public class LiftingTomePlayer : ModPlayer
 {
-    public bool _active;
-    public int _cooldownBolt;
-    public int _cooldownSkull;
-    public int _cooldownScythe;
-    public int _cooldownBoltMax = 90;
-    public int _cooldownSkullMax = 120;
-    public int _cooldownScytheMax = 180;
+    public bool Active;
 
-    public WgStat _damageModifier = new(1f, 2f);
-    public WgStat _velocityModifier = new(1f, 0.8f);
+    public int CooldownBoltMax = 120;
+    public int CooldownSkullMax = 180;
+    public int CooldownScytheMax = 240;
+    public int CooldownBolt;
+    public int CooldownSkull;
+    public int CooldownScythe;
+
+    public WgStat DamageModifier = new(1f, 1.5f);
+    public WgStat VelocityModifier = new(1f, 0.8f);
 
     public override void ResetEffects()
     {
-        _active = false;
+        Active = false;
     }
 
     public void SpawnHallucination(Item item)
@@ -213,7 +207,7 @@ public class LiftingTomePlayer : ModPlayer
 
     public override void HideDrawLayers(PlayerDrawSet drawInfo)
     {
-        if (_active && Player.velocity.Y == 0f)
+        if (Active && Player.velocity.Y == 0f)
             PlayerDrawLayers.Wings.Hide();
     }
 
@@ -290,19 +284,20 @@ public class LiftingTomeWingLayer : PlayerDrawLayer
 
 public class LiftingTomeItem : GlobalItem
 {
+    static readonly HashSet<DamageClass> _magicWeapons = [DamageClass.Magic, DamageClass.MagicSummonHybrid];
+
     public override void UseAnimation(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out LiftingTomePlayer lt) || !player.TryGetModPlayer(out WgPlayer wg) || !lt._active || item.damage < 1)
+        if (!player.TryGetModPlayer(out LiftingTomePlayer lt) || !player.TryGetModPlayer(out WgPlayer wg) || !lt.Active || item.damage < 1 || player.whoAmI != Main.myPlayer || !_magicWeapons.Contains(item.DamageType))
             return;
-
         float immobility = wg.Weight.ClampedImmobility;
 
         Vector2 mousePosition = Main.MouseWorld;
         float angle = Utils.AngleTo(player.Center, mousePosition);
-        Vector2 velocity = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+        Vector2 velocity = new(MathF.Cos(angle), MathF.Sin(angle));
 
-        lt._damageModifier.Lerp(immobility);
-        lt._velocityModifier.Lerp(immobility);
+        lt.DamageModifier.Lerp(immobility);
+        lt.VelocityModifier.Lerp(immobility);
 
         switch (item.useStyle)
         {
@@ -313,51 +308,30 @@ public class LiftingTomeItem : GlobalItem
             case ItemUseStyleID.Rapier:
             case ItemUseStyleID.RaiseLamp:
 
-                if (lt._cooldownScythe == lt._cooldownScytheMax)
+                if (lt.CooldownScythe == lt.CooldownScytheMax)
                 {
-                    lt._cooldownScythe = (int)float.Lerp(30, 0, immobility);
+                    lt.CooldownScythe = (int)float.Lerp(30, 0, immobility);
 
-                    Projectile.NewProjectile(
-                        player.GetSource_FromThis(),
-                        player.Center,
-                        velocity * 0.2f * lt._velocityModifier,
-                        ProjectileID.DemonScythe,
-                        17 * lt._damageModifier,
-                        5
-                    );
+                    Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, velocity * 0.2f * lt.VelocityModifier, ProjectileID.DemonScythe, 17 * lt.DamageModifier, 5);
 
                     return;
                 }
 
-                if (lt._cooldownSkull == lt._cooldownSkullMax)
+                if (lt.CooldownSkull == lt.CooldownSkullMax)
                 {
-                    lt._cooldownSkull = (int)float.Lerp(30, 0, immobility);
+                    lt.CooldownSkull = (int)float.Lerp(30, 0, immobility);
 
-                    Projectile.NewProjectile(
-                        player.GetSource_FromThis(),
-                        player.Center,
-                        velocity * 3.5f * lt._velocityModifier,
-                        ProjectileID.BookOfSkullsSkull,
-                        14 * lt._damageModifier,
-                        3.5f
-                    );
+                    Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, velocity * 3.5f * lt.VelocityModifier, ProjectileID.BookOfSkullsSkull, 14 * lt.DamageModifier, 3.5f);
 
                     return;
                 }
 
 
-                if (lt._cooldownBolt == lt._cooldownBoltMax)
+                if (lt.CooldownBolt == lt.CooldownBoltMax)
                 {
-                    lt._cooldownBolt = (int)float.Lerp(30, 0, immobility);
+                    lt.CooldownBolt = (int)float.Lerp(30, 0, immobility);
 
-                    Projectile.NewProjectile(
-                        player.GetSource_FromThis(),
-                        player.Center,
-                        velocity * 4.5f * lt._velocityModifier,
-                        ProjectileID.WaterBolt,
-                        9 * lt._damageModifier,
-                        5
-                    );
+                    Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, velocity * 4.5f * lt.VelocityModifier, ProjectileID.WaterBolt, 9 * lt.DamageModifier, 5);
                 }
 
                 break;

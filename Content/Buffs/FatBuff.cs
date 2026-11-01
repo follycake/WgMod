@@ -12,10 +12,11 @@ namespace WgMod.Content.Buffs;
 
 public class FatBuff : WgBuffBase
 {
-    public const float MaxLifeIncreasePercentage = 0.2f;
+    public const float MaxLifeIncreasePercentage = 0.3f;
+    public const int MaxStageGraphic = WeightStage.Max;
 
-    WgStat _damageReduction = new(0f, 0.05f);
-    WgStat _lifeIncrease = new(0f, 100f);
+    WgStat _damageReduction = new(0f, 0.06f);
+    WgStat _lifeIncrease = new(0f, 150f);
 
     Asset<Texture2D> _stagesTexture;
 
@@ -52,7 +53,7 @@ public class FatBuff : WgBuffBase
         );
         if (!WgServerConfig.Instance.DisableFatHitbox)
         {
-            string line = this.GetLocalization("HitboxIncrease").Format((WeightValues.GetHitboxWidthInTiles(stage) - 2).Range(0, WeightValues.GetHitboxWidthInTiles(Weight.ImmobileStage) - 2));
+            string line = this.GetLocalization("HitboxIncrease").Format((WeightValues.GetHitboxWidthInTiles(stage) - 2).Range(0, WeightValues.GetHitboxWidthInTiles(WeightStage.Max) - 2));
             tip += "\n" + line;
         }
     }
@@ -68,14 +69,14 @@ public class FatBuff : WgBuffBase
 
         // Calculate factors
         int stage = wg.Weight.GetStage();
-        if (stage >= Weight.DamageReductionStage)
-            _damageReduction.Lerp(wg.Weight.GetClampedFactor(Weight.FromStage(Weight.DamageReductionStage), Weight.Immobile));
+        if (stage >= WeightStage.DamageReduction)
+            _damageReduction.Lerp(wg.Weight.GetClampedFactor(WeightStage.DamageReduction, WeightStage.Max));
         else
             _damageReduction.Reset();
 
-        if (stage >= Weight.HeavyStage)
+        if (stage >= WeightStage.Heavy)
         {
-            float t = wg.Weight.GetClampedFactor(Weight.FromStage(Weight.HeavyStage), Weight.Immobile) * MaxLifeIncreasePercentage;
+            float t = wg.Weight.GetClampedFactor(WeightStage.Heavy, WeightStage.Max) * MaxLifeIncreasePercentage;
             _lifeIncrease.Value = MathF.Floor(player.statLifeMax * t / 5f) * 5f;
             _lifeIncrease.Clamp();
         }
@@ -92,17 +93,14 @@ public class FatBuff : WgBuffBase
         if (Main.LocalPlayer.TryGetModPlayer(out WgPlayer wg))
         {
             drawParams.Texture = _stagesTexture.Value;
-            drawParams.SourceRectangle = drawParams.Texture.Frame(1, Weight.StageCount, 0, wg.Weight.GetStage());
+            drawParams.SourceRectangle = drawParams.Texture.Frame(1, MaxStageGraphic + 1, 0, Math.Clamp(wg.Weight.GetStage(), 0, MaxStageGraphic));
         }
         return base.PreDraw(spriteBatch, buffIndex, ref drawParams);
     }
 
     public override float GetProgress(WgPlayer wg, int buffIndex)
     {
-        int stage = wg.Weight.GetStage();
-        if (stage < Weight.ImmobileStage)
-            return wg.Weight.GetStageFactor();
-        return 1f;
+        return wg.Weight.GetStageFactor();
     }
 
     public override bool RightClick(int buffIndex)

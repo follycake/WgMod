@@ -6,9 +6,11 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Accessories.Fat;
 
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
+[Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class HeliumTank : ModItem
 {
     WgStat _gravity = new(1f, 0.1f);
+
     public override void SetDefaults()
     {
         Item.width = 24;
@@ -25,16 +27,12 @@ public class HeliumTank : ModItem
             return;
 
         float immobility = wg.Weight.ClampedImmobility;
-
         _gravity.Lerp(immobility);
         player.gravity *= _gravity;
     }
-}
-public class SellHeliumTank : GlobalNPC
-{
-    public override void ModifyShop(NPCShop shop)
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
     {
-        if (shop.NpcType == NPCID.PartyGirl)
-            shop.Add<HeliumTank>();
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 }

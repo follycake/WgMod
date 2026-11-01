@@ -1,16 +1,17 @@
 {
     "Author": "folly",
+    "DrawOffsetY": 8,
     "ArmCount": 3,
     "Layers": [
         {
             "Name": "Base",
             "Type": "Legs",
-            "SimpleArmor": false
+            "Physics": true
         },
         {
             "Name": "Belly",
             "Type": "Belly",
-            "SimpleArmor": false
+            "Physics": true
         }
     ],
     "Stages": {

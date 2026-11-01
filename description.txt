@@ -6,7 +6,6 @@ Discord tags of the people that helped make this possible
 - @follycake
 - @maimaichubs
 - @jumpsu2
-- @bb_waffle_batter
 - @_d_u_m_m_y_
 - @igobee_
 [c/C42254:Contributions]
@@ -17,6 +16,13 @@ Discord tags of the people that helped make this possible
 - @haydumbb (Some ideas and art)
 - @divine_lumine (Armor sprites)
 - @the_trueterrafox (Item idea and sprites)
+- @tea_kettles (i-frames visual bugfix)
+- @altaber (Fat mannquins idea)
+- @thegungis (Shoddy scale idea)
+- @radiantluminant (Greedy Flask idea)
+- @robinn9283 (Item sprites)
+- @magicalmoondust_ (Item sprites)
+- @alphas0 (Code for Gain Tosser)
 
 [c/EFBF00:Full credits]
 [wgmodcred:0]

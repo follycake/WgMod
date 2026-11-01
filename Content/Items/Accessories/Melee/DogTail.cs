@@ -17,11 +17,13 @@ public class DogTail : GlobalItem
 
     public override bool InstancePerEntity => true;
 
+    public override bool AppliesToEntity(Item entity, bool lateInstantiation)
+    {
+        return entity.type == ItemID.DogTail;
+    }
+
     public override void SetDefaults(Item item)
     {
-        if (item.type != ItemID.DogTail)
-            return;
-
         item.defense = 7;
         item.vanity = false;
         item.rare = ItemRarityID.Cyan;
@@ -29,16 +31,16 @@ public class DogTail : GlobalItem
 
     public override void UpdateAccessory(Item item, Player player, bool hideVisual)
     {
-        if (item.type != ItemID.DogTail || !player.TryGetModPlayer(out DogTailPlayer dt) || !player.TryGetModPlayer(out WgPlayer wg))
+        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !player.TryGetModPlayer(out WgPlayer wg))
             return;
-        float immobility = wg.Weight.ClampedImmobility;
 
-        dt._active = true;
+        float immobility = wg.Weight.ClampedImmobility;
+        dt.Active = true;
 
         _damageModifier.Lerp(immobility);
         dt._damageModifier = _damageModifier;
 
-        if (dt._cooldown < 120)
+        if (dt._cooldown < 180)
             dt._cooldown++;
 
         if (Main.hardMode)
@@ -49,74 +51,55 @@ public class DogTail : GlobalItem
 
     public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
     {
-        if (item.type != ItemID.DogTail)
-            return;
-
         tooltips.LineBeforeTooltip(out TooltipLine line);
-        tooltips.Insert(
-            tooltips.IndexOf(line) + 1,
-            new TooltipLine(
-                Mod,
-                "NewTooltip",
-                Language.GetTextValue("Mods.WgMod.Items.DogTail.Tooltip")
-            )
-        );
+        tooltips.Insert(tooltips.IndexOf(line) + 1, new TooltipLine(Mod, "NewTooltip", Language.GetTextValue("Mods.WgMod.Items.DogTail.Tooltip")));
     }
 }
 
 public class DogTailPlayer : ModPlayer
 {
-    public bool _active;
-    public int _cooldown = 120;
-    public int _damage;
-    public float _damageModifier;
+    public bool Active;
+    internal int _cooldown = 180;
+    internal int _damage;
+    internal float _damageModifier;
 
     public override void ResetEffects()
     {
-        _active = false;
+        Active = false;
     }
 }
 
 public class DogTailItem : GlobalItem
 {
+    static readonly HashSet<DamageClass> _meleeWeapons = [DamageClass.Melee, DamageClass.MeleeNoSpeed];
+
     public override void UseAnimation(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !dt._active || dt._cooldown < 120 || item.damage < 1)
+        if (!player.TryGetModPlayer(out DogTailPlayer dt) || !dt.Active || dt._cooldown < 180 || item.damage < 1 || player.whoAmI != Main.myPlayer || !_meleeWeapons.Contains(item.DamageType))
             return;
 
         if (Main.hardMode)
-            dt._cooldown = 60;
+            dt._cooldown = 30;
         else
             dt._cooldown = 0;
 
         if (player.wereWolf)
-        {
             dt._cooldown += 30;
-        }
 
         Vector2 mousePosition = Main.MouseWorld;
         float angle = Utils.AngleTo(player.Center, mousePosition);
-        Vector2 velocity = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+        Vector2 velocity = new(MathF.Cos(angle), MathF.Sin(angle));
 
+        switch (item.useStyle)
         {
-            switch (item.useStyle)
-            {
-                case ItemUseStyleID.Swing:
-                case ItemUseStyleID.Thrust:
-                case ItemUseStyleID.Shoot:
-                case ItemUseStyleID.Guitar:
-                case ItemUseStyleID.Rapier:
-                case ItemUseStyleID.RaiseLamp:
-                    Projectile.NewProjectile(
-                        player.GetSource_FromThis(),
-                        player.Center,
-                        velocity * 6f,
-                        ModContent.ProjectileType<BouncyBall>(),
-                        (int)(dt._damage * dt._damageModifier),
-                        5
-                    );
-                    break;
-            }
+            case ItemUseStyleID.Swing:
+            case ItemUseStyleID.Thrust:
+            case ItemUseStyleID.Shoot:
+            case ItemUseStyleID.Guitar:
+            case ItemUseStyleID.Rapier:
+            case ItemUseStyleID.RaiseLamp:
+                Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, velocity * 6f, ModContent.ProjectileType<BouncyBall>(), (int)(dt._damage * dt._damageModifier), 5);
+                break;
         }
     }
 }

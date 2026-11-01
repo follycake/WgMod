@@ -15,4 +15,7 @@ public class WgServerConfig : ModConfig
 
     [DefaultValue(false)]
     public bool DisableFatHitbox;
+
+    [DefaultValue(false)]
+    public bool DisablePlayerPushing;
 }

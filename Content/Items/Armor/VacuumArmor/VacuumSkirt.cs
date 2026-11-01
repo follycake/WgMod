@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -7,15 +8,24 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Armor.VacuumArmor;
 
-[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [AutoloadEquip(EquipType.Legs)]
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class VacuumSkirt : ModItem
 {
+    static int _glowMask;
+
     WgStat _attackSpeed = new(1.02f, 1.12f);
     WgStat _health = new(20, 100);
-    WgStat _defense = new(0, 16 * 2);
+    WgStat _defense = new(16, 48);
     WgStat _resist = new(0f, 0.02f);
     WgStat _movePenalty = new(1.2f, 1.05f);
+
+    public override void SetStaticDefaults()
+    {
+        ArmorIDs.Legs.Sets.OverridesLegs[Item.legSlot] = true;
+        _glowMask = GlowMaskUtility.AddGlowMask(Texture + "_Legs_Glow");
+    }
 
     public override void SetDefaults()
     {
@@ -23,31 +33,40 @@ public class VacuumSkirt : ModItem
         Item.height = 18;
         Item.value = Item.sellPrice(gold: 2);
         Item.rare = ItemRarityID.Red;
-        Item.defense = 32 / 2;
+        Item.defense = 16;
     }
 
     public override void UpdateEquip(Player player)
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-
         float immobility = wg.Weight.ClampedImmobility;
+
         _attackSpeed.Lerp(immobility);
-
         _health.Lerp(immobility);
-        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
-
         _defense.Lerp(immobility);
         _resist.Lerp(immobility);
         _movePenalty.Lerp(immobility);
 
+        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
+
         player.GetAttackSpeed(DamageClass.Generic) *= _attackSpeed;
         player.statLifeMax2 += _health;
-        player.statDefense += _defense;
+        Item.defense = _defense;
         player.endurance += _resist;
         wg.MovementPenalty *= _movePenalty;
 
         player.aggro += 5;
+
+        Vector3 light = new(130f / 255f, 90f / 255f, 190f / 255f);
+
+        if (!Main.dedServ)
+            Lighting.AddLight(player.Center, light);
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Pants;
     }
 
     public override void AddRecipes()
@@ -64,6 +83,13 @@ public class VacuumSkirt : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines((_attackSpeed - 1f).Percent(), _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+        tooltips.ReplaceDefense(_defense.ToString());
+        tooltips.FormatLines((_attackSpeed - 1f).Percent(), _health, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+    }
+
+    public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)
+    {
+        glowMask = _glowMask;
+        glowMaskColor = Color.White;
     }
 }

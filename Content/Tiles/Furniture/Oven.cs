@@ -25,19 +25,17 @@ public class Oven : ModTile
         TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
         TileObjectData.newTile.Origin = new Point16(1, 1);
         TileObjectData.newTile.CoordinateHeights = [16, 18];
+        TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+        TileObjectData.addTile(Type);
         TileObjectData.newTile.AnchorInvalidTiles =
         [
             TileID.MagicalIceBlock,
             TileID.Boulder,
             TileID.BouncyBoulder,
             TileID.LifeCrystalBoulder,
-            TileID.RollingCactus,
+            TileID.RollingCactus
         ];
-        TileObjectData.newTile.AnchorBottom = new AnchorData(
-            AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide,
-            TileObjectData.newTile.Width,
-            0
-        );
-        TileObjectData.addTile(Type);
+
+        AddMapEntry(new Color(200, 200, 200), Mod.GetLocalization("Tiles.Oven.MapEntry"));
     }
 }

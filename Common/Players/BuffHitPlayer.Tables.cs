@@ -1,11 +1,15 @@
 using System.Collections.Generic;
 using Terraria.ID;
+using Terraria.ModLoader;
+using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Common.Players;
 
 public partial class BuffHitPlayer
 {
-    readonly HashSet<int> _slimes =
+    readonly int _slimesBuff = BuffID.Slimed;
+
+    public readonly HashSet<int> _slimes =
     [
         NPCID.BlueSlime,
         NPCID.GreenSlime,
@@ -46,8 +50,19 @@ public partial class BuffHitPlayer
         NPCID.QueenSlimeMinionPink,
         NPCID.QueenSlimeMinionPurple,
         NPCID.HoppinJack,
-        NPCID.SlimedZombie,
+        NPCID.SlimedZombie
     ];
+
+    readonly HashSet<int> _slimeProjectiles =
+    [
+        ProjectileID.SpikedSlimeSpike,
+        ProjectileID.QueenSlimeGelAttack,
+        ProjectileID.QueenSlimeMinionBlueSpike,
+        ProjectileID.QueenSlimeMinionPinkBall,
+        ProjectileID.VolatileGelatinBall
+    ];
+
+    readonly int _beesBuff = ModContent.BuffType<Bloated>();
 
     readonly HashSet<int> _bees =
     [
@@ -75,8 +90,37 @@ public partial class BuffHitPlayer
         NPCID.LittleHornetSpikey,
         NPCID.LittleHornetStingy,
         NPCID.VortexHornet,
-        NPCID.VortexHornetQueen,
+        NPCID.VortexHornetQueen
     ];
+
+    readonly HashSet<int> _bloaters =
+    [
+        ProjectileID.Stinger,
+        ProjectileID.HornetStinger,
+        ProjectileID.QueenBeeStinger,
+        ProjectileID.Bee,
+        ProjectileID.BeeArrow,
+        ProjectileID.GiantBee,
+        ProjectileID.BeeHive,
+        ProjectileID.SporeCloud,
+        ProjectileID.SporeTrap,
+        ProjectileID.SporeTrap2,
+        ProjectileID.SporeGas,
+        ProjectileID.SporeGas2,
+        ProjectileID.SporeGas3,
+        ProjectileID.ToxicCloud,
+        ProjectileID.ToxicCloud2,
+        ProjectileID.ToxicCloud3,
+        ProjectileID.TruffleSpore,
+        ProjectileID.GasTrap,
+        ProjectileID.JungleSpike,
+        ProjectileID.SeedPlantera,
+        ProjectileID.PoisonSeedPlantera,
+        ProjectileID.ThornBall,
+        ProjectileID.DandelionSeed
+    ];
+
+    readonly int _feedersBuff = ModContent.BuffType<ForceFed>();
 
     readonly HashSet<int> _feeders =
     [
@@ -124,7 +168,23 @@ public partial class BuffHitPlayer
         NPCID.AncientLight,
         NPCID.AncientDoom,
         NPCID.BurningSphere,
-        NPCID.PresentMimic,
+        NPCID.PresentMimic
+    ];
+
+    readonly HashSet<int> _feederProjectiles =
+    [
+        ProjectileID.DemonSickle,
+        ProjectileID.DemonScythe
+    ];
+
+    readonly int _empressBuff = ModContent.BuffType<PrismaticStuffing>();
+
+    readonly HashSet<int> _empressOfLight =
+    [
+        ProjectileID.HallowBossRainbowStreak,
+        ProjectileID.HallowBossLastingRainbow,
+        ProjectileID.FairyQueenLance,
+        ProjectileID.FairyQueenSunDance
     ];
 
     void AddModNPCs()

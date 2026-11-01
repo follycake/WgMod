@@ -20,19 +20,42 @@ public class BottomlessAppetite : ModItem
 
         Item.accessory = true;
         Item.rare = ItemRarityID.Red;
-        Item.value = Item.buyPrice(gold: 1);
+        Item.value = Item.buyPrice(gold: 6);
     }
 
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
-        if (!player.TryGetModPlayer(out WgPlayer wg))
-            return;
-        if (!player.TryGetModPlayer(out BottomlessAppetitePlayer ba))
+        if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out BottomlessAppetitePlayer ba))
             return;
         float immobility = wg.Weight.ClampedImmobility;
-        ba._active = true;
-        ba._range = (int)float.Lerp(2f, 9999f, immobility);
-        ba._hidden = hideVisual;
+
+        ba.Active = true;
+        ba.Range = (int)float.Lerp(2f, 9999f, immobility);
+        ba.Hidden = hideVisual;
+    }
+
+    public override void UpdateEquip(Player player)
+    {
+        if (!player.TryGetModPlayer(out BottomlessAppetitePlayer bp))
+            return;
+
+        bp.Active = true;
+
+        if (player.whoAmI == Main.myPlayer && !player.dead)
+        {
+            for (int i = 0; i < 200; i++)
+            {
+                NPC npc = Main.npc[i];
+
+                if (npc.active && !npc.friendly && npc.damage > 0 && !npc.dontTakeDamage && !npc.buffImmune[ModContent.BuffType<PillarWrath>()] && player.CanNPCBeHitByPlayerOrPlayerProjectile(npc) && Vector2.Distance(player.Center, npc.Center) <= bp.Radius + 32f)
+                    npc.AddBuff(ModContent.BuffType<PillarWrath>(), 2 * 60);
+            }
+        }
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 
     public override void AddRecipes()
@@ -45,46 +68,20 @@ public class BottomlessAppetite : ModItem
             .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
-
-    public override void UpdateEquip(Player player)
-    {
-        if (!player.TryGetModPlayer(out BottomlessAppetitePlayer bp))
-            return;
-
-        bp._active = true;
-
-        if (player.whoAmI == Main.myPlayer && !player.dead)
-        {
-            for (int i = 0; i < 200; i++)
-            {
-                NPC npc = Main.npc[i];
-                if (
-                    npc.active
-                    && !npc.friendly
-                    && npc.damage > 0
-                    && !npc.dontTakeDamage
-                    && !npc.buffImmune[ModContent.BuffType<PillarWrath>()]
-                    && player.CanNPCBeHitByPlayerOrPlayerProjectile(npc)
-                    && Vector2.Distance(player.Center, npc.Center) <= bp._radius + 32f
-                )
-                {
-                    npc.AddBuff(ModContent.BuffType<PillarWrath>(), 2 * 60);
-                }
-            }
-        }
-    }
 }
 
 public class BottomlessAppetitePlayer : ModPlayer
 {
-    internal bool _active;
-    internal bool _hidden;
-    internal int _range;
-    public float _radius;
+    public bool Active;
+    public bool Hidden;
+
+    public float Radius;
+
+    public int Range;
 
     public override void ResetEffects()
     {
-        _active = false;
+        Active = false;
     }
 
     public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
@@ -103,11 +100,11 @@ public class BottomlessAppetitePlayer : ModPlayer
         float playerHeight = Player.height;
 
         if (playerWidth > playerHeight)
-            _radius = playerWidth * 1.5f;
+            Radius = playerWidth * 1.5f;
         else
-            _radius = playerHeight * 1.5f;
+            Radius = playerHeight * 1.5f;
 
-        if (_active == true && _hidden == false)
+        if (Active == true && Hidden == false)
         {
             for (int i = 0; i < dustRate; i++)
             {
@@ -117,7 +114,7 @@ public class BottomlessAppetitePlayer : ModPlayer
                 Vector2 dir2 = new(MathF.Cos(angle + spin), MathF.Sin(angle + spin));
 
                 int dust = Dust.NewDust(
-                    new Vector2(playerX + dir.X * _radius, playerY + dir.Y * _radius),
+                    new Vector2(playerX + dir.X * Radius, playerY + dir.Y * Radius),
                     4,
                     4,
                     DustID.t_Slime,
@@ -128,7 +125,7 @@ public class BottomlessAppetitePlayer : ModPlayer
                     dustSize
                 );
                 int dust2 = Dust.NewDust(
-                    new Vector2(playerX + dir.X * _radius, playerY + dir.Y * _radius),
+                    new Vector2(playerX + dir.X * Radius, playerY + dir.Y * Radius),
                     4,
                     4,
                     DustID.SolarFlare,
@@ -139,7 +136,7 @@ public class BottomlessAppetitePlayer : ModPlayer
                     dustSize
                 );
                 int dust3 = Dust.NewDust(
-                    new Vector2(playerX + dir.X * _radius, playerY + dir.Y * _radius),
+                    new Vector2(playerX + dir.X * Radius, playerY + dir.Y * Radius),
                     4,
                     4,
                     DustID.SolarFlare,
@@ -165,7 +162,7 @@ public class BottomlessAppetiteItem : GlobalItem
     {
         if (!player.TryGetModPlayer(out BottomlessAppetitePlayer ba))
             return;
-        if (ba._active && item.type != ItemID.FallenStar)
-            grabRange *= ba._range;
+        if (ba.Active && item.type != ItemID.FallenStar)
+            grabRange *= ba.Range;
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -23,8 +24,8 @@ public class HellsBeesBuff : ModBuff
 [Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
 public class HellishBee : ModProjectile
 {
-    public const int StageCount = 4;
-    public const int MaxStage = StageCount - 1;
+    const int StageCount = 4;
+    const int MaxStage = StageCount - 1;
 
     int _weightProgress;
     int _weightStage;
@@ -42,7 +43,7 @@ public class HellishBee : ModProjectile
         ProjectileID.Sets.CultistIsResistantTo[Type] = true;
     }
 
-    public sealed override void SetDefaults()
+    public override void SetDefaults()
     {
         Projectile.width = 34;
         Projectile.height = 40;
@@ -69,6 +70,7 @@ public class HellishBee : ModProjectile
             {
                 _weightProgress = 0;
                 _weightStage++;
+                Projectile.netUpdate = true;
 
                 SoundEngine.PlaySound(WgSounds.Belly, Projectile.Center);
             }
@@ -95,28 +97,18 @@ public class HellishBee : ModProjectile
     public override void AI()
     {
         int dustRate = 5;
+
         if (Main.rand.NextBool(dustRate) && _weightStage == MaxStage)
-        {
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.t_Honey, 0f, 0.5f, 100, new Color(151, 93, 15), 0.7f);
-        }
 
         Player owner = Main.player[Projectile.owner];
+
         if (!CheckActive(owner))
             return;
+
         GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
-        SearchForTargets(
-            owner,
-            out bool foundTarget,
-            out float distanceFromTarget,
-            out Vector2 targetCenter
-        );
-        Movement(
-            foundTarget,
-            distanceFromTarget,
-            targetCenter,
-            distanceToIdlePosition,
-            vectorToIdlePosition
-        );
+        SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
+        Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
         Visuals();
     }
 
@@ -132,11 +124,7 @@ public class HellishBee : ModProjectile
         return true;
     }
 
-    void GeneralBehavior(
-        Player owner,
-        out Vector2 vectorToIdlePosition,
-        out float distanceToIdlePosition
-    )
+    void GeneralBehavior(Player owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition)
     {
         Vector2 idlePosition = owner.Center;
         idlePosition.Y -= 48f;
@@ -155,14 +143,14 @@ public class HellishBee : ModProjectile
         }
 
         float overlapVelocity = 0.04f;
-        foreach (var other in Main.ActiveProjectiles)
+        foreach (Projectile other in Main.ActiveProjectiles)
         {
             if (
                 other.whoAmI != Projectile.whoAmI
                 && other.owner == Projectile.owner
                 && Math.Abs(Projectile.position.X - other.position.X)
-                    + Math.Abs(Projectile.position.Y - other.position.Y)
-                    < Projectile.width
+                + Math.Abs(Projectile.position.Y - other.position.Y)
+                < Projectile.width
             )
             {
                 if (Projectile.position.X < other.position.X)
@@ -178,12 +166,7 @@ public class HellishBee : ModProjectile
         }
     }
 
-    void SearchForTargets(
-        Player owner,
-        out bool foundTarget,
-        out float distanceFromTarget,
-        out Vector2 targetCenter
-    )
+    void SearchForTargets(Player owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter)
     {
         distanceFromTarget = 700f;
         targetCenter = Projectile.position;
@@ -204,7 +187,7 @@ public class HellishBee : ModProjectile
 
         if (!foundTarget)
         {
-            foreach (var npc in Main.ActiveNPCs)
+            foreach (NPC npc in Main.ActiveNPCs)
             {
                 if (npc.CanBeChasedBy())
                 {
@@ -221,7 +204,7 @@ public class HellishBee : ModProjectile
                     );
                     bool closeThroughWall = between < 100f;
 
-                    if (((closest && inRange) || !foundTarget) && (lineOfSight || closeThroughWall))
+                    if ((closest && inRange || !foundTarget) && (lineOfSight || closeThroughWall))
                     {
                         distanceFromTarget = between;
                         targetCenter = npc.Center;
@@ -230,16 +213,11 @@ public class HellishBee : ModProjectile
                 }
             }
         }
+
         Projectile.friendly = foundTarget;
     }
 
-    void Movement(
-        bool foundTarget,
-        float distanceFromTarget,
-        Vector2 targetCenter,
-        float distanceToIdlePosition,
-        Vector2 vectorToIdlePosition
-    )
+    void Movement(bool foundTarget, float distanceFromTarget, Vector2 targetCenter, float distanceToIdlePosition, Vector2 vectorToIdlePosition)
     {
         _speedModifier = float.Lerp(0.5f, 1f, _weightStage / (float)MaxStage);
 
@@ -295,6 +273,7 @@ public class HellishBee : ModProjectile
             Projectile.spriteDirection = 1;
 
         const int flyFrameSpeed = 5;
+
         Projectile.frameCounter++;
 
         if (Projectile.frameCounter >= flyFrameSpeed)
@@ -307,6 +286,19 @@ public class HellishBee : ModProjectile
         }
 
         Lighting.AddLight(Projectile.Center, Color.White.ToVector3() * 0.78f);
+    }
+
+    public override void SendExtraAI(BinaryWriter writer)
+    {
+        writer.Write((byte)_weightStage);
+    }
+
+    public override void ReceiveExtraAI(BinaryReader reader)
+    {
+        byte stage = reader.ReadByte();
+        if (_weightStage != stage)
+            SoundEngine.PlaySound(WgSounds.Belly, Projectile.Center);
+        _weightStage = stage;
     }
 }
 

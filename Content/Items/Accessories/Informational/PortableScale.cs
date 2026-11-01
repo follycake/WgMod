@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Content.Items.Placeable;
 
 namespace WgMod.Content.Items.Accessories.Informational;
 
@@ -27,11 +28,22 @@ public class PortableScale : ModItem
         player.Wg()._displayWeight = true;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()
             .AddRecipeGroup(RecipeGroupID.PressurePlate)
             .AddRecipeGroup(RecipeGroupID.IronBar, 10)
+            .AddIngredient(ItemID.Wire, 4)
+            .AddTile(TileID.Anvils)
+            .Register();
+
+        CreateRecipe()
+            .AddIngredient<Scale>()
             .AddIngredient(ItemID.Wire, 4)
             .AddTile(TileID.Anvils)
             .Register();

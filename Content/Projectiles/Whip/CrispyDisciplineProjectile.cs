@@ -19,6 +19,7 @@ namespace WgMod.Content.Projectiles.Whip;
 public class CrispyDisciplineProjectile : ModProjectile
 {
     public int _beeDamage;
+
     WgStat _damage = new(25, 30);
     WgStat _knockback = new(4, 8);
 
@@ -52,14 +53,15 @@ public class CrispyDisciplineProjectile : ModProjectile
     public override void AI()
     {
         Player owner = Main.player[Projectile.owner];
-        Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
+        Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
         Projectile.Center = Main.GetPlayerArmPosition(Projectile) + Projectile.velocity * Timer;
         Projectile.spriteDirection = Projectile.velocity.X >= 0f ? 1 : -1;
 
         Timer++;
 
         float swingTime = owner.itemAnimationMax * Projectile.MaxUpdates;
+
         if (Timer >= swingTime || owner.itemAnimation <= 0)
         {
             Projectile.Kill();
@@ -67,6 +69,7 @@ public class CrispyDisciplineProjectile : ModProjectile
         }
 
         owner.heldProj = Projectile.whoAmI;
+
         if (Timer == swingTime / 2)
         {
             List<Vector2> points = Projectile.WhipPointsForCollision;
@@ -75,12 +78,8 @@ public class CrispyDisciplineProjectile : ModProjectile
         }
 
         float swingProgress = Timer / swingTime;
-        if (
-            Utils.GetLerpValue(0.1f, 0.7f, swingProgress, clamped: true)
-                * Utils.GetLerpValue(0.9f, 0.7f, swingProgress, clamped: true)
-                > 0.5f
-            && !Main.rand.NextBool(3)
-        )
+
+        if (Utils.GetLerpValue(0.1f, 0.7f, swingProgress, true) * Utils.GetLerpValue(0.9f, 0.7f, swingProgress, true) > 0.5f && !Main.rand.NextBool(3))
         {
             List<Vector2> points = Projectile.WhipPointsForCollision;
             points.Clear();
@@ -185,10 +184,12 @@ public class CrispyDisciplineProjectile : ModProjectile
     static void DrawLine(List<Vector2> list)
     {
         Texture2D texture = TextureAssets.FishingLine.Value;
-        Rectangle frame = texture.Frame();
-        Vector2 origin = new(frame.Width / 2, 2);
 
+        Rectangle frame = texture.Frame();
+
+        Vector2 origin = new(frame.Width / 2, 2);
         Vector2 pos = list[0];
+
         for (int i = 0; i < list.Count - 1; i++)
         {
             Vector2 element = list[i];
@@ -216,13 +217,15 @@ public class CrispyDisciplineProjectile : ModProjectile
     public override bool PreDraw(ref Color lightColor)
     {
         List<Vector2> list = [];
+
         Projectile.FillWhipControlPoints(Projectile, list);
 
         DrawLine(list);
 
-        SpriteEffects flip =
-            Projectile.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+        SpriteEffects flip = Projectile.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
         Texture2D texture = TextureAssets.Projectile[Type].Value;
+
         Vector2 pos = list[0];
 
         for (int i = 0; i < list.Count - 1; i++)
@@ -247,7 +250,7 @@ public class CrispyDisciplineProjectile : ModProjectile
                     0.5f,
                     1.5f,
                     Utils.GetLerpValue(0.1f, 0.7f, t, true)
-                        * Utils.GetLerpValue(0.9f, 0.7f, t, true)
+                    * Utils.GetLerpValue(0.9f, 0.7f, t, true)
                 );
             }
             else if (i == list.Count - 3)
@@ -265,22 +268,14 @@ public class CrispyDisciplineProjectile : ModProjectile
             Vector2 diff = list[i + 1] - element;
 
             float rotation = diff.ToRotation() - MathHelper.PiOver2;
+
             Color color = Lighting.GetColor(element.ToTileCoordinates());
 
-            Main.EntitySpriteDraw(
-                texture,
-                pos - Main.screenPosition,
-                frame,
-                color,
-                rotation,
-                origin,
-                scale,
-                flip,
-                0
-            );
+            Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
 
             pos += diff;
         }
+
         return false;
     }
 }
@@ -289,12 +284,8 @@ public class CirspyDisciplinePlayer : ModPlayer
 {
     public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
     {
-        if (
-            proj.type != ModContent.ProjectileType<CrispyDisciplineProjectile>()
-            || !Player.TryGetModPlayer(out WgPlayer wg)
-        )
+        if (proj.type != ModContent.ProjectileType<CrispyDisciplineProjectile>() || !Player.TryGetModPlayer(out WgPlayer wg))
             return;
-
-        wg.SetWeight(wg.Weight + hurtInfo.Damage / 6);
+        wg.AddWeight(hurtInfo.Damage / 6);
     }
 }

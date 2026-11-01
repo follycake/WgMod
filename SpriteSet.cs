@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 using WgMod.Common;
+using WgMod.Common.Players;
+using WgMod.Common.Systems;
 
 namespace WgMod;
 
@@ -15,37 +18,115 @@ public class SpriteSet
 {
     public const string BasePath = "SpriteSets";
     public const string JsonFileName = "Set.json";
-    public const string DefaultSet = "Folly";
+    public const string DefaultSet = "Folly2";
 
+    public static SpriteSet Fallback { get; private set; }
     public static SpriteSet Current { get; private set; }
     public static string[] FoundSets { get; private set; }
 
     public string Author = "Unknown";
+    public float DrawOffsetX;
+    public float DrawOffsetY;
     public int ArmCount;
     public Layer[] Layers = [];
+    public Layer[] TopLayers = [];
+    public Layer[] HeadLayers = [];
     public Dictionary<int, Stage> Stages = [];
 
+    [JsonIgnore] public string Name { get; private set; }
     [JsonIgnore] public int FrameCount { get; private set; }
     [JsonIgnore] public Layer[] ArmLayers { get; private set; }
     [JsonIgnore] public Layer[] ArmorLayers { get; private set; }
+    [JsonIgnore] public Layer[] PhysicsLayers { get; private set; }
 
     [JsonIgnore] public bool UVArmor => ArmorLayers.Length > 0;
     [JsonIgnore] public int ArmorAltasWidth { get; private set; }
     [JsonIgnore] public int ArmorAltasHeight { get; private set; }
 
-    public Stage GetStage(int stage)
+    public void Unload()
     {
-        if (Stages.TryGetValue(stage, out Stage result))
+        foreach (Layer layer in Layers)
+            layer.Unload();
+        foreach (Layer layer in TopLayers)
+            layer.Unload();
+        foreach (Layer layer in HeadLayers)
+            layer.Unload();
+        foreach (Layer layer in ArmLayers)
+            layer.Unload();
+        Layers = null;
+        TopLayers = null;
+        HeadLayers = null;
+        ArmLayers = null;
+        ArmorLayers = null;
+        PhysicsLayers = null;
+        Stages = null;
+    }
+
+    public static Stage GetStage(int stage)
+    {
+        return GetStage(stage, out _);
+    }
+
+    public static Stage GetStage(int stage, out SpriteSet set)
+    {
+        if (Current.Stages.TryGetValue(stage, out Stage result))
+        {
+            set = Current;
+            return result;
+        }
+        set = Fallback;
+        if (Fallback.Stages.TryGetValue(stage, out result))
             return result;
         return Stage.Fallback;
     }
 
+    public static SpriteSet GetSet(int stage)
+    {
+        if (Current.Stages.ContainsKey(stage))
+            return Current;
+        return Fallback;
+    }
+
+    public static Vector2 GetOffset(SpriteSet set, Stage stageData, int direction, float gravDir)
+    {
+        return new Vector2(set.DrawOffsetX * direction + stageData.OffsetX * direction, set.DrawOffsetY * gravDir);
+    }
+
     public static void Initialize(Mod mod, string name)
     {
+        Main.RunOnMainThread(() => WgArmorLUTs.Initialize(mod));
         FoundSets = [.. FindSets(mod)];
+        Fallback = Load(mod, DefaultSet);
+        SetCurrent(mod, name);
+    }
+
+    public static void SetCurrent(Mod mod, string name)
+    {
+        if (Fallback == null)
+            return;
         if (!Exists(mod, name))
             name = DefaultSet;
-        Current = Load(mod, name);
+        if (Current == null || Current.Name != name)
+        {
+            if (Current != Fallback)
+                Current?.Unload();
+            if (name == DefaultSet)
+                Current = Fallback;
+            else
+                Current = Load(mod, name);
+            if (!Main.gameMenu)
+            {
+                foreach (Player player in Main.player)
+                {
+                    if (!player.active || !player.TryGetModPlayer(out WgPlayer wg))
+                        continue;
+                    wg.OnSwitchSpriteSet();
+                    wg.PreUpdateVisuals();
+                    wg.PostUpdateVisuals();
+                }
+                WgMannequinSystem.Instance.PostUpdateEverything();
+            }
+        }
     }
 
     public static IEnumerable<string> FindSets(Mod mod)
@@ -70,20 +151,45 @@ public class SpriteSet
     {
         string path = Path.Combine(BasePath, name);
         SpriteSet set = JsonConvert.DeserializeObject<SpriteSet>(GetFileText(mod, Path.Combine(path, JsonFileName)));
+        set.Name = name;
 
         List<Layer> armorLayers = [];
+        List<Layer> physicsLayers = [];
         set.ArmorAltasWidth = 0;
-        void LoadTextures(Layer layer)
+
+        void LoadTextures(Layer layer, int lookup = 0)
         {
+            if (layer.Physics)
+            {
+                layer.PhysicsIndex = physicsLayers.Count;
+                physicsLayers.Add(layer);
+            }
+
             layer.Texture = mod.Assets.Request<Texture2D>(Path.Combine(path, layer.Name));
             layer.ArmorAtlasX = set.ArmorAltasWidth;
 
             string armorName = Path.Combine(path, layer.Name + "_Armor");
-            if (mod.HasAsset(armorName))
+            bool hasArmor = mod.HasAsset(armorName);
+            bool simpleArmor = true;
+            if (!hasArmor)
+            {
+                armorName = Path.Combine(path, layer.Name + "_ExArmor");
+                hasArmor = mod.HasAsset(armorName);
+                simpleArmor = false;
+            }
+            if (hasArmor)
             {
                 layer.ArmorTexture = mod.Assets.Request<Texture2D>(armorName, AssetRequestMode.ImmediateLoad).Value;
-                if (layer.SimpleArmor)
-                    Main.RunOnMainThread(() => WgArmor.ConvertSimple(layer.ArmorTexture));
+                if (simpleArmor)
+                {
+                    if (layer.LegArmor)
+                        lookup = 2;
+                    Main.RunOnMainThread(() =>
+                    {
+                        layer.ArmorTexture = WgArmorLUTs.ConvertSimple(lookup, layer.ArmorTexture);
+                        layer.OwnsArmorTexture = true;
+                    });
+                }
                 set.ArmorAltasWidth += layer.ArmorTexture.Width;
                 set.ArmorAltasHeight = Math.Max(set.ArmorAltasHeight, layer.ArmorTexture.Height);
                 armorLayers.Add(layer);
@@ -93,11 +199,17 @@ public class SpriteSet
         foreach (Layer layer in set.Layers)
             LoadTextures(layer);
 
+        foreach (Layer layer in set.TopLayers)
+            LoadTextures(layer);
+
+        foreach (Layer layer in set.HeadLayers)
+            LoadTextures(layer);
+
         set.ArmLayers = new Layer[set.ArmCount];
         for (int i = 0; i < set.ArmLayers.Length; i++)
         {
-            Layer arm = new() { Name = "Arms" + i, Type = LayerType.Arms, SimpleArmor = false };
-            LoadTextures(arm);
+            Layer arm = new() { Name = "Arms" + i, Type = LayerType.Arms };
+            LoadTextures(arm, 1);
             set.ArmLayers[i] = arm;
         }
 
@@ -107,6 +219,7 @@ public class SpriteSet
         set.FrameCount = frame;
 
         set.ArmorLayers = [.. armorLayers];
+        set.PhysicsLayers = [.. physicsLayers];
         return set;
     }
 
@@ -119,7 +232,8 @@ public class SpriteSet
 
     public enum LayerType
     {
-        Belly = 0,
+        Fixed = 0,
+        Belly,
         Legs,
         Breasts,
         Arms
@@ -130,7 +244,9 @@ public class SpriteSet
         Show = 0,
         Hide,
         FemaleOnly,
-        MaleOnly
+        MaleOnly,
+        WhenSitting,
+        WhenStanding
     }
 
     public class Layer
@@ -138,13 +254,35 @@ public class SpriteSet
         public string Name;
         public LayerType Type;
         public RenderType Render;
-        public bool SimpleArmor = true;
+        public bool LegArmor;
+        public bool Physics;
 
-        [JsonIgnore] public Asset<Texture2D> Texture;
-        [JsonIgnore] public Texture2D ArmorTexture;
-        [JsonIgnore] public int ArmorAtlasX;
+        [JsonIgnore]
+        public Asset<Texture2D> Texture;
+        [JsonIgnore]
+        public Texture2D ArmorTexture;
+        [JsonIgnore]
+        public bool OwnsArmorTexture;
+        [JsonIgnore]
+        public int ArmorAtlasX;
+        [JsonIgnore]
+        public int PhysicsIndex;
 
         [JsonIgnore] public bool UVArmor => ArmorTexture != null;
+
+        public void Unload()
+        {
+            if (OwnsArmorTexture)
+                ArmorTexture?.Dispose();
+            Texture = null;
+            ArmorTexture = null;
+            OwnsArmorTexture = false;
+        }
+
+        public Rectangle Frame(SpriteSet set, Stage stage)
+        {
+            return Texture.Frame(1, set.FrameCount, 0, stage.Frame);
+        }
 
         public bool ShouldRender(Player player) => Render switch
         {
@@ -152,8 +290,54 @@ public class SpriteSet
             RenderType.Hide => false,
             RenderType.FemaleOnly => !player.Male,
             RenderType.MaleOnly => player.Male,
-            _ => true,
+            RenderType.WhenSitting => player.Wg().IsSittingVisual(),
+            RenderType.WhenStanding => !player.Wg().IsSittingVisual(),
+            _ => true
         };
+
+        public Vector2 Squish(float squish)
+        {
+            switch (Type)
+            {
+                case LayerType.Belly:
+                    return new Vector2(1f / squish, 1f * squish);
+                case LayerType.Legs:
+                case LayerType.Breasts:
+                    return new Vector2(1f * squish, 1f / squish);
+                default:
+                    return Vector2.One;
+            }
+        }
+
+        public void Animate(WgPlayer wg, Vector2 position, float bellySquish, float baseSquish, out Vector2 pos, out Vector2 scale)
+        {
+            switch (Type)
+            {
+                case LayerType.Belly:
+                    pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, wg.Player.gravDir);
+                    scale = Squish(bellySquish);
+                    break;
+                case LayerType.Legs:
+                    pos = PrepPos(position, MathF.Round(wg._legOffsetX / 2f) * 2f, MathF.Round(wg._legOffsetY / 2f) * 2f, wg.Player.gravDir);
+                    scale = Squish(baseSquish);
+                    break;
+                case LayerType.Breasts:
+                    pos = PrepPos(position, 0f, MathF.Round(wg._bellyOffset / 2f) * 2f, wg.Player.gravDir);
+                    scale = Squish(baseSquish);
+                    break;
+                default:
+                    pos = PrepPos(position, 0f, 0f, wg.Player.gravDir);
+                    scale = Vector2.One;
+                    break;
+            }
+        }
+
+        static Vector2 PrepPos(Vector2 pos, float xOffset, float yOffset, float gravDir)
+        {
+            pos.X += xOffset;
+            pos.Y += yOffset * gravDir;
+            return pos.Floor();
+        }
     }
 
     public class Stage
@@ -164,7 +348,9 @@ public class SpriteSet
         public bool OnTop;
         public float OffsetX;
         public float OffsetY;
+        public bool ArmBelowWhenWalking;
 
-        [JsonIgnore] public int Frame;
+        [JsonIgnore]
+        public int Frame;
     }
 }

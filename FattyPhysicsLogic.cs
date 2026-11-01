@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common.Configs;
 
 namespace WgMod;
 
@@ -60,9 +61,7 @@ public static class FattyPhysicsLogic
             }
         }
         else if (sizeComparison > 1.15) // push away
-        {
             ActuallyPush(fatty, target, sizeComparison);
-        }
         else if (sizeComparison > 0.95)
         {
             ActuallyPush(fatty, target, 1);
@@ -76,23 +75,19 @@ public static class FattyPhysicsLogic
             return;
         foreach (Player plr in Main.ActivePlayers)
         {
-            if (!plr.active)
+            if (!plr.active || plr.dead)
                 continue;
             if (plr.Hitbox.Intersects(entity.Hitbox))
-            {
                 DoPush(entity, plr);
-            }
         }
         foreach (NPC npc in Main.ActiveNPCs)
         {
             if (!npc.active)
                 continue;
-            if (npc.type == NPCID.TargetDummy)
+            if (npc.type == NPCID.TargetDummy || npc.type == NPCID.DD2EterniaCrystal || npc.knockBackResist == 0f)
                 continue;
             if (npc.Hitbox.Intersects(entity.Hitbox))
-            {
                 DoPush(entity, npc);
-            }
         }
     }
 }
@@ -101,7 +96,9 @@ public class FatPushPlayer : ModPlayer
 {
     public override void PostUpdateMiscEffects()
     {
-        if (Player.Wg().Weight.GetStage() > 4)
+        if (WgServerConfig.Instance.DisablePlayerPushing)
+            return;
+        if (Player.Wg().Weight.GetStage() >= WeightStage.MorbidlyObese)
             Player.PushAwayFromMe();
     }
 }

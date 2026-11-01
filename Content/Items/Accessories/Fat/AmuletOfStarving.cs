@@ -10,6 +10,8 @@ namespace WgMod.Content.Items.Accessories.Fat;
 [Credit(ProjectRole.Artist, Contributor.trilophyte)]
 public class AmuletOfStarving : ModItem
 {
+    const float WeightLossRate = 10f;
+
     public override void SetDefaults()
     {
         Item.width = 24;
@@ -22,52 +24,36 @@ public class AmuletOfStarving : ModItem
 
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
-        if (!player.TryGetModPlayer(out WgPlayer wg))
+        if (!player.TryGetModPlayer(out WgPlayer wg) || !player.TryGetModPlayer(out AmuletOfStarvingPlayer wp))
             return;
-        if (!player.TryGetModPlayer(out AmuletOfStarvingPlayer wp))
-            return;
-        wg.WeightLossRate += 5f;
-        wp._active = true;
-        wp._hidden = hideVisual;
+        wg.MovementWeightLossRate += WeightLossRate;
+
+        wp.Active = true;
+        wp.Hidden = hideVisual;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 }
 
 public class AmuletOfStarvingPlayer : ModPlayer
 {
-    internal bool _active;
-    internal bool _hidden;
-    internal int _dustRate;
+    public bool Active;
+    public bool Hidden;
 
     public override void ResetEffects()
     {
-        _active = false;
-        _hidden = false;
+        Active = false;
+        Hidden = false;
     }
 
-    public override void DrawEffects(
-        PlayerDrawSet drawInfo,
-        ref float r,
-        ref float g,
-        ref float b,
-        ref float a,
-        ref bool fullBright
-    )
+    public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
     {
-        _dustRate = 30;
+        if (!Main.rand.NextBool(30) || !Active == true || !Hidden == false)
+            return;
 
-        if (Main.rand.NextBool(_dustRate) && _active == true && _hidden == false)
-        {
-            Dust.NewDust(
-                Player.position,
-                Player.width,
-                Player.height - 1,
-                DustID.Shadowflame,
-                0f,
-                0f,
-                100,
-                default,
-                0.7f
-            );
-        }
+        Dust.NewDust(Player.position, Player.width, Player.height - 1, DustID.Shadowflame, 0f, 0f, 100, default, 0.7f);
     }
 }

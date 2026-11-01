@@ -1,17 +1,31 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common;
 using WgMod.Common.Players;
 
 namespace WgMod;
 
 public static class Utility
 {
-    // TODO: Decide if we're gonna use this or not...
-    public static WgPlayer Wg(this Player player)
+    /// <summary> Gets WgPlayer. </summary>
+    public static WgPlayer Wg(this Player player) => player.GetModPlayer<WgPlayer>();
+
+    /// <summary> Gets StatPlayer. </summary>
+    public static StatPlayer ExtraStats(this Player player) => player.GetModPlayer<StatPlayer>();
+
+    public static bool ReplaceDefense(this List<TooltipLine> tooltips, string defense)
     {
-        return player.GetModPlayer<WgPlayer>();
+        TooltipLine line = tooltips.Find(t => t.Name == "Defense");
+        if (line == null)
+            return false;
+        line.Text = defense + Lang.tip[25].Value;
+        return true;
     }
 
     public static bool FormatLines(this List<TooltipLine> tooltips, params object[] args)
@@ -125,4 +139,85 @@ public static class Utility
     }
 
     public static float GetJumpSpeedIncrease(float speed) => speed / 6.51f;
+
+    public static ModPacket GetPacket(this Mod mod, WgMod.MessageType type, int capacity = 256)
+    {
+        ModPacket packet = mod.GetPacket(capacity);
+        packet.Write((byte)type);
+        return packet;
+    }
+
+    public static bool ShouldHidePlayer(this PlayerDrawSet drawInfo)
+    {
+        return drawInfo.drawPlayer.invis || drawInfo.drawPlayer.dead || drawInfo.hideEntirePlayer;
+    }
+
+    public static void TouchLava(this Player player)
+    {
+        if (player.lavaWet)
+            return;
+        if (player.lavaTime > 0)
+            player.lavaTime--; // Account for the lavaTime increase when not touching lava
+        if (!player.lavaImmune && player.whoAmI == Main.myPlayer && player.hurtCooldowns[4] <= 0)
+        {
+            if (player.lavaTime > 0)
+                player.lavaTime--;
+            else
+            {
+                int num87 = 80;
+                int num88 = 420;
+                if (Main.remixWorld)
+                {
+                    num87 = 200;
+                    num88 = 630;
+                }
+                if (!player.ashWoodBonus || !player.lavaRose)
+                {
+                    if (player.ashWoodBonus)
+                    {
+                        if (Main.remixWorld)
+                            num87 = 145;
+                        num87 /= 2;
+                        num88 -= 210;
+                    }
+                    if (player.lavaRose)
+                    {
+                        num87 -= 45;
+                        num88 -= 210;
+                    }
+                    if (num87 > 0)
+                        player.Hurt(PlayerDeathReason.ByOther(2), num87, 0, false, false, 4);
+                    if (num88 > 0)
+                        player.AddBuff(BuffID.OnFire, num88);
+                }
+            }
+            player.lavaWet = true;
+        }
+    }
+
+    static readonly VertexPositionColor[] _lineVertexData = new VertexPositionColor[2];
+
+    public static void DrawLine(this GraphicsDevice device, Vector2 start, Vector2 end, Color color)
+    {
+        _lineVertexData[0] = new VertexPositionColor(new Vector3(start, 0f), color);
+        _lineVertexData[1] = new VertexPositionColor(new Vector3(end, 0f), color);
+        device.Textures[0] = Shaders.White.Value;
+        device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertexData, 0, 1);
+    }
+
+    // https://github.com/godotengine/godot/blob/master/core/math/math_funcs.h
+    public static float AngleDifference(float from, float to)
+    {
+        float difference = (to - from) % MathF.Tau;
+        return 2f * difference % MathF.Tau - difference;
+    }
+
+    public static void RegisterKill<T>() where T : ModNPC
+    {
+        T instance = ModContent.GetInstance<T>();
+        instance.NPC.netID = instance.Type;
+        Main.BestiaryTracker.Kills.RegisterKill(instance.NPC);
+    }
+
+    public static bool Grounded(this Player player) => player.grappling[0] == -1 && !player.tongued && !player.shimmering && player.velocity.Y == 0f;
 }

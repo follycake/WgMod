@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -8,20 +9,31 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Armor.VacuumArmor;
 
-[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [AutoloadEquip(EquipType.Head)]
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class VacuumHelmet : ModItem
 {
     public const float SetBonusWeightLoss = 0.1f;
 
+    static int _glowMask;
+
     WgStat _critChance = new(2f, 8f);
     WgStat _health = new(10, 100);
-    WgStat _defense = new(0, 12 * 2);
+    WgStat _defense = new(16, 48);
     WgStat _resist = new(0f, 0.02f);
     WgStat _movePenalty = new(1.2f, 1.05f);
-
     WgStat _setBonusRegen = new(0, 20);
     WgStat _setBonusHealth = new(0f, 1f);
+
+    public static LocalizedText SetBonusText { get; private set; }
+
+    public override void SetStaticDefaults()
+    {
+        _glowMask = GlowMaskUtility.AddGlowMask(Texture + "_Head_Glow");
+
+        SetBonusText = this.GetLocalization("SetBonus");
+    }
 
     public override void SetDefaults()
     {
@@ -29,15 +41,36 @@ public class VacuumHelmet : ModItem
         Item.height = 18;
         Item.value = Item.sellPrice(gold: 2);
         Item.rare = ItemRarityID.Red;
-        Item.defense = 36 / 2;
+        Item.defense = 18;
     }
 
-    public override void SetStaticDefaults()
+    public override void UpdateEquip(Player player)
     {
-        SetBonusText = this.GetLocalization("SetBonus");
-    }
+        if (!player.TryGetModPlayer(out WgPlayer wg))
+            return;
+        float immobility = wg.Weight.ClampedImmobility;
 
-    public static LocalizedText SetBonusText { get; private set; }
+        _critChance.Lerp(immobility);
+        _health.Lerp(immobility);
+        _defense.Lerp(immobility);
+        _resist.Lerp(immobility);
+        _movePenalty.Lerp(immobility);
+
+        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
+
+        player.GetCritChance(DamageClass.Generic) += _critChance;
+        player.statLifeMax2 += _health;
+        Item.defense = _defense;
+        player.endurance += _resist;
+        wg.MovementPenalty *= _movePenalty;
+
+        player.aggro += 5;
+
+        Vector3 light = new(130f / 255f, 90f / 255f, 190f / 255f);
+
+        if (!Main.dedServ)
+            Lighting.AddLight(player.Center, light);
+    }
 
     public override bool IsArmorSet(Item head, Item body, Item legs)
     {
@@ -49,40 +82,27 @@ public class VacuumHelmet : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-
         float immobility = wg.Weight.ClampedImmobility;
+
         _setBonusRegen.Lerp(immobility);
         _setBonusHealth.Lerp(immobility);
 
         player.lifeRegen += _setBonusRegen;
         player.statLifeMax2 = (int)Math.Round(player.statLifeMax2 * (1f + _setBonusHealth));
-        wg.WeightLossRate *= SetBonusWeightLoss;
+        wg.MovementWeightLossRate *= SetBonusWeightLoss;
+        wg.PreventImmobility = true;
 
         player.setBonus = SetBonusText.Format(_setBonusRegen, _setBonusHealth.Percent(), (1f - SetBonusWeightLoss).Percent());
     }
 
-    public override void UpdateEquip(Player player)
+    public override void ArmorSetShadows(Player player)
     {
-        if (!player.TryGetModPlayer(out WgPlayer wg))
-            return;
+        player.armorEffectDrawOutlines = true;
+    }
 
-        float immobility = wg.Weight.ClampedImmobility;
-        _critChance.Lerp(immobility);
-
-        _health.Lerp(immobility);
-        _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
-
-        _defense.Lerp(immobility);
-        _resist.Lerp(immobility);
-        _movePenalty.Lerp(immobility);
-
-        player.GetCritChance(DamageClass.Generic) += _critChance;
-        player.statLifeMax2 += _health;
-        player.statDefense += _defense;
-        player.endurance += _resist;
-        wg.MovementPenalty *= _movePenalty;
-
-        player.aggro += 5;
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Headgear;
     }
 
     public override void AddRecipes()
@@ -99,6 +119,13 @@ public class VacuumHelmet : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(_critChance, _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+        tooltips.ReplaceDefense(_defense.ToString());
+        tooltips.FormatLines(_critChance, _health, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+    }
+
+    public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)
+    {
+        glowMask = _glowMask;
+        glowMaskColor = Color.White;
     }
 }

@@ -37,6 +37,7 @@ public class AmbrosiaGorged : ModBuff
 
         int dustRate = 10;
         if (Main.rand.NextBool(dustRate))
+        {
             Dust.NewDust(
                 player.position,
                 player.width,
@@ -48,6 +49,7 @@ public class AmbrosiaGorged : ModBuff
                 default,
                 1.3f
             );
+        }
     }
 
     public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)

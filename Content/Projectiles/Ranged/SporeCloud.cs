@@ -7,6 +7,8 @@ using Terraria.ModLoader;
 
 namespace WgMod.Content.Projectiles.Ranged;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class SporeCloud : ModProjectile
 {
     public const int _cooldownMax = 30;
@@ -55,7 +57,7 @@ public class SporeCloud : ModProjectile
         Projectile.Opacity = t;
         Projectile.scale = t;
 
-        /*Projectile.position = Projectile.Center; 
+        /*Projectile.position = Projectile.Center;
         Projectile.Size = new Vector2(160f, 160f) * t; // If someone else wants to try this go ahead, I give up
         Projectile.Center = Projectile.position;*/
 

@@ -9,6 +9,7 @@ public class HarpyFeatherFriendly : ModProjectile
     public override void SetDefaults()
     {
         Projectile.CloneDefaults(ProjectileID.HarpyFeather);
+        AIType = ProjectileID.HarpyFeather;
 
         Projectile.friendly = true;
         Projectile.hostile = false;

@@ -1,0 +1,108 @@
+{
+    "Author": "folly, enkah",
+    "DrawOffsetX": 8,
+    "DrawOffsetY": 24,
+    "ArmCount": 4,
+    "Layers": [
+        {
+            "Name": "Leg",
+            "Type": "Legs",
+            "Render": "WhenStanding",
+            "LegArmor": true,
+            "Physics": true
+        },
+        {
+            "Name": "LegSit",
+            "Type": "Legs",
+            "Render": "WhenSitting",
+            "LegArmor": true,
+            "Physics": true
+        },
+        {
+            "Name": "BackBoob",
+            "Type": "Breasts",
+            "Render": "FemaleOnly",
+            "Physics": true
+        },
+        {
+            "Name": "BackBoob_Male",
+            "Type": "Breasts",
+            "Render": "MaleOnly",
+            "Physics": true
+        },
+        {
+            "Name": "Belly",
+            "Type": "Belly",
+            "Render": "FemaleOnly",
+            "Physics": true
+        },
+        {
+            "Name": "Belly_Male",
+            "Type": "Belly",
+            "Render": "MaleOnly",
+            "Physics": true
+        }
+    ],
+    "TopLayers": [
+        {
+            "Name": "FrontBoob",
+            "Type": "Breasts",
+            "Render": "FemaleOnly",
+            "Physics": true
+        },
+        {
+            "Name": "FrontBoob_Male",
+            "Type": "Breasts",
+            "Render": "MaleOnly",
+            "Physics": true
+        }
+    ],
+    "HeadLayers": [
+        {
+            "Name": "Cheeks"
+        }
+    ],
+    "Stages": {
+        "1": {
+            "OnTop": false
+        },
+        "2": {
+            "OnTop": false
+        },
+        "3": {
+            "Arm": 0,
+            "OnTop": true
+        },
+        "4": {
+            "Arm": 0,
+            "OnTop": true,
+            "OffsetY": 2
+        },
+        "5": {
+            "Arm": 1,
+            "OnTop": true,
+            "OffsetY": 6
+        },
+        "6": {
+            "Arm": 1,
+            "OnTop": true,
+            "OffsetY": 10
+        },
+        "7": {
+            "Arm": 2,
+            "OnTop": true,
+            "OffsetY": 14
+        },
+        "8": {
+            "Arm": 2,
+            "OnTop": true,
+            "OffsetY": 18
+        },
+        "9": {
+            "Arm": 3,
+            "OnTop": true,
+            "OffsetY": 24,
+            "ArmBelowWhenWalking": true
+        }
+    }
+}

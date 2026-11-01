@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 namespace WgMod.Content.Buffs.Debuffs;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.follycake)]
 public class PillarWrath : ModBuff
 {
     public override void SetStaticDefaults()
@@ -21,43 +22,26 @@ public class PillarWrath : ModBuff
     {
         player.GetModPlayer<PillarWrathPlayer>().PillarWrath = true;
     }
-
-    public override void Update(NPC npc, ref int buffIndex)
-    {
-        npc.GetGlobalNPC<PillarWrathNPC>().PillarWrath = true;
-    }
 }
 
 public class PillarWrathNPC : GlobalNPC
 {
-    public override bool InstancePerEntity => true;
-
-    public bool PillarWrath;
-
-    public override void ResetEffects(NPC npc)
-    {
-        PillarWrath = false;
-    }
-
     public override void UpdateLifeRegen(NPC npc, ref int damage)
     {
-        if (!PillarWrath)
+        if (!npc.HasBuff<PillarWrath>())
             return;
-
         damage = 50;
         if (npc.lifeRegen > 0)
             npc.lifeRegen = 0;
-
         npc.lifeRegen -= 200;
     }
 
     public override void DrawEffects(NPC npc, ref Color drawColor)
     {
-        if (!PillarWrath)
+        if (!npc.HasBuff<PillarWrath>())
             return;
 
         int dustRate = 15;
-
         if (Main.rand.NextBool(dustRate))
         {
             int vortex = Dust.NewDust(

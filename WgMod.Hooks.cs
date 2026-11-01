@@ -1,18 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs;
-using WgMod.Content.Dusts;
-using WgMod.Content.Tiles;
 
 namespace WgMod;
+
+public interface IUpdateCloud
+{
+    /// <summary> Return true to do vanilla cloud updating </summary>
+    bool PreUpdate(Cloud cloud);
+
+    void PostUpdate(Cloud cloud);
+}
 
 public partial class WgMod
 {
@@ -22,14 +30,16 @@ public partial class WgMod
         On_Player.AddBuff += Player_AddBuff;
         On_Player.DelBuff += Player_DelBuff;
         On_Player.UpdateSocialShadow += Player_UpdateSocialShadow;
+        On_Player.GetGrapplingForces += Player_GetGrapplingForces;
         On_PlayerDrawSet.HeadOnlySetup += PlayerDrawSet_HeadOnlySetup;
         On_Mount.Draw += Mount_Draw;
         On_Main.GetPlayerArmPosition += Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras += Main_DrawProj_DrawExtras;
-        On_TileObject.CanPlace += TileObject_CanPlace;
-
-        // folly: Move this elsewhere, this doesn't belong here. Do it inside of a Load and Unload of a ModType
-        On_Main.DrawDust += DrawFollowerDust;
+        On_Cloud.Update += Cloud_Update;
+        On_PlayerDrawLayers.DrawStarboardRainbowTrail += PlayerDrawLayers_DrawStarboardRainbowTrail;
+        On_PlayerDrawLayers.DrawPlayer_03_PortableStool += PlayerDrawLayers_DrawPlayer_03_PortableStool;
+        On_PlayerDrawLayers.DrawPlayer_09_Wings += PlayerDrawLayers_DrawPlayer_09_Wings;
+        On_PlayerDrawLayers.DrawPlayer_25_Shield += PlayerDrawLayers_DrawPlayer_25_Shield;
     }
 
     // Always remember to unregister your hooks
@@ -38,13 +48,16 @@ public partial class WgMod
         On_Player.AddBuff -= Player_AddBuff;
         On_Player.DelBuff -= Player_DelBuff;
         On_Player.UpdateSocialShadow -= Player_UpdateSocialShadow;
+        On_Player.GetGrapplingForces -= Player_GetGrapplingForces;
         On_PlayerDrawSet.HeadOnlySetup -= PlayerDrawSet_HeadOnlySetup;
         On_Mount.Draw -= Mount_Draw;
         On_Main.GetPlayerArmPosition -= Main_GetPlayerArmPosition;
         On_Main.DrawProj_DrawExtras -= Main_DrawProj_DrawExtras;
-        On_TileObject.CanPlace -= TileObject_CanPlace;
-
-        On_Main.DrawDust -= DrawFollowerDust;
+        On_Cloud.Update -= Cloud_Update;
+        On_PlayerDrawLayers.DrawStarboardRainbowTrail -= PlayerDrawLayers_DrawStarboardRainbowTrail;
+        On_PlayerDrawLayers.DrawPlayer_03_PortableStool -= PlayerDrawLayers_DrawPlayer_03_PortableStool;
+        On_PlayerDrawLayers.DrawPlayer_09_Wings -= PlayerDrawLayers_DrawPlayer_09_Wings;
+        On_PlayerDrawLayers.DrawPlayer_25_Shield -= PlayerDrawLayers_DrawPlayer_25_Shield;
     }
 
     static void Player_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
@@ -74,7 +87,7 @@ public partial class WgMod
             if (gain.IsInstant)
             {
                 if (previousTime < timeToAdd - 2) // Apply once (2 ticks of leeway)
-                    wg.SetWeight(wg.Weight + gain.TotalGain);
+                    wg.AddStomach(gain.TotalGain);
             }
             else if (!self.HasBuff<GainingBuff>())
                 GainingBuff.AddBuff(wg, gain);
@@ -116,10 +129,17 @@ public partial class WgMod
         self.gfxOffY = lastOffY;
     }
 
+    static void Player_GetGrapplingForces(On_Player.orig_GetGrapplingForces orig, Player self, Vector2 fromPosition, out int? preferredPlayerDirectionToSet, out float preferedPlayerVelocityX, out float preferedPlayerVelocityY)
+    {
+        orig(self, fromPosition, out preferredPlayerDirectionToSet, out preferedPlayerVelocityX, out preferedPlayerVelocityY);
+        if (self.TryGetModPlayer(out WgPlayer wg) && wg._softSquishRight > 0.01f)
+            preferedPlayerVelocityY = MathF.Round(preferedPlayerVelocityY);
+    }
+
     static void PlayerDrawSet_HeadOnlySetup(On_PlayerDrawSet.orig_HeadOnlySetup orig, ref PlayerDrawSet self, Player drawPlayer2, List<DrawData> drawData, List<int> dust, List<int> gore, float X, float Y, float Alpha, float Scale)
     {
         orig(ref self, drawPlayer2, drawData, dust, gore, X, Y, Alpha, Scale);
-        self.Position.X -= Math.Max((self.drawPlayer.width / 2) - 10, 0);
+        self.Position.X -= Math.Max(self.drawPlayer.width / 2 - 10, 0);
     }
 
     static Vector2 Main_GetPlayerArmPosition(On_Main.orig_GetPlayerArmPosition orig, Projectile proj)
@@ -146,24 +166,43 @@ public partial class WgMod
 
     static void Mount_Draw(On_Mount.orig_Draw orig, Mount self, List<DrawData> playerDrawData, int drawType, Player drawPlayer, Vector2 Position, Color drawColor, SpriteEffects playerEffect, float shadow)
     {
-        float scale = 1f;
-        if (drawPlayer.TryGetModPlayer(out WgPlayer wg) && self.Active)
+        if (!drawPlayer.TryGetModPlayer(out WgPlayer wg) || !self.Active)
         {
-            int stage = wg.Weight.GetStage();
-            Position.Y += WeightValues.DrawOffsetY(stage);
-            scale = WeightValues.GetMountScale(stage);
+            orig(self, playerDrawData, drawType, drawPlayer, Position, drawColor, playerEffect, shadow);
+            return;
         }
+
+        int stage = wg.Weight.GetStage();
+        float scale = WeightValues.GetMountScale(stage);
+        Position.Y += SpriteSet.GetStage(stage).OffsetY - wg._mountOffY;
+
         int start = playerDrawData.Count;
         orig(self, playerDrawData, drawType, drawPlayer, Position, drawColor, playerEffect, shadow);
+
+        if (self.Type == MountID.Scutlix) // Temporary fix
+        {
+            wg._mountOffY = 0f;
+            return;
+        }
+
         if (scale > 1f)
         {
+            float averageOffset = 0f;
             Span<DrawData> span = CollectionsMarshal.AsSpan(playerDrawData);
             for (int i = start; i < playerDrawData.Count; i++)
             {
                 ref DrawData data = ref span[i];
+                Rectangle rect = data.sourceRect ?? data.texture.Frame();
+                float offset = -(rect.Height - data.origin.Y) * (scale - 1f);
+                averageOffset += offset;
+                data.position.Y += offset;
                 data.scale *= scale;
             }
+            averageOffset /= playerDrawData.Count - start;
+            wg._mountOffY = averageOffset;
         }
+        else
+            wg._mountOffY = 0f;
     }
 
     static void Main_DrawProj_DrawExtras(On_Main.orig_DrawProj_DrawExtras orig, Main self, Projectile proj, Vector2 mountedCenter, ref float polePosX, ref float polePosY)
@@ -177,52 +216,158 @@ public partial class WgMod
         orig(self, proj, mountedCenter, ref polePosX, ref polePosY);
     }
 
-    // For custom tombstones (temporary)
-    static bool TileObject_CanPlace(On_TileObject.orig_CanPlace orig, int x, int y, int type, int style, int dir, out TileObject objectData, bool onlyCheck, int? forcedRandom, bool checkStay)
+    static void Cloud_Update(On_Cloud.orig_Update orig, Cloud self)
     {
-        if (type == TileID.Tombstones && !Main.dedServ && Main.LocalPlayer.dead)
-            FatTombstones.ReplaceTombstone(Main.LocalPlayer, ref type, ref style);
-        return orig(x, y, type, style, dir, out objectData, onlyCheck, forcedRandom, checkStay);
+        if (self.ModCloud is IUpdateCloud update)
+        {
+            if (update.PreUpdate(self))
+                orig(self);
+            else
+            {
+                if (Main.bgAlphaFrontLayer[4] == 1f && self.position.Y > 200f)
+                {
+                    self.kill = true;
+                    self.Alpha -= 0.005f * (float)Main.dayRate;
+                }
+                if (!self.kill)
+                {
+                    if (self.Alpha < 1f)
+                    {
+                        self.Alpha += 0.001f * (float)Main.dayRate;
+                        if (self.Alpha > 1f)
+                            self.Alpha = 1f;
+                    }
+                }
+                else
+                {
+                    self.Alpha -= 0.001f * (float)Main.dayRate;
+                    if (self.Alpha <= 0f)
+                        self.active = false;
+                }
+                if (self.position.X + TextureAssets.Cloud[self.type].Width() * self.scale < 0f - 600f || self.position.X > Main.screenWidth + 600f)
+                    self.active = false;
+                self.width = (int)(TextureAssets.Cloud[self.type].Width() * self.scale);
+                self.height = (int)(TextureAssets.Cloud[self.type].Height() * self.scale);
+            }
+            update.PostUpdate(self);
+        }
+        else
+            orig(self);
     }
 
-    static void DrawFollowerDust(On_Main.orig_DrawDust orig, Main self)
+    static void PlayerDrawLayers_DrawStarboardRainbowTrail(On_PlayerDrawLayers.orig_DrawStarboardRainbowTrail orig, ref PlayerDrawSet drawinfo, Vector2 commonWingPosPreFloor, Vector2 dirsVec)
     {
-        Texture2D sprite = ModContent.Request<Texture2D>("WgMod/Content/Dusts/FollowerDust").Value;
-
-        Main.spriteBatch.Begin(0, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.Transform);
-
-        for (int i = 0; i < Main.maxDustToDraw; i++)
+        if (drawinfo.shadow != 0f)
+            return;
+        int num = Math.Min(drawinfo.drawPlayer.availableAdvancedShadowsCount - 1, 30);
+        float num2 = 0f;
+        for (int num3 = num; num3 > 0; num3--)
         {
-            Dust dust = Main.dust[i];
-            if (!dust.active)
-                continue;
-            if (dust.type == ModContent.DustType<FollowerDustSmall>())
+            EntityShadowInfo advancedShadow = drawinfo.drawPlayer.GetAdvancedShadow(num3);
+            float num10 = num2;
+            Vector2 position = drawinfo.drawPlayer.GetAdvancedShadow(num3 - 1).Position;
+            num2 = num10 + Vector2.Distance(advancedShadow.Position, position);
+        }
+        float num4 = MathHelper.Clamp(num2 / 160f, 0f, 1f);
+        Main.instance.LoadProjectile(250);
+        Texture2D value = TextureAssets.Projectile[250].Value;
+        float x = 1.7f;
+        Vector2 origin = new(value.Width / 2, value.Height / 2);
+        Color white = Color.White;
+        white.A = 64;
+        Vector2 vector2 = new Vector2(drawinfo.drawPlayer.width, drawinfo.drawPlayer.height) * new Vector2(0.5f, 1f) + new Vector2(0f, -4f);
+        if (dirsVec.Y < 0f)
+            vector2 = new Vector2(drawinfo.drawPlayer.width, drawinfo.drawPlayer.height) * new Vector2(0.5f, 0f) + new Vector2(0f, 4f);
+        for (int num5 = num; num5 > 0; num5--)
+        {
+            EntityShadowInfo advancedShadow2 = drawinfo.drawPlayer.GetAdvancedShadow(num5);
+            EntityShadowInfo advancedShadow3 = drawinfo.drawPlayer.GetAdvancedShadow(num5 - 1);
+            Vector2 pos = advancedShadow2.Position + vector2 + advancedShadow2.HeadgearOffset;
+            Vector2 pos2 = advancedShadow3.Position + vector2 + advancedShadow3.HeadgearOffset;
+            pos = drawinfo.drawPlayer.RotatedRelativePoint(pos, true, false);
+            pos2 = drawinfo.drawPlayer.RotatedRelativePoint(pos2, true, false);
+            float num6 = 1.5707964f * drawinfo.drawPlayer.direction;
+            float num7 = Math.Abs(pos2.X - pos.X);
+            Vector2 scale = new(x, num7 / value.Height);
+            float num8 = 1f - num5 / (float)num;
+            num8 *= num8;
+            num8 *= Utils.GetLerpValue(0f, 4f, num7, true);
+            num8 *= 0.5f;
+            num8 *= num8;
+            Color color = white * num8 * num4;
+            if (!(color == Color.Transparent))
             {
-                Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(6, 0, 6, 6), dust.color, dust.rotation, new Vector2(3, 3), dust.scale, SpriteEffects.None, 0f);
-            }
-            else if (dust.type == ModContent.DustType<FollowerDustBig>())
-            {
-                Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(7, 7, 7, 7), dust.color, dust.rotation, new Vector2(3.5f, 3.5f), dust.scale, SpriteEffects.None, 0f);
+                DrawData item = new(value, pos - Main.screenPosition, null, color, num6, origin, scale, drawinfo.playerEffect, 0f)
+                {
+                    shader = drawinfo.cWings
+                };
+                drawinfo.DrawDataCache.Add(item);
+                for (float num9 = 0.25f; num9 < 1f; num9 += 0.25f)
+                {
+                    item = new DrawData(value, Vector2.Lerp(pos, pos2, num9) - Main.screenPosition, null, color, num6, origin, scale, drawinfo.playerEffect, 0f)
+                    {
+                        shader = drawinfo.cWings
+                    };
+                    drawinfo.DrawDataCache.Add(item);
+                }
             }
         }
+    }
 
-        for (int i = 0; i < Main.maxDustToDraw; i++)
+    static void PlayerDrawLayers_DrawPlayer_03_PortableStool(On_PlayerDrawLayers.orig_DrawPlayer_03_PortableStool orig, ref PlayerDrawSet drawinfo)
+    {
+        Vector2 oldPos = drawinfo.Position;
+        drawinfo.Position.Y -= drawinfo.drawPlayer.gfxOffY;
+        orig(ref drawinfo);
+        drawinfo.Position = oldPos;
+    }
+
+    static void PlayerDrawLayers_DrawPlayer_09_Wings(On_PlayerDrawLayers.orig_DrawPlayer_09_Wings orig, ref PlayerDrawSet drawinfo)
+    {
+        if (drawinfo.drawPlayer.dead || drawinfo.hideEntirePlayer || drawinfo.drawPlayer.wings <= 0)
+            return;
+        if (drawinfo.drawPlayer.wings != ArmorIDs.Wing.LongTrailRainbowWings)
         {
-            Dust dust = Main.dust[i];
-            if (!dust.active)
-                continue;
-            if (dust.type == ModContent.DustType<FollowerDustSmall>())
+            orig(ref drawinfo);
+            return;
+        }
+        Vector2 directions = drawinfo.drawPlayer.Directions;
+        Vector2 vector2 = new(0f, 7f);
+        Vector2 vector = drawinfo.Position - Main.screenPosition + new Vector2(drawinfo.drawPlayer.width / 2, drawinfo.drawPlayer.height - drawinfo.drawPlayer.bodyFrame.Height / 2 - drawinfo.drawPlayer.gfxOffY) + vector2;
+        Main.instance.LoadWings(drawinfo.drawPlayer.wings);
+        if (!drawinfo.drawPlayer.ShouldDrawWingsThatAreAlwaysAnimated())
+            return;
+        PlayerDrawLayers.DrawStarboardRainbowTrail(ref drawinfo, vector, directions);
+        Color color10 = new(255, 255, 255, 255);
+        int num3 = 22;
+        int num4 = 0;
+        Vector2 vec2 = vector + new Vector2(num4, num3) * directions;
+        Color color2 = color10 * (1f - drawinfo.shadow);
+        DrawData item = new(TextureAssets.Wings[drawinfo.drawPlayer.wings].Value, vec2.Floor(), new Rectangle?(new Rectangle(0, TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 6 * drawinfo.drawPlayer.wingFrame, TextureAssets.Wings[drawinfo.drawPlayer.wings].Width(), TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 6)), color2, drawinfo.drawPlayer.bodyRotation, new Vector2(TextureAssets.Wings[drawinfo.drawPlayer.wings].Width() / 2, TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 12), 1f, drawinfo.playerEffect, 0f)
+        {
+            shader = drawinfo.cWings
+        };
+        drawinfo.DrawDataCache.Add(item);
+        if (drawinfo.shadow == 0f)
+        {
+            float num5 = (drawinfo.drawPlayer.miscCounter / 75f * 6.2831855f).ToRotationVector2().X * 4f;
+            Color color3 = new Color(70, 70, 70, 0) * (num5 / 8f + 0.5f) * 0.4f;
+            for (float num6 = 0f; num6 < 6.2831855f; num6 += 1.5707964f)
             {
-                Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(0, 0, 6, 6), Color.Black, dust.rotation, new Vector2(3, 3), dust.scale, SpriteEffects.None, 0f);
-            }
-            else if (dust.type == ModContent.DustType<FollowerDustBig>())
-            {
-                Main.spriteBatch.Draw(sprite, dust.position - Main.screenPosition, new Rectangle(0, 7, 7, 7), Color.Black, dust.rotation, new Vector2(3.5f, 3.5f), dust.scale, SpriteEffects.None, 0f);
+                item = new DrawData(TextureAssets.Wings[drawinfo.drawPlayer.wings].Value, vec2.Floor() + num6.ToRotationVector2() * num5, new Rectangle(0, TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 6 * drawinfo.drawPlayer.wingFrame, TextureAssets.Wings[drawinfo.drawPlayer.wings].Width(), TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 6), color3, drawinfo.drawPlayer.bodyRotation, new Vector2(TextureAssets.Wings[drawinfo.drawPlayer.wings].Width() / 2, TextureAssets.Wings[drawinfo.drawPlayer.wings].Height() / 12), 1f, drawinfo.playerEffect, 0f)
+                {
+                    shader = drawinfo.cWings
+                };
+                drawinfo.DrawDataCache.Add(item);
             }
         }
+    }
 
-        Main.spriteBatch.End();
-
-        orig(self);
+    static void PlayerDrawLayers_DrawPlayer_25_Shield(On_PlayerDrawLayers.orig_DrawPlayer_25_Shield orig, ref PlayerDrawSet drawinfo)
+    {
+        Vector2 oldPos = drawinfo.Position;
+        drawinfo.Position += new Vector2(drawinfo.drawPlayer.direction * (drawinfo.drawPlayer.width - Player.defaultWidth) * 0.4f, 0f);
+        orig(ref drawinfo);
+        drawinfo.Position = oldPos;
     }
 }

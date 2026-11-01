@@ -58,6 +58,11 @@ public class CrispyDiscipline : ModItem
         knockback *= _knockback;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.SummonWeapon;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()

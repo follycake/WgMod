@@ -6,9 +6,9 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Armor.CrimatriarchArmor;
 
+[AutoloadEquip(EquipType.Body)]
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.trilophyte)]
-[AutoloadEquip(EquipType.Body)]
 public class CrimatriarchGown : ModItem
 {
     public const int MinionCount = 1;
@@ -34,6 +34,11 @@ public class CrimatriarchGown : ModItem
         player.buffImmune[BuffID.Bleeding] = true;
         player.GetDamage(DamageClass.Summon) += _damage;
         player.maxMinions += MinionCount;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Torso;
     }
 
     public override void AddRecipes()

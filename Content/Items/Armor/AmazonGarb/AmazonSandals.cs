@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -6,15 +7,23 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Armor.AmazonGarb;
 
-[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [AutoloadEquip(EquipType.Legs)]
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class AmazonSandals : ModItem
 {
+    static int _glowMask;
+
     WgStat _critChance = new(6f, 12f);
+
+    public override void SetStaticDefaults()
+    {
+        _glowMask = GlowMaskUtility.AddGlowMask(Texture + "_Legs_Glow");
+    }
 
     public override void SetDefaults()
     {
-        Item.width = 18;
+        Item.width = 22;
         Item.height = 18;
         Item.value = Item.sellPrice(gold: 1);
         Item.rare = ItemRarityID.Orange;
@@ -30,11 +39,16 @@ public class AmazonSandals : ModItem
         _critChance.Lerp(immobility);
 
         player.GetCritChance(DamageClass.Melee) += _critChance;
+
+        Vector3 light = new(100f / 255f, 50f / 255f, 0f);
+
+        if (!Main.dedServ)
+            Lighting.AddLight(player.Center, light);
     }
 
-    public override void ModifyTooltips(List<TooltipLine> tooltips)
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
     {
-        tooltips.FormatLines(_critChance);
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Pants;
     }
 
     public override void AddRecipes()
@@ -43,5 +57,16 @@ public class AmazonSandals : ModItem
             .AddIngredient(ItemID.HellstoneBar, 5)
             .AddIngredient(ItemID.Silk, 10)
             .Register();
+    }
+
+    public override void ModifyTooltips(List<TooltipLine> tooltips)
+    {
+        tooltips.FormatLines(_critChance);
+    }
+
+    public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)
+    {
+        glowMask = _glowMask;
+        glowMaskColor = Color.White;
     }
 }

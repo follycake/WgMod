@@ -1,10 +1,10 @@
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using WgMod.Common.Players;
 
 namespace WgMod.Content.Tiles;
 
@@ -39,6 +39,18 @@ public class FatTombstones : ModTile
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.LavaDeath = false;
         TileObjectData.addTile(Type);
+
+        AddMapEntry(new Color(192, 192, 192), Mod.GetLocalization("Projectiles.FatTombstone.DisplayName"));
+    }
+
+    public override void Load()
+    {
+        On_SceneMetrics.ExportTileCountsToMain += ExportTileCountsToMain;
+    }
+
+    public override void Unload()
+    {
+        On_SceneMetrics.ExportTileCountsToMain -= ExportTileCountsToMain;
     }
 
     public override void PlaceInWorld(int i, int j, Item item)
@@ -56,17 +68,29 @@ public class FatTombstones : ModTile
         return true;
     }
 
-    internal static bool ReplaceTombstone(Player player, ref int type, ref int style)
+    public static int GetStyle(int type)
     {
-        if (!Main.rand.NextBool())
-            return false;
-        if (!player.TryGetModPlayer(out WgPlayer wg) || wg.Weight.GetStage() <= 0)
-            return false;
-        type = ModContent.TileType<FatTombstones>();
+        int style = 0;
+        if (type >= ProjectileID.GraveMarker && type <= ProjectileID.Obelisk)
+            style = type - 200;
+        if (type >= ProjectileID.RichGravestone1 && type <= ProjectileID.RichGravestone5)
+            style = type - ProjectileID.RichGravestone1 + 6;
         if (style >= 6) // Gold
             style = (style - 6) % GoldCount + RegularCount;
         else
             style %= RegularCount;
-        return true;
+        return style;
+    }
+
+    static void ExportTileCountsToMain(On_SceneMetrics.orig_ExportTileCountsToMain orig, SceneMetrics self)
+    {
+        orig(self);
+        self.GraveyardTileCount = self.GetTileCount(TileID.Tombstones);
+        self.GraveyardTileCount += self.GetTileCount((ushort)ModContent.TileType<FatTombstones>());
+        self.GraveyardTileCount -= self.GetTileCount(TileID.Sunflower) / 2;
+        if (self.GraveyardTileCount > SceneMetrics.GraveyardTileMin)
+            self.HasSunflower = false;
+        if (self.GraveyardTileCount < 0)
+            self.GraveyardTileCount = 0;
     }
 }

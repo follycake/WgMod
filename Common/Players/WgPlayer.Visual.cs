@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Configs;
 
@@ -13,35 +16,62 @@ public partial class WgPlayer
     internal float _squishRest = 1f;
     internal float _squishPos = 1f;
     internal float _squishVel;
+
+    internal float _legOffsetX;
+    internal float _legOffsetY;
     internal float _bellyOffset;
 
-    internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[4];
+    internal bool _fakeWalk;
+    internal float _fakeWalkTime;
+    internal int _fakeWalkFrameX;
+    internal float _fakeWalkJiggle;
+
+    internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[5];
     internal RenderTarget2D _armorTarget;
 
+    internal List<WgPhysics.Layer> _physicsLayers;
+    internal Dictionary<int, WgPhysics.Layer> _physicsDrawOverride;
+    internal Asset<Texture2D> _headOverride;
+
+    internal float _mountOffY;
     internal float _addedGfxOffY;
     float _lastGfxOffY;
+
+    bool _requestPhysicsSetup;
+    static SpriteDrawBuffer _spriteBuffer;
+
+    public override void Load()
+    {
+        On_Player.Spawn += Spawn;
+        On_Player.Teleport += Teleport;
+        On_PlayerDrawLayers.DrawPlayer_RenderAllLayers += RenderAllLayers;
+    }
+
+    public override void Unload()
+    {
+        On_Player.Spawn -= Spawn;
+        On_Player.Teleport -= Teleport;
+        On_PlayerDrawLayers.DrawPlayer_RenderAllLayers -= RenderAllLayers;
+    }
 
     void InitializeVisuals()
     {
         if (Main.dedServ)
             return;
         if (WgArmor.Enabled)
-        {
-            Main.RunOnMainThread(() =>
-            {
-                WgPlayerDrawLayer.SetupArmorLayers(this);
-                WgArmor.Render(ref _armorTarget, _armorLayers, Player.Male);
-            });
-        }
+            Main.RunOnMainThread(() => WgArmor.Render(this));
     }
 
-    void PreUpdateVisuals()
+    internal void PreUpdateVisuals()
     {
         Player.gfxOffY = _lastGfxOffY;
-        _addedGfxOffY = WeightValues.DrawOffsetY(Weight.GetStage()) * -Player.gravDir;
+        if (!Player.mount.Active)
+            _mountOffY = 0f;
+        _addedGfxOffY = SpriteSet.GetStage(Weight.GetStage()).OffsetY * -Player.gravDir + _mountOffY;
+        _headOverride = null;
     }
 
-    void PostUpdateVisuals()
+    internal void PostUpdateVisuals()
     {
         // Can't find a better way to change the draw position
         _lastGfxOffY = Player.gfxOffY;
@@ -50,7 +80,93 @@ public partial class WgPlayer
         if (Main.dedServ)
             return;
         if (WgArmor.Enabled)
-            WgArmor.Render(ref _armorTarget, _armorLayers, Player.Male);
+            WgArmor.Render(this);
+        if (_requestPhysicsSetup)
+        {
+            WgPhysics.Setup(this);
+            _requestPhysicsSetup = false;
+        }
+        WgPhysics.Update(this);
+    }
+
+    internal void OnSwitchSpriteSet()
+    {
+        _requestPhysicsSetup = true;
+    }
+
+    internal void UpdateAnimation()
+    {
+        _fakeWalk = !IsMobile && (Player.controlLeft || Player.controlRight);
+        if (_fakeWalk)
+        {
+            _fakeWalkTime += 0.2f;
+            _fakeWalkTime %= 13f;
+            switch ((int)(6f + _fakeWalkTime))
+            {
+                case 6:
+                    _fakeWalkFrameX = 3;
+                    break;
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    _fakeWalkFrameX = 4;
+                    break;
+                case 11:
+                case 12:
+                case 13:
+                    _fakeWalkFrameX = 3;
+                    break;
+                case 14:
+                    _fakeWalkFrameX = 5;
+                    break;
+                case 15:
+                case 16:
+                    _fakeWalkFrameX = 6;
+                    break;
+                case 17:
+                    _fakeWalkFrameX = 5;
+                    break;
+                case 18:
+                case 19:
+                    _fakeWalkFrameX = 3;
+                    break;
+            }
+        }
+        else
+        {
+            _fakeWalkTime = 0f;
+            _fakeWalkFrameX = 3;
+        }
+
+        int frame = Player.legFrame.Y / Player.legFrame.Height;
+        if (_fakeWalk)
+            frame = (int)(6f + _fakeWalkTime);
+        // Frame [0] - Idle
+        // Frame [5] - Jump
+        // Frame [6 to 19] - Walk
+
+        _legOffsetX = 0f;
+        _legOffsetY = 0f;
+        _bellyOffset = 0f;
+        _fakeWalkJiggle = 0f;
+        if (IsMobile)
+        {
+            if (frame == 5)
+                _bellyOffset = Math.Clamp(Player.velocity.Y * Player.gravDir / 4f, -1f, 1f) * -2f;
+            else if (frame >= 6 && frame <= 19)
+            {
+                float frameTime = (frame - 6) / 13f;
+                _legOffsetX = MathF.Sin(frameTime * MathF.Tau) * 2f * Player.direction;
+                _legOffsetY = MathF.Max(MathF.Cos(frameTime * MathF.Tau), 0f) * -2f;
+                _bellyOffset = MathF.Sin(frameTime * MathF.Tau * 2f) * -2f;
+            }
+        }
+        if (_fakeWalk)
+        {
+            float frameTime = (frame - 6) / 13f;
+            _fakeWalkJiggle = MathF.Sin(frameTime * MathF.Tau * 2f) * -3f;
+        }
     }
 
     void UpdateJiggle()
@@ -64,10 +180,10 @@ public partial class WgPlayer
         else
         {
             Vector2 vel = Player.velocity;
-            vel.Y += _bellyOffset * 0.6f;
+            vel.Y += (_bellyOffset + _fakeWalkJiggle) * 0.6f;
 
             _squishPos += MathF.Abs(vel.X) * 0.005f;
-            _squishPos += vel.Y * 0.005f;
+            _squishPos += vel.Y * 0.008f;
 
             _squishVel += (_squishRest - _squishPos) * 400f * dt;
             _squishVel = float.Lerp(_squishVel, 0f, 1f - MathF.Exp(-6f * dt));
@@ -76,26 +192,129 @@ public partial class WgPlayer
         }
     }
 
+    public void Jiggle(float amount)
+    {
+        _squishVel += amount;
+        WgPhysics.Jiggle(this, amount);
+    }
+
+    public bool IsSittingVisual()
+    {
+        if (Player.mount.Active)
+        {
+            switch (Player.mount.Type)
+            {
+                case MountID.GolfCartSomebodySaveMe:
+                case MountID.WitchBroom:
+                case MountID.SpookyWood:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        return Player.sitting.isSitting && !Player.GetModPlayer<TreadmillPlayer>()._onTreadmill || !IsMobile;
+    }
+
     public override void HideDrawLayers(PlayerDrawSet drawInfo)
     {
         int stage = Weight.GetStage();
-        int armStage = WeightValues.GetArmStage(stage);
+        int armStage = SpriteSet.GetStage(stage).Arm;
         foreach (PlayerDrawLayer drawLayer in PlayerDrawLayerLoader.Layers)
         {
             if (drawLayer == PlayerDrawLayers.ArmOverItem && armStage >= 0)
                 drawLayer.Hide();
-            else if ((drawLayer == PlayerDrawLayers.Skin || drawLayer == PlayerDrawLayers.Torso || drawLayer == PlayerDrawLayers.Leggings) && stage >= 5)
+            else if ((drawLayer == PlayerDrawLayers.Skin || drawLayer == PlayerDrawLayers.Torso || drawLayer == PlayerDrawLayers.Leggings) && stage >= WeightStage.MorbidlyObese)
                 drawLayer.Hide();
         }
     }
 
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
-        if (Player.mount.Active)
+        if (WgPhysics.IsEnabled(this))
+            _physicsDrawOverride.Clear();
+        if (Player.isDisplayDollOrInanimate)
+            drawInfo.Position.Y += Player.gfxOffY;
+    }
+
+    static void Spawn(On_Player.orig_Spawn orig, Player self, PlayerSpawnContext context)
+    {
+        orig(self, context);
+        if (self.TryGetModPlayer(out WgPlayer wg))
+            wg._requestPhysicsSetup = true;
+    }
+
+    static void Teleport(On_Player.orig_Teleport orig, Player self, Vector2 newPos, int Style, int extraInfo)
+    {
+        orig(self, newPos, Style, extraInfo);
+        if (self.TryGetModPlayer(out WgPlayer wg))
+            wg._requestPhysicsSetup = true;
+    }
+
+    static void RenderAllLayers(On_PlayerDrawLayers.orig_DrawPlayer_RenderAllLayers orig, ref PlayerDrawSet drawinfo)
+    {
+        if (!drawinfo.drawPlayer.TryGetModPlayer(out WgPlayer wg) || !WgPhysics.IsEnabled(wg))
         {
-            /*drawInfo.Position.Y += drawInfo.mountOffSet;
-            drawInfo.mountOffSet *= WeightValues.GetMountScale(Weight.GetStage());
-            drawInfo.Position.Y -= drawInfo.mountOffSet;*/
+            orig(ref drawinfo);
+            return;
+        }
+        List<DrawData> drawDataCache = drawinfo.DrawDataCache;
+        if (_spriteBuffer == null)
+            _spriteBuffer = new SpriteDrawBuffer(Main.graphics.GraphicsDevice, 200);
+        else
+            _spriteBuffer.CheckGraphicsDevice(Main.graphics.GraphicsDevice);
+        for (int i = 0; i < drawDataCache.Count; i++)
+        {
+            DrawData drawData = drawDataCache[i];
+            if (wg._physicsDrawOverride.ContainsKey(i))
+                continue;
+            if (drawData.texture != null)
+                drawData.Draw(_spriteBuffer);
+        }
+        _spriteBuffer.UploadAndBind();
+        DrawData cdd = default;
+        int drawCount = 0;
+        for (int i = 0; i <= drawDataCache.Count; i++)
+        {
+            if (drawinfo.projectileDrawPosition == i)
+            {
+                if (cdd.shader != 0)
+                    Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+                _spriteBuffer.Unbind();
+                DrawHeldProj(drawinfo, Main.projectile[drawinfo.drawPlayer.heldProj]);
+                _spriteBuffer.Bind();
+            }
+            if (i != drawDataCache.Count)
+            {
+                cdd = drawDataCache[i];
+                if (!cdd.sourceRect.HasValue)
+                    cdd.sourceRect = cdd.texture.Frame();
+                PlayerDrawHelper.SetShaderForData(drawinfo.drawPlayer, drawinfo.cHead, ref cdd);
+                if (wg._physicsDrawOverride.TryGetValue(i, out WgPhysics.Layer layer))
+                {
+                    _spriteBuffer.Unbind();
+                    layer.Draw(Main.graphics.GraphicsDevice, cdd);
+                    _spriteBuffer.Bind();
+                    continue;
+                }
+                if (cdd.texture != null)
+                    _spriteBuffer.DrawSingle(drawCount++);
+            }
+        }
+        _spriteBuffer.Unbind();
+        Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+    }
+
+    static void DrawHeldProj(PlayerDrawSet drawinfo, Projectile proj)
+    {
+        if (!ProjectileID.Sets.HeldProjDoesNotUsePlayerGfxOffY[proj.type])
+            proj.gfxOffY = drawinfo.drawPlayer.gfxOffY;
+        try
+        {
+            Main.instance.DrawProjDirect(proj);
+        }
+        catch
+        {
+            proj.active = false;
         }
     }
 }

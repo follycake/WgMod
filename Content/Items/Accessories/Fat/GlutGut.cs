@@ -34,17 +34,23 @@ public class GlutGut : ModItem
     {
         if (!player.TryGetModPlayer(out GlutGutPlayer gp))
             return;
-        gp._active = true;
+
+        gp.Active = true;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.Accessories;
     }
 }
 
 public class GlutGutPlayer : ModPlayer
 {
-    internal bool _active;
+    public bool Active;
 
     public override void ResetEffects()
     {
-        _active = false;
+        Active = false;
     }
 }
 
@@ -52,21 +58,20 @@ public class GlutGutItem : GlobalItem
 {
     public override bool ConsumeItem(Item item, Player player)
     {
-        if (!player.TryGetModPlayer(out GlutGutPlayer gp))
+        if (!player.TryGetModPlayer(out GlutGutPlayer gp) || !gp.Active)
             return base.ConsumeItem(item, player);
-        if (gp._active)
+
+        switch (item.useStyle)
         {
-            switch (item.useStyle)
-            {
-                case ItemUseStyleID.DrinkOld:
-                case ItemUseStyleID.EatFood:
-                case ItemUseStyleID.DrinkLiquid:
-                case ItemUseStyleID.DrinkLong:
-                    player.AddBuff(ModContent.BuffType<GluttedGut>(), 30 * 60);
-                    SoundEngine.PlaySound(SoundID.Item33);
-                    break;
-            }
+            case ItemUseStyleID.DrinkOld:
+            case ItemUseStyleID.EatFood:
+            case ItemUseStyleID.DrinkLiquid:
+            case ItemUseStyleID.DrinkLong:
+                player.AddBuff(ModContent.BuffType<GluttedGut>(), 30 * 60);
+                SoundEngine.PlaySound(SoundID.Item33);
+                break;
         }
+
         return base.ConsumeItem(item, player);
     }
 }

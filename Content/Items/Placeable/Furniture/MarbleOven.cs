@@ -16,6 +16,11 @@ public class MarbleOven : ModItem
         Item.value = 500;
     }
 
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.CraftingObjects;
+    }
+
     public override void AddRecipes()
     {
         CreateRecipe()
