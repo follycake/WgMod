@@ -84,8 +84,8 @@ public class SanguistNPC : ModNPC
         NPC.damage = 25;
         NPC.defense = 15;
         NPC.lifeMax = 250;
-        NPC.HitSound = SoundID.NPCHit28;
-        NPC.DeathSound = SoundID.NPCDeath31;
+        NPC.HitSound = SoundID.NPCHit1;
+        NPC.DeathSound = SoundID.NPCDeath6;
         NPC.knockBackResist = 0.5f;
 
         AnimationType = NPCID.Guide;
@@ -142,12 +142,14 @@ public class SanguistNPC : ModNPC
         string belch1 = " ";
         string belch2 = " ";
         string belch3 = " ";
+
         if (Main.rand.NextBool(belchChance))
             belch1 = belchVariant;
         else if (Main.rand.NextBool(belchChance))
             belch2 = belchVariant;
         else if (Main.rand.NextBool(belchChance))
             belch3 = belchVariant;
+
         return Language.GetTextValue(key, belch1, belch2, belch3);
     }
 
@@ -300,12 +302,11 @@ public class SanguistNPC : ModNPC
                         break;
                 }
             }
+
             Main.npcChatText = Belch3("Mods.WgMod.Dialogue.Sanguist.Drink.Drink" + (1 + weightLevel) + Main.rand.Next(1, 4), belchChance);
         }
         else
-        {
             Main.npcChatText = Belch3("Mods.WgMod.Dialogue.Sanguist.Drink.DrinkDeny1", belchChance);
-        }
     }
 
     public override void AddShops()

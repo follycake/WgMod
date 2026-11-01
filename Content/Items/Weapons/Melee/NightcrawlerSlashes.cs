@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Content.Projectiles.Melee;
 using WgMod.Common.Players;
+using Terraria.GameContent.UI;
 
 namespace WgMod.Content.Items.Weapons.Melee;
 
@@ -15,14 +16,18 @@ public class NightcrawlerSlashes : ModItem
 {
     WgStat _damage = new(1f, 1.5f);
     WgStat _knockback = new(1f, 0.75f);
+    WgStat _speed = new(1f, 3f);
 
     public override void SetDefaults()
     {
-        Item.CloneDefaults(ItemID.ShroomiteDiggingClaw);
-
+        Item.DamageType = DamageClass.Melee;
+        Item.useStyle = ItemUseStyleID.Swing;
         Item.damage = 12;
-        Item.pick = 0;
-        Item.axe = 0;
+        Item.knockBack = 6;
+        Item.useTime = 12;
+        Item.useAnimation = 12;
+        Item.UseSound = SoundID.Item1;
+        Item.rare = ItemRarityID.Green;
 
         Item.shoot = ModContent.ProjectileType<NightcrawlerSlashEnergy>();
         Item.noMelee = true;
@@ -35,8 +40,15 @@ public class NightcrawlerSlashes : ModItem
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
         float immobility = wg.Weight.ClampedImmobility;
+
         _damage.Lerp(immobility);
         _knockback.Lerp(immobility);
+        _speed.Lerp(immobility);
+    }
+
+    public override float UseSpeedMultiplier(Player player)
+    {
+        return _speed;
     }
 
     public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
