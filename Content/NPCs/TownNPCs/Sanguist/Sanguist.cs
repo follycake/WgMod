@@ -16,9 +16,9 @@ using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 using WgMod.Common.Systems;
 using WgMod.Content.Items.Weapons.Melee;
-using WgMod.Content.NPCs.GroundedHarpy;
+using WgMod.Content.NPCs.TownNPCs.GroundedHarpy;
 
-namespace WgMod.Content.NPCs.Sanguist;
+namespace WgMod.Content.NPCs.TownNPCs.Sanguist;
 
 [AutoloadHead]
 
@@ -27,7 +27,7 @@ namespace WgMod.Content.NPCs.Sanguist;
 [Credit(ProjectRole.Idea, Contributor.igobee_)]
 public class SanguistNPC : ModNPC
 {
-    public override string Texture => "WgMod/Content/NPCs/Sanguist/Sanguist";
+    public override string Texture => "WgMod/Content/NPCs/TownNPCs/Sanguist/Sanguist";
 
     public override bool CanGoToStatue(bool toQueenStatue) => toQueenStatue;
 

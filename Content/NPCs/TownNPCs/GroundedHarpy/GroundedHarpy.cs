@@ -10,8 +10,8 @@ using Terraria.ModLoader;
 using Terraria.Utilities;
 using WgMod.Common.Systems;
 using WgMod.Content.Items.Consumables;
-using WgMod.Content.Items.Weapons.Ranged.Ranged;
-using WgMod.Content.NPCs.Sanguist;
+using WgMod.Content.Items.Weapons.Ranged;
+using WgMod.Content.NPCs.TownNPCs.Sanguist;
 using WgMod.Content.Projectiles;
 
 namespace WgMod.Content.NPCs.TownNPCs.GroundedHarpy;

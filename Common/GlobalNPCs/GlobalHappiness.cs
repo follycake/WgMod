@@ -2,7 +2,7 @@ using Terraria.GameContent.Personalities;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Content.NPCs;
-using WgMod.Content.NPCs.Sanguist;
+using WgMod.Content.NPCs.TownNPCs.Sanguist;
 
 namespace WgMod.Common.GlobalNPCs;
 

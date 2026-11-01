@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework;
 using System;
 using WgMod.Content.Dusts;
 
-namespace WgMod.Content.NPCs.Sanguist;
+namespace WgMod.Content.NPCs.TownNPCs.Sanguist;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.igobee_)]

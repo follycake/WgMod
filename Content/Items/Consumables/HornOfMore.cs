@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
-using WgMod.Content.NPCs.GroundedHarpy;
+using WgMod.Content.NPCs.TownNPCs.GroundedHarpy;
 
 namespace WgMod.Content.Items.Consumables;
 

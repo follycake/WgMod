@@ -3,8 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Systems;
-using WgMod.Content.NPCs;
-using WgMod.Content.NPCs.GroundedHarpy;
+using WgMod.Content.NPCs.TownNPCs.GroundedHarpy;
 using WgMod.Content.Projectiles;
 
 namespace WgMod.Common.GlobalNPCs;
