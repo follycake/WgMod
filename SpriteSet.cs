@@ -297,12 +297,16 @@ public class SpriteSet
 
         public Vector2 Squish(float squish)
         {
-            return Type switch
+            switch (Type)
             {
-                LayerType.Belly => new Vector2(1f / squish, 1f * squish),
-                LayerType.Legs or LayerType.Breasts => new Vector2(1f * squish, 1f / squish),
-                _ => Vector2.One,
-            };
+                case LayerType.Belly:
+                    return new Vector2(1f / squish, 1f * squish);
+                case LayerType.Legs:
+                case LayerType.Breasts:
+                    return new Vector2(1f * squish, 1f / squish);
+                default:
+                    return Vector2.One;
+            }
         }
 
         public void Animate(WgPlayer wg, Vector2 position, float bellySquish, float baseSquish, out Vector2 pos, out Vector2 scale)
