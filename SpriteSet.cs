@@ -69,13 +69,13 @@ public class SpriteSet
 
     public static Stage GetStage(int stage, out SpriteSet set)
     {
-        if (Current.Stages.TryGetValue(stage, out Stage result))
+        if (Current != null && Current.Stages.TryGetValue(stage, out Stage result))
         {
             set = Current;
             return result;
         }
         set = Fallback;
-        if (Fallback.Stages.TryGetValue(stage, out result))
+        if (Fallback != null && Fallback.Stages.TryGetValue(stage, out result))
             return result;
         return Stage.Fallback;
     }
@@ -297,16 +297,12 @@ public class SpriteSet
 
         public Vector2 Squish(float squish)
         {
-            switch (Type)
+            return Type switch
             {
-                case LayerType.Belly:
-                    return new Vector2(1f / squish, 1f * squish);
-                case LayerType.Legs:
-                case LayerType.Breasts:
-                    return new Vector2(1f * squish, 1f / squish);
-                default:
-                    return Vector2.One;
-            }
+                LayerType.Belly => new Vector2(1f / squish, 1f * squish),
+                LayerType.Legs or LayerType.Breasts => new Vector2(1f * squish, 1f / squish),
+                _ => Vector2.One,
+            };
         }
 
         public void Animate(WgPlayer wg, Vector2 position, float bellySquish, float baseSquish, out Vector2 pos, out Vector2 scale)
