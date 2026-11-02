@@ -1106,13 +1106,13 @@ Items: {
 	}
 
 	HoneyPick: {
-		Tooltip: ""
 		DisplayName: Honey Pick
+		Tooltip: ""
 	}
 
 	HoneyChop: {
-		Tooltip: ""
 		DisplayName: Honey Chop
+		Tooltip: ""
 	}
 
 	HoneyHammer: {
@@ -1126,8 +1126,13 @@ Items: {
 	}
 
 	SlamFire: {
-		Tooltip: ""
 		DisplayName: Slam Fire
+		Tooltip:
+			'''
+			Fires a focused spread of bullets
+			More powerful while tipsy, but sobers you up faster
+			'They never wanna come quietly...'
+			'''
 	}
 }
 

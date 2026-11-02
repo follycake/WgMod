@@ -6,6 +6,8 @@ using Terraria.ModLoader;
 
 namespace WgMod.Content.Items.Weapons.Ranged;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.evanescentsummer)]
 public class SlamFire : ModItem
 {
 	const int SoberAmount = 40 * 60;
