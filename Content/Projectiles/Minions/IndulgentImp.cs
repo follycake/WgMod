@@ -1,19 +1,11 @@
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Numerics;
-using JetBrains.Annotations;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
-using rail;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.Graphics.CameraModifiers;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Default;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Microsoft.Xna.Framework;
 
 namespace WgMod.Content.Projectiles.Minions;
 
