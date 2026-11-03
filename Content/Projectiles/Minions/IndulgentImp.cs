@@ -136,8 +136,10 @@ public class IndulgentImp : ModProjectile
             return false;
 
         float distance = Vector2.Distance(npc.Center, new Vector2(Projectile.Center.X, Projectile.Center.Y + _shootOffset));
+
         if (distance >= maxDist)
             return false;
+
         if (!Collision.CanHitLine(new Vector2(Projectile.position.X, Projectile.Center.Y + _shootOffset), Projectile.width, Projectile.height, npc.position, npc.width, npc.height))
             return false;
 
@@ -173,9 +175,7 @@ public class IndulgentImp : ModProjectile
         float maxAllowedDistance = hasHostileTarget ? 1000 : 500;
 
         if (_state != State.Following && Projectile.Center.Distance(player.Center) > maxAllowedDistance)
-        {
             _state = State.Following;
-        }
 
         if (_state == State.Attacking)
             Projectile.tileCollide = false;
@@ -198,18 +198,15 @@ public class IndulgentImp : ModProjectile
                 Projectile.velocity.Y = (Projectile.velocity.Y * 40f + direction.Y) / 41f;
             }
             else
-            {
                 Projectile.velocity *= 0.97f;
-            }
         }
         else
         {
             if (_state != State.Following && !Collision.CanHitLine(Projectile.Center, 1, 1, Main.player[Projectile.owner].Center, 1, 1))
-            {
                 _state = State.Following;
-            }
 
             float speed = 6f;
+
             if (_state == State.Following)
                 speed = 15f;
 
@@ -227,9 +224,7 @@ public class IndulgentImp : ModProjectile
             speed = (int)(speed * speedMult);
 
             if (_state == State.Following && distance < 100f && !Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
-            {
                 _state = State.Attacking;
-            }
 
             if (distance > 2000f)
             {
@@ -259,9 +254,7 @@ public class IndulgentImp : ModProjectile
         Player player = Main.player[Projectile.owner];
 
         if (!Projectile.CheckForSolidGround())
-        {
             Projectile.velocity.Y += 0.25f;
-        }
 
         Projectile.velocity.X *= 0.93f;
         Projectile.velocity.Y *= 0.97f;
@@ -333,9 +326,9 @@ public class IndulgentImp : ModProjectile
         Projectile.frame = Projectile.frameCounter / delay + start;
         Projectile.rotation = Projectile.velocity.X * 0.05f;
         if (Projectile.velocity.X > 0f)
-            Projectile.spriteDirection = (Projectile.direction = -1);
+            Projectile.spriteDirection = Projectile.direction = -1;
         else if (Projectile.velocity.X < 0f)
-            Projectile.spriteDirection = (Projectile.direction = 1);
+            Projectile.spriteDirection = Projectile.direction = 1;
     }
 
     void GroundedAnim(int start, int len, bool hasHostileTarget)
@@ -369,17 +362,13 @@ public class IndulgentImp : ModProjectile
     void Attack(int coolDown, float projSpeed, bool hasHostileTarget, Vector2 targetPosition)
     {
         if (_attackTimer > 0)
-        {
             if (Main.rand.NextBool(3))
                 _attackTimer += 2;
             else
                 _attackTimer += 1;
-        }
 
         if (_attackTimer > coolDown)
-        {
             _attackTimer = 0;
-        }
 
         if (!hasHostileTarget)
             return;
@@ -457,9 +446,7 @@ public class IndulgentImp : ModProjectile
             Projectile.netUpdate = true;
         }
         else
-        {
             QuickTeleport = false;
-        }
 
         switch (Stage)
         {
@@ -502,9 +489,7 @@ public class IndulgentImp : ModProjectile
         SpawnParticles();
 
         if (_needsUpdate && Projectile.owner == Main.myPlayer)
-        {
             Projectile.netUpdate = true;
-        }
     }
 
     void TeleportEffects(Vector2 position)
