@@ -69,13 +69,13 @@ public class SpriteSet
 
     public static Stage GetStage(int stage, out SpriteSet set)
     {
-        if (Current.Stages.TryGetValue(stage, out Stage result))
+        if (Current != null && Current.Stages.TryGetValue(stage, out Stage result))
         {
             set = Current;
             return result;
         }
         set = Fallback;
-        if (Fallback.Stages.TryGetValue(stage, out result))
+        if (Fallback != null && Fallback.Stages.TryGetValue(stage, out result))
             return result;
         return Stage.Fallback;
     }

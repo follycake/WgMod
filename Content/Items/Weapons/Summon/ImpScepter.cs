@@ -45,16 +45,25 @@ public class ImpScepter : ModItem
 
     public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
     {
-        if (!player.TryGetModPlayer(out IndulgentImpController ii))
-            return false;
-
         if (!player.HasBuff(Item.buffType))
             player.AddBuff(Item.buffType, 2);
 
-        if (ii.Stage < 3)
-            ii.Stage++;
-        else
-            ii.QuickTeleport = true;
+        foreach (Projectile proj in Main.ActiveProjectiles)
+        {
+            if (proj.owner != player.whoAmI || proj.type != Item.shoot)
+                continue;
+            if (proj.ModProjectile is IndulgentImp imp)
+            {
+                bool canAdvance = imp.Stage != 0 || (player.maxMinions - player.slotsMinions) > 0;
+
+                if (imp.Stage < 2 && canAdvance)
+                    imp.Stage++;
+                else
+                    imp.QuickTeleport = true;
+            }
+
+            return false;
+        }
 
         return true;
     }
