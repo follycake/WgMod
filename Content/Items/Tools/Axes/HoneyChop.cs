@@ -7,7 +7,7 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Tools.Axes;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class HoneyChop : ModItem
 {
 	WgStat _damage = new(1f, 1.1f);
@@ -18,8 +18,8 @@ public class HoneyChop : ModItem
 	{
 		Item.damage = 20;
 		Item.DamageType = DamageClass.Melee;
-		Item.width = 40;
-		Item.height = 40;
+		Item.width = 36;
+		Item.height = 34;
 		Item.useTime = 15;
 		Item.useAnimation = 30;
 		Item.useStyle = ItemUseStyleID.Swing;

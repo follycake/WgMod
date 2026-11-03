@@ -7,7 +7,7 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Tools.Pickaxes;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class HoneyPick : ModItem
 {
 	WgStat _damage = new(1f, 1.05f);
@@ -18,8 +18,8 @@ public class HoneyPick : ModItem
 	{
 		Item.damage = 8;
 		Item.DamageType = DamageClass.Melee;
-		Item.width = 40;
-		Item.height = 40;
+		Item.width = 32;
+		Item.height = 32;
 		Item.useTime = 15;
 		Item.useAnimation = 25;
 		Item.useStyle = ItemUseStyleID.Swing;

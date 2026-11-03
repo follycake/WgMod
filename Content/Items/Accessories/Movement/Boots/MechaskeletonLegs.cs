@@ -8,7 +8,7 @@ namespace WgMod.Content.Items.Accessories.Movement.Boots;
 
 [AutoloadEquip(EquipType.Shoes)]
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.tamara2401)]
 public class MechaskeletonLegs : ModItem
 {
     WgStat _movePenalty = new(1f, 0.5f);
@@ -18,7 +18,7 @@ public class MechaskeletonLegs : ModItem
 
     public override void SetDefaults()
     {
-        Item.width = 38;
+        Item.width = 36;
         Item.height = 28;
 
         Item.accessory = true;

@@ -8,7 +8,7 @@ namespace WgMod.Content.Items.Accessories.Movement.Boots;
 
 [AutoloadEquip(EquipType.Shoes)]
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.tamara2401)]
 public class TwilightTracers : ModItem
 {
     WgStat _movePenalty = new(1f, 0.35f);
@@ -19,8 +19,8 @@ public class TwilightTracers : ModItem
 
     public override void SetDefaults()
     {
-        Item.width = 38;
-        Item.height = 28;
+        Item.width = 52;
+        Item.height = 40;
 
         Item.accessory = true;
         Item.rare = ItemRarityID.Yellow;

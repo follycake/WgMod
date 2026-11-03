@@ -7,7 +7,7 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Tools.Hammers;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.PLACEHOLDER)]
+[Credit(ProjectRole.Artist, Contributor.divine_lumine)]
 public class HoneyHammer : ModItem
 {
 	WgStat _damage = new(1f, 1.05f);
@@ -18,8 +18,8 @@ public class HoneyHammer : ModItem
 	{
 		Item.damage = 23;
 		Item.DamageType = DamageClass.Melee;
-		Item.width = 40;
-		Item.height = 40;
+		Item.width = 34;
+		Item.height = 34;
 		Item.useTime = 19;
 		Item.useAnimation = 45;
 		Item.useStyle = ItemUseStyleID.Swing;
