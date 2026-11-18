@@ -60,7 +60,7 @@ public class HoneyHammer : ModItem
 	public override void AddRecipes()
 	{
 		CreateRecipe()
-			.AddIngredient(ItemID.HoneyComb, 16)
+			.AddIngredient(ItemID.BeeWax, 16)
 			.AddTile(TileID.Anvils)
 			.Register();
 	}
