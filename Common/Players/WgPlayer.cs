@@ -170,7 +170,7 @@ public partial class WgPlayer : ModPlayer
     {
         EnsureBuff<FatBuff>();
         EnsureBuff<StomachBuff>();
-        if (Weight.GetStage() >= Tired.StartStage)
+        if (!WgServerConfig.Instance.DisableFatBuffs && Weight.GetStage() >= Tired.StartStage)
             Player.AddBuff(ModContent.BuffType<Tired>(), 2);
         if (Stomach > 0f && (Player.HasBuff(BuffID.NeutralHunger) || Player.HasBuff(BuffID.Hunger) || Player.HasBuff(BuffID.Starving)))
         {
