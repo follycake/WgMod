@@ -50,8 +50,7 @@ public class BouncyBall : ModProjectile
 
         float maxDetectRadius = 400f;
 
-        if (HomingTarget == null)
-            HomingTarget = FindClosestNPC(maxDetectRadius);
+        HomingTarget ??= FindClosestNPC(maxDetectRadius);
 
         if (HomingTarget != null && !IsValidTarget(HomingTarget))
             HomingTarget = null;
@@ -114,19 +113,10 @@ public class BouncyBall : ModProjectile
 
             if (Math.Abs(Projectile.velocity.Y - oldVelocity.Y) > float.Epsilon)
                 Projectile.velocity.Y = -oldVelocity.Y * 0.9f;
+
             for (int i = 0; i < 5; i++)
             {
-                Dust cute = Dust.NewDustDirect(
-                    Projectile.position,
-                    12,
-                    12,
-                    ModContent.DustType<CutieHeart>(),
-                    0,
-                    0,
-                    100,
-                    default,
-                    1
-                );
+                Dust cute = Dust.NewDustDirect(Projectile.position, 12, 12, ModContent.DustType<CutieHeart>(), 0, 0, 100, default, 1);
                 cute.noGravity = true;
             }
         }
@@ -146,17 +136,7 @@ public class BouncyBall : ModProjectile
 
         for (int i = 0; i < 5; i++)
         {
-            Dust cute = Dust.NewDustDirect(
-                Projectile.position,
-                12,
-                12,
-                ModContent.DustType<CutieHeart>(),
-                0,
-                0,
-                100,
-                default,
-                1
-            );
+            Dust cute = Dust.NewDustDirect(Projectile.position, 12, 12, ModContent.DustType<CutieHeart>(), 0, 0, 100, default, 1);
             cute.noGravity = true;
         }
 
