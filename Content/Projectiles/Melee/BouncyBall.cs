@@ -66,10 +66,7 @@ public class BouncyBall : ModProjectile
         {
             if (IsValidTarget(target))
             {
-                float sqrDistanceToTarget = Vector2.DistanceSquared(
-                    target.Center,
-                    Projectile.Center
-                );
+                float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, Projectile.Center);
 
                 if (sqrDistanceToTarget < sqrMaxDetectDistance)
                 {
@@ -97,11 +94,7 @@ public class BouncyBall : ModProjectile
             float length = Projectile.velocity.Length();
             float targetAngle = Projectile.AngleTo(HomingTarget.Center);
 
-            Projectile.velocity =
-                Projectile
-                    .velocity.ToRotation()
-                    .AngleTowards(targetAngle, MathHelper.ToRadians(360))
-                    .ToRotationVector2() * length;
+            Projectile.velocity = Projectile.velocity.ToRotation().AngleTowards(targetAngle, MathHelper.ToRadians(360)).ToRotationVector2() * length;
             Projectile.velocity.Y += -oldVelocity.Y * 0.5f;
         }
         else
