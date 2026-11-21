@@ -1134,6 +1134,11 @@ Items: {
 			'They never wanna come quietly...'
 			'''
 	}
+
+	CoolFuckingOrb: {
+		DisplayName: Cool Fucking Orb
+		Tooltip: ""
+	}
 }
 
 Buffs: {
@@ -1494,6 +1499,7 @@ Projectiles: {
 	StrawProjectile.DisplayName: Straw Projectile
 	IndulgentImp.DisplayName: Indulgent Imp
 	IndulgentFireball.DisplayName: Indulgent Fireball
+	SmartShot.DisplayName: Smart Shot
 }
 
 NPCs: {
