@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Microsoft.Xna.Framework;
+using Steamworks;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -22,7 +23,7 @@ public class HellsBeesBuff : ModBuff
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
-public class HellishBee : ModProjectile
+public class HellishBee : TargetProjectile
 {
     const int StageCount = 4;
     const int MaxStage = StageCount - 1;
@@ -107,7 +108,7 @@ public class HellishBee : ModProjectile
             return;
 
         GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
-        SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
+        SearchForTargets(owner, Projectile, 700f, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
         Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
         Visuals();
     }
@@ -145,13 +146,7 @@ public class HellishBee : ModProjectile
         float overlapVelocity = 0.04f;
         foreach (Projectile other in Main.ActiveProjectiles)
         {
-            if (
-                other.whoAmI != Projectile.whoAmI
-                && other.owner == Projectile.owner
-                && Math.Abs(Projectile.position.X - other.position.X)
-                + Math.Abs(Projectile.position.Y - other.position.Y)
-                < Projectile.width
-            )
+            if (other.whoAmI != Projectile.whoAmI && other.owner == Projectile.owner && Math.Abs(Projectile.position.X - other.position.X) + Math.Abs(Projectile.position.Y - other.position.Y) < Projectile.width)
             {
                 if (Projectile.position.X < other.position.X)
                     Projectile.velocity.X -= overlapVelocity;
@@ -164,57 +159,6 @@ public class HellishBee : ModProjectile
                     Projectile.velocity.Y += overlapVelocity;
             }
         }
-    }
-
-    void SearchForTargets(Player owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter)
-    {
-        distanceFromTarget = 700f;
-        targetCenter = Projectile.position;
-        foundTarget = false;
-
-        if (owner.HasMinionAttackTargetNPC)
-        {
-            NPC npc = Main.npc[owner.MinionAttackTargetNPC];
-            float between = Vector2.Distance(npc.Center, Projectile.Center);
-
-            if (between < 2000f)
-            {
-                distanceFromTarget = between;
-                targetCenter = npc.Center;
-                foundTarget = true;
-            }
-        }
-
-        if (!foundTarget)
-        {
-            foreach (NPC npc in Main.ActiveNPCs)
-            {
-                if (npc.CanBeChasedBy())
-                {
-                    float between = Vector2.Distance(npc.Center, Projectile.Center);
-                    bool closest = Vector2.Distance(Projectile.Center, targetCenter) > between;
-                    bool inRange = between < distanceFromTarget;
-                    bool lineOfSight = Collision.CanHitLine(
-                        Projectile.position,
-                        Projectile.width,
-                        Projectile.height,
-                        npc.position,
-                        npc.width,
-                        npc.height
-                    );
-                    bool closeThroughWall = between < 100f;
-
-                    if ((closest && inRange || !foundTarget) && (lineOfSight || closeThroughWall))
-                    {
-                        distanceFromTarget = between;
-                        targetCenter = npc.Center;
-                        foundTarget = true;
-                    }
-                }
-            }
-        }
-
-        Projectile.friendly = foundTarget;
     }
 
     void Movement(bool foundTarget, float distanceFromTarget, Vector2 targetCenter, float distanceToIdlePosition, Vector2 vectorToIdlePosition)

@@ -6,6 +6,8 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Humanizer;
+using WgMod.Content.Projectiles.Sentry;
 
 namespace WgMod.Content.Projectiles.Minions;
 
@@ -35,7 +37,7 @@ public class IndulgentImpBuff : ModBuff
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
-public class IndulgentImp : ModProjectile
+public class IndulgentImp : TargetProjectile
 {
     enum State
     {
@@ -50,6 +52,7 @@ public class IndulgentImp : ModProjectile
     int _baseDamage;
     State _state = State.Following;
     int _attackTimer = 1;
+    int _attackRange = 2000;
 
     bool _needsUpdate = false;
 
@@ -128,44 +131,6 @@ public class IndulgentImp : ModProjectile
     public override bool MinionContactDamage()
     {
         return Stage == 2 && Projectile.velocity.Y > 0;
-    }
-
-    bool isValidTarget(NPC npc, float maxDist)
-    {
-        if (!npc.CanBeChasedBy())
-            return false;
-
-        float distance = Vector2.Distance(npc.Center, new Vector2(Projectile.Center.X, Projectile.Center.Y + _shootOffset));
-
-        if (distance >= maxDist)
-            return false;
-
-        if (!Collision.CanHitLine(new Vector2(Projectile.position.X, Projectile.Center.Y + _shootOffset), Projectile.width, Projectile.height, npc.position, npc.width, npc.height))
-            return false;
-
-        return true;
-    }
-
-    bool FindTarget(int maxDist, out Vector2 targetPosition)
-    {
-        NPC ownerAttackTarget = Projectile.OwnerMinionAttackTargetNPC;
-        if (ownerAttackTarget != null && isValidTarget(ownerAttackTarget, maxDist * 3f))
-        {
-            targetPosition = ownerAttackTarget.Center;
-            return true;
-        }
-
-        foreach (NPC npc in Main.ActiveNPCs)
-        {
-            if (!isValidTarget(npc, maxDist))
-                continue;
-
-            targetPosition = npc.Center;
-            return true;
-        }
-
-        targetPosition = Projectile.position;
-        return false;
     }
 
     void FlyingAI(float speedMult, bool hasHostileTarget, Vector2 targetPosition)
@@ -319,7 +284,7 @@ public class IndulgentImp : ModProjectile
     {
         Projectile.frameCounter++;
 
-        int delay = 15;
+        int delay = 5;
         if (Projectile.frameCounter >= len * delay)
             Projectile.frameCounter = 0;
 
@@ -359,7 +324,7 @@ public class IndulgentImp : ModProjectile
         }
     }
 
-    void Attack(int coolDown, float projSpeed, bool hasHostileTarget, Vector2 targetPosition)
+    void Attack(int cooldown, float projSpeed, bool hasHostileTarget, Vector2 targetPosition, int type = ProjectileID.ImpFireball)
     {
         if (_attackTimer > 0)
             if (Main.rand.NextBool(3))
@@ -367,7 +332,7 @@ public class IndulgentImp : ModProjectile
             else
                 _attackTimer += 1;
 
-        if (_attackTimer > coolDown)
+        if (_attackTimer > cooldown)
             _attackTimer = 0;
 
         if (!hasHostileTarget)
@@ -384,11 +349,12 @@ public class IndulgentImp : ModProjectile
             return;
 
         _attackTimer += 1;
+
         if (Main.myPlayer == Projectile.owner)
         {
             direction = direction.SafeNormalize(Vector2.Zero);
             direction *= projSpeed;
-            Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y + _shootOffset), direction, ProjectileID.ImpFireball, Projectile.damage, Projectile.knockBack, Main.myPlayer);
+            Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y + _shootOffset), direction, type, Projectile.damage, Projectile.knockBack, Main.myPlayer);
             proj.timeLeft = 300;
             proj.netUpdate = true;
             Projectile.netUpdate = true;
@@ -421,7 +387,9 @@ public class IndulgentImp : ModProjectile
         if (!CheckActive(owner))
             return;
 
-        bool hasHostileTarget = FindTarget(_targetingDistance, out Vector2 targetPosition);
+        SearchForTargets(owner, Projectile, _targetingDistance, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
+
+        float speedMultiplier = 1 + distanceFromTarget / _attackRange;
 
         _teleDelay++;
 
@@ -453,17 +421,17 @@ public class IndulgentImp : ModProjectile
             case 0:
                 Projectile.damage = _baseDamage;
 
-                FlyingAI(0.65f, hasHostileTarget, targetPosition);
+                FlyingAI(0.65f, foundTarget, targetCenter);
                 FlyingAnim(0, 3);
-                Attack(_projectileCooldown, 10, hasHostileTarget, targetPosition);
+                Attack(_projectileCooldown, 12, foundTarget, targetCenter);
                 break;
             case 1:
                 Projectile.damage = _baseDamage * 2;
                 Projectile.minionSlots = 2;
 
-                FlyingAI(0.4f, hasHostileTarget, targetPosition);
+                FlyingAI(0.4f, foundTarget, targetCenter);
                 FlyingAnim(3, 3);
-                Attack(_projectileCooldown + 10, 9, hasHostileTarget, targetPosition);
+                Attack(_projectileCooldown + 10, 14, foundTarget, targetCenter);
                 break;
             case 2:
                 Projectile.damage = _baseDamage * 4;
@@ -480,9 +448,9 @@ public class IndulgentImp : ModProjectile
                 Projectile.width = 78;
                 Projectile.height = 54;
 
-                GroundedAI(hasHostileTarget);
-                GroundedAnim(6, 5, hasHostileTarget);
-                Attack(_projectileCooldown + 20, 8, hasHostileTarget, targetPosition);
+                GroundedAI(foundTarget);
+                GroundedAnim(6, 5, foundTarget);
+                Attack(_projectileCooldown + 20, 16 * speedMultiplier, foundTarget, targetCenter, ModContent.ProjectileType<IndulgentFireball>());
                 break;
         }
 

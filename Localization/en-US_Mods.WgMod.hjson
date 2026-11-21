@@ -1493,6 +1493,7 @@ Projectiles: {
 	HeartyHeart_Direct_Spawner_Strong.DisplayName: Hearty Heart Hearter
 	StrawProjectile.DisplayName: Straw Projectile
 	IndulgentImp.DisplayName: Indulgent Imp
+	IndulgentFireball.DisplayName: Indulgent Fireball
 }
 
 NPCs: {
