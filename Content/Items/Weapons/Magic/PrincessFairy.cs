@@ -6,7 +6,7 @@ using WgMod.Content.Projectiles.Magic;
 
 namespace WgMod.Content.Items.Weapons.Magic;
 
-public class CoolFuckingOrb : ModItem
+public class PrincessFairy : ModItem
 {
     const float Range = 2000f;
 
@@ -31,7 +31,7 @@ public class CoolFuckingOrb : ModItem
         Item.noMelee = true;
         Item.mana = 50;
 
-        Item.shoot = ModContent.ProjectileType<SmartShot>();
+        Item.shoot = ModContent.ProjectileType<FairyShot>();
         Item.shootSpeed = 12f;
     }
 

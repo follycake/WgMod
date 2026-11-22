@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace WgMod.Content.Projectiles.Magic;
 
-public class SmartShot : ModProjectile
+public class FairyShot : ModProjectile
 {
 	public override void SetDefaults()
 	{
