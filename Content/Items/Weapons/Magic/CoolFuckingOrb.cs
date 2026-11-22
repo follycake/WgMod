@@ -8,6 +8,8 @@ namespace WgMod.Content.Items.Weapons.Magic;
 
 public class CoolFuckingOrb : ModItem
 {
+    const float Range = 2000f;
+
     const int CooldownMax = 2 * 60;
 
     int _cooldown = CooldownMax;
@@ -35,7 +37,7 @@ public class CoolFuckingOrb : ModItem
 
     public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
     {
-        FindClosestNPC(player, 2000f, out NPC closestNPC);
+        FindClosestNPC(player, Range, out NPC closestNPC);
 
         if (closestNPC == null || _cooldown != CooldownMax)
             mult = 0;
@@ -49,7 +51,7 @@ public class CoolFuckingOrb : ModItem
 
     public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
     {
-        FindClosestNPC(player, 2000f, out NPC closestNPC);
+        FindClosestNPC(player, Range, out NPC closestNPC);
 
         if (closestNPC == null || _cooldown != CooldownMax)
         {
