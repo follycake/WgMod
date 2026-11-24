@@ -1257,6 +1257,24 @@ Items: {
 			May cause side effects
 			''' */
 	}
+
+	CopperFunnel: {
+		// DisplayName: Copper Funnel
+		/* Tooltip:
+			'''
+			Use on another player to feed them something from your inventory
+			The item that will be used is displayed next to the cursor
+			''' */
+	}
+
+	TinFunnel: {
+		// DisplayName: Tin Funnel
+		/* Tooltip:
+			'''
+			Use on another player to feed them something from your inventory
+			The item that will be used is displayed next to the cursor
+			''' */
+	}
 }
 
 Buffs: {

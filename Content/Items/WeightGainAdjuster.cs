@@ -12,7 +12,6 @@ public class WeightGainAdjuster : ModItem
 
     public override void SetStaticDefaults()
     {
-        Item.ResearchUnlockCount = 10;
         ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
     }
 

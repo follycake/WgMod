@@ -49,7 +49,7 @@ public class SweetSpirit : ModNPC
         NPC.defense = 8;
         NPC.lifeMax = 50;
         NPC.HitSound = SoundID.NPCHit1;
-        NPC.DeathSound = SoundID.NPCDeath1;
+        NPC.DeathSound = SoundID.NPCDeath6;
         NPC.value = 60f;
         NPC.aiStyle = NPCAIStyleID.HoveringFighter;
         NPC.noTileCollide = true;

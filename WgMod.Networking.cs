@@ -4,8 +4,10 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Tile_Entities;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Common;
 using WgMod.Common.Players;
 using WgMod.Common.Systems;
+using WgMod.Content.Items;
 using WgMod.Content.TileEntities;
 
 namespace WgMod;
@@ -21,7 +23,8 @@ partial class WgMod
         MannequinSetStage,
         FeedingTubeSetLiquid,
         FeedingTubePlayerSync,
-        CurseSync
+        CurseSync,
+        FeederTool
     }
 
     public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -89,6 +92,33 @@ partial class WgMod
                 curses.ReceivePlayerSync(reader);
                 if (Main.netMode == NetmodeID.Server) // Forward the changes to the other clients
                     curses.SyncPlayer(-1, whoAmI, false);
+                break;
+            case MessageType.FeederTool:
+                Player feeder = Main.player[reader.ReadByte()];
+                Player feedee = Main.player[reader.ReadByte()];
+                int itemType = reader.ReadInt32();
+                int buffType = reader.ReadInt32();
+                int buffTime = reader.ReadInt32();
+
+                if (ItemCategories._weightGainPotions.Contains(itemType) || ItemCategories._weightLossPotions.Contains(itemType))
+                    CopperFunnel.HandleWGPotion(feedee, itemType);
+                else
+                    feedee.AddBuff(buffType, buffTime);
+
+                CopperFunnel.HandleSpecialCases(feedee, itemType); //for items that do something else when eaten or add more than one buff
+
+                if (Main.netMode == NetmodeID.Server) // Forward to clients
+                {
+                    ModPacket packet = GetPacket();
+                    packet.Write((byte)MessageType.FeederTool);
+                    packet.Write((byte)feeder.whoAmI);
+                    packet.Write((byte)feedee.whoAmI);
+                    packet.Write(itemType);
+                    packet.Write(buffType);
+                    packet.Write(buffTime);
+                    packet.Send();
+                }
+
                 break;
             default:
                 Logger.WarnFormat("WgMod: Unknown Message type: {0}", type);

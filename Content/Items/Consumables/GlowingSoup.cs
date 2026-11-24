@@ -42,10 +42,7 @@ public class GlowingSoup : ModItem
 
     public override bool? UseItem(Player player)
     {
-        if (player.whoAmI == Main.myPlayer)
-        {
-            player.AddBuff(ModContent.BuffType<Spored>(), Utility.TimeToTicks(minutes: 2), false);
-        }
+        player.AddBuff(ModContent.BuffType<Spored>(), Utility.TimeToTicks(minutes: 2));
         return true;
     }
 
