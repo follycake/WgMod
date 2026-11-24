@@ -1244,6 +1244,15 @@ Items: {
 			[c/ffff30:they are either to add more challenge or just for fun.]
 			'''
 	}
+
+	GlowingSoup: {
+		DisplayName: Glowing Soup
+		Tooltip:
+			'''
+			Minor improvements to all stats
+			May cause side effects
+			'''
+	}
 }
 
 Buffs: {
@@ -1421,7 +1430,7 @@ Buffs: {
 
 	Infatuated: {
 		DisplayName: In'fat'uated
-		Description: Weight gain rate increased by {0}%
+		Description: Weight gain rate increased by 75%
 	}
 
 	CrystalSugarFrenzy: {
@@ -1439,6 +1448,15 @@ Buffs: {
 		AltDisplayName: Stamina (or lack thereof)
 		Description: Reduces movement penalty by {0}%
 		AltDescription: Increases movement penalty by {0}%
+	}
+
+	Spored: {
+		DisplayName: Spored
+		Description:
+			'''
+			'You think you might be gaining weight...'
+			'But it could just be your imagination.'
+			'''
 	}
 }
 

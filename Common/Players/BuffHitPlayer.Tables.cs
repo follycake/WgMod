@@ -187,6 +187,22 @@ public partial class BuffHitPlayer
         ProjectileID.FairyQueenSunDance
     ];
 
+    readonly int _mushroomBuff = ModContent.BuffType<Spored>();
+
+    readonly HashSet<int> _mushrooms =
+    [
+        NPCID.AnomuraFungus,
+        NPCID.FungiBulb,
+        NPCID.MushiLadybug,
+        NPCID.SporeBat,
+        NPCID.SporeSkeleton,
+        NPCID.ZombieMushroom,
+        NPCID.ZombieMushroomHat,
+        NPCID.FungoFish,
+        NPCID.GiantFungiBulb,
+        NPCID.FungiSpore
+    ];
+
     void AddModNPCs()
     {
         AddNPCs(_slimes, "Consolaria", "ShadowSlime");

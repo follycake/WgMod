@@ -326,7 +326,7 @@ public class HeartyHeart_Wave : ModProjectile
 
     public override void OnHitPlayer(Player target, Player.HurtInfo info)
     {
-        target.AddBuff(ModContent.BuffType<Infatuated>(), 600, false);
+        target.AddBuff(ModContent.BuffType<Infatuated>(), 900, false);
         if (!target.TryGetModPlayer(out WgPlayer wg))
             return;
         Mass weightGain = 8f + (int)Math.Round(info.Damage / 2f) / 10f;

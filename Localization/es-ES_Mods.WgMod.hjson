@@ -1228,7 +1228,7 @@ Items: {
 			// DisplayName: Super Soft
 			/* Tooltip:
 				'''
-				Weight penalty is increased by 100%
+				Weight penalty is increased by 75%
 				You gain +5 max life per 10kg above 60kg
 				''' */
 		}
@@ -1246,6 +1246,15 @@ Items: {
 			Used to craft curses to modify the experience
 			[c/ffff30:The mod is not designed with curses in mind,]
 			[c/ffff30:they are either to add more challenge or just for fun.]
+			''' */
+	}
+
+	GlowingSoup: {
+		// DisplayName: Glowing Soup
+		/* Tooltip:
+			'''
+			Minor improvements to all stats
+			May cause side effects
 			''' */
 	}
 }
@@ -1443,6 +1452,15 @@ Buffs: {
 		// AltDisplayName: Stamina (or lack thereof)
 		// Description: Reduces movement penalty by {0}%
 		// AltDescription: Increases movement penalty by {0}%
+	}
+
+	Spored: {
+		// DisplayName: Spored
+		/* Description:
+			'''
+			'You think you might be gaining weight...'
+			'But it could just be your imagination.'
+			''' */
 	}
 }
 
