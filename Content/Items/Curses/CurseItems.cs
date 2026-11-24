@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using WgMod.Common.Players;
+﻿using Terraria.ID;
 using WgMod.Common.Systems;
 
 namespace WgMod.Content.Items.Curses;
@@ -61,7 +57,7 @@ public class Absorbant : CurseTemplate
     public override void AddRecipes()
     {
         CreateRecipe()
-            .AddIngredient(ItemID.Pumpkin, 10)
+            .AddIngredient(ItemID.EmptyBucket)
             .AddRecipeGroup(RecipeGroups.EvilPowder, 5)
             .AddTile<Tiles.Furniture.AltarOfCurses>()
             .Register();
@@ -138,6 +134,21 @@ public class StormDrain : CurseTemplate
     {
         CreateRecipe()
             .AddIngredient(ItemID.Grate, 3)
+            .AddRecipeGroup(RecipeGroups.EvilPowder, 5)
+            .AddTile<Tiles.Furniture.AltarOfCurses>()
+            .Register();
+    }
+}
+[Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
+[Credit(ProjectRole.Artist, Contributor.jumpsu2)]
+public class SuperSoft : CurseTemplate
+{
+    public override int CurseID => (int)CurseIDs.SuperSoft;
+    public override string Texture => "WgMod/Content/Items/Curses/SuperSoft";
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient(ItemID.Pumpkin, 5)
             .AddRecipeGroup(RecipeGroups.EvilPowder, 5)
             .AddTile<Tiles.Furniture.AltarOfCurses>()
             .Register();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Xna.Framework;
-using Stubble.Core.Classes;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -10,13 +9,12 @@ using Terraria.ModLoader.IO;
 using WgMod.Content.Buffs;
 using WgMod.Content.Items.Curses;
 using WgMod.Content.TileEntities;
-using static WgMod.Content.TileEntities.TEFeedingTube;
 
 namespace WgMod.Common.Players;
 
 public class CursePlayer : ModPlayer
 {
-    public bool[] ActiveCurses = new bool[9];
+    public bool[] ActiveCurses = new bool[10];
 
     internal WgStat _stuckageSpeed = new(0.3f, 0.1f);
     internal WgStat _grappleWeaken = new(0.1f, 0.99f);
@@ -67,14 +65,15 @@ public class CursePlayer : ModPlayer
         }
     }
 
-    public override void PostUpdateRunSpeeds()
-    {
-        StuckageMethod();
-    }
     public override void PreUpdateBuffs()
     {
         if (ActiveCurses[(int)CurseIDs.ThirteenDollarStaminaSystem])
             Player.AddBuff(ModContent.BuffType<Stamina>(), 2, true);
+    }
+    public override void PostUpdateEquips()
+    {
+        if (ActiveCurses[(int)CurseIDs.SuperSoft])
+            SuperSoft();
     }
     public override void PostUpdateMiscEffects()
     {
@@ -84,6 +83,10 @@ public class CursePlayer : ModPlayer
             StormDrain();
         if (ActiveCurses[(int)CurseIDs.ThirteenDollarStaminaSystem])
             StaminaUpdate();
+    }
+    public override void PostUpdateRunSpeeds()
+    {
+        StuckageMethod();
     }
     public override void PostUpdate()
     {
@@ -116,7 +119,7 @@ public class CursePlayer : ModPlayer
             return;
         _absorbantTimer = 0;
 
-        Point16 targetPos = Utils.ToTileCoordinates16(Player.Bottom - new Vector2(0, 1));
+        Point16 targetPos = Utils.ToTileCoordinates16(Player.Bottom - new Vector2(0, 2f));
 
         Tile targetTile = Main.tile[targetPos.X, targetPos.Y];
 
@@ -205,6 +208,12 @@ public class CursePlayer : ModPlayer
 
         float movementMult = float.Lerp(2f, 0.6f, _stamina / _maxStamina);
         Player.Wg().MovementPenalty *= movementMult;
+    }
+    public void SuperSoft()
+    {
+        int extraLife = (int)Math.Floor((Player.Wg().Weight.Mass - 60) / 10f) * 5;
+        Player.statLifeMax2 += extraLife;
+        Player.Wg().MovementPenalty *= 1.75f;
     }
     public void TakeBiteOutOfSlime(NPC target)
     {

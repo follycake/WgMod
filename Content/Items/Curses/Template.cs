@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
-using static WgMod.Common.GlobalItems.ItemDisabling;
 
 namespace WgMod.Content.Items.Curses;
 public class CurseTemplate : ModItem
@@ -88,5 +81,6 @@ public enum CurseIDs
     RockBottom,
     SlimeEater,
     MoreFatteningEnemies,
-    StormDrain
+    StormDrain,
+    SuperSoft
 }
