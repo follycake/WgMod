@@ -18,6 +18,7 @@ public class Stuckage : CurseTemplate
             .Register();
     }
 }
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 [Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class WeakChains : CurseTemplate
@@ -33,6 +34,7 @@ public class WeakChains : CurseTemplate
             .Register();
     }
 }
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 [Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class WeakPulley : CurseTemplate
@@ -48,6 +50,7 @@ public class WeakPulley : CurseTemplate
             .Register();
     }
 }
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 [Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class Absorbant : CurseTemplate
@@ -63,6 +66,7 @@ public class Absorbant : CurseTemplate
             .Register();
     }
 }
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 [Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class ThirteenDollarStaminaSystem : CurseTemplate
@@ -78,6 +82,7 @@ public class ThirteenDollarStaminaSystem : CurseTemplate
             .Register();
     }
 }
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 [Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class RockBottom : CurseTemplate
@@ -93,6 +98,7 @@ public class RockBottom : CurseTemplate
             .Register();
     }
 }
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 [Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class SlimeEater : CurseTemplate
@@ -108,6 +114,7 @@ public class SlimeEater : CurseTemplate
             .Register();
     }
 }
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 [Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class MoreFatteningEnemies : CurseTemplate
@@ -124,6 +131,7 @@ public class MoreFatteningEnemies : CurseTemplate
             .Register();
     }
 }
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 [Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class StormDrain : CurseTemplate
@@ -139,6 +147,7 @@ public class StormDrain : CurseTemplate
             .Register();
     }
 }
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 [Credit(ProjectRole.Artist, Contributor.jumpsu2)]
 public class SuperSoft : CurseTemplate

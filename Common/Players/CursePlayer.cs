@@ -22,21 +22,26 @@ public class CursePlayer : ModPlayer
     internal Vector2 _oldVelocity;
 
     internal int _absorbantTimer = 0;
+
     internal int _stormDrainTimer = 0;
 
-    internal WgStat _staminaDrain = new(1f, 15f);
     public float _stamina = 100;
     public float _maxStamina = 100;
+    internal WgStat _staminaDrain = new(1f, 15f);
 
     public override void Load()
     {
         On_Player.GetGrapplingForces += GetGrapplingForces;
     }
+    public override void Unload()
+    {
+        On_Player.GetGrapplingForces -= GetGrapplingForces;
+    }
+
     public override void ResetEffects()
     {
         _oldVelocity = Player.velocity;
     }
-
 
     public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
     {
@@ -56,7 +61,6 @@ public class CursePlayer : ModPlayer
             tag["ActiveCurse" + i] = ActiveCurses[i];
         }
     }
-
     public override void LoadData(TagCompound tag)
     {
         for (int i = 0; i < ActiveCurses.Length; i++)
@@ -70,11 +74,13 @@ public class CursePlayer : ModPlayer
         if (ActiveCurses[(int)CurseIDs.ThirteenDollarStaminaSystem])
             Player.AddBuff(ModContent.BuffType<Stamina>(), 2, true);
     }
+
     public override void PostUpdateEquips()
     {
         if (ActiveCurses[(int)CurseIDs.SuperSoft])
             SuperSoft();
     }
+
     public override void PostUpdateMiscEffects()
     {
         if (ActiveCurses[(int)CurseIDs.Absorbant] && Player == Main.LocalPlayer)
@@ -84,10 +90,12 @@ public class CursePlayer : ModPlayer
         if (ActiveCurses[(int)CurseIDs.ThirteenDollarStaminaSystem])
             StaminaUpdate();
     }
+
     public override void PostUpdateRunSpeeds()
     {
-        StuckageMethod();
+        Stuckage();
     }
+
     public override void PostUpdate()
     {
         if (ActiveCurses[(int)CurseIDs.WeakPulley])
@@ -151,6 +159,7 @@ public class CursePlayer : ModPlayer
             Liquid.AddWater(targetPos.X, targetPos.Y);
         }
     }
+
     public void StormDrain()
     {
         _stormDrainTimer++;
@@ -170,6 +179,7 @@ public class CursePlayer : ModPlayer
             }
         }
     }
+
     public void StaminaUpdate()
     {
         _stamina += 0.05f;
@@ -209,12 +219,14 @@ public class CursePlayer : ModPlayer
         float movementMult = float.Lerp(2f, 0.6f, _stamina / _maxStamina);
         Player.Wg().MovementPenalty *= movementMult;
     }
+
     public void SuperSoft()
     {
         int extraLife = (int)Math.Floor((Player.Wg().Weight.Mass - 60) / 10f) * 5;
         Player.statLifeMax2 += extraLife;
         Player.Wg().MovementPenalty *= 1.75f;
     }
+
     public void TakeBiteOutOfSlime(NPC target)
     {
         int stage = Player.Wg().Weight.GetStage();
@@ -224,11 +236,8 @@ public class CursePlayer : ModPlayer
 
         Player.Wg().AddStomach(info.Damage / 5f);
     }
-    public bool TileTypeMatches(Point16 target, ushort tileID)
-    {
-        return Main.tile[target.X, target.Y].HasTile && Main.tile[target.X, target.Y].TileType == tileID;
-    }
-    public void StuckageMethod()
+
+    public void Stuckage()
     {
         if (!ActiveCurses[(int)CurseIDs.Stuckage])
             return;
@@ -247,6 +256,12 @@ public class CursePlayer : ModPlayer
         Player.accRunSpeed *= _stuckageSpeed;
         Player.runSlowdown /= _stuckageSpeed * 3;
     }
+
+    public bool TileTypeMatches(Point16 target, ushort tileID)
+    {
+        return Main.tile[target.X, target.Y].HasTile && Main.tile[target.X, target.Y].TileType == tileID;
+    }
+
     static void GetGrapplingForces(On_Player.orig_GetGrapplingForces orig, Player self, Vector2 fromPosition, out int? preferredPlayerDirectionToSet, out float preferedPlayerVelocityX, out float preferedPlayerVelocityY)
     {
         if (!self.TryGetModPlayer(out CursePlayer plr))

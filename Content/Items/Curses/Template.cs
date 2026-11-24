@@ -12,10 +12,15 @@ namespace WgMod.Content.Items.Curses;
 public class CurseTemplate : ModItem
 {
     public virtual int CurseID => -1;
-    public override LocalizedText DisplayName => Language.GetText("Mods.WgMod.Items.Curses." + base.Name + ".DisplayName");
-    public override LocalizedText Tooltip => Language.GetText("Mods.WgMod.Items.Curses." + base.Name + ".Tooltip");
-    public override string Texture => "WgMod/Assets/Placeholder/ExampleItem";
+
     public override bool IsLoadingEnabled(Mod mod) => CurseID >= 0;
+
+    public override LocalizedText DisplayName => Language.GetText("Mods.WgMod.Items.Curses." + base.Name + ".DisplayName");
+
+    public override LocalizedText Tooltip => Language.GetText("Mods.WgMod.Items.Curses." + base.Name + ".Tooltip");
+
+    public override string Texture => "WgMod/Assets/Placeholder/ExampleItem";
+
     public override void SetDefaults()
     {
         Item.rare = ItemRarityID.LightPurple;
@@ -26,6 +31,7 @@ public class CurseTemplate : ModItem
         Item.width = 16;
         Item.height = 16;
     }
+
     public override bool? UseItem(Player player)
     {
         if (CurseID < 0) return true;
@@ -36,6 +42,7 @@ public class CurseTemplate : ModItem
         }
         return null;
     }
+
     public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
     {
         if (CurseID == -1)
@@ -55,6 +62,7 @@ public class CurseTemplate : ModItem
         return true;
 
     }
+
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
         tooltips.LineBeforeTooltip(out TooltipLine line);
@@ -66,6 +74,8 @@ public class CurseTemplate : ModItem
                 tooltips.Insert(tooltips.IndexOf(line) + 1, new TooltipLine(Mod, "NewTooltip", Language.GetTextValue("Mods.WgMod.Items.Curses.General.Inactive")));
         }
     }
+
+
     public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
     {
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.RemainingUseItems;

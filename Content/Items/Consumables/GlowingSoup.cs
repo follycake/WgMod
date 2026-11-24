@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -40,6 +39,7 @@ public class GlowingSoup : ModItem
         Item.value = Item.sellPrice(silver: 50);
         Item.rare = ItemRarityID.Blue;
     }
+
     public override bool? UseItem(Player player)
     {
         if (player.whoAmI == Main.myPlayer)
@@ -53,6 +53,7 @@ public class GlowingSoup : ModItem
     {
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.Food;
     }
+
     public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI) => false;
     public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
     {

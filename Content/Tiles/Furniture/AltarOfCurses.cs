@@ -17,9 +17,6 @@ public class AltarOfCurses : ModTile
 
         AddMapEntry(new Color(81, 59, 99));
 
-        RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.GraniteOven>(), 1);
-
-        TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3);
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.addTile(Type);
