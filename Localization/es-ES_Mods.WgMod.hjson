@@ -1223,6 +1223,15 @@ Items: {
 				This can be avoided by being underground or behind background walls
 				''' */
 		}
+
+		SuperSoft: {
+			// DisplayName: Super Soft
+			/* Tooltip:
+				'''
+				Weight penalty is increased by 100%
+				You gain +5 max life per 10kg above 60kg
+				''' */
+		}
 	}
 
 	PrincessFairy: {
