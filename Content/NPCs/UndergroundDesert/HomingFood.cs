@@ -12,6 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using WgMod.Content.Buffs.Debuffs;
+using WgMod.Content.Items.Curses;
 
 namespace WgMod.Content.NPCs.UndergroundDesert;
 
@@ -68,7 +69,10 @@ public class HomingFood : ModNPC
 
     public override float SpawnChance(NPCSpawnInfo spawnInfo)
     {
-        return SpawnCondition.DesertCave.Chance * 0.05f;
+        float chance = SpawnCondition.DesertCave.Chance * 0.05f;
+        if (spawnInfo.Player.Curses().ActiveCurses[(int)CurseIDs.MoreFatteningEnemies])
+            chance *= 2f;
+        return chance;
     }
 
     public override void OnSpawn(IEntitySource source)

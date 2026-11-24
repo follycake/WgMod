@@ -20,7 +20,8 @@ partial class WgMod
         WgPlayerCombatWeightText,
         MannequinSetStage,
         FeedingTubeSetLiquid,
-        FeedingTubePlayerSync
+        FeedingTubePlayerSync,
+        CurseSync
     }
 
     public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -82,6 +83,12 @@ partial class WgMod
                 fp.ReceivePlayerSync(reader);
                 if (Main.netMode == NetmodeID.Server)
                     fp.SyncPlayer(-1, whoAmI, false);
+                break;
+            case MessageType.CurseSync:
+                CursePlayer curses = Main.player[reader.ReadByte()].Curses();
+                curses.ReceivePlayerSync(reader);
+                if (Main.netMode == NetmodeID.Server) // Forward the changes to the other clients
+                    curses.SyncPlayer(-1, whoAmI, false);
                 break;
             default:
                 Logger.WarnFormat("WgMod: Unknown Message type: {0}", type);

@@ -19,6 +19,9 @@ public static class Utility
     /// <summary> Gets StatPlayer. </summary>
     public static StatPlayer ExtraStats(this Player player) => player.GetModPlayer<StatPlayer>();
 
+    /// <summary> Gets CursePlayer. </summary>
+    public static CursePlayer Curses(this Player player) => player.GetModPlayer<CursePlayer>();
+
     public static bool ReplaceDefense(this List<TooltipLine> tooltips, string defense)
     {
         TooltipLine line = tooltips.Find(t => t.Name == "Defense");
@@ -76,10 +79,10 @@ public static class Utility
         return $"{value}[c/B000B0:/{max}]";
     }
 
-    public static string Percent(this float value)
+    public static string Percent(this float value, bool goesRed = true)
     {
         int rounded = (int)MathF.Round(value * 100f);
-        if (rounded == 0)
+        if (rounded == 0 && goesRed)
             return rounded.ToString().Red();
         return rounded.ToString();
     }

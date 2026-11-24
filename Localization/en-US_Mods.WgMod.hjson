@@ -1139,6 +1139,102 @@ Items: {
 		DisplayName: Cool Fucking Orb
 		Tooltip: ""
 	}
+
+	Curses: {
+		General: {
+			Active:
+				'''
+				[c/ff325a:This curse is currently enabled.]
+				[c/ff325a:Use the item to disable it.]
+				'''
+			Inactive:
+				'''
+				[c/6432ff:This curse is currently disabled.]
+				[c/6432ff:Use the item to enable it.]
+				'''
+		}
+
+		Absorbant: {
+			DisplayName: Absorbant
+			Tooltip:
+				'''
+				You will absorb liquid that you make contact with, causing weight gain
+				The amount of weight gained is determined by the liquid type
+				'''
+		}
+
+		MoreFatteningEnemies: {
+			DisplayName: Alluring Scent
+			Tooltip:
+				'''
+				Enemies that inflict weight gain become twice as common
+				[c/646464:Only affects enemies introduced in this mod]
+				'''
+		}
+
+		RockBottom: {
+			DisplayName: Rock Bottom
+			Tooltip: Prevents weight loss
+		}
+
+		SlimeEater: {
+			DisplayName: Slime Eater
+			Tooltip:
+				'''
+				Contact with slime-like enemies makes you take a bite out of them
+				This deals damage to the slime and fills up your stomach
+				'''
+		}
+
+		Stuckage: {
+			DisplayName: Stuckage
+			Tooltip: Getting through doors at higher weights may become difficult
+		}
+
+		ThirteenDollarStaminaSystem: {
+			DisplayName: Exhaustion
+			Tooltip:
+				'''
+				Moving around and using items slowly increases the weight penalty up to a 100% increase
+				Not moving will reduce the weight penalty up to a 40% reduction
+				Sitting or sleeping speeds up reduction
+				'''
+		}
+
+		WeakChains: {
+			DisplayName: Weak Chains
+			Tooltip: Grappling hooks become less effective at higher weights
+		}
+
+		WeakPulley: {
+			DisplayName: Weak Pulley
+			Tooltip: Ropes & chains become less effective at higher weights
+		}
+
+		StormDrain: {
+			DisplayName: Storm Drain
+			Tooltip:
+				'''
+				If it is raining, you will rapidly gain weight
+				This can be avoided by being underground or behind background walls
+				'''
+		}
+	}
+
+	PrincessFairy: {
+		DisplayName: Princess Fairy
+		Tooltip: ""
+	}
+
+	AltarOfCurses: {
+		DisplayName: Altar of Curses
+		Tooltip:
+			'''
+			Used to craft curses to modify the experience
+			[c/ffff30:The mod is not designed with curses in mind,]
+			[c/ffff30:they are either to add more challenge or just for fun.]
+			'''
+	}
 }
 
 Buffs: {
@@ -1328,6 +1424,13 @@ Buffs: {
 		DisplayName: Indulgent Imp Buff
 		Description: Mods.WgMod.Buffs.IndulgentImpBuff.Description
 	}
+
+	Stamina: {
+		DisplayName: Stamina
+		AltDisplayName: Stamina (or lack thereof)
+		Description: Reduces movement penalty by {0}%
+		AltDescription: Increases movement penalty by {0}%
+	}
 }
 
 Configs: {
@@ -1449,6 +1552,7 @@ Tiles: {
 
 	BarnDresser.MapEntry: Barn Dresser
 	Oven.MapEntry: Oven
+	AltarOfCurses.MapEntry: Altar of Curses
 }
 
 InfoDisplays.PortableScale_InfoDisplay.DisplayName: Current weight
@@ -1500,6 +1604,7 @@ Projectiles: {
 	IndulgentImp.DisplayName: Indulgent Imp
 	IndulgentFireball.DisplayName: Indulgent Fireball
 	SmartShot.DisplayName: Smart Shot
+	FairyShot.DisplayName: Fairy Shot
 }
 
 NPCs: {
@@ -1855,3 +1960,5 @@ Achievements: {
 		Description: Mount a {$Items.Treadmill.DisplayName} while wearing the full Yoga Armor set.
 	}
 }
+
+RecipeGroups.EvilPowder: Evil Powder

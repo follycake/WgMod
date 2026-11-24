@@ -13,6 +13,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
+using WgMod.Content.Items.Curses;
 using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Dungeon;
@@ -189,6 +190,8 @@ public class EncumberedStatueMiddle : ModNPC
         if (NPC.FindFirstNPC(NPC.type) > 0) //prevent multiple of the same
             return 0f;
         float chance = SpawnCondition.DungeonNormal.Chance * 0.03f;
+        if (spawnInfo.Player.Curses().ActiveCurses[(int)CurseIDs.MoreFatteningEnemies])
+            chance *= 2f;
         if (NPC.downedPlantBoss)
             chance /= 3f;
         int onTile = spawnInfo.SpawnTileType;

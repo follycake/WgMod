@@ -10,6 +10,7 @@ using WgMod.Common.Systems;
 using WgMod.Content.Achievements;
 using WgMod.Content.Buffs;
 using WgMod.Content.Buffs.Debuffs;
+using WgMod.Content.Items.Curses;
 
 namespace WgMod.Common.Players;
 
@@ -102,6 +103,11 @@ public partial class WgPlayer : ModPlayer
         Weight start = Weight;
         if (mass > 0f)
             mass = WeightGainRate.ApplyTo(mass);
+        else if (mass < 0f)
+        {
+            if (Player.Curses().ActiveCurses[(int)CurseIDs.RockBottom])
+                return 0f;
+        }
         SetWeight(Weight + mass, effects);
         return Weight.Mass - start.Mass;
     }
@@ -442,7 +448,8 @@ public partial class WgPlayer : ModPlayer
 
     public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
     {
-        SetWeight(new Weight(Weight.Mass * WeightValues.GetDeathPenalty(Player.difficulty)));
+        if (!Player.Curses().ActiveCurses[(int)CurseIDs.RockBottom])
+            SetWeight(new Weight(Weight.Mass * WeightValues.GetDeathPenalty(Player.difficulty)));
     }
 
     public override void ModifyHurt(ref Player.HurtModifiers modifiers)

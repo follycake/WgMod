@@ -9,6 +9,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
+using WgMod.Content.Items.Curses;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -175,6 +176,8 @@ public class OverindulgentStatueBottom : ModNPC
         if (!NPC.downedPlantBoss)
             return 0f;
         float chance = SpawnCondition.DungeonNormal.Chance * 0.03f;
+        if (spawnInfo.Player.Curses().ActiveCurses[(int)CurseIDs.MoreFatteningEnemies])
+            chance *= 2f;
         int onTile = spawnInfo.SpawnTileType;
         if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick ||
             onTile == TileID.GreenDungeonBrick)

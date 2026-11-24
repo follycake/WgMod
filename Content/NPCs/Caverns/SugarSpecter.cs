@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using WgMod.Content.Dusts;
+using WgMod.Content.Items.Curses;
 
 namespace WgMod.Content.NPCs.Caverns;
 
@@ -34,7 +35,10 @@ public class SugarSpecter : SweetSpirit
     {
         if (!Main.hardMode)
             return 0f;
-        return SpawnCondition.Cavern.Chance * 0.04f;
+        float chance = SpawnCondition.Cavern.Chance * 0.04f;
+        if (spawnInfo.Player.Curses().ActiveCurses[(int)CurseIDs.MoreFatteningEnemies])
+            chance *= 2f;
+        return chance;
     }
 
     public override void HitEffect(NPC.HitInfo hit)
