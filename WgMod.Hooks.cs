@@ -40,6 +40,7 @@ public partial class WgMod
         On_PlayerDrawLayers.DrawPlayer_03_PortableStool += PlayerDrawLayers_DrawPlayer_03_PortableStool;
         On_PlayerDrawLayers.DrawPlayer_09_Wings += PlayerDrawLayers_DrawPlayer_09_Wings;
         On_PlayerDrawLayers.DrawPlayer_25_Shield += PlayerDrawLayers_DrawPlayer_25_Shield;
+        On_Mount.Hover += Mount_Hover;
     }
 
     // Always remember to unregister your hooks
@@ -58,6 +59,7 @@ public partial class WgMod
         On_PlayerDrawLayers.DrawPlayer_03_PortableStool -= PlayerDrawLayers_DrawPlayer_03_PortableStool;
         On_PlayerDrawLayers.DrawPlayer_09_Wings -= PlayerDrawLayers_DrawPlayer_09_Wings;
         On_PlayerDrawLayers.DrawPlayer_25_Shield -= PlayerDrawLayers_DrawPlayer_25_Shield;
+        On_Mount.Hover -= Mount_Hover;
     }
 
     static void Player_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
@@ -369,5 +371,177 @@ public partial class WgMod
         drawinfo.Position += new Vector2(drawinfo.drawPlayer.direction * (drawinfo.drawPlayer.width - Player.defaultWidth) * 0.4f, 0f);
         orig(ref drawinfo);
         drawinfo.Position = oldPos;
+    }
+
+    static bool Mount_Hover(On_Mount.orig_Hover orig, Mount self, Player mountedPlayer)
+    {
+        if (self._type == MountID.Drill || !mountedPlayer.active)
+            return orig(self, mountedPlayer);
+
+        float hoverMult = mountedPlayer.Wg()._finalMovementFactor;
+
+        bool flag = self._type == MountID.UFO || self._type == MountID.CuteFishron || self._type == MountID.WitchBroom || self._type == MountID.PirateShip || self._type == MountID.LavaShark;
+        bool flag2 = self._frameState == 2 || self._frameState == 4;
+        if (self._type == MountID.LavaShark)
+        {
+            flag2 = (self._frameState == 4);
+        }
+        if (flag2)
+        {
+            bool flag3 = true;
+            float num = 1f;
+            float num2 = mountedPlayer.gravity / Player.defaultGravity;
+            if (mountedPlayer.slowFall)
+            {
+                num2 /= 3f;
+            }
+            if (num2 < 0.25f)
+            {
+                num2 = 0.25f;
+            }
+            if (!flag)
+            {
+                if (self._flyTime > 0)
+                {
+                    self._flyTime--;
+                }
+                else if (self._fatigue < self._fatigueMax)
+                {
+                    self._fatigue += num2;
+                }
+                else
+                {
+                    flag3 = false;
+                }
+            }
+            if (self._type == MountID.CuteFishron && !mountedPlayer.MountFishronSpecial)
+            {
+                num = 0.5f;
+            }
+            float num3 = self._fatigue / self._fatigueMax;
+            if (flag)
+            {
+                num3 = 0f;
+            }
+            bool flag4 = true;
+            if (self._type == MountID.DarkMageBook)
+            {
+                flag4 = false;
+            }
+            num *= (float.Lerp(hoverMult, 1f, 0.5f));
+            float num4 = 4f * num3;
+            float num5 = 4f * num3;
+            bool flag5 = false;
+            if (self._type == MountID.DarkMageBook)
+            {
+                num4 = 0f;
+                num5 = 0f;
+                if (!flag3)
+                {
+                    flag5 = true;
+                }
+                if (mountedPlayer.controlDown)
+                {
+                    num5 = 8f;
+                }
+            }
+            if (num4 == 0f)
+            {
+                num4 = -0.001f;
+            }
+            if (num5 == 0f)
+            {
+                num5 = -0.001f;
+            }
+            float num6 = mountedPlayer.velocity.Y;
+            if (flag4 && (mountedPlayer.controlUp || mountedPlayer.controlJump) && flag3)
+            {
+                num4 = -2f - 6f * (1f - num3);
+                if (self._type == MountID.DarkMageBook)
+                {
+                    num4 /= 3f;
+                }
+                num6 -= self._data.acceleration * num * hoverMult;
+            }
+            else if (mountedPlayer.controlDown)
+            {
+                num6 += self._data.acceleration * num * (1f + 1f - hoverMult);
+                num5 = 8f;
+            }
+            else if (flag5)
+            {
+                float num7 = mountedPlayer.gravity * mountedPlayer.gravDir;
+                num6 += num7;
+                num5 = 4f;
+            }
+            else
+            {
+                int jump = mountedPlayer.jump;
+            }
+
+            if (num6 < num4 * hoverMult)
+            {
+                num6 = ((num4 - num6 >= self._data.acceleration) ? (num6 + self._data.acceleration * num * hoverMult) : num4 * hoverMult);
+            }
+            else if (num6 > num5)
+            {
+                num6 = ((num6 - num5 >= self._data.acceleration) ? (num6 - self._data.acceleration * num) : num5 * (1f + 1f - hoverMult));
+            }
+
+            if ((hoverMult <= 0.4f && !(mountedPlayer.controlUp || mountedPlayer.controlJump)) || hoverMult <= 0f)
+                num6 += (1 - hoverMult * 2.5f) * 0.25f;
+
+            mountedPlayer.velocity.Y = num6;
+            if (num4 == -0.001f && num5 == -0.001f && num6 == -0.001f)
+            {
+                mountedPlayer.position.Y = mountedPlayer.position.Y - -0.001f;
+            }
+            mountedPlayer.fallStart = (int)(mountedPlayer.position.Y / 16f);
+        }
+        else if (!flag)
+        {
+            mountedPlayer.velocity.Y = mountedPlayer.velocity.Y + mountedPlayer.gravity * mountedPlayer.gravDir;
+        }
+        else if (mountedPlayer.velocity.Y == 0f)
+        {
+            Vector2 velocity = Vector2.UnitY * mountedPlayer.gravDir * 1f;
+            if (Collision.TileCollision(mountedPlayer.position, velocity, mountedPlayer.width, mountedPlayer.height, false, false, (int)mountedPlayer.gravDir).Y != 0f || mountedPlayer.controlDown)
+            {
+                mountedPlayer.velocity.Y = 0.001f;
+            }
+        }
+        else if (mountedPlayer.velocity.Y == -0.001f)
+        {
+            mountedPlayer.velocity.Y = mountedPlayer.velocity.Y - -0.001f;
+        }
+        if (self._type == MountID.UFO)
+        {
+            float num8 = mountedPlayer.velocity.X / self._data.dashSpeed;
+            if ((double)num8 > 0.95)
+            {
+                num8 = 0.95f;
+            }
+            if ((double)num8 < -0.95)
+            {
+                num8 = -0.95f;
+            }
+            float fullRotation = 0.7853982f * num8 / 2f;
+            float num9 = Math.Abs(2f - (float)self._frame / 2f) / 2f;
+            Lighting.AddLight((int)(mountedPlayer.position.X + (float)(mountedPlayer.width / 2)) / 16, (int)(mountedPlayer.position.Y + (float)(mountedPlayer.height / 2)) / 16, 0.4f, 0.2f * num9, 0f);
+            mountedPlayer.fullRotation = fullRotation;
+        }
+        else if (self._type == MountID.WitchBroom)
+        {
+            float value = (0f - mountedPlayer.velocity.Y) / self._data.dashSpeed;
+            value = MathHelper.Clamp(value, -1f, 1f);
+            float value2 = mountedPlayer.velocity.X / self._data.dashSpeed;
+            value2 = MathHelper.Clamp(value2, -1f, 1f);
+            float num12 = -0.19634955f * value * (float)mountedPlayer.direction;
+            float num11 = 0.19634955f * value2;
+            float fullRotation3 = num12 + num11;
+            mountedPlayer.fullRotation = fullRotation3;
+            mountedPlayer.fullRotationOrigin = new Vector2((float)(mountedPlayer.width / 2), (float)mountedPlayer.height);
+        }
+        return true;
     }
 }

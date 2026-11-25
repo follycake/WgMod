@@ -1275,6 +1275,11 @@ Items: {
 			The item that will be used is displayed next to the cursor
 			''' */
 	}
+
+	LardDarterBanner: {
+		// DisplayName: Lard Darter Banner
+		// Tooltip: ""
+	}
 }
 
 Buffs: {
@@ -1480,6 +1485,15 @@ Buffs: {
 			'But it could just be your imagination.'
 			''' */
 	}
+
+	Honeyspored: {
+		// DisplayName: Honeyspored
+		/* Description:
+			'''
+			'You think you might be gaining weight...'
+			'But it could just be your imagination.'
+			''' */
+	}
 }
 
 Configs: {
@@ -1654,6 +1668,7 @@ Projectiles: {
 	// IndulgentFireball.DisplayName: Indulgent Fireball
 	// SmartShot.DisplayName: Smart Shot
 	// FairyShot.DisplayName: Fairy Shot
+	// HoneyGas.DisplayName: Honey Gas
 }
 
 NPCs: {
@@ -1742,6 +1757,9 @@ NPCs: {
 	OverindulgentStatueTop.DisplayName: Estatua Sobreindulgente
 	OverindulgentStatueMiddle.DisplayName: Estatua Sobreindulgente
 	OverindulgentStatueBottom.DisplayName: Estatua Sobreindulgente
+	// Honeybundle.DisplayName: Honeybundle
+	// LardDarter_Corrupt.DisplayName: Lard Darter
+	// LardDarter_Crimson.DisplayName: Lard Darter
 }
 
 Dialogue: {
@@ -1931,6 +1949,7 @@ Bestiary: {
 	Skeleborer: Algunas veces, grandes cantidades de ectoplasma se juntan, ¡y vienen a la vida! Ella es atormentada por los gritos de miles de almas, pero realmente no le importa.
 	EncumberedStatue: Una estatua que parece ser el habitada por un fantasma. A pesar de ser incapaz de moverse, parece feliz.
 	OverindulgentStatue: Una estatua con proporciones exageradas. No hay mucho mas que se pueda decir sobre esto, realmente.
+	// LardDarter: Yet another beast from the depths of this world's impurities, it appears to secrete thick layers of lard to use as a makeshift helmet.
 }
 
 Conditions.BlackRiderDev: Be super awesome cool
