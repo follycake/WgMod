@@ -10,6 +10,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using Terraria.Utilities;
 using WgMod.Content.Items;
+using WgMod.Content.Items.Consumables;
 using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Dungeon;
@@ -110,6 +111,7 @@ public class SkeleborerHead : WormHead
 
         _rareDrops = new();
         _rareDrops.Add(ModContent.ItemType<SkeleborerIOU>(), 2);
+        _rareDrops.Add(ModContent.ItemType<GreedyFlask>(), 1);
         _rareDrops.Add(ItemID.WaterCandle, 1);
     }
 

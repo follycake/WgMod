@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WgMod.Content.Items.Consumables;
 
 namespace WgMod.Content.Items;
 
@@ -17,5 +18,15 @@ public class SkeleborerIOU : ModItem
     public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
     {
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.Material;
+    }
+}
+
+public class SkeleborerRewards : GlobalItem
+{
+    public override void AddRecipes()
+    {
+        Recipe.Create(ModContent.ItemType<GreedyFlask>())
+            .AddIngredient(ModContent.ItemType<SkeleborerIOU>())
+            .Register();
     }
 }
