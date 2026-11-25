@@ -17,6 +17,7 @@ public class FairyShot : ModProjectile
 		Projectile.penetrate = 3;
 		Projectile.timeLeft = 600;
 	}
+
 	public override void AI()
 	{
 		Projectile.velocity.Y += Projectile.ai[0];

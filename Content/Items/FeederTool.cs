@@ -46,6 +46,7 @@ public class CopperFunnel : ModItem
         if (player.IsTargetTileInItemRange(Item) && usedFood != null) //a bit of a dumb way to get range but i guess it works
         {
             Player targetPlr = null;
+
             foreach (var plr in Main.ActivePlayers)
             {
                 if (plr == player)
@@ -56,6 +57,7 @@ public class CopperFunnel : ModItem
                     break;
                 }
             }
+
             if (targetPlr != null)
             {
                 if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -84,6 +86,7 @@ public class CopperFunnel : ModItem
         if (Main.LocalPlayer == player)
         {
             Item food = GetFood(player);
+
             if (food != null)
             {
                 player.cursorItemIconEnabled = true;
@@ -97,8 +100,10 @@ public class CopperFunnel : ModItem
     {
         if (selectFood.buffType > 0)
             return true;
+
         if (ItemCategories._weightGainPotions.Contains(selectFood.type) || ItemCategories._weightLossPotions.Contains(selectFood.type))
             return true;
+
         return false;
     }
 
@@ -106,13 +111,11 @@ public class CopperFunnel : ModItem
     {
         Item item = null;
         for (int i = 0; i < 54; i++)
-        {
             if (player.inventory[i].stack > 0 && WhatKindOfFruitIsThis(player.inventory[i]))
             {
                 item = player.inventory[i];
                 break;
             }
-        }
         return item;
     }
 
@@ -134,7 +137,7 @@ public class CopperFunnel : ModItem
             weightChange *= 0.1f;
         else
             player.AddBuff(ModContent.BuffType<MilkshakeSickness>(), 1 * 60 * 30);
-        
+
         player.Wg().CombatWeightText(player.Wg().AddWeight(weightChange), false);
     }
 

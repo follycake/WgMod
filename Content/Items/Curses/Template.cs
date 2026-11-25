@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Curses;
+
 public class CurseTemplate : ModItem
 {
     public virtual int CurseID => -1;
@@ -34,12 +35,15 @@ public class CurseTemplate : ModItem
 
     public override bool? UseItem(Player player)
     {
-        if (CurseID < 0) return true;
+        if (CurseID < 0)
+            return true;
+
         if (player.TryGetModPlayer(out CursePlayer plr))
         {
             plr.ActiveCurses[CurseID] = !plr.ActiveCurses[CurseID];
             return true;
         }
+
         return null;
     }
 
@@ -54,7 +58,7 @@ public class CurseTemplate : ModItem
                 string path = Texture;
                 if (path == "WgMod/Assets/Placeholder/ExampleItem")
                     return true;
-                Asset<Texture2D> asset = ModContent.Request<Texture2D>(path + "Active");
+                Asset<Texture2D> asset = ModContent.Request<Texture2D>(path + "_Active");
                 spriteBatch.Draw(asset.Value, position, frame, drawColor, 0, origin, scale, SpriteEffects.None, 0);
                 return false;
             }
@@ -67,12 +71,10 @@ public class CurseTemplate : ModItem
     {
         tooltips.LineBeforeTooltip(out TooltipLine line);
         if (Main.LocalPlayer.TryGetModPlayer(out CursePlayer plr))
-        {
             if (plr.ActiveCurses[CurseID])
                 tooltips.Insert(tooltips.IndexOf(line) + 1, new TooltipLine(Mod, "NewTooltip", Language.GetTextValue("Mods.WgMod.Items.Curses.General.Active")));
             else
                 tooltips.Insert(tooltips.IndexOf(line) + 1, new TooltipLine(Mod, "NewTooltip", Language.GetTextValue("Mods.WgMod.Items.Curses.General.Inactive")));
-        }
     }
 
 
@@ -81,6 +83,7 @@ public class CurseTemplate : ModItem
         itemGroup = ContentSamples.CreativeHelper.ItemGroup.RemainingUseItems;
     }
 }
+
 public enum CurseIDs
 {
     Stuckage,
