@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
@@ -9,6 +10,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
+using WgMod.Common.Configs;
 using WgMod.Common.Systems;
 using WgMod.Content.Items.Consumables.Potions.WeightGainPotions;
 using WgMod.Content.Items.Consumables.Potions.WeightLossPotions;
@@ -305,5 +307,52 @@ public class MilkmaidNPC : ModNPC
     public override void SaveData(TagCompound tag)
     {
         tag[nameof(milkedToday)] = milkedToday;
+    }
+    public override void HitEffect(NPC.HitInfo hit)
+    {
+        if (Main.netMode == NetmodeID.Server)
+            return;
+
+        int counter;
+
+        if (NPC.life > 0)
+        {
+            int loops = 0;
+            while ((double)loops < hit.Damage / (double)NPC.lifeMax * 100.0)
+            {
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -1f);
+                counter = loops;
+                loops = counter + 1;
+            }
+            return;
+        }
+
+        for (int i = 0; i < 50; i = counter + 1)
+        {
+            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, 2.5f * hit.HitDirection, -2.5f);
+            counter = i;
+        }
+
+        IEntitySource source = NPC.GetSource_Death();
+
+        if (WgClientConfig.Instance.DisableGoreSpecificallyForTheModsTownNPCsIGuess)
+        {
+            Gore.NewGore(source, NPC.position, Vector2.Zero, 11, 1f);
+            Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 20f), Vector2.Zero, 12, 1f);
+            Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 34f), Vector2.Zero, 13, 1f);
+            return;
+        }
+
+        int head = Mod.Find<ModGore>("MilkmaidHead").Type;
+        int arm = Mod.Find<ModGore>("MilkmaidArm").Type;
+        int leg = Mod.Find<ModGore>("MilkmaidLeg").Type;
+
+        Gore.NewGore(source, NPC.position, NPC.velocity, head, 1f);
+
+        Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 20f), NPC.velocity, arm, 1f);
+        Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 20f), NPC.velocity, arm, 1f);
+        Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 34f), NPC.velocity, leg, 1f);
+        Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 34f), NPC.velocity, leg, 1f);
+        return;
     }
 }

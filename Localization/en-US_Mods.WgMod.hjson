@@ -1577,6 +1577,11 @@ Configs: {
 			Label: Disable Advanced Jiggle
 			Tooltip: Disables advanced jiggle effects
 		}
+
+		DisableGoreSpecificallyForTheModsTownNPCsIGuess: {
+			Label: Disable Gore Specifically For This Mod's Town NPCs
+			Tooltip: Okay.
+		}
 	}
 
 	WorkshopIconsConfig: {

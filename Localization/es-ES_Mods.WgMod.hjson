@@ -1581,6 +1581,11 @@ Configs: {
 			Label: Desactivar Temblor Avanzado
 			Tooltip: Desactiva efectos de temblor avanzados
 		}
+
+		DisableGoreSpecificallyForTheModsTownNPCsIGuess: {
+			// Label: Disable Gore Specifically For This Mod's Town NPCs
+			// Tooltip: Okay.
+		}
 	}
 
 	WorkshopIconsConfig: {
