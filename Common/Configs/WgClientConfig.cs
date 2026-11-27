@@ -36,6 +36,9 @@ public class WgClientConfig : ModConfig
     [DefaultValue(true)]
     public bool ShowCredits;
 
+    [DefaultValue(false)]
+    public bool DisableGoreForCertainNPCs;
+
     [Header("Volume")]
     [Slider, DrawTicks, Increment(10), Range(0, 100), DefaultValue(100)]
     public int BellyVolume;

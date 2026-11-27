@@ -8,6 +8,9 @@ public class EnemyBanner : ModBannerTile
     {
         Skeleborer,
         EncumberedStatue,
-        OverindulgentStatue
+        OverindulgentStatue,
+        LardDarter,
+        Lardling,
+        LardZombie
     }
 }

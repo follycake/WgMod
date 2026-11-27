@@ -15,6 +15,7 @@ using WgMod.Common.Players;
 using WgMod.Content.Buffs.Debuffs;
 using WgMod.Content.Items.Curses;
 using WgMod.Content.Items.Placeable.Banners;
+using WgMod.Content.NPCs.Gores;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -184,6 +185,44 @@ public class OverindulgentStatueMiddle : ModNPC
 
         for (int k = 0; k < num; k++)
             Dust.NewDust(NPC.position, NPC.width, NPC.height, dustID);
+
+        if (NPC.life <= 0)
+        {
+            IEntitySource source = NPC.GetSource_Death();
+
+            int partA = 0;
+            int partB = 0;
+            int partC = 0;
+
+            if (_style == 0)
+            {
+                partA = ModContent.GoreType<PinkStatue_A>();
+                partB = ModContent.GoreType<PinkStatue_B>();
+                partC = ModContent.GoreType<PinkStatue_C>();
+            }
+            else if (_style == 1)
+            {
+                partA = ModContent.GoreType<BlueStatue_A>();
+                partB = ModContent.GoreType<BlueStatue_B>();
+                partC = ModContent.GoreType<BlueStatue_C>();
+            }
+            else if (_style == 2)
+            {
+                partA = ModContent.GoreType<GreenStatue_A>();
+                partB = ModContent.GoreType<GreenStatue_B>();
+                partC = ModContent.GoreType<GreenStatue_C>();
+            }
+
+            Gore.NewGore(source, NPC.Top, new Vector2(Main.rand.NextFloat(-1f, 1f), -2f), partB, 1f);
+            Gore.NewGore(source, NPC.Center, new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), partA, 1f);
+            Gore.NewGore(source, NPC.Center, new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), partC, 1f);
+            Gore.NewGore(source, NPC.Center, new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), partA, 1f);
+            Gore.NewGore(source, NPC.Center, new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), partC, 1f);
+            Gore.NewGore(source, NPC.Center, new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), partA, 1f);
+            Gore.NewGore(source, NPC.Center, new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), partC, 1f);
+            Gore.NewGore(source, NPC.Center, new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), partA, 1f);
+            Gore.NewGore(source, NPC.Center, new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), partC, 1f);
+        }
     }
 
     public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)

@@ -11,7 +11,7 @@ public class WgHeadDrawLayer : PlayerDrawLayer
     public override bool IsHeadLayer => true;
     public override Transformation Transform => PlayerDrawLayers.TorsoGroup;
 
-    public override Position GetDefaultPosition() => new Between(PlayerDrawLayers.Head, PlayerDrawLayers.ArmOverItem);
+    public override Position GetDefaultPosition() => new Between(PlayerDrawLayers.FaceAcc, PlayerDrawLayers.MountFront);
     public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => true;
 
     public static Vector2 GetPosition(in PlayerDrawSet drawInfo)

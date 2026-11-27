@@ -1,8 +1,6 @@
 using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ModLoader;
-using WgMod.Common.Players;
 
 namespace WgMod.Content.Buffs.Debuffs;
 
@@ -30,7 +28,7 @@ public class Spored : ModBuff
         else
         {
             _cooldown = 0;
-            player.Wg().AddWeight(0.015f + player.buffTime[buffIndex] / 6000 * 0.01f);
+            player.Wg().AddWeight(0.02f + player.buffTime[buffIndex] / 4000f * 0.01f);
         }
     }
 }
