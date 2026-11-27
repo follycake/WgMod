@@ -37,7 +37,7 @@ public class WgClientConfig : ModConfig
     public bool ShowCredits;
 
     [DefaultValue(false)]
-    public bool DisableGoreSpecificallyForTheModsTownNPCsIGuess;
+    public bool DisableGoreForCertainNPCs;
 
     [Header("Volume")]
     [Slider, DrawTicks, Increment(10), Range(0, 100), DefaultValue(100)]

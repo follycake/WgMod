@@ -306,13 +306,43 @@ public class GroundedHarpyNPC : ModNPC
             counter = i;
         }
 
+        counter = 0;
+
         IEntitySource source = NPC.GetSource_Death();
 
-        if (WgClientConfig.Instance.DisableGoreSpecificallyForTheModsTownNPCsIGuess)
+        if (WgClientConfig.Instance.DisableGoreForCertainNPCs)
         {
-            Gore.NewGore(source, NPC.position, Vector2.Zero, 11, 1f);
-            Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 20f), Vector2.Zero, 12, 1f);
-            Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 34f), Vector2.Zero, 13, 1f);
+            // this is the vanilla code for NPCs poofing
+            for (int loops = 0; loops < 25; loops = counter + 1)
+            {
+                int num641 = Dust.NewDust(new Vector2(NPC.position.X, NPC.position.Y), NPC.width, NPC.height, DustID.Smoke, 0f, 0f, 100, Scale: 2f);
+                Dust dust144 = Main.dust[num641];
+                Dust dust190 = dust144;
+                dust190.velocity *= 1.4f;
+                Main.dust[num641].noLight = true;
+                Main.dust[num641].noGravity = true;
+                counter = loops;
+            }
+            int num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
+            ref float ptr = ref Main.gore[num642].velocity.X;
+            ptr += 1f;
+            ptr = ref Main.gore[num642].velocity.Y;
+            ptr += 1f;
+            num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
+            ptr = ref Main.gore[num642].velocity.X;
+            ptr -= 1f;
+            ptr = ref Main.gore[num642].velocity.Y;
+            ptr += 1f;
+            num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
+            ptr = ref Main.gore[num642].velocity.X;
+            ptr += 1f;
+            ptr = ref Main.gore[num642].velocity.Y;
+            ptr -= 1f;
+            num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
+            ptr = ref Main.gore[num642].velocity.X;
+            ptr -= 1f;
+            ptr = ref Main.gore[num642].velocity.Y;
+            ptr -= 1f;
             return;
         }
 

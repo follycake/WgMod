@@ -168,7 +168,7 @@ public class CursePlayer : ModPlayer
             return;
         _stormDrainTimer = 0;
 
-        if (Main.cloudAlpha > 0 && Player.position.Y > Main.worldSurface)
+        if (Main.cloudAlpha > 0 && Player.ZoneRain)
         {
             Point16 targetPos = Utils.ToTileCoordinates16(Player.Center);
             Tile targetTile = Main.tile[targetPos.X, targetPos.Y];

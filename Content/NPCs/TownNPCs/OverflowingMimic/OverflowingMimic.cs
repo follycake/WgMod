@@ -372,7 +372,47 @@ public class OverflowingMimicNPC : ModNPC
 
     public override void HitEffect(NPC.HitInfo hit)
     {
-        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.position, new(0f, 0f), ModContent.ProjectileType<MimicAttack>(), NPC.damage, 5f);
+        IEntitySource source = NPC.GetSource_Death();
+        if (NPC.life <= 0)
+        {
+            int counter;
+
+            for (int loops = 0; loops < 25; loops = counter + 1)
+            {
+                int num641 = Dust.NewDust(new Vector2(NPC.position.X, NPC.position.Y), NPC.width, NPC.height, DustID.Smoke, 0f, 0f, 100, Scale: 2f);
+                Dust dust144 = Main.dust[num641];
+                Dust dust190 = dust144;
+                dust190.velocity *= 1.4f;
+                Main.dust[num641].noLight = true;
+                Main.dust[num641].noGravity = true;
+                counter = loops;
+            }
+            int num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
+            ref float ptr = ref Main.gore[num642].velocity.X;
+            ptr += 1f;
+            ptr = ref Main.gore[num642].velocity.Y;
+            ptr += 1f;
+            num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
+            ptr = ref Main.gore[num642].velocity.X;
+            ptr -= 1f;
+            ptr = ref Main.gore[num642].velocity.Y;
+            ptr += 1f;
+            num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
+            ptr = ref Main.gore[num642].velocity.X;
+            ptr += 1f;
+            ptr = ref Main.gore[num642].velocity.Y;
+            ptr -= 1f;
+            num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
+            ptr = ref Main.gore[num642].velocity.X;
+            ptr -= 1f;
+            ptr = ref Main.gore[num642].velocity.Y;
+            ptr -= 1f;
+            return;
+        }
+        
+
+        if (Main.netMode != NetmodeID.MultiplayerClient)
+            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.position, new(0f, 0f), ModContent.ProjectileType<MimicAttack>(), NPC.damage, 5f);
     }
 }
 

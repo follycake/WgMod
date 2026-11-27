@@ -168,7 +168,8 @@ public partial class BuffHitPlayer
         NPCID.AncientLight,
         NPCID.AncientDoom,
         NPCID.BurningSphere,
-        NPCID.PresentMimic
+        NPCID.PresentMimic,
+        NPCID.GingerbreadMan
     ];
 
     readonly HashSet<int> _feederProjectiles =

@@ -9,6 +9,8 @@ public class EnemyBanner : ModBannerTile
         Skeleborer,
         EncumberedStatue,
         OverindulgentStatue,
-        LardDarter
+        LardDarter,
+        Lardling,
+        LardZombie
     }
 }

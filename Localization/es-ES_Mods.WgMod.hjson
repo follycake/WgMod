@@ -1280,6 +1280,16 @@ Items: {
 		// DisplayName: Lard Darter Banner
 		// Tooltip: ""
 	}
+
+	LardlingBanner: {
+		// DisplayName: Lardling Banner
+		// Tooltip: ""
+	}
+
+	LardZombieBanner: {
+		// DisplayName: Lard Zombie Banner
+		// Tooltip: ""
+	}
 }
 
 Buffs: {
@@ -1582,9 +1592,9 @@ Configs: {
 			Tooltip: Desactiva efectos de temblor avanzados
 		}
 
-		DisableGoreSpecificallyForTheModsTownNPCsIGuess: {
-			// Label: Disable Gore Specifically For This Mod's Town NPCs
-			// Tooltip: Okay.
+		DisableGoreForCertainNPCs: {
+			// Label: Disable Gore for This Mod's Town NPCs
+			// Tooltip: Causes specific town NPCs to poof like town pets
 		}
 	}
 
@@ -1765,6 +1775,9 @@ NPCs: {
 	// Honeybundle.DisplayName: Honeybundle
 	// LardDarter_Corrupt.DisplayName: Lard Darter
 	// LardDarter_Crimson.DisplayName: Lard Darter
+	// LardZombie.DisplayName: Lard Zombie
+	// Lardling.DisplayName: Lardling
+	// CorpulentZombie.DisplayName: Corpulent Zombie
 }
 
 Dialogue: {
@@ -1955,6 +1968,9 @@ Bestiary: {
 	EncumberedStatue: Una estatua que parece ser el habitada por un fantasma. A pesar de ser incapaz de moverse, parece feliz.
 	OverindulgentStatue: Una estatua con proporciones exageradas. No hay mucho mas que se pueda decir sobre esto, realmente.
 	// LardDarter: Yet another beast from the depths of this world's impurities, it appears to secrete thick layers of lard to use as a makeshift helmet.
+	// CorpulentZombie: On rare occasion, Lardlings will infect zombies and direct their bodies to produce lard, impairing their movement and causing their bodies to swell. The Lardling will return to the zombie once it is immobile, and consume it for reproduction.
+	// Lardling: Vile, lard-based creatures have begun infesting this world in the past few years. This one appears to eat the insides of corpses, then reproduce by division after accumulating enough mass.
+	// LardZombie: An infected zombie housing a Lardling that is actively reproducing. Disgusting.
 }
 
 Conditions.BlackRiderDev: Be super awesome cool

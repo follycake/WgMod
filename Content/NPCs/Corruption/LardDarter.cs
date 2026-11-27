@@ -12,6 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using WgMod.Common.Players;
+using WgMod.Common.Systems;
 using WgMod.Content.Items.Curses;
 using WgMod.Content.Items.Placeable.Banners;
 
@@ -23,6 +24,13 @@ public class LardDarter_Corrupt : ModNPC
     {
         NPCID.Sets.TrailingMode[NPC.type] = 3;
         NPCID.Sets.TrailCacheLength[NPC.type] = 10;
+
+        NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+        {
+            Position = new Vector2(0, 4),
+            PortraitPositionYOverride = 0f
+        };
+        NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
     }
 
     Vector2 _targetPosition = Vector2.Zero;
@@ -43,7 +51,15 @@ public class LardDarter_Corrupt : ModNPC
         NPC.damage = 26;
         NPC.defense = 3;
 
-        if (Main.hardMode)
+
+        if (NPC.downedPlantBoss && Main.expertMode)
+        {
+            NPC.value = 520;
+            NPC.lifeMax = 220;
+            NPC.damage = 72;
+            NPC.defense = 28;
+        }
+        else if (Main.hardMode && Main.expertMode)
         {
             NPC.value = 520;
             NPC.lifeMax = 190;
@@ -288,22 +304,16 @@ public class LardDarter_Corrupt : ModNPC
 
         int counter = 0;
 
-        int lard1 = Mod.Find<ModGore>("Lard_Tiny").Type;
-        int lard2 = Mod.Find<ModGore>("Lard_Medium").Type;
-        int lard3 = Mod.Find<ModGore>("Lard_Big").Type;
-
         if (NPC.life > 0)
         {
             int loops = 0;
             while ((double)loops < hit.Damage / (double)NPC.lifeMax * 100.0)
             {
                 Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.CorruptGibs, (float)hit.HitDirection, -1f, NPC.alpha, NPC.color, NPC.scale);
-                if (counter % 7 == 6)
-                    Gore.NewGore(NPC.GetSource_FromThis(), NPC.Center, NPC.velocity / 2 + new Vector2(Main.rand.NextFloat(-1.5f, 1.5f), Main.rand.NextFloat(-1.5f, 1.5f)),
-                        Main.rand.NextBool() ? lard1 : lard2, 1f);
                 counter = loops;
                 loops = counter + 1;
             }
+            DumbParticleSystem.LardExplode(NPC.GetSource_FromThis(), (int)(hit.Damage / (double)NPC.lifeMax * 20.0), NPC.Center, 2f, false, true);
             return;
         }
         for (int num583 = 0; num583 < 50; num583 = counter + 1)
@@ -316,22 +326,10 @@ public class LardDarter_Corrupt : ModNPC
 
         int segment = Mod.Find<ModGore>("LardDarter_Corrupt").Type;
 
-        Gore.NewGore(source, NPC.Center, NPC.velocity * Main.rand.NextFloat(0.7f, 1f), segment, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity * Main.rand.NextFloat(0.7f, 1f), segment, 1f);
+        Gore.NewGore(source, NPC.Center, NPC.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-3f, 0f)), segment, 1f);
+        Gore.NewGore(source, NPC.Center, NPC.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-3f, 0f)), segment, 1f);
 
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard3, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard3, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard3, 1f);
-
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard2, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard2, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard2, 1f);
-
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
+        DumbParticleSystem.LardExplode(source, 40, NPC.Center, 4f, true, true);
         return;
     }
 
@@ -339,7 +337,7 @@ public class LardDarter_Corrupt : ModNPC
     {
         if (!target.TryGetModPlayer(out WgPlayer wg))
             return;
-        Mass weightGain = 4f + (int)Math.Round(hurtInfo.Damage / 2f) / 10f;
+        Mass weightGain = 4f + hurtInfo.Damage / 15f;
         weightGain = wg.AddWeight(weightGain);
         SoundEngine.PlaySound(WgSounds.Gulp, target.Center);
         if (weightGain > 0f)
@@ -395,22 +393,16 @@ public class LardDarter_Crimson : LardDarter_Corrupt
 
         int counter = 0;
 
-        int lard1 = Mod.Find<ModGore>("Lard_Tiny").Type;
-        int lard2 = Mod.Find<ModGore>("Lard_Medium").Type;
-        int lard3 = Mod.Find<ModGore>("Lard_Big").Type;
-
         if (NPC.life > 0)
         {
             int loops = 0;
             while ((double)loops < hit.Damage / (double)NPC.lifeMax * 100.0)
             {
                 Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -1f, NPC.alpha, Scale: NPC.scale);
-                if (counter % 7 == 6)
-                    Gore.NewGore(NPC.GetSource_FromThis(), NPC.Center, NPC.velocity / 2 + new Vector2(Main.rand.NextFloat(-1.5f, 1.5f), Main.rand.NextFloat(-1.5f, 1.5f)),
-                        Main.rand.NextBool() ? lard1 : lard2, 1f);
                 counter = loops;
                 loops = counter + 1;
             }
+            DumbParticleSystem.LardExplode(NPC.GetSource_FromThis(), (int)(hit.Damage / (double)NPC.lifeMax * 20.0), NPC.Center, 2f, false, true);
             return;
         }
         for (int i = 0; i < 50; i = counter + 1)
@@ -423,22 +415,10 @@ public class LardDarter_Crimson : LardDarter_Corrupt
 
         int segment = Mod.Find<ModGore>("LardDarter_Crimson").Type;
 
-        Gore.NewGore(source, NPC.Center, NPC.velocity * Main.rand.NextFloat(0.7f, 1f), segment, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity * Main.rand.NextFloat(0.7f, 1f), segment, 1f);
+        Gore.NewGore(source, NPC.Center, NPC.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-3f, 0f)), segment, 1f);
+        Gore.NewGore(source, NPC.Center, NPC.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-3f, 0f)), segment, 1f);
 
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard3, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard3, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard3, 1f);
-
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard2, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard2, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard2, 1f);
-
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
-        Gore.NewGore(source, NPC.Center, NPC.velocity / 1.5f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f)), lard1, 1f);
+        DumbParticleSystem.LardExplode(source, 40, NPC.Center, 4f, true, true);
         return;
     }
 

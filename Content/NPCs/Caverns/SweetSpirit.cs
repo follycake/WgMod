@@ -39,6 +39,12 @@ public class SweetSpirit : ModNPC
     public override void SetStaticDefaults()
     {
         Main.npcFrameCount[Type] = FrameCount;
+
+        NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+        {
+            Position = new Vector2(0, 12)
+        };
+        NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
     }
 
     public override void SetDefaults()
