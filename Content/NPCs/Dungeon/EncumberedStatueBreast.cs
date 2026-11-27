@@ -3,18 +3,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
-using WgMod.Common.Players;
-using WgMod.Content.Buffs.Debuffs;
-using WgMod.Content.Dusts;
 using WgMod.Content.Items.Curses;
 using WgMod.Content.NPCs.Gores;
+using WgMod.Content.Projectiles.Enemy;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -246,179 +243,5 @@ public class EncumberedStatueTop : ModNPC
         spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition,
             sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
         return false;
-    }
-}
-
-public class HeartyHeart_Direct : ModProjectile
-{
-    public override string Texture => "WgMod/Content/Projectiles/Enemy/EncumberedStatueHeartBig";
-
-    const string TrailTexture = "WgMod/Content/Projectiles/Enemy/EncumberedStatueHeartBigTrail";
-
-    static Asset<Texture2D> _trailTexture;
-
-    public override void Load()
-    {
-        _trailTexture = ModContent.Request<Texture2D>(TrailTexture);
-    }
-
-    public override void SetStaticDefaults()
-    {
-        ProjectileID.Sets.TrailCacheLength[Type] = 8;
-        ProjectileID.Sets.TrailingMode[Type] = 2;
-    }
-
-    public override void SetDefaults()
-    {
-        Projectile.width = 16;
-        Projectile.height = 16;
-        Projectile.penetrate = -1;
-        Projectile.tileCollide = false;
-        Projectile.hostile = true;
-    }
-
-    public override void AI()
-    {
-        Projectile.velocity *= 1.015f;
-        Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
-    }
-
-    public override bool PreDraw(ref Color lightColor)
-    {
-        Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-
-        int pos = 0;
-
-        if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Direct_Blue>())
-            pos = 1;
-        else if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Direct_Green>())
-            pos = 2;
-
-        Rectangle sourceRectangle = new(texture.Width / 3 * pos, 0, texture.Width / 3, texture.Height);
-        Vector2 origin = sourceRectangle.Size() / 2f;
-
-        Color drawColor = Projectile.GetAlpha(Color.White);
-
-        for (int k = 1; k < Projectile.oldPos.Length; k++)
-        {
-            Vector2 drawPos = Projectile.oldPos[k] + Projectile.Size / 2 - Main.screenPosition;
-            Color color = drawColor * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-            Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin,
-                Projectile.scale, SpriteEffects.None, 0);
-        }
-
-        Main.EntitySpriteDraw(texture,
-            Projectile.Center - Main.screenPosition,
-            sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
-        return false;
-    }
-
-    public override void OnHitPlayer(Player target, Player.HurtInfo info)
-    {
-        target.AddBuff(ModContent.BuffType<Infatuated>(), 900, false);
-        if (!target.TryGetModPlayer(out WgPlayer wg))
-            return;
-        Mass weightGain = 8f + (int)Math.Round(info.Damage / 2f) / 10f;
-        weightGain = wg.AddWeight(weightGain);
-        SoundEngine.PlaySound(WgSounds.Gulp, target.Center);
-        if (weightGain > 0f)
-            wg.CombatWeightText(weightGain, true);
-    }
-}
-
-public class HeartyHeart_Direct_Blue : HeartyHeart_Direct;
-public class HeartyHeart_Direct_Green : HeartyHeart_Direct;
-
-public class HeartyHeart_Direct_Spawner : ModProjectile
-{
-    Color GetDustColor()
-    {
-        Color color = new(255, 51, 160);
-        if (Projectile.ai[1] == 1)
-            color = new(51, 109, 255);
-        else if (Projectile.ai[1] == 2)
-            color = new(51, 255, 92);
-        return color;
-    }
-
-    void SmallDust(Vector2 Position, Vector2 Velocity, float Scale)
-    {
-        Dust.NewDustPerfect(Position, ModContent.DustType<OutlinedDustSmall>(), Velocity, 0, GetDustColor(), Scale);
-    }
-
-    void BigDust(Vector2 Position, Vector2 Velocity, float Scale)
-    {
-        Dust.NewDustPerfect(Position, ModContent.DustType<OutlinedDustBig>(), Velocity, 0, GetDustColor(), Scale);
-    }
-
-    int _timer = Utility.TimeToTicks(seconds: 1, ticks: 30);
-
-    public override string Texture => "WgMod/Assets/Textures/Invisible";
-
-    public override void SetDefaults()
-    {
-        Projectile.width = 16;
-        Projectile.height = 16;
-        Projectile.penetrate = -1;
-        Projectile.tileCollide = false;
-        Projectile.hostile = true;
-    }
-
-    public override void AI() //ai0 = target player, ai1 = color index
-    {
-        _timer--;
-        Player target = Main.player[(int)Projectile.ai[0]];
-        if (!target.active || target.dead)
-        {
-            Projectile.Kill();
-            return;
-        }
-
-        if (_timer > 0)
-        {
-            SmallDust(Projectile.Center, new Vector2(Main.rand.Next(5, 11) / 8f, 0).RotatedByRandom(MathHelper.Pi),
-                1.65f);
-            SmallDust(Projectile.Center, new Vector2(Main.rand.Next(15, 21) / 8f, 0)
-                .RotatedBy(Projectile.Center.AngleTo(target.Center))
-                .RotatedByRandom(MathHelper.ToRadians(Main.rand.Next(-15, 16))), 1.75f);
-        }
-        else if (_timer == 0)
-        {
-            float degrees = 0;
-            while (degrees < 360)
-            {
-                float power = Main.rand.Next(20, 95) / 10f;
-                Vector2 dustVelocity = new Vector2(0, 1).RotatedBy(MathHelper.ToRadians(degrees));
-                float scale = 1 + Main.rand.Next(0, 20) / 10f;
-                BigDust(Projectile.Center, dustVelocity * power, scale);
-                degrees += 22.51f;
-            }
-
-            SoundEngine.PlaySound(SoundID.Item28, Projectile.Center);
-
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                int projectileID = ModContent.ProjectileType<HeartyHeart_Direct>();
-
-                if (Projectile.ai[1] == 1)
-                    projectileID = ModContent.ProjectileType<HeartyHeart_Direct_Blue>();
-                else if (Projectile.ai[1] == 2)
-                    projectileID = ModContent.ProjectileType<HeartyHeart_Direct_Green>();
-
-                int projectileCount = 3;
-                float baseAngle = MathHelper.ToRadians(20);
-                float currentAngle = -baseAngle * (projectileCount / 2f) + baseAngle / 2f;
-                Vector2 velocity = new Vector2(1.75f, 0).RotatedBy(Projectile.Center.AngleTo(target.Center));
-
-                for (int projectiles = 0; projectiles < projectileCount; projectiles++)
-                {
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center,
-                        velocity.RotatedBy(currentAngle), projectileID, 10, 0f);
-                    currentAngle += baseAngle;
-                }
-            }
-        }
-        else
-            Projectile.Kill();
     }
 }

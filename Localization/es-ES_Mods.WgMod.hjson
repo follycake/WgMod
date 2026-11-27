@@ -1290,6 +1290,16 @@ Items: {
 		// DisplayName: Lard Zombie Banner
 		// Tooltip: ""
 	}
+
+	PremiumStraw: {
+		// DisplayName: Premium Straw
+		/* Tooltip:
+			'''
+			Can be used to slurp up liquid or slimes
+			Does not work on other enemies
+			'Why would you need a reinforced drinking straw.'
+			''' */
+	}
 }
 
 Buffs: {
@@ -1683,7 +1693,8 @@ Projectiles: {
 	// IndulgentFireball.DisplayName: Indulgent Fireball
 	// SmartShot.DisplayName: Smart Shot
 	// FairyShot.DisplayName: Fairy Shot
-	// HoneyGas.DisplayName: Honey Gas
+	// HoneyGas.DisplayName: Honeycloud
+	// PremiumStrawProjectile.DisplayName: Premium Straw
 }
 
 NPCs: {

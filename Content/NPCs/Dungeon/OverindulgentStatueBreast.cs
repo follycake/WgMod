@@ -3,16 +3,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
-using WgMod.Content.Dusts;
 using WgMod.Content.Items.Curses;
 using WgMod.Content.NPCs.Gores;
+using WgMod.Content.Projectiles.Enemy;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -249,98 +248,5 @@ public class OverindulgentStatueTop : ModNPC
         spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition,
             sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
         return false;
-    }
-}
-
-public class HeartyHeart_Direct_Spawner_Strong : ModProjectile
-{
-    Color GetDustColor()
-    {
-        Color color = new(255, 51, 160);
-        if (Projectile.ai[1] == 1)
-            color = new(51, 109, 255);
-        else if (Projectile.ai[1] == 2)
-            color = new(51, 255, 92);
-        return color;
-    }
-
-    void SmallDust(Vector2 Position, Vector2 Velocity, float Scale)
-    {
-        Dust.NewDustPerfect(Position, ModContent.DustType<OutlinedDustSmall>(), Velocity, 0, GetDustColor(), Scale);
-    }
-
-    void BigDust(Vector2 Position, Vector2 Velocity, float Scale)
-    {
-        Dust.NewDustPerfect(Position, ModContent.DustType<OutlinedDustBig>(), Velocity, 0, GetDustColor(), Scale);
-    }
-
-    int _timer = Utility.TimeToTicks(seconds: 2, ticks: 30);
-    public override string Texture => "WgMod/Assets/Textures/Invisible";
-
-    public override void SetDefaults()
-    {
-        Projectile.width = 16;
-        Projectile.height = 16;
-        Projectile.penetrate = -1;
-        Projectile.tileCollide = false;
-        Projectile.hostile = true;
-    }
-
-    public override void AI() //ai0 = target player, ai1 = color index
-    {
-        _timer--;
-        Player target = Main.player[(int)Projectile.ai[0]];
-        if (!target.active || target.dead)
-        {
-            Projectile.Kill();
-            return;
-        }
-
-        if (_timer > 0)
-        {
-            SmallDust(Projectile.Center, new Vector2(Main.rand.Next(7, 13) / 8f, 0)
-                .RotatedByRandom(MathHelper.Pi), 1.85f);
-            SmallDust(Projectile.Center, new Vector2(Main.rand.Next(18, 24) / 8f, 0)
-                .RotatedBy(Projectile.Center.AngleTo(target.Center))
-                .RotatedByRandom(MathHelper.ToRadians(Main.rand.Next(-15, 16))), 2f);
-        }
-        else if (_timer == 0)
-        {
-            float degrees = 0;
-            while (degrees < 360)
-            {
-                float power = Main.rand.Next(20, 105) / 10f;
-                Vector2 dustVelocity = new Vector2(0, 1).RotatedBy(MathHelper.ToRadians(degrees));
-                float scale = 1.25f + Main.rand.Next(0, 20) / 10f;
-                BigDust(Projectile.Center, dustVelocity * power, scale);
-                degrees += 22.51f;
-            }
-
-            SoundEngine.PlaySound(SoundID.Item28, Projectile.Center);
-
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                int projectileID = ModContent.ProjectileType<HeartyHeart_Direct>();
-
-                if (Projectile.ai[1] == 1)
-                    projectileID = ModContent.ProjectileType<HeartyHeart_Direct_Blue>();
-                else if (Projectile.ai[1] == 2)
-                    projectileID = ModContent.ProjectileType<HeartyHeart_Direct_Green>();
-
-                int projectileCount = 6;
-                float baseAngle = MathHelper.ToRadians(18);
-                float currentAngle = -baseAngle * (projectileCount / 2f) + baseAngle / 2f;
-                Vector2 velocity = new Vector2(2.25f, 0).RotatedBy(Projectile.Center.AngleTo(target.Center));
-
-                for (int projectiles = 0; projectiles < projectileCount; projectiles++)
-                {
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center,
-                        velocity.RotatedBy(currentAngle), projectileID, 30, 0f);
-                    currentAngle += baseAngle;
-                }
-            }
-        }
-        else
-            Projectile.Kill();
     }
 }

@@ -35,7 +35,7 @@ public class DrinkingStraw : ModItem
 
         if (player.IsTargetTileInItemRange(Item))
         {
-            Point16 targetPos = Utils.ToTileCoordinates16(selectTile);
+            Point16 targetPos = selectTile.ToTileCoordinates16();
 
             Tile targetTile = Main.tile[targetPos.X, targetPos.Y];
 
@@ -64,16 +64,87 @@ public class DrinkingStraw : ModItem
             WorldGen.SquareTileFrame(targetPos.X, targetPos.Y, false);
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
                 NetMessage.sendWater(targetPos.X, targetPos.Y);
-            }
             else
-            {
                 Liquid.AddWater(targetPos.X, targetPos.Y);
-            }
             return true;
         }
 
         return null;
+    }
+}
+
+public class PremiumStraw : ModItem
+{
+    public override void SetStaticDefaults()
+    {
+        Item.staff[Type] = true;
+    }
+
+    public override void SetDefaults()
+    {
+        Item.DefaultToStaff(ModContent.ProjectileType<PremiumStrawProjectile>(), 0.01f, 6, 0);
+        Item.DamageType = DamageClass.Generic;
+        Item.damage = 58;
+        Item.UseSound = null;
+        Item.value = Item.sellPrice(silver: 8, copper: 50);
+        Item.rare = ItemRarityID.LightRed;
+    }
+
+    public override bool? UseItem(Player player)
+    {
+        if (player != Main.LocalPlayer)
+            return null;
+
+        Vector2 selectTile = Main.MouseWorld;
+
+        if (player.IsTargetTileInItemRange(Item))
+        {
+            Point16 targetPos = selectTile.ToTileCoordinates16();
+
+            Tile targetTile = Main.tile[targetPos.X, targetPos.Y];
+
+            if (targetTile.LiquidAmount == 0)
+                return null;
+
+            int drankLiquid = targetTile.LiquidType;
+            byte liquidLeft = (byte)Math.Max(targetTile.LiquidAmount - 255, 0);
+            int totalDrank = 255;
+            if (liquidLeft == 0)
+                totalDrank -= targetTile.LiquidAmount;
+
+            targetTile.LiquidAmount = liquidLeft;
+
+            TEFeedingTube.FluidInfo fluidInfo = TEFeedingTube.FluidTable[drankLiquid];
+            player.Wg().AddStomach(fluidInfo.Gain * totalDrank / 255);
+
+            SoundEngine.PlaySound(WgSounds.Gulp, player.Center);
+
+            if (liquidLeft == 0)
+                targetTile.LiquidType = LiquidID.Water; //i guess this is the default?
+
+            if (drankLiquid == LiquidID.Lava)
+                player.TouchLava();
+
+            WorldGen.SquareTileFrame(targetPos.X, targetPos.Y, false);
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                NetMessage.sendWater(targetPos.X, targetPos.Y);
+            else
+                Liquid.AddWater(targetPos.X, targetPos.Y);
+            return true;
+        }
+
+        return null;
+    }
+
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient<DrinkingStraw>()
+            .AddIngredient(ItemID.AdamantiteBar, 2)
+            .AddIngredient(ItemID.TitaniumBar, 2)
+            .AddTile(TileID.MythrilAnvil)
+            .Register();
     }
 }

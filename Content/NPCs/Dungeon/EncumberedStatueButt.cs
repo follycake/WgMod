@@ -3,17 +3,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
-using WgMod.Common.Players;
-using WgMod.Content.Buffs.Debuffs;
 using WgMod.Content.Items.Curses;
 using WgMod.Content.NPCs.Gores;
+using WgMod.Content.Projectiles.Enemy;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
@@ -258,131 +256,3 @@ public class EncumberedStatueBottom : ModNPC
         return false;
     }
 }
-
-public class HeartyHeart_Wave : ModProjectile
-{
-    public override string Texture => "WgMod/Content/Projectiles/Enemy/EncumberedStatueHeartBig";
-
-    const string TrailTexture = "WgMod/Content/Projectiles/Enemy/EncumberedStatueHeartBigTrail";
-
-    static Asset<Texture2D> _trailTexture;
-
-    public override void Load()
-    {
-        _trailTexture = ModContent.Request<Texture2D>(TrailTexture);
-    }
-
-    int _timer = Utility.TimeToTicks(seconds: 7);
-    float _defaultX = 0f;
-    int _wavyTimer = 0;
-    bool _firstTick = true;
-
-    public override void SetStaticDefaults()
-    {
-        ProjectileID.Sets.TrailCacheLength[Type] = 8;
-        ProjectileID.Sets.TrailingMode[Type] = 2;
-    }
-
-    public override void SetDefaults()
-    {
-        Projectile.width = 16;
-        Projectile.height = 16;
-        Projectile.penetrate = -1;
-        Projectile.tileCollide = false;
-        Projectile.hostile = true;
-    }
-
-    static float Easing(float x)
-    {
-        if (x > 1f)
-            x = 2f - x;
-        return x < 0.5f ? 2 * x * x : 1 - (float)Math.Pow(-2 * x + 2, 2) / 2f;
-    }
-
-    public override void AI()
-    {
-        if (_firstTick)
-        {
-            _defaultX = Projectile.position.X;
-            Projectile.velocity.X = 0;
-        }
-
-        int wavyStrength = (int)Projectile.ai[0] * 2;
-        int wavyTime = (int)Projectile.ai[0] + 100;
-
-        _timer--;
-
-        if (_timer > 60 * 6)
-            Projectile.alpha = (int)Math.Clamp((_timer - 60 * 6) / 60f * 255f, 0, 255);
-        else if (_timer < 60)
-            Projectile.alpha = (int)Math.Clamp(255f - _timer / 60f * 255f, 0, 255);
-        else
-            Projectile.alpha = 0;
-
-        _wavyTimer++;
-        if (_wavyTimer > wavyTime)
-            _wavyTimer = 0;
-        float offset = MathHelper.Lerp(-wavyStrength / 2, wavyStrength / 2, Easing(_wavyTimer / (float)wavyTime * 2f));
-        Projectile.position = new Vector2(_defaultX + offset, Projectile.position.Y);
-        Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
-
-        if (_firstTick)
-            _firstTick = false;
-    }
-
-    public override bool PreDraw(ref Color lightColor)
-    {
-        Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-
-        int pos = 0;
-        if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Wave_Blue>())
-            pos = 1;
-        else if (Projectile.type == ModContent.ProjectileType<HeartyHeart_Wave_Green>())
-            pos = 2;
-
-        Rectangle sourceRectangle = new(texture.Width / 3 * pos, 0, texture.Width / 3, texture.Height);
-        Vector2 origin = sourceRectangle.Size() / 2f;
-
-        Color drawColor = Projectile.GetAlpha(Color.White);
-
-        for (int k = 1; k < Projectile.oldPos.Length; k++)
-        {
-            Vector2 drawPos = Projectile.oldPos[k] + Projectile.Size / 2 - Main.screenPosition;
-            Color color = drawColor * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-            Main.EntitySpriteDraw(_trailTexture.Value, drawPos, sourceRectangle, color, Projectile.rotation, origin,
-                Projectile.scale, SpriteEffects.None, 0);
-        }
-
-        Main.EntitySpriteDraw(texture,
-            Projectile.Center - Main.screenPosition,
-            sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
-        return false;
-    }
-
-    public override void OnHitPlayer(Player target, Player.HurtInfo info)
-    {
-        target.AddBuff(ModContent.BuffType<Infatuated>(), 900, false);
-        if (!target.TryGetModPlayer(out WgPlayer wg))
-            return;
-        Mass weightGain = 8f + (int)Math.Round(info.Damage / 2f) / 10f;
-        weightGain = wg.AddWeight(weightGain);
-        SoundEngine.PlaySound(WgSounds.Gulp, target.Center);
-        if (weightGain > 0f)
-            wg.CombatWeightText(weightGain, true);
-    }
-
-    public override bool CanHitPlayer(Player target)
-    {
-        return _timer < 60 * 6 && _timer > 60;
-    }
-
-    public override bool? CanHitNPC(NPC target)
-    {
-        if (_timer < 60 * 6 && _timer > 60)
-            return null;
-        return false;
-    }
-}
-
-public class HeartyHeart_Wave_Blue : HeartyHeart_Wave;
-public class HeartyHeart_Wave_Green : HeartyHeart_Wave;

@@ -11,6 +11,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using WgMod.Content.Items.Curses;
 using WgMod.Content.NPCs.Gores;
+using WgMod.Content.Projectiles.Enemy;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
