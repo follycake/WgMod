@@ -12,6 +12,7 @@ using WgMod.Common.Systems;
 using WgMod.Content.Items.Curses;
 
 namespace WgMod.Content.NPCs.Night;
+
 public class CorpulentZombie : ModNPC
 {
     public override void SetStaticDefaults()
@@ -82,6 +83,7 @@ public class CorpulentZombie : ModNPC
     public override void AI()
     {
         NPC.velocity.X *= 0.85f;
+
         if (NPC.velocity.Y < -0.5f)
             NPC.velocity.Y *= 0.9f;
 
@@ -93,14 +95,14 @@ public class CorpulentZombie : ModNPC
         if (Main.netMode == NetmodeID.Server)
             return;
 
-        int counter = 0;
+        int counter;
 
         if (NPC.life > 0)
-        {
+        {   // Why is this code in every new NPC added? Please don't just copy/paste the same thing over and over again, make something more efficient.
             int loops = 0;
-            while ((double)loops < hit.Damage / (double)NPC.lifeMax * 100.0)
+            while (loops < hit.Damage / (double)NPC.lifeMax * 100.0)
             {
-                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -1f, NPC.alpha, Scale: NPC.scale);
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, hit.HitDirection, -1f, NPC.alpha, Scale: NPC.scale);
                 counter = loops;
                 loops = counter + 1;
             }
@@ -108,7 +110,7 @@ public class CorpulentZombie : ModNPC
         }
         for (int i = 0; i < 50; i = counter + 1)
         {
-            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -2f, NPC.alpha, Scale: NPC.scale);
+            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, hit.HitDirection, -2f, NPC.alpha, Scale: NPC.scale);
             counter = i;
         }
 

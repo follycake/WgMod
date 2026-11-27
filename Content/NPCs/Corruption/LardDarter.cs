@@ -17,6 +17,7 @@ using WgMod.Content.Items.Curses;
 using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Corruption;
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 public class LardDarter_Corrupt : ModNPC
 {
@@ -89,7 +90,7 @@ public class LardDarter_Corrupt : ModNPC
         return chance;
     }
 
-    public float Easing(float t) => (float)-(Math.Cos(Math.PI * t) - 1) / 2;
+    public static float Easing(float t) => (float)-(Math.Cos(Math.PI * t) - 1) / 2;
 
     // ai0 = timer, ai1 = state
     // 0 = idle, 1 = aiming, 2 = charging, 3 = returning to idle
@@ -107,6 +108,7 @@ public class LardDarter_Corrupt : ModNPC
             pong = true;
             NPC.velocity.X = NPC.oldVelocity.X * -1;
         }
+
         if (NPC.collideY)
         {
             pong = true;
@@ -122,6 +124,7 @@ public class LardDarter_Corrupt : ModNPC
             _redness = Math.Clamp(_redness - 0.08f, 0, 1);
 
         NPC.TargetClosest(false);
+
         if (!NPC.HasValidTarget)
         {
             NPC.ai[1] = 0;
@@ -185,9 +188,7 @@ public class LardDarter_Corrupt : ModNPC
                         _enragedCounter++;
 
                         if (distance > 600)
-                        {
                             _enragedCounter = 0;
-                        }
                         if (_enragedCounter >= 3)
                         {
                             _enraged = false;
@@ -302,23 +303,24 @@ public class LardDarter_Corrupt : ModNPC
         if (Main.netMode == NetmodeID.Server)
             return;
 
-        int counter = 0;
+        int counter;
 
         if (NPC.life > 0)
         {
             int loops = 0;
-            while ((double)loops < hit.Damage / (double)NPC.lifeMax * 100.0)
+            while (loops < hit.Damage / (double)NPC.lifeMax * 100.0)
             {
-                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.CorruptGibs, (float)hit.HitDirection, -1f, NPC.alpha, NPC.color, NPC.scale);
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.CorruptGibs, hit.HitDirection, -1f, NPC.alpha, NPC.color, NPC.scale);
                 counter = loops;
                 loops = counter + 1;
             }
             DumbParticleSystem.LardExplode(NPC.GetSource_FromThis(), (int)(hit.Damage / (double)NPC.lifeMax * 20.0), NPC.Center, 2f, false, true);
             return;
         }
+
         for (int num583 = 0; num583 < 50; num583 = counter + 1)
         {
-            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.CorruptGibs, (float)hit.HitDirection, -2f, NPC.alpha, NPC.color, NPC.scale);
+            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.CorruptGibs, hit.HitDirection, -2f, NPC.alpha, NPC.color, NPC.scale);
             counter = num583;
         }
 
@@ -337,9 +339,11 @@ public class LardDarter_Corrupt : ModNPC
     {
         if (!target.TryGetModPlayer(out WgPlayer wg))
             return;
+
         Mass weightGain = 4f + hurtInfo.Damage / 15f;
         weightGain = wg.AddWeight(weightGain);
         SoundEngine.PlaySound(WgSounds.Gulp, target.Center);
+
         if (weightGain > 0f)
             wg.CombatWeightText(weightGain, true);
     }
@@ -391,23 +395,24 @@ public class LardDarter_Crimson : LardDarter_Corrupt
         if (Main.netMode == NetmodeID.Server)
             return;
 
-        int counter = 0;
+        int counter;
 
         if (NPC.life > 0)
-        {
+        {   // Why is this code in every new NPC added? Please don't just copy/paste the same thing over and over again, make something more efficient.
             int loops = 0;
-            while ((double)loops < hit.Damage / (double)NPC.lifeMax * 100.0)
+            while (loops < hit.Damage / (double)NPC.lifeMax * 100.0)
             {
-                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -1f, NPC.alpha, Scale: NPC.scale);
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, hit.HitDirection, -1f, NPC.alpha, Scale: NPC.scale);
                 counter = loops;
                 loops = counter + 1;
             }
             DumbParticleSystem.LardExplode(NPC.GetSource_FromThis(), (int)(hit.Damage / (double)NPC.lifeMax * 20.0), NPC.Center, 2f, false, true);
             return;
         }
+
         for (int i = 0; i < 50; i = counter + 1)
         {
-            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -2f, NPC.alpha, Scale: NPC.scale);
+            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, hit.HitDirection, -2f, NPC.alpha, Scale: NPC.scale);
             counter = i;
         }
 

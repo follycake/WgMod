@@ -11,6 +11,7 @@ using WgMod.Content.Items.Curses;
 using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Night;
+
 public class LardZombie : ModNPC
 {
     int _spawnedLardlings = 0;
@@ -67,6 +68,7 @@ public class LardZombie : ModNPC
     {
         if (!Main.hardMode)
             return 0f;
+
         if (NPC.FindFirstNPC(Type) >= 0)
             return 0f;
 
@@ -98,6 +100,7 @@ public class LardZombie : ModNPC
     {
         NPC.spriteDirection = NPC.direction;
         NPC.velocity.X *= 0.85f;
+
         if (NPC.velocity.Y < -0.5f)
             NPC.velocity.Y *= 0.9f;
 
@@ -133,19 +136,19 @@ public class LardZombie : ModNPC
                 evilThing.velocity = new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 0f));
             }
         }
-                
+
 
         if (Main.netMode == NetmodeID.Server)
             return;
 
-        int counter = 0;
+        int counter;
 
         if (NPC.life > 0)
-        {
+        {   // Why is this code in every new NPC added? Please don't just copy/paste the same thing over and over again, make something more efficient.
             int loops = 0;
-            while ((double)loops < hit.Damage / (double)NPC.lifeMax * 100.0)
+            while (loops < hit.Damage / (double)NPC.lifeMax * 100.0)
             {
-                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -1f, NPC.alpha, Scale: NPC.scale);
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, hit.HitDirection, -1f, NPC.alpha, Scale: NPC.scale);
                 counter = loops;
                 loops = counter + 1;
             }
@@ -153,7 +156,7 @@ public class LardZombie : ModNPC
         }
         for (int i = 0; i < 75; i = counter + 1)
         {
-            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -2f, NPC.alpha, Scale: NPC.scale);
+            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, hit.HitDirection, -2f, NPC.alpha, Scale: NPC.scale);
             counter = i;
         }
 
@@ -167,6 +170,7 @@ public class LardZombie : ModNPC
     {
         return false;
     }
+
     public override bool CanHitNPC(NPC target)
     {
         return false;

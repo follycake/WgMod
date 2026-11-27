@@ -14,6 +14,7 @@ using WgMod.Content.Items.Curses;
 using WgMod.Content.Items.Placeable.Banners;
 
 namespace WgMod.Content.NPCs.Night;
+
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
 public class Lardling : ModNPC
 {
@@ -53,6 +54,7 @@ public class Lardling : ModNPC
     {
         if (!Main.hardMode)
             return 0f;
+
         float chance = SpawnCondition.OverworldNightMonster.Chance * 0.03f;
 
         if (Main.bloodMoon)
@@ -60,6 +62,7 @@ public class Lardling : ModNPC
 
         if (spawnInfo.Player.Curses().ActiveCurses[(int)CurseIDs.MoreFatteningEnemies])
             chance *= 2f;
+
         return chance;
     }
 
@@ -74,6 +77,7 @@ public class Lardling : ModNPC
                 else if (NPC.velocity.X < 0)
                     NPC.velocity.X = -3;
         }
+
         if (NPC.collideY)
         {
             NPC.velocity.Y = NPC.oldVelocity.Y * -1;
@@ -162,9 +166,11 @@ public class Lardling : ModNPC
     {
         if (!target.TryGetModPlayer(out WgPlayer wg))
             return;
+
         Mass weightGain = 3f + hurtInfo.Damage / 10f;
         weightGain = wg.AddWeight(weightGain);
         SoundEngine.PlaySound(WgSounds.Gulp, target.Center);
+
         if (weightGain > 0f)
             wg.CombatWeightText(weightGain, true);
     }

@@ -10,6 +10,7 @@ using WgMod.Content.Buffs.Debuffs;
 using WgMod.Content.Items.Curses;
 
 namespace WgMod.Content.NPCs.Jungle;
+
 public class Honeybundle : ModNPC
 {
     public override void SetStaticDefaults()
@@ -88,15 +89,17 @@ public class Honeybundle : ModNPC
         return false;
     }
 }
-public class HoneyGas : ModProjectile
+
+public class HoneyGas : ModProjectile   // Move this to where it belongs.
 {
     public override string Texture => "WgMod/Content/Projectiles/Enemy/Honeygas";
     int _style = -1;
 
-    public float Easing(float t)
+    public static float Easing(float t)
     {
         return 1 - (float)Math.Pow(1 - t, 5);
     }
+
     public override void SetDefaults()
     {
         Projectile.tileCollide = false;
@@ -104,6 +107,7 @@ public class HoneyGas : ModProjectile
         Projectile.height = 64;
         Projectile.hostile = true;
     }
+
     public override void AI()
     {
         float maxTime = 200f;
@@ -126,10 +130,9 @@ public class HoneyGas : ModProjectile
 
         Vector2 dir = Projectile.velocity.SafeNormalize(Vector2.Zero);
         Vector2 pos = Projectile.Center + dir * 16f;
+
         if (Collision.IsWorldPointSolid(pos, true))
-        {
             Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.velocity - dir * 1f, 0.5f);
-        }
     }
     public override bool CanHitPlayer(Player target)
     {
@@ -160,7 +163,7 @@ public class HoneyGas : ModProjectile
         Color color = Projectile.GetAlpha(lightColor).MultiplyRGBA(new Color(0.8f, 0.8f, 0.8f, 0.8f));
         Color color2 = color.MultiplyRGBA(new Color(0.4f, 0.4f, 0.4f, 0.4f));
 
-        Rectangle source = new Rectangle(texture.Width / 3 * _style, 0, texture.Width / 3, texture.Height);
+        Rectangle source = new(texture.Width / 3 * _style, 0, texture.Width / 3, texture.Height);
 
         Main.EntitySpriteDraw(texture, drawPos, source,
             color2, Projectile.rotation, source.Size() / 2, Projectile.scale * 2.5f, SpriteEffects.None, 0);
