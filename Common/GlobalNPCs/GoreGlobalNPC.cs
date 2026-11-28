@@ -7,7 +7,7 @@ namespace WgMod.Common.GlobalNPCs;
 
 public class GoreGlobalNPC : GlobalNPC
 {
-    public void TownNPCParticlesAndGore(NPC npc, string name, int particle, int amount = 15)
+    public void TownNPCDustAndGore(NPC npc, string name, int particle, int amount = 15)
     {
         GlobalNPCDust(npc, particle, amount);
 

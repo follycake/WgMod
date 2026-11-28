@@ -380,7 +380,7 @@ public class OverflowingMimic : ModNPC
         {
             if (!NPC.TryGetGlobalNPC(out GoreGlobalNPC gg))
                 return;
-            gg.TownNPCParticlesAndGore(NPC, Name, DustID.Blood);
+            gg.TownNPCDustAndGore(NPC, Name, DustID.Blood);
         }
         else
         {

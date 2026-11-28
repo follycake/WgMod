@@ -1780,6 +1780,8 @@ NPCs: {
 	OverindulgentStatueMiddle.DisplayName: Overindulgent Statue
 	OverindulgentStatueBottom.DisplayName: Overindulgent Statue
 	Honeybundle.DisplayName: Honeybundle
+	LardDarter_Corrupt.DisplayName: Lard Darter
+	LardDarter_Crimson.DisplayName: Lard Darter
 }
 
 Dialogue: {
