@@ -15,7 +15,7 @@ using WgMod.Content.Projectiles.Enemy;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
-public class EncumberedStatueTop : ModNPC
+public class EncumberedStatueTop : ModNPC // These classes should not be copy/pasted multiple times, this is highly inefficient. -Mai
 {
     public override string Texture => "WgMod/Content/NPCs/Dungeon/EncumberedStatueSheet";
 
@@ -71,26 +71,24 @@ public class EncumberedStatueTop : ModNPC
         {
             Vector2 bottomPosition = NPC.Center + new Vector2(0, NPC.height / 2 + 4);
             Tile onTileLeft = Framing.GetTileSafely(bottomPosition - new Vector2(4, 0));
+
             if (onTileLeft.HasTile)
-            {
                 if (onTileLeft.TileType == TileID.PinkDungeonBrick)
                     _style = 0;
                 else if (onTileLeft.TileType == TileID.BlueDungeonBrick)
                     _style = 1;
                 else if (onTileLeft.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
-            }
 
             Tile onTileRight = Framing.GetTileSafely(bottomPosition + new Vector2(4, 0));
+
             if (onTileRight.HasTile)
-            {
                 if (onTileRight.TileType == TileID.PinkDungeonBrick)
                     _style = 0;
                 else if (onTileRight.TileType == TileID.BlueDungeonBrick)
                     _style = 1;
                 else if (onTileRight.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
-            }
 
             if (_style == -1)
                 _style = Main.rand.Next(3);
@@ -110,11 +108,15 @@ public class EncumberedStatueTop : ModNPC
         }
 
         NPC.velocity.X *= 0.8f;
+
         if (NPC.velocity.X > -0.05f && NPC.velocity.X < 0.05f)
             NPC.velocity.X = 0;
+
         NPC.TargetClosest(false);
+
         if (!NPC.HasValidTarget)
             return;
+
         Player target = Main.player[NPC.target];
 
         if (target.Center.Distance(NPC.Center) > 950)
@@ -124,6 +126,7 @@ public class EncumberedStatueTop : ModNPC
         if (NPC.ai[0] > Utility.TimeToTicks(seconds: 8))
         {
             NPC.ai[0] = 0;
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 float thisAngle = MathHelper.ToRadians(Main.rand.Next(0, 360));
@@ -199,23 +202,30 @@ public class EncumberedStatueTop : ModNPC
     {
         if (NPC.FindFirstNPC(NPC.type) > 0) //prevent multiple of the same
             return 0f;
+
         float chance = SpawnCondition.DungeonNormal.Chance * 0.03f;
+
         if (spawnInfo.Player.Curses().ActiveCurses[(int)CurseIDs.MoreFatteningEnemies])
             chance *= 2f;
+
         if (NPC.downedPlantBoss)
             chance /= 3f;
+
         int onTile = spawnInfo.SpawnTileType;
-        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick ||
-            onTile == TileID.GreenDungeonBrick)
+
+        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick || onTile == TileID.GreenDungeonBrick)
             return chance;
+
         return 0f;
     }
 
     public override void FindFrame(int frameHeight)
     {
         NPC.frameCounter++;
+
         if (NPC.frameCounter >= 20)
             NPC.frameCounter = 0;
+
         NPC.frame = new Rectangle(58, 0, 58, 58);
     }
 
@@ -230,18 +240,15 @@ public class EncumberedStatueTop : ModNPC
             sourceRectangle = new Rectangle(58, 58 * 2, 58, 58);
             headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 58 : 0, 58 * 2, 58, 58);
 
-            spriteBatch.Draw(_headTexture.Value, NPC.Center, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f,
-                SpriteEffects.None, 0f);
-            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center, sourceRectangle, drawColor, 0f, origin, 1f,
-                SpriteEffects.None, 0f);
+            spriteBatch.Draw(_headTexture.Value, NPC.Center, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+
             return false;
         }
 
-        spriteBatch.Draw(_headTexture.Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition, headRectangle,
-            NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(_headTexture.Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
 
-        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center - new Vector2(0, 3) - Main.screenPosition,
-            sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
         return false;
     }
 }

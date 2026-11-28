@@ -15,7 +15,7 @@ using WgMod.Content.Projectiles.Enemy;
 
 namespace WgMod.Content.NPCs.Dungeon;
 
-public class OverindulgentStatueTop : ModNPC
+public class OverindulgentStatueTop : ModNPC // These classes should not be copy/pasted multiple times, this is highly inefficient. -Mai
 {
     public override string Texture => "WgMod/Content/NPCs/Dungeon/OverindulgentStatueSheet";
 
@@ -71,26 +71,24 @@ public class OverindulgentStatueTop : ModNPC
         {
             Vector2 bottomPosition = NPC.Center + new Vector2(0, NPC.height / 2 + 4);
             Tile onTileLeft = Framing.GetTileSafely(bottomPosition - new Vector2(4, 0));
+
             if (onTileLeft.HasTile)
-            {
                 if (onTileLeft.TileType == TileID.PinkDungeonBrick)
                     _style = 0;
                 else if (onTileLeft.TileType == TileID.BlueDungeonBrick)
                     _style = 1;
                 else if (onTileLeft.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
-            }
 
             Tile onTileRight = Framing.GetTileSafely(bottomPosition + new Vector2(4, 0));
+
             if (onTileRight.HasTile)
-            {
                 if (onTileRight.TileType == TileID.PinkDungeonBrick)
                     _style = 0;
                 else if (onTileRight.TileType == TileID.BlueDungeonBrick)
                     _style = 1;
                 else if (onTileRight.TileType == TileID.GreenDungeonBrick)
                     _style = 2;
-            }
 
             if (_style == -1)
                 _style = Main.rand.Next(3);
@@ -110,20 +108,26 @@ public class OverindulgentStatueTop : ModNPC
         }
 
         NPC.velocity.X *= 0.8f;
+
         if (NPC.velocity.X > -0.05f && NPC.velocity.X < 0.05f)
             NPC.velocity.X = 0;
+
         NPC.TargetClosest(false);
+
         if (!NPC.HasValidTarget)
             return;
+
         Player target = Main.player[NPC.target];
 
         if (target.Center.Distance(NPC.Center) > 950)
             return;
 
         NPC.ai[0]++;
+
         if (NPC.ai[0] > Utility.TimeToTicks(seconds: 8))
         {
             NPC.ai[0] = 0;
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 float thisAngle = MathHelper.ToRadians(Main.rand.Next(0, 360));
@@ -204,23 +208,30 @@ public class OverindulgentStatueTop : ModNPC
     {
         if (NPC.FindFirstNPC(NPC.type) > 0) //prevent multiple of the same
             return 0f;
+
         if (!NPC.downedPlantBoss)
             return 0f;
+
         float chance = SpawnCondition.DungeonNormal.Chance * 0.03f;
+
         if (spawnInfo.Player.Curses().ActiveCurses[(int)CurseIDs.MoreFatteningEnemies])
             chance *= 2f;
+
         int onTile = spawnInfo.SpawnTileType;
-        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick ||
-            onTile == TileID.GreenDungeonBrick)
+
+        if (onTile == TileID.BlueDungeonBrick || onTile == TileID.PinkDungeonBrick || onTile == TileID.GreenDungeonBrick)
             return chance;
+
         return 0f;
     }
 
     public override void FindFrame(int frameHeight)
     {
         NPC.frameCounter++;
+
         if (NPC.frameCounter >= 20)
             NPC.frameCounter = 0;
+
         NPC.frame = new Rectangle(78, 0, 78, 60);
     }
 
@@ -235,18 +246,14 @@ public class OverindulgentStatueTop : ModNPC
             sourceRectangle = new Rectangle(78, 60 * 2, 78, 60);
             headRectangle = new Rectangle(NPC.frameCounter >= 10 ? 78 : 0, 60 * 2, 78, 60);
 
-            spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 7), headRectangle,
-                NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 7), sourceRectangle,
-                drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 7), headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 7), sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
             return false;
         }
 
-        spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, headRectangle,
-            NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(_headTexture.Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, headRectangle, NPC.GetAlpha(Color.White), 0f, origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition, sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
 
-        spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center + new Vector2(0, 4) - Main.screenPosition,
-            sourceRectangle, drawColor, 0f, origin, 1f, SpriteEffects.None, 0f);
         return false;
     }
 }
