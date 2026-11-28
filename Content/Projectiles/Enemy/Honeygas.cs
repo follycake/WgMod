@@ -7,37 +7,37 @@ using Terraria.ModLoader;
 using WgMod.Content.Buffs.Debuffs;
 
 namespace WgMod.Content.Projectiles.Enemy;
+
 public class HoneyGas : ModProjectile
 {
-    public override string Texture => "WgMod/Content/Projectiles/Enemy/Honeygas";
-    int _style = -1;
+    const float MaxTime = 200;
 
-    public static float Easing(float t)
-    {
-        return 1 - (float)Math.Pow(1 - t, 5);
-    }
+    float _lifetime = 0;
+    int _scale = 0;
+
+    public static float Easing(float t) => 1 - (float)Math.Pow(1 - t, 5);
+
     public override void SetDefaults()
     {
         Projectile.tileCollide = false;
         Projectile.width = 64;
         Projectile.height = 64;
         Projectile.hostile = true;
+        _scale = Main.rand.Next(3);
     }
+
     public override void AI()
     {
-        float maxTime = 200f;
+        _lifetime++;
 
-        Projectile.ai[0]++;
-
-        if (Projectile.ai[0] > maxTime)
+        if (_lifetime > MaxTime)
         {
             Projectile.Kill();
-            Projectile.ai[0] = maxTime;
             return;
         }
 
-        Projectile.Opacity = 1 - (Projectile.ai[0] / maxTime);
-        Projectile.scale = float.Lerp(0.25f, 1.5f, Easing(Projectile.ai[0] / maxTime));
+        Projectile.Opacity = 1 - (_lifetime / MaxTime);
+        Projectile.scale = float.Lerp(0.25f, 1.5f, Easing(_lifetime / MaxTime));
 
         Projectile.velocity *= 0.96f;
 
@@ -50,14 +50,11 @@ public class HoneyGas : ModProjectile
             Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.velocity - dir * 1f, 0.5f);
         }
     }
-    public override bool CanHitPlayer(Player target)
-    {
-        return Projectile.ai[0] < 110f;
-    }
-    public override bool? CanHitNPC(NPC target)
-    {
-        return Projectile.ai[0] < 110f ? null : false;
-    }
+
+    public override bool CanHitPlayer(Player target) => _lifetime < 110f;
+
+    public override bool? CanHitNPC(NPC target) => _lifetime < 110f ? null : false;
+
     public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
     {
         modifiers.Knockback *= 0f;
@@ -65,13 +62,11 @@ public class HoneyGas : ModProjectile
 
     public override void OnHitPlayer(Player target, Player.HurtInfo info)
     {
-        target.AddBuff(ModContent.BuffType<Honeyspored>(), Utility.TimeToTicks(seconds: 25) + info.Damage * 25, false);
+        target.AddBuff(ModContent.BuffType<Honeyspored>(), Utility.TimeToTicks(seconds: 5) + info.Damage * 15, false);
     }
+
     public override bool PreDraw(ref Color lightColor)
     {
-        if (_style == -1)
-            _style = Main.rand.Next(3);
-
         Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
 
         Vector2 drawPos = Projectile.Center - Main.screenPosition;
@@ -79,13 +74,13 @@ public class HoneyGas : ModProjectile
         Color color = Projectile.GetAlpha(lightColor).MultiplyRGBA(new Color(0.8f, 0.8f, 0.8f, 0.8f));
         Color color2 = color.MultiplyRGBA(new Color(0.4f, 0.4f, 0.4f, 0.4f));
 
-        Rectangle source = new Rectangle(texture.Width / 3 * _style, 0, texture.Width / 3, texture.Height);
+        Rectangle source = new(texture.Width / 3 * _scale, 0, texture.Width / 3, texture.Height);
 
         Main.EntitySpriteDraw(texture, drawPos, source,
-            color2, Projectile.rotation, source.Size() / 2, Projectile.scale * 2.5f, SpriteEffects.None, 0);
+            color2, Projectile.rotation * 0.5f, source.Size() / 2, Projectile.scale * 2.5f, SpriteEffects.None, 0);
 
         Main.EntitySpriteDraw(texture, drawPos, source,
-            color, Projectile.rotation, source.Size() / 2, Projectile.scale * 1.5f, SpriteEffects.None, 0);
+            color, Projectile.rotation * 1.5f, source.Size() / 2, Projectile.scale * 1.5f, SpriteEffects.None, 0);
 
         return false;
     }

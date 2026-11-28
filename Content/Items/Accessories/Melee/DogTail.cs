@@ -17,10 +17,7 @@ public class DogTail : GlobalItem
 
     public override bool InstancePerEntity => true;
 
-    public override bool AppliesToEntity(Item entity, bool lateInstantiation)
-    {
-        return entity.type == ItemID.DogTail;
-    }
+    public override bool AppliesToEntity(Item entity, bool lateInstantiation) => entity.type == ItemID.DogTail;
 
     public override void SetDefaults(Item item)
     {

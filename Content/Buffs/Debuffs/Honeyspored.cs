@@ -14,15 +14,17 @@ public class Honeyspored : ModBuff
     public override void SetStaticDefaults()
     {
         Main.debuff[Type] = true;
+        Main.buffNoSave[Type] = true;
     }
+
     public override bool ReApply(Player player, int time, int buffIndex)
     {
         player.buffTime[buffIndex] = Math.Min(player.buffTime[buffIndex] + time, Utility.TimeToTicks(minutes: 5));
         return true;
     }
+
     public override void Update(Player player, ref int buffIndex)
     {
-
         if (_cooldown < Ticks)
             _cooldown++;
         else

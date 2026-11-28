@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -12,7 +10,6 @@ namespace WgMod.Content.NPCs.Jungle;
 
 public class Honeybundle : ModNPC
 {
-    public override bool IsLoadingEnabled(Mod mod) => false;
     public override void SetStaticDefaults()
     {
         NPCID.Sets.CantTakeLunchMoney[NPC.type] = true;
@@ -65,8 +62,7 @@ public class Honeybundle : ModNPC
     {
         if (Main.netMode == NetmodeID.Server)
             return;
-        Player target = Main.LocalPlayer;
-        if (NPC.Hitbox.Intersects(target.Hitbox))
+        if (NPC.Hitbox.Intersects(Main.LocalPlayer.Hitbox))
             NPC.StrikeInstantKill();
     }
 
@@ -74,18 +70,14 @@ public class Honeybundle : ModNPC
     {
         for (int i = 0; i < 360; i += 36)
         {
-            Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, new Vector2(0, Main.rand.NextFloat(3f, 7f)).RotatedBy(MathHelper.ToRadians(i)).RotatedByRandom(MathHelper.ToRadians(Main.rand.Next(-25, 26))),
-                ModContent.ProjectileType<HoneyGas>(), NPC.damage, 0f);
+            Vector2 velocity = new Vector2(0, Main.rand.NextFloat(3f, 7f)).RotatedBy(MathHelper.ToRadians(i)).RotatedByRandom(MathHelper.ToRadians(Main.rand.Next(-25, 26)));
+
+            Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, velocity, ModContent.ProjectileType<HoneyGas>(), NPC.damage, 0f);
         }
     }
 
-    public override bool CanHitNPC(NPC target)
-    {
-        return false;
-    }
+    public override bool CanHitNPC(NPC target) => false;
 
-    public override bool CanHitPlayer(Player target, ref int cooldownSlot)
-    {
-        return false;
-    }
+    public override bool CanHitPlayer(Player target, ref int cooldownSlot) => false;
 }
+

@@ -31,8 +31,10 @@ public class PillarWrathNPC : GlobalNPC
         if (!npc.HasBuff<PillarWrath>())
             return;
         damage = 50;
+
         if (npc.lifeRegen > 0)
             npc.lifeRegen = 0;
+
         npc.lifeRegen -= 200;
     }
 
@@ -44,66 +46,24 @@ public class PillarWrathNPC : GlobalNPC
         int dustRate = 15;
         if (Main.rand.NextBool(dustRate))
         {
-            int vortex = Dust.NewDust(
-                npc.position,
-                npc.width,
-                npc.height,
-                DustID.Vortex,
-                0f,
-                0f,
-                100,
-                default,
-                1f
-            );
+            int vortex = Dust.NewDust(npc.position, npc.width, npc.height, DustID.Vortex, 0f, 0f, 100, default, 1f);
 
             Main.dust[vortex].noGravity = true;
         }
 
         if (Main.rand.NextBool(dustRate))
         {
-            int stardust = Dust.NewDust(
-                npc.position,
-                npc.width,
-                npc.height,
-                DustID.Electric,
-                0f,
-                0f,
-                100,
-                default,
-                1f
-            );
+            int stardust = Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, 0f, 0f, 100, default, 1f);
 
             Main.dust[stardust].noGravity = true;
         }
 
         if (Main.rand.NextBool(dustRate))
-        {
-            int solar = Dust.NewDust(
-                npc.position,
-                npc.width,
-                npc.height,
-                DustID.SolarFlare,
-                0f,
-                0.25f,
-                100,
-                default,
-                1f
-            );
-        }
+            Dust.NewDust(npc.position, npc.width, npc.height, DustID.SolarFlare, 0f, 0.25f, 100, default, 1f);
 
         if (Main.rand.NextBool(dustRate))
         {
-            int nebula = Dust.NewDust(
-                npc.position,
-                npc.width,
-                npc.height,
-                DustID.CrystalPulse,
-                0f,
-                0f,
-                100,
-                default,
-                1f
-            );
+            int nebula = Dust.NewDust(npc.position, npc.width, npc.height, DustID.CrystalPulse, 0f, 0f, 100, default, 1f);
 
             Main.dust[nebula].noGravity = true;
             Main.dust[nebula].velocity = new Vector2(0, 0);
@@ -141,66 +101,25 @@ public class PillarWrathPlayer : ModPlayer
 
         if (Main.rand.NextBool(dustRate))
         {
-            int vortex = Dust.NewDust(
-                Player.position,
-                Player.width,
-                Player.height,
-                DustID.Vortex,
-                0f,
-                0f,
-                100,
-                default,
-                1f
-            );
+            int vortex = Dust.NewDust(Player.position, Player.width, Player.height, DustID.Vortex, 0f, 0f, 100, default, 1f);
+
 
             Main.dust[vortex].noGravity = true;
         }
 
         if (Main.rand.NextBool(dustRate))
         {
-            int stardust = Dust.NewDust(
-                Player.position,
-                Player.width,
-                Player.height,
-                DustID.Electric,
-                0f,
-                0f,
-                100,
-                default,
-                1f
-            );
+            int stardust = Dust.NewDust(Player.position, Player.width, Player.height, DustID.Electric, 0f, 0f, 100, default, 1f);
 
             Main.dust[stardust].noGravity = true;
         }
 
         if (Main.rand.NextBool(dustRate))
-        {
-            int solar = Dust.NewDust(
-                Player.position,
-                Player.width,
-                Player.height,
-                DustID.SolarFlare,
-                0f,
-                0.25f,
-                100,
-                default,
-                1f
-            );
-        }
+            Dust.NewDust(Player.position, Player.width, Player.height, DustID.SolarFlare, 0f, 0.25f, 100, default, 1f);
 
         if (Main.rand.NextBool(dustRate))
         {
-            int nebula = Dust.NewDust(
-                Player.position,
-                Player.width,
-                Player.height,
-                DustID.CrystalPulse,
-                0f,
-                0f,
-                100,
-                default,
-                1f
-            );
+            int nebula = Dust.NewDust(Player.position, Player.width, Player.height, DustID.CrystalPulse, 0f, 0f, 100, default, 1f);
 
             Main.dust[nebula].noGravity = true;
             Main.dust[nebula].velocity = new Vector2(0, 0);

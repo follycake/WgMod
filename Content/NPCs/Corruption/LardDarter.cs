@@ -19,14 +19,14 @@ using WgMod.Content.Items.Placeable.Banners;
 namespace WgMod.Content.NPCs.Corruption;
 
 [Credit(ProjectRole.Programmer, Contributor.jumpsu2)]
-public class LardDarter_Corrupt : ModNPC
+public class LardDarter_Corrupt : ModNPC // I like this enemy, but please change the theme. This whole "lard" theme makes me sick. They look like carrots, maybe a root theme?
 {
     public override void SetStaticDefaults()
     {
         NPCID.Sets.TrailingMode[NPC.type] = 3;
         NPCID.Sets.TrailCacheLength[NPC.type] = 10;
 
-        NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+        NPCID.Sets.NPCBestiaryDrawModifiers value = new()
         {
             Position = new Vector2(0, 4),
             PortraitPositionYOverride = 0f
@@ -53,7 +53,7 @@ public class LardDarter_Corrupt : ModNPC
         NPC.defense = 3;
 
 
-        if (NPC.downedPlantBoss && Main.expertMode)
+        if (NPC.downedPlantBoss && Main.expertMode) // No master mode stats?
         {
             NPC.value = 520;
             NPC.lifeMax = 220;

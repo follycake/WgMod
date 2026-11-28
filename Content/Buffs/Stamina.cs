@@ -1,11 +1,8 @@
-using System;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using WgMod.Common.Players;
 
 namespace WgMod.Content.Buffs;
 
@@ -18,6 +15,7 @@ public class Stamina : ModBuff
         Main.buffNoTimeDisplay[Type] = true;
         Main.buffNoSave[Type] = true;
     }
+
     public override bool RightClick(int buffIndex)
     {
         return false;
@@ -41,6 +39,7 @@ public class Stamina : ModBuff
             tip = Language.GetText("Mods.WgMod.Buffs.Stamina.Description").Format(percentage);
         }
     }
+
     public override bool PreDraw(SpriteBatch spriteBatch, int buffIndex, ref BuffDrawParams drawParams)
     {
         Player player = Main.LocalPlayer;
