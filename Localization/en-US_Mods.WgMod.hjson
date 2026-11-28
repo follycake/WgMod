@@ -1715,7 +1715,7 @@ NPCs: {
 			DislikeBiome: It's c-c-cold! I need to fly south for the winter!
 		}
 
-		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a harpy
+		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a {$NPCName.Harpy}
 	}
 
 	HomingFood.DisplayName: Cursed Food
@@ -1766,7 +1766,7 @@ NPCs: {
 		}
 
 		DisplayName: Overflowing Mimic
-		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a mimic
+		Census.SpawnCondition: Use {$Items.PowderedSugar.DisplayName} [i:WgMod/PowderedSugar] on a {$NPCName.Mimic} or an {$NPCName.IceMimic}
 	}
 
 	SugarSpecter.DisplayName: Sugar Specter
@@ -2040,12 +2040,12 @@ Achievements: {
 
 	Playtime: {
 		FriendlyName: Playtime!
-		Description: Have the Overflowing Mimic 'play with' a boss.
+		Description: Have the {$NPCs.OverflowingMimic.DisplayName} 'play with' a boss.
 	}
 
 	ImBigger: {
 		FriendlyName: I'm Bigger
-		Description: Defeat King Slime while at weight level Blob.
+		Description: Defeat {$NPCName.KingSlime} while at weight level Blob.
 	}
 
 	LetsGetPhysical: {
