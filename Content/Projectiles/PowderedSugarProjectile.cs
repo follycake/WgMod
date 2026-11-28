@@ -45,7 +45,7 @@ public class PowderedSugarProjectile : ModProjectile
             NPC.NewNPC(Terraria.Entity.GetSource_TownSpawn(),
                 (int)npc.Center.X,
                 (int)npc.Center.Y,
-                ModContent.NPCType<GroundedHarpyNPC>()
+                ModContent.NPCType<GroundedHarpy>()
             );
             return true;
         }
@@ -55,7 +55,7 @@ public class PowderedSugarProjectile : ModProjectile
                 Terraria.Entity.GetSource_TownSpawn(),
                 (int)npc.Center.X,
                 (int)npc.Center.Y,
-                ModContent.NPCType<OverflowingMimicNPC>()
+                ModContent.NPCType<OverflowingMimic>()
             );
             int variation;
             if (npc.type == NPCID.IceMimic)

@@ -67,9 +67,9 @@ public class NurseDialogNPC : GlobalNPC
 
         int zoologist = NPC.FindFirstNPC(NPCID.BestiaryGirl);
         int dryad = NPC.FindFirstNPC(NPCID.Dryad);
-        int groundedHarpy = NPC.FindFirstNPC(ModContent.NPCType<GroundedHarpyNPC>());
-        int overflowingMimic = NPC.FindFirstNPC(ModContent.NPCType<OverflowingMimicNPC>());
-        int milkmaid = NPC.FindFirstNPC(ModContent.NPCType<MilkmaidNPC>());
+        int groundedHarpy = NPC.FindFirstNPC(ModContent.NPCType<GroundedHarpy>());
+        int overflowingMimic = NPC.FindFirstNPC(ModContent.NPCType<OverflowingMimic>());
+        int milkmaid = NPC.FindFirstNPC(ModContent.NPCType<Milkmaid>());
 
         if (zoologist >= 0 && WgGlobalNPC.GetStage(zoologist) > 0)
             chat.Add(GetText(stage >= WeightStage.Fat ? "ZoologistFatPlayerFat" : "ZoologistFat", GetName(zoologist)));

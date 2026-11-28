@@ -31,11 +31,11 @@ public class TownNPCRespawnSystem : ModSystem
     public override void LoadWorldData(TagCompound tag)
     {
         unlockGroundedHarpy = tag.GetBool(nameof(unlockGroundedHarpy));
-        unlockGroundedHarpy |= NPC.AnyNPCs(ModContent.NPCType<GroundedHarpyNPC>());
+        unlockGroundedHarpy |= NPC.AnyNPCs(ModContent.NPCType<GroundedHarpy>());
         unlockMilkmaid = tag.GetBool(nameof(unlockMilkmaid));
-        unlockMilkmaid |= NPC.AnyNPCs(ModContent.NPCType<MilkmaidNPC>());
+        unlockMilkmaid |= NPC.AnyNPCs(ModContent.NPCType<Milkmaid>());
         unlockOverflowingMimic = tag.GetBool(nameof(unlockOverflowingMimic));
-        unlockOverflowingMimic |= NPC.AnyNPCs(ModContent.NPCType<OverflowingMimicNPC>());
+        unlockOverflowingMimic |= NPC.AnyNPCs(ModContent.NPCType<OverflowingMimic>());
     }
 
     public override void NetSend(BinaryWriter writer)

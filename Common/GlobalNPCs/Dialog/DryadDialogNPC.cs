@@ -70,9 +70,9 @@ public class DryadDialogNPC : GlobalNPC
                 chat.Add(GetText("FatPlayerNotMobile"));
         }
 
-        int overflowingMimic = NPC.FindFirstNPC(ModContent.NPCType<OverflowingMimicNPC>());
-        int groundedHarpy = NPC.FindFirstNPC(ModContent.NPCType<GroundedHarpyNPC>());
-        int milkmaid = NPC.FindFirstNPC(ModContent.NPCType<MilkmaidNPC>());
+        int overflowingMimic = NPC.FindFirstNPC(ModContent.NPCType<OverflowingMimic>());
+        int groundedHarpy = NPC.FindFirstNPC(ModContent.NPCType<GroundedHarpy>());
+        int milkmaid = NPC.FindFirstNPC(ModContent.NPCType<Milkmaid>());
         int zoologist = NPC.FindFirstNPC(NPCID.BestiaryGirl);
 
         if (overflowingMimic >= 0)

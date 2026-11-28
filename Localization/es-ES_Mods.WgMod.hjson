@@ -1698,7 +1698,7 @@ Projectiles: {
 }
 
 NPCs: {
-	GroundedHarpyNPC: {
+	GroundedHarpy: {
 		DisplayName: Arpía Rechoncha
 
 		TownNPCMood: {
@@ -1724,7 +1724,7 @@ NPCs: {
 
 	HomingFood.DisplayName: Comida Maldita
 
-	MilkmaidNPC: {
+	Milkmaid: {
 		DisplayName: Milkmaid
 
 		TownNPCMood: {
@@ -1751,7 +1751,7 @@ NPCs: {
 
 	SweetSpirit.DisplayName: Espiritu Dulce
 
-	OverflowingMimicNPC: {
+	OverflowingMimic: {
 		TownNPCMood: {
 			HateNPC: ¡Recaudador tomar monedas doradas! ¡Malvado! ¡Lleno de avaricia!
 			LikeNPC: ¡Gustar hombre bomba! ¡Tirar bombas! ¡Bum!
