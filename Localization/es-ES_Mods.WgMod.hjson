@@ -1784,11 +1784,6 @@ NPCs: {
 	OverindulgentStatueMiddle.DisplayName: Estatua Sobreindulgente
 	OverindulgentStatueBottom.DisplayName: Estatua Sobreindulgente
 	// Honeybundle.DisplayName: Honeybundle
-	// LardDarter_Corrupt.DisplayName: Lard Darter
-	// LardDarter_Crimson.DisplayName: Lard Darter
-	// LardZombie.DisplayName: Lard Zombie
-	// Lardling.DisplayName: Lardling
-	// CorpulentZombie.DisplayName: Corpulent Zombie
 }
 
 Dialogue: {
