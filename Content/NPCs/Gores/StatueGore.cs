@@ -2,6 +2,7 @@
 using Terraria.ModLoader;
 
 namespace WgMod.Content.NPCs.Gores;
+
 public class PinkStatue_A : ModGore
 {
     public override void SetStaticDefaults()
@@ -9,6 +10,7 @@ public class PinkStatue_A : ModGore
         ChildSafety.SafeGore[Type] = true;
     }
 }
+
 public class PinkStatue_B : ModGore
 {
     public override void SetStaticDefaults()
@@ -16,6 +18,7 @@ public class PinkStatue_B : ModGore
         ChildSafety.SafeGore[Type] = true;
     }
 }
+
 public class PinkStatue_C : ModGore
 {
     public override void SetStaticDefaults()
@@ -23,6 +26,7 @@ public class PinkStatue_C : ModGore
         ChildSafety.SafeGore[Type] = true;
     }
 }
+
 public class BlueStatue_A : ModGore
 {
     public override void SetStaticDefaults()
@@ -30,6 +34,7 @@ public class BlueStatue_A : ModGore
         ChildSafety.SafeGore[Type] = true;
     }
 }
+
 public class BlueStatue_B : ModGore
 {
     public override void SetStaticDefaults()
@@ -37,6 +42,7 @@ public class BlueStatue_B : ModGore
         ChildSafety.SafeGore[Type] = true;
     }
 }
+
 public class BlueStatue_C : ModGore
 {
     public override void SetStaticDefaults()
@@ -44,6 +50,7 @@ public class BlueStatue_C : ModGore
         ChildSafety.SafeGore[Type] = true;
     }
 }
+
 public class GreenStatue_A : ModGore
 {
     public override void SetStaticDefaults()
@@ -51,6 +58,7 @@ public class GreenStatue_A : ModGore
         ChildSafety.SafeGore[Type] = true;
     }
 }
+
 public class GreenStatue_B : ModGore
 {
     public override void SetStaticDefaults()
@@ -58,6 +66,7 @@ public class GreenStatue_B : ModGore
         ChildSafety.SafeGore[Type] = true;
     }
 }
+
 public class GreenStatue_C : ModGore
 {
     public override void SetStaticDefaults()
