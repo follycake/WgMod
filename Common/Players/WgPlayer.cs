@@ -398,6 +398,9 @@ public partial class WgPlayer : ModPlayer
 
         if (stage >= WeightStage.Fat)
             TownNPCRespawnSystem.unlockMilkmaid = true;
+
+        if (_finalMovementFactor <= 0)
+            Help.Condition.Complete();
     }
 
     public override void UpdateDead()

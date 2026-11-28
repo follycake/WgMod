@@ -2056,6 +2056,11 @@ Achievements: {
 		FriendlyName: ¡Vamos a trabajar esos musculos!
 		Description: Monta una {$Items.Treadmill.DisplayName} mientras estas vistiendo un set completo de Yoga.
 	}
+
+	Help: {
+		// FriendlyName: Help!
+		// Description: Become immobile!
+	}
 }
 
 // RecipeGroups.EvilPowder: Evil Powder

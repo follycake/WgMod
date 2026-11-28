@@ -2052,6 +2052,11 @@ Achievements: {
 		FriendlyName: Let's Get Physical!
 		Description: Mount a {$Items.Treadmill.DisplayName} while wearing the full Yoga Armor set.
 	}
+
+	Help: {
+		FriendlyName: Help!
+		Description: Become immobile!
+	}
 }
 
 RecipeGroups.EvilPowder: Evil Powder
