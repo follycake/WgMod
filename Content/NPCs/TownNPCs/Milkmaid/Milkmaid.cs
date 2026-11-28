@@ -313,6 +313,7 @@ public class Milkmaid : ModNPC
     {
         tag[nameof(milkedToday)] = milkedToday;
     }
+
     public override void HitEffect(NPC.HitInfo hit)
     {
         if (!WgClientConfig.Instance.DisableGoreForCertainNPCs)
