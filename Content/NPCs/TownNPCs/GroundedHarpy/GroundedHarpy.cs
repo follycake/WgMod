@@ -48,9 +48,6 @@ public class GroundedHarpy : ModNPC
         NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new() { Velocity = -1f, Direction = -1 };
         NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
 
-        if (WgClientConfig.Instance.DisableGoreForCertainNPCs)
-            ChildSafety.SafeGore[Type] = true;
-
         NPC.Happiness.SetBiomeAffection<ForestBiome>(AffectionLevel.Like)
             .SetBiomeAffection<SnowBiome>(AffectionLevel.Dislike)
             .SetBiomeAffection<UndergroundBiome>(AffectionLevel.Hate)

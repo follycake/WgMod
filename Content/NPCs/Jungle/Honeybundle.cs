@@ -62,6 +62,7 @@ public class Honeybundle : ModNPC
     {
         if (Main.netMode == NetmodeID.Server)
             return;
+
         if (NPC.Hitbox.Intersects(Main.LocalPlayer.Hitbox))
             NPC.StrikeInstantKill();
     }

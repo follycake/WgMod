@@ -76,8 +76,6 @@ public class OverflowingMimic : ModNPC
 
         _overflowingMimicProfile = new OverflowingMimicProfile();
 
-        ChildSafety.SafeGore[Type] = true;
-
         NPC.Happiness.SetBiomeAffection<SnowBiome>(AffectionLevel.Like)
             .SetBiomeAffection<HallowBiome>(AffectionLevel.Dislike)
             .SetBiomeAffection<UndergroundBiome>(AffectionLevel.Love)
