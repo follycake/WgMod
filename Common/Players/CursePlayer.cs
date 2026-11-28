@@ -45,28 +45,19 @@ public class CursePlayer : ModPlayer
 
     public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
     {
-        if (Player.TryGetModPlayer(out BuffHitPlayer plr) && ActiveCurses[(int)CurseIDs.SlimeEater])
-        {
-            if (plr._slimes.Contains(npc.type))
-            {
-                TakeBiteOutOfSlime(npc);
-            }
-        }
+        if (Player.TryGetModPlayer(out BuffHitPlayer plr) && ActiveCurses[(int)CurseIDs.SlimeEater] && plr._slimes.Contains(npc.type))
+            TakeBiteOutOfSlime(npc);
     }
 
     public override void SaveData(TagCompound tag)
     {
         for (int i = 0; i < ActiveCurses.Length; i++)
-        {
             tag["ActiveCurse" + i] = ActiveCurses[i];
-        }
     }
     public override void LoadData(TagCompound tag)
     {
         for (int i = 0; i < ActiveCurses.Length; i++)
-        {
             ActiveCurses[i] = tag.GetBool("ActiveCurse" + i);
-        }
     }
 
     public override void PreUpdateBuffs()
@@ -85,8 +76,10 @@ public class CursePlayer : ModPlayer
     {
         if (ActiveCurses[(int)CurseIDs.Absorbant] && Player == Main.LocalPlayer)
             Absorbant();
+
         if (ActiveCurses[(int)CurseIDs.StormDrain] && Player == Main.LocalPlayer)
             StormDrain();
+
         if (ActiveCurses[(int)CurseIDs.ThirteenDollarStaminaSystem])
             StaminaUpdate();
     }
@@ -98,25 +91,20 @@ public class CursePlayer : ModPlayer
 
     public override void PostUpdate()
     {
-        if (ActiveCurses[(int)CurseIDs.WeakPulley])
-            if (Player.pulley)
-            {
-                float weight = Player.Wg().Weight.Mass;
+        if (ActiveCurses[(int)CurseIDs.WeakPulley] && Player.pulley)
+        {
+            float weight = Player.Wg().Weight.Mass;
+            float downWeigh = weight / 1250;
 
-                float downWeigh = weight / 1250;
-                if (!Player.controlDown)
-                {
-                    downWeigh = Math.Max(0, downWeigh - 0.1f);
-                }
-                if (Player.controlUp)
-                {
-                    downWeigh = Math.Max(0, downWeigh * 0.67f);
-                }
-                if (downWeigh > 0f)
-                {
-                    Player.velocity.Y += downWeigh;
-                }
-            }
+            if (!Player.controlDown)
+                downWeigh = Math.Max(0, downWeigh - 0.1f);
+
+            if (Player.controlUp)
+                downWeigh = Math.Max(0, downWeigh * 0.67f);
+
+            if (downWeigh > 0f)
+                Player.velocity.Y += downWeigh;
+        }
     }
 
     public void Absorbant()
@@ -125,6 +113,7 @@ public class CursePlayer : ModPlayer
 
         if (_absorbantTimer < 6)
             return;
+
         _absorbantTimer = 0;
 
         Point16 targetPos = Utils.ToTileCoordinates16(Player.Bottom - new Vector2(0, 2f));
@@ -137,6 +126,7 @@ public class CursePlayer : ModPlayer
         int drankLiquid = targetTile.LiquidType;
         byte liquidLeft = (byte)Math.Max(targetTile.LiquidAmount - 20, 0);
         int totalDrank = 20;
+
         if (liquidLeft == 0)
             totalDrank -= targetTile.LiquidAmount;
 
@@ -151,13 +141,9 @@ public class CursePlayer : ModPlayer
         WorldGen.SquareTileFrame(targetPos.X, targetPos.Y, false);
 
         if (Main.netMode == NetmodeID.MultiplayerClient)
-        {
             NetMessage.sendWater(targetPos.X, targetPos.Y);
-        }
         else
-        {
             Liquid.AddWater(targetPos.X, targetPos.Y);
-        }
     }
 
     public void StormDrain()
@@ -166,6 +152,7 @@ public class CursePlayer : ModPlayer
 
         if (_stormDrainTimer < 6)
             return;
+
         _stormDrainTimer = 0;
 
         if (Main.cloudAlpha > 0 && Player.ZoneRain)
@@ -174,9 +161,7 @@ public class CursePlayer : ModPlayer
             Tile targetTile = Main.tile[targetPos.X, targetPos.Y];
 
             if (targetTile.WallType == WallID.None)
-            {
                 Player.Wg().AddWeight(Main.cloudAlpha * 0.5f);
-            }
         }
     }
 
@@ -193,6 +178,7 @@ public class CursePlayer : ModPlayer
 
         bool running = false;
         float runningSpeed = 0f;
+
         if (Player.Grounded() && !Player.mount.Active)
         {
             if (Player.controlRight && Player.velocity.X > 0 || Player.controlLeft && Player.velocity.X < 0)
@@ -201,18 +187,15 @@ public class CursePlayer : ModPlayer
                 runningSpeed = Math.Abs(Player.velocity.X);
             }
         }
+
         if (running)
-        {
             _stamina -= (0.008f + Math.Clamp(runningSpeed / 400, 0, 0.01f)) * _staminaDrain;
-        }
 
         if (Player.Wg().JustJumped)
             _stamina -= 0.5f * _staminaDrain;
 
         if (Player.ItemAnimationJustStarted)
-        {
             _stamina -= 0.07f * _staminaDrain;
-        }
 
         _stamina = Math.Clamp(_stamina, 0, _maxStamina);
 
@@ -239,28 +222,24 @@ public class CursePlayer : ModPlayer
 
     public void Stuckage()
     {
-        if (!ActiveCurses[(int)CurseIDs.Stuckage])
-            return;
-        if (Player.Wg().Weight.GetStage() < WeightStage.Heavy)
+        if (!ActiveCurses[(int)CurseIDs.Stuckage] || Player.Wg().Weight.GetStage() < WeightStage.Heavy)
             return;
 
         Point16 targetPos = Utils.ToTileCoordinates16(Player.Hitbox.Center.ToVector2());
         if (!TileTypeMatches(targetPos, TileID.OpenDoor))
+
             return;
 
-        float laaarp = Player.Wg().Weight.GetClampedFactor(Weight.FromStage(WeightStage.Heavy), Weight.FromStage(WeightStage.Immobile));
+        float value = Player.Wg().Weight.GetClampedFactor(Weight.FromStage(WeightStage.Heavy), Weight.FromStage(WeightStage.Immobile));
 
-        _stuckageSpeed.Lerp(laaarp);
+        _stuckageSpeed.Lerp(value);
 
         Player.maxRunSpeed *= _stuckageSpeed;
         Player.accRunSpeed *= _stuckageSpeed;
         Player.runSlowdown /= _stuckageSpeed * 3;
     }
 
-    public bool TileTypeMatches(Point16 target, ushort tileID)
-    {
-        return Main.tile[target.X, target.Y].HasTile && Main.tile[target.X, target.Y].TileType == tileID;
-    }
+    public static bool TileTypeMatches(Point16 target, ushort tileID) => Main.tile[target.X, target.Y].HasTile && Main.tile[target.X, target.Y].TileType == tileID;
 
     static void GetGrapplingForces(On_Player.orig_GetGrapplingForces orig, Player self, Vector2 fromPosition, out int? preferredPlayerDirectionToSet, out float preferedPlayerVelocityX, out float preferedPlayerVelocityY)
     {
@@ -269,17 +248,20 @@ public class CursePlayer : ModPlayer
             orig(self, fromPosition, out preferredPlayerDirectionToSet, out preferedPlayerVelocityX, out preferedPlayerVelocityY);
             return;
         }
+
         if (!plr.ActiveCurses[(int)CurseIDs.WeakChains])
         {
             orig(self, fromPosition, out preferredPlayerDirectionToSet, out preferedPlayerVelocityX, out preferedPlayerVelocityY);
             return;
         }
+
         float targetX = 0f;
         float targetY = 0f;
         preferredPlayerDirectionToSet = null;
         int hookCount = 0;
         bool hasAntiGrav = false;
         bool bigEnoughToBeAffected = self.Wg().Weight.GetStage() >= WeightStage.Heavy;
+
         for (int i = 0; i < self.grapCount; i++)
         {
             Projectile projectile = Main.projectile[self.grappling[i]];
@@ -287,27 +269,28 @@ public class CursePlayer : ModPlayer
             {
                 int type = projectile.type;
                 bool flag = projectile.ModProjectile != null && projectile.ModProjectile.AIType > ProjectileID.None;
+
                 if (flag)
-                {
                     projectile.type = projectile.ModProjectile.AIType;
-                }
+
                 targetX += projectile.position.X + (float)(projectile.width / 2);
                 targetY += projectile.position.Y + (float)(projectile.height / 2);
                 hookCount++;
+
                 if (projectile.type == ProjectileID.AntiGravityHook)
                 {
                     hasAntiGrav = true;
-                    Vector2 vector = new Vector2((float)(self.controlRight.ToInt() - self.controlLeft.ToInt()), (float)(self.controlDown.ToInt() - self.controlUp.ToInt()) * self.gravDir);
+                    Vector2 vector = new(self.controlRight.ToInt() - self.controlLeft.ToInt(), (self.controlDown.ToInt() - self.controlUp.ToInt()) * self.gravDir);
+
                     if (vector != Vector2.Zero)
-                    {
                         vector.Normalize();
-                    }
+
                     vector *= 100f;
                     Vector2 vec = Vector2.Normalize(self.Center - projectile.Center + vector);
+
                     if (vec.HasNaNs())
-                    {
                         vec = -Vector2.UnitY;
-                    }
+
                     float num4 = 200f;
                     targetX += vec.X * num4;
                     targetY += vec.Y * num4;
@@ -315,19 +298,19 @@ public class CursePlayer : ModPlayer
                 else if (projectile.type == ProjectileID.StaticHook)
                 {
                     hasAntiGrav = true;
-                    Vector2 vector2 = new Vector2((float)(self.controlRight.ToInt() - self.controlLeft.ToInt()), (float)(self.controlDown.ToInt() - self.controlUp.ToInt()) * self.gravDir).SafeNormalize(Vector2.Zero);
+                    Vector2 vector2 = new Vector2(self.controlRight.ToInt() - self.controlLeft.ToInt(), (self.controlDown.ToInt() - self.controlUp.ToInt()) * self.gravDir).SafeNormalize(Vector2.Zero);
                     Vector2 vector3 = projectile.Center - self.Center;
                     Vector2 vector4 = vector3.SafeNormalize(Vector2.Zero);
                     Vector2 value = Vector2.Zero;
+
                     if (vector2 != Vector2.Zero)
-                    {
                         value = vector4 * Vector2.Dot(vector4, vector2);
-                    }
+
                     float num5 = 6f;
+
                     if (Vector2.Dot(value, vector3) < 0f && vector3.Length() >= 600f)
-                    {
                         num5 = 0f;
-                    }
+
                     targetX += 0f - vector3.X + value.X * num5;
                     targetY += 0f - vector3.Y + value.Y * num5;
                 }
@@ -337,15 +320,14 @@ public class CursePlayer : ModPlayer
                     Vector2 vector6 = -vector5 * 28f;
                     targetX += vector6.X;
                     targetY += vector6.Y;
+
                     if (vector5.X != 0f)
-                    {
                         preferredPlayerDirectionToSet = new int?(Math.Sign(vector5.X));
-                    }
                 }
+
                 if (flag)
-                {
                     projectile.type = type;
-                }
+
                 ProjectileLoader.GrappleTargetPoint(projectile, self, ref targetX, ref targetY);
             }
         }
@@ -353,26 +335,26 @@ public class CursePlayer : ModPlayer
         {
             preferedPlayerVelocityX = self.velocity.X;
             preferedPlayerVelocityY = self.velocity.Y;
+
             return;
         }
-        float realTargetX = targetX / (float)hookCount;
-        float realTargetY = targetY / (float)hookCount;
+
+        float realTargetX = targetX / hookCount;
+        float realTargetY = targetY / hookCount;
         preferedPlayerVelocityX = realTargetX - fromPosition.X;
         preferedPlayerVelocityY = realTargetY - fromPosition.Y;
         float num8 = (float)Math.Sqrt((double)(preferedPlayerVelocityX * preferedPlayerVelocityX + preferedPlayerVelocityY * preferedPlayerVelocityY));
         float pullSpeed = 11f;
+
         if (Main.projectile[self.grappling[0]].type == ProjectileID.BatHook)
-        {
             pullSpeed = 14f;
-        }
+
         if (Main.projectile[self.grappling[0]].type == ProjectileID.ThornHook)
-        {
             pullSpeed = 12f;
-        }
+
         if (Main.projectile[self.grappling[0]].type >= ProjectileID.LunarHookSolar && Main.projectile[self.grappling[0]].type <= ProjectileID.LunarHookStardust)
-        {
             pullSpeed = 16f;
-        }
+
         ProjectileLoader.GrapplePullSpeed(Main.projectile[self.grappling[0]], self, ref pullSpeed);
 
         float pullPower = 1f;
@@ -389,6 +371,7 @@ public class CursePlayer : ModPlayer
 
             pullPower *= Math.Clamp(1 - plr._grappleWeaken / (1 + (float)Math.Log(hookCount) / 10f), 0f, 1f);
         }
+
         if (pullPower < 1f)
         {
             preferedPlayerVelocityX *= pullPower;
@@ -403,42 +386,39 @@ public class CursePlayer : ModPlayer
     {
         ModPacket packet = Mod.GetPacket(WgMod.MessageType.CurseSync);
         packet.Write((byte)Player.whoAmI);
+
         for (int i = 0; i < ActiveCurses.Length; i++)
-        {
             packet.Write(ActiveCurses[i]);
-        }
+
         packet.Send(toWho, fromWho);
     }
 
     public void ReceivePlayerSync(BinaryReader reader)
     {
         for (int i = 0; i < ActiveCurses.Length; i++)
-        {
             ActiveCurses[i] = reader.ReadBoolean();
-        }
     }
 
     public override void CopyClientState(ModPlayer targetCopy)
     {
         CursePlayer clone = (CursePlayer)targetCopy;
+
         for (int i = 0; i < ActiveCurses.Length; i++)
-        {
             clone.ActiveCurses[i] = ActiveCurses[i];
-        }
     }
 
     public override void SendClientChanges(ModPlayer clientPlayer)
     {
         CursePlayer clone = (CursePlayer)clientPlayer;
         bool changed = false;
+
         for (int i = 0; i < ActiveCurses.Length; i++)
-        {
             if (ActiveCurses[i] != clone.ActiveCurses[i])
             {
                 changed = true;
                 break;
             }
-        }
+
         if (changed)
             SyncPlayer(-1, Main.myPlayer, false);
     }
