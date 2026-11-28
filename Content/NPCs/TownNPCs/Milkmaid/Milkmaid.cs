@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.Events;
 using Terraria.GameContent.Personalities;
@@ -11,6 +12,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 using WgMod.Common.Configs;
+using WgMod.Common.GlobalNPCs;
 using WgMod.Common.Systems;
 using WgMod.Content.Items.Consumables.Potions.WeightGainPotions;
 using WgMod.Content.Items.Consumables.Potions.WeightLossPotions;
@@ -21,7 +23,7 @@ namespace WgMod.Content.NPCs.TownNPCs.Milkmaid;
 [AutoloadHead]
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor._d_u_m_m_y_)]
-public class MilkmaidNPC : ModNPC
+public class Milkmaid : ModNPC
 {
     public override string Texture => "WgMod/Content/NPCs/TownNPCs/Milkmaid/Milkmaid";
 
@@ -45,6 +47,9 @@ public class MilkmaidNPC : ModNPC
 
         NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new() { Velocity = -1f, Direction = -1 };
         NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
+
+        if (WgClientConfig.Instance.DisableGoreForCertainNPCs)
+            ChildSafety.SafeGore[Type] = true;
 
         NPC.Happiness.SetBiomeAffection<ForestBiome>(AffectionLevel.Love)
             .SetBiomeAffection<SnowBiome>(AffectionLevel.Like)
@@ -310,77 +315,15 @@ public class MilkmaidNPC : ModNPC
     }
     public override void HitEffect(NPC.HitInfo hit)
     {
-        if (Main.netMode == NetmodeID.Server)
-            return;
-
-        int counter;
-
-        if (NPC.life > 0)
+        if (!WgClientConfig.Instance.DisableGoreForCertainNPCs)
         {
-            int loops = 0;
-            while ((double)loops < hit.Damage / (double)NPC.lifeMax * 100.0)
-            {
-                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -1f);
-                counter = loops;
-                loops = counter + 1;
-            }
-            return;
+            if (!NPC.TryGetGlobalNPC(out GoreGlobalNPC gg))
+                return;
+            gg.TownNPCParticlesAndGore(NPC, Name, DustID.Blood);
         }
-
-        for (int i = 0; i < 50; i = counter + 1)
+        else
         {
-            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, 2.5f * hit.HitDirection, -2.5f);
-            counter = i;
+            // Custom safe particles
         }
-
-        IEntitySource source = NPC.GetSource_Death();
-
-        if (WgClientConfig.Instance.DisableGoreForCertainNPCs)
-        {
-            // this is the vanilla code for NPCs poofing
-            for (int loops = 0; loops < 25; loops = counter + 1)
-            {
-                int num641 = Dust.NewDust(new Vector2(NPC.position.X, NPC.position.Y), NPC.width, NPC.height, DustID.Smoke, 0f, 0f, 100, Scale: 2f);
-                Dust dust144 = Main.dust[num641];
-                Dust dust190 = dust144;
-                dust190.velocity *= 1.4f;
-                Main.dust[num641].noLight = true;
-                Main.dust[num641].noGravity = true;
-                counter = loops;
-            }
-            int num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
-            ref float ptr = ref Main.gore[num642].velocity.X;
-            ptr += 1f;
-            ptr = ref Main.gore[num642].velocity.Y;
-            ptr += 1f;
-            num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
-            ptr = ref Main.gore[num642].velocity.X;
-            ptr -= 1f;
-            ptr = ref Main.gore[num642].velocity.Y;
-            ptr += 1f;
-            num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
-            ptr = ref Main.gore[num642].velocity.X;
-            ptr += 1f;
-            ptr = ref Main.gore[num642].velocity.Y;
-            ptr -= 1f;
-            num642 = Gore.NewGore(source, NPC.Center, Vector2.Zero, Main.rand.Next(61, 64), 1f);
-            ptr = ref Main.gore[num642].velocity.X;
-            ptr -= 1f;
-            ptr = ref Main.gore[num642].velocity.Y;
-            ptr -= 1f;
-            return;
-        }
-
-        int head = Mod.Find<ModGore>("MilkmaidHead").Type;
-        int arm = Mod.Find<ModGore>("MilkmaidArm").Type;
-        int leg = Mod.Find<ModGore>("MilkmaidLeg").Type;
-
-        Gore.NewGore(source, NPC.position, NPC.velocity, head, 1f);
-
-        Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 20f), NPC.velocity, arm, 1f);
-        Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 20f), NPC.velocity, arm, 1f);
-        Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 34f), NPC.velocity, leg, 1f);
-        Gore.NewGore(source, new Vector2(NPC.position.X, NPC.position.Y + 34f), NPC.velocity, leg, 1f);
-        return;
     }
 }
